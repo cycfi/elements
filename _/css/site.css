@@ -2062,3 +2062,36 @@ audio {
     margin-bottom: 5px;
 }
 
+
+/* The Elements icon font, for the Icons reference page's table. */
+@font-face{
+    font-family:elements_basic;
+    font-style:normal;
+    font-weight:400;
+    src:url(../font/elements_basic.ttf?v=267) format("truetype");
+}
+.ei{
+    font-family:elements_basic;
+    font-size:1.3em;
+    line-height:1;
+}
+table.icons,table.icons thead,table.icons tbody,table.icons tr,
+table.icons thead th,table.icons td{
+    background:#1e1e20;
+    color:#e8e8e8;
+    border-color:#3a3a3e;
+}
+table.icons thead th,table.icons thead tr{
+    background:#1e1e20 !important;
+    color:#e8e8e8 !important;
+    font-weight:500;
+}
+table.icons .ei{
+    color:#ffffff;
+}
+table.icons code{
+    background:transparent;
+    border:0;
+    padding:0;
+    color:#9ecbff;
+}

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Receivers :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="theme.html">Theme</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li>Support</li>
+    <li><a href="receivers.html">Receivers</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="receivers.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Receivers</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A receiver is an element that holds a value: a slider holds a <code>double</code>, a
+button holds a <code>bool</code>, a text box holds a string. <code>receiver&lt;T&gt;</code> is the
+interface such an element implements. It has three operations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operation</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>value()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read the value.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>value(v)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the value, without notification. Used by code that owns the value:
+  a model update, or initialization.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>edit(view, v)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the value as a user edit, with notification. Used by code that acts
+  on the user&#8217;s behalf: a keyboard shortcut, a reset button, a preset
+  recall.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_notification"><a class="anchor" href="#_notification"></a>Notification</h3>
+<div class="paragraph">
+<p>A user edit is reported through two independent callbacks, with
+different purposes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Callback</th>
+<th class="tableblock halign-left valign-top">Member of</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>on_change</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The element. For buttons, <code>on_click</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receives the new value. Typically bound to a model through
+  <a href="../model.html" class="xref page"><code>model_binder</code></a>, so the model follows the control. The
+  model&#8217;s update then reaches every control bound to it through
+  <code>value(v)</code>, the one that reported included. For a plain binding the
+  control already holds the value and the call changes nothing; for a
+  binding with a mapping that snaps or clamps, the call shows the
+  control what the model actually took.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>on_tracking</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>view</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Receives the element and a tracking state: <code>begin_tracking</code>,
+  <code>while_tracking</code> or <code>end_tracking</code>. The edits between a begin and an
+  end form one gesture: one undo step, or one span of recorded
+  automation.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>on_change</code> is called for every user edit, whatever its source: a mouse
+drag, a scroll wheel step, or <code>edit(view, v)</code> from code. It is never
+called by <code>value(v)</code>. The following sections give the exact order of the
+calls for each source.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gui_interactions"><a class="anchor" href="#_gui_interactions"></a>GUI Interactions</h3>
+<div class="paragraph">
+<p>The order of the calls depends on the kind of control. The slider and the
+button are the two patterns; the other controls follow one or the other.</p>
+</div>
+<div class="sect3">
+<h4 id="_sliders"><a class="anchor" href="#_sliders"></a>Sliders</h4>
+<div class="paragraph">
+<p>The user drags a slider. The slider calls both callbacks in this order:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/support/receiver_gui.svg" alt="A drag on a slider: begin_tracking on mouse down, on_change and while_tracking while dragging, end_tracking on mouse up" width="750px">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Mouse down: <code>on_tracking</code> with <code>begin_tracking</code>.</p>
+</li>
+<li>
+<p>Each drag step: the slider sets its own value, then calls <code>on_change</code>
+with it, then <code>on_tracking</code> with <code>while_tracking</code>.</p>
+</li>
+<li>
+<p>Mouse up: <code>on_tracking</code> with <code>end_tracking</code>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The gesture is bounded by the mouse press and release.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+The model&#8217;s <code>value(0.6)</code> after <code>on_change(0.6)</code> looks redundant,
+and for this binding it is: the slider set its own value before
+reporting it, so the call changes nothing. It is there because the model
+does not know where its update came from. The update goes to every
+control bound to the model, so a second slider bound to the same model
+follows the first, and a binding with a mapping shows the control what
+the model took, which may differ from what the control reported: a
+mapping that snaps to steps, for instance.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A scroll wheel step has no press or release. It calls <code>on_tracking</code> with
+<code>while_tracking</code>, then <code>on_change</code> with the new value. The view supplies
+<code>begin_tracking</code> before the first <code>while_tracking</code>, and ends the gesture
+as it does for an edit from code, described next.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_buttons"><a class="anchor" href="#_buttons"></a>Buttons</h4>
+<div class="paragraph">
+<p>A button has no intermediate values. The user presses and releases a
+toggle, and the toggle calls the callbacks in this order:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/support/receiver_button.svg" alt="A click on a toggle: begin_tracking on mouse down, and the toggle flips its value; on_click and end_tracking on mouse up" width="750px">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Mouse down: <code>on_tracking</code> with <code>begin_tracking</code>, then the toggle flips
+its own value.</p>
+</li>
+<li>
+<p>Mouse up, inside the button: <code>on_click</code> with the value, then
+<code>on_tracking</code> with <code>end_tracking</code>. The model&#8217;s <code>value</code> call back is as
+for the slider.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>There is no <code>while_tracking</code>: the button follows the mouse visually while
+it is held, but the user has not decided until the release, so no value
+is reported before then. A release outside the button cancels the click:
+<code>on_tracking</code> with <code>end_tracking</code>, and no <code>on_click</code>. Dials,
+thumbwheels and the other dragged controls follow the slider; check
+boxes, radio buttons, switches and the other buttons follow the button.</p>
+</div>
+<div class="paragraph">
+<p>A momentary button is a trigger, not a state: its value is "pressed",
+true only while the mouse is down. <code>model_binder</code> refuses to bind one, at
+compile time; it binds toggles, latching buttons, check boxes, radio
+buttons and switches, whose value is a state.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_programmatic_interactions"><a class="anchor" href="#_programmatic_interactions"></a>Programmatic Interactions</h3>
+<div class="sect3">
+<h4 id="_sliders_2"><a class="anchor" href="#_sliders_2"></a>Sliders</h4>
+<div class="paragraph">
+<p>Code sets the slider&#8217;s value through one of its two setters:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/support/receiver_code.svg" alt="From code: a model update reaches the slider through value; edit calls on_change and reports begin_tracking and while_tracking, and the view ends the gesture after a second" width="750px">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>value(v)</code></dt>
+<dd>
+<p>Sets the value. Neither callback is called. This is how a model update
+reaches the element: the control shows the new value, and the model is
+not notified of what it already has. Automation, for example, writes
+through the model, and is therefore never recorded as a user edit.</p>
+</dd>
+<dt class="hdlist1"><code>edit(view, v)</code></dt>
+<dd>
+<p>Sets the value as a user edit. Sets the slider&#8217;s own value, then calls
+<code>on_change</code> with it, then <code>on_tracking</code> with <code>while_tracking</code>. If the element is not already
+being tracked, the view first calls <code>on_tracking</code> with
+<code>begin_tracking</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>An edit from code has no mouse release to end its gesture. The view ends
+it: <code>view::poll</code> calls <code>on_tracking</code> with <code>end_tracking</code> once the element
+has gone one second without an edit. Edits within that second belong to
+the same gesture.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_buttons_2"><a class="anchor" href="#_buttons_2"></a>Buttons</h4>
+<div class="paragraph">
+<p>A button&#8217;s <code>edit</code> reports the same tracking states:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/support/receiver_button_code.svg" alt="From code: a model update reaches the button through value; edit calls on_click, the model sets the value, and the view reports begin_tracking and while_tracking, then end_tracking after a second" width="750px">
+</div>
+</div>
+<div class="paragraph">
+<p><code>edit(view, v)</code> on a toggle or latching button sets its own value, then
+calls <code>on_click</code> with <code>v</code>. On a momentary button, whose value is only
+"pressed", <code>edit</code> calls <code>on_click</code> and leaves the value alone. The
+tracking states follow as for the slider: <code>begin_tracking</code> and <code>while_tracking</code> at once, <code>end_tracking</code>
+from <code>view::poll</code> one second later.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_librarys_receivers"><a class="anchor" href="#_the_librarys_receivers"></a>The Library&#8217;s Receivers</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Element</th>
+<th class="tableblock halign-left valign-top">Value Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_button</code> (all buttons)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>slider_base</code> (all sliders)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_dial</code> (all dials)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_thumbwheel_element</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>status_bar_base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>range_slider</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>double_range</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thumbwheel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">text boxes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>std::u32string_view</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>as_label_element&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>T</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_value_element&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>T</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   template &lt;typename T&gt;
+   struct receiver : receiver_base
+   {
+      using receiver_type = T;
+      using getter_type = T;
+      using param_type = T;
+
+      virtual void         value(param_type val) = 0;
+      virtual getter_type  value() const = 0;
+      virtual void         edit(view&amp; view_, param_type val);
+   };
+
+   template &lt;&gt;
+   struct receiver&lt;std::string&gt; : receiver_base
+   {
+      using receiver_type = std::string;
+      using getter_type = std::string const&amp;;
+      using param_type = string_view;
+
+      virtual void         value(param_type val) = 0;
+      virtual getter_type  value() const = 0;
+      virtual void         edit(view&amp; view_, param_type val);
+   };
+
+   template &lt;typename T&gt;
+   struct basic_receiver : receiver&lt;T&gt;
+   {
+      void                 value(param_type val) override;
+      getter_type          value() const override;
+   };
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>receiver&lt;T&gt;</code> is abstract: a concrete element implements both <code>value</code>
+functions. <code>receiver&lt;std::string&gt;</code> takes a <code>string_view</code> and returns a
+reference, so neither direction copies the string.</p>
+</div>
+<div class="paragraph">
+<p><code>basic_receiver&lt;T&gt;</code> implements both <code>value</code> functions over a member of
+type <code>T</code>, value initialized. It serves an element that holds a value and
+draws it, with no further behavior.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>r</code></dt>
+<dd>
+<p>A <code>receiver&lt;T&gt;</code>, which is also an element.</p>
+</dd>
+<dt class="hdlist1"><code>v</code></dt>
+<dd>
+<p>A <code>view</code>.</p>
+</dd>
+<dt class="hdlist1"><code>val</code></dt>
+<dd>
+<p>A <code>receiver&lt;T&gt;::param_type</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>r.value()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The current value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>receiver&lt;T&gt;::getter_type</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>r.value(val)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the value. No callback is called.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>r.edit(v, val)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the value as a user edit: call <code>r&#8217;s `on_change</code>, then <code>v&#8217;s
+  `on_tracking</code> with <code>r</code> and <code>while_tracking</code>, preceded by
+  <code>begin_tracking</code> if <code>r</code> was not already being tracked. One second after
+  the last edit, <code>v.poll()</code> calls <code>on_tracking</code> with <code>end_tracking</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A slider bound to a model, with an <code>on_tracking</code> that groups each gesture
+into one undo step:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">value_model&lt;double&gt; volume = 0.5;
+auto vol = share(slider(basic_thumb&lt;20&gt;(), basic_track&lt;5, false&gt;()));
+
+model_binder binder{[&amp;view_](element&amp; e) { view_.refresh(e); }};
+binder.bind(volume, vol);
+
+view_.on_tracking =
+   [](element&amp; e, element::tracking state)
+   {
+      if (state == element::begin_tracking)
+         ;  // open an undo step
+      else if (state == element::end_tracking)
+         ;  // close it
+   };
+
+volume = 0.3;              // model update: the slider shows 0.3,
+                           // no callback is called
+vol-&gt;edit(view_, 0.75);    // user edit: volume is 0.75, and a gesture
+                           // begins, ending one second later</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

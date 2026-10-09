@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Labels :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="labels.html">Labels</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="labels.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Labels</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A label is a single line of text. <code>label("text")</code> draws it in the
+theme&#8217;s label font, size, colour and alignment; <code>heading("text")</code> uses
+the theme&#8217;s heading settings instead, and <code>heading1</code> to <code>heading5</code> are
+headings in five sizes. Each setting can be changed by a
+modifier, which returns a new label with the change and every earlier
+setting kept, so modifiers chain:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">label("Volume").font_size(18).font_color(colors::gold)</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/labels.png"><img src="../_images/elements/labels.png" alt="The same text as a label, a heading, at size 22, in gold, in italic, and as a note label of a style of its own" width="440px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A label&#8217;s <a href="../layout/limits.html" class="xref page">limits</a> are the size of its text in its font, as both the
+minimum and the maximum, so a label never stretches. The text is
+placed by <code>text_align</code> when the label is given more room than that: a
+tile gives every child its full width across the tile, so labels in a
+<code>vtile</code> align against the widest of them.</p>
+</div>
+<div class="paragraph">
+<p>A label holds its text and implements <code>text_reader_u8</code> and
+<code>text_writer_u8</code> (see <a href="../support/text_utils.html" class="xref page">Text Utilities</a>), so
+the text can be read and replaced through a proxy without naming the
+label&#8217;s type. When the new text has a different size, call the view&#8217;s
+<code>layout()</code> so the label&#8217;s new limits take effect.</p>
+</div>
+<div class="paragraph">
+<p>A disabled label, or a label drawn in a disabled element, is drawn at
+the theme&#8217;s <code>disabled_opacity</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_changing_a_live_label"><a class="anchor" href="#_changing_a_live_label"></a>Changing a Live Label</h3>
+<div class="paragraph">
+<p>A label is changed in one of two ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Modifiers</strong> build a label. Each returns a label of a new type, which
+cannot be assigned back to the original.</p>
+</li>
+<li>
+<p><strong>Setters</strong> change a label already in a view, in place:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>set_font</code></p>
+</li>
+<li>
+<p><code>set_font_size</code> and <code>set_relative_font_size</code></p>
+</li>
+<li>
+<p><code>set_font_color</code></p>
+</li>
+<li>
+<p><code>set_text_align</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each setter exists only for a setting the label was built with: a label
+made with <code>font_color(c)</code> has <code>set_font_color</code>, and a plain
+<code>label("text")</code> has none. After a change, refresh the label; after a
+change of font or size, lay the view out again.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_heading_levels"><a class="anchor" href="#_heading_levels"></a>Heading Levels</h3>
+<div class="paragraph">
+<p><code>heading1</code> to <code>heading5</code> are headings in five sizes, <code>heading1</code> the
+largest. Each draws in the theme&#8217;s heading font, colour and alignment,
+at the font&#8217;s size times the theme&#8217;s <code>heading_scale</code> for its level.
+<code>heading</code> is <code>heading5</code>, the smallest, at the heading font&#8217;s own size.
+A theme changes the whole hierarchy through the one array.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+The default levels follow a minor-third modular scale: each is
+1.2 times the one below, so <code>heading_scale</code> is 1.2 raised to the powers
+4, 3, 2, 1 and 0. A ratio of 1.125 to 1.2 is common for application
+interfaces, 1.25 to 1.333 for documents. With the default 15 point
+heading font, the levels are 31.1, 25.9, 21.6, 18 and 15 points, and the
+smallest stays above the 14 point label. To keep a modular scale with
+another ratio <code>r</code>, set <code>heading_scale</code> to <code>r</code> raised to the same powers.
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/heading_levels.png"><img src="../_images/elements/heading_levels.png" alt="The same text as heading1 to heading5, from the largest to the smallest" width="360px"></a>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_label_styles"><a class="anchor" href="#_label_styles"></a>Label Styles</h3>
+<div class="paragraph">
+<p><code>label</code> and <code>heading</code> are one class template over different defaults.
+The defaults come from a styler class derived from
+<code>default_label_styler</code>, which reads them from the
+<a href="../support/theme.html" class="xref page">theme</a> through six virtual functions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>get_font</code></p>
+</li>
+<li>
+<p><code>get_font_size</code> and <code>get_default_font_size</code></p>
+</li>
+<li>
+<p><code>get_font_color</code></p>
+</li>
+<li>
+<p><code>get_text_align</code> and <code>get_default_text_align</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>default_heading</code> overrides them with the heading settings, and
+<code>default_heading_level</code> scales the heading size for its level. A class
+of your own that overrides some of them is a label style of its own,
+with the same modifiers; see the example below.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_as_label"><a class="anchor" href="#_as_label"></a>as_label</h3>
+<div class="paragraph">
+<p><code>as_label&lt;T&gt;(f, subject)</code> makes a label show a value. It is a proxy and
+a <code>receiver&lt;T&gt;</code> (see <a href="../support/receivers.html" class="xref page">Receivers</a>): each
+<code>value(v)</code> stores <code>v</code>, converts it to text with <code>f(v)</code>, and writes the
+text into the first text writer it finds in its subject. The control
+that feeds it, a <a href="thumbwheels.html" class="xref page">thumbwheel</a> for
+instance, then needs to know nothing of text.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   struct default_label_styler : element, text_reader_u8
+   {
+      virtual font_descr      get_font() const;
+      virtual float           get_font_size() const;
+      virtual float           get_default_font_size() const;
+      virtual color           get_font_color() const;
+      virtual int             get_text_align() const;
+      virtual int             get_default_text_align() const;
+   };
+
+   struct default_heading : default_label_styler
+   {
+      // The same six, from the theme's heading settings
+   };
+
+   template &lt;std::size_t Level&gt;
+   struct default_heading_level : default_heading
+   {
+      // The size: heading_font's size times heading_scale[Level - 1]
+      float                   get_font_size() const override;
+      float                   get_default_font_size() const override;
+   };
+
+   template &lt;concepts::LabelStyler Base&gt;
+   struct basic_label_styler_base : Base, text_writer_u8
+   {
+                              basic_label_styler_base(std::string text);
+
+      std::string_view        get_text() const override;
+      void                    set_text(string_view text) override;
+   };
+
+   template &lt;concepts::LabelStyler Base&gt;
+   struct label_styler_with_font : Base
+   {
+      void                    set_font(font_descr font_);
+   };
+
+   template &lt;concepts::LabelStyler Base&gt;
+   struct label_styler_with_font_size : Base
+   {
+      void                    set_font_size(float size);
+      void                    set_relative_font_size(float size);
+   };
+
+   template &lt;concepts::LabelStyler Base&gt;
+   struct label_styler_with_font_color : Base
+   {
+      void                    set_font_color(color color_);
+   };
+
+   template &lt;concepts::LabelStyler Base&gt;
+   struct label_with_text_align : Base
+   {
+      void                    set_text_align(int align);
+   };
+
+   template &lt;concepts::LabelStyler Base&gt;
+   struct label_styler_gen : Base
+   {
+      gen_font                font(font_descr font_) const;
+      gen_font_size           font_size(float size) const;
+      gen_font_size           relative_font_size(float size) const;
+      gen_font_color          font_color(color color_) const;
+      gen_text_align          text_align(int align) const;
+   };
+
+   template &lt;std::size_t Level&gt;
+   using basic_heading_level = basic_label_styler_base&lt;default_heading_level&lt;Level&gt;&gt;;
+
+   using label = label_styler_gen&lt;basic_label_styler_base&lt;default_label_styler&gt;&gt;;
+   using heading1 = label_styler_gen&lt;basic_heading_level&lt;1&gt;&gt;;
+   using heading2 = label_styler_gen&lt;basic_heading_level&lt;2&gt;&gt;;
+   using heading3 = label_styler_gen&lt;basic_heading_level&lt;3&gt;&gt;;
+   using heading4 = label_styler_gen&lt;basic_heading_level&lt;4&gt;&gt;;
+   using heading5 = label_styler_gen&lt;basic_heading_level&lt;5&gt;&gt;;
+   using heading = heading5;
+
+   template &lt;typename T, concepts::Element Subject, typename F&gt;
+   as_label_element&lt;Subject, T, F&gt;  as_label(F&amp;&amp; as_string, Subject&amp;&amp; subject);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>concepts::LabelStyler</code> is satisfied by a class derived from
+<code>default_label_styler</code>. Each <code>gen_</code> type is a <code>label_styler_gen</code> over
+the label with one more layer, which holds the setting and its setter:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>font</code> adds a <code>label_styler_with_font</code>.</p>
+</li>
+<li>
+<p><code>font_size</code> and <code>relative_font_size</code> add a
+<code>label_styler_with_font_size</code>.</p>
+</li>
+<li>
+<p><code>font_color</code> adds a <code>label_styler_with_font_color</code>.</p>
+</li>
+<li>
+<p><code>text_align</code> adds a <code>label_with_text_align</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>l</code></dt>
+<dd>
+<p>A <code>label</code>, a heading of any level, or a label of another style.</p>
+</dd>
+<dt class="hdlist1"><code>s</code></dt>
+<dd>
+<p>A <code>std::string</code>.</p>
+</dd>
+<dt class="hdlist1"><code>f</code></dt>
+<dd>
+<p>A <code>font_descr</code>.</p>
+</dd>
+<dt class="hdlist1"><code>z</code></dt>
+<dd>
+<p>A <code>float</code>, a font size in points or a factor.</p>
+</dd>
+<dt class="hdlist1"><code>c</code></dt>
+<dd>
+<p>A <code>color</code>.</p>
+</dd>
+<dt class="hdlist1"><code>a</code></dt>
+<dd>
+<p>An <code>int</code>: a horizontal alignment, <code>canvas::left</code>, <code>canvas::center</code>
+or <code>canvas::right</code>, optionally or&#8217;ed with a vertical one,
+<code>canvas::top</code>, <code>canvas::middle</code>, <code>canvas::bottom</code> or <code>canvas::baseline</code>.</p>
+</dd>
+<dt class="hdlist1"><code>v</code></dt>
+<dd>
+<p>A value of type <code>T</code>.</p>
+</dd>
+<dt class="hdlist1"><code>conv</code></dt>
+<dd>
+<p>A function from <code>T</code> to <code>std::string</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>label(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A label of <code>s</code>, in the theme&#8217;s label settings.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>heading1(s)</code> to <code>heading5(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A label of <code>s</code>, in the theme&#8217;s heading settings, at the heading
+  font&#8217;s size times <code>heading_scale[0]</code> to <code>heading_scale[4]</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>heading(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>heading5(s)</code>: the heading font at its own size.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.font(f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A copy of <code>l</code> in font <code>f</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.font_size(z)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A copy of <code>l</code> at size <code>z</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.relative_font_size(z)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A copy of <code>l</code> at <code>z</code> times the style&#8217;s default size.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.font_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A copy of <code>l</code> in colour <code>c</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.text_align(a)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A copy of <code>l</code> with the text aligned by <code>a</code> within the label&#8217;s bounds.
+  Without a vertical part, the style&#8217;s default alignment supplies it:
+  the theme&#8217;s <code>label_text_align</code> for a label, <code>heading_text_align</code> for
+  a heading.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.get_text()</code>, <code>l.set_text(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read and replace the text.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.set_font(f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the font of <code>l</code> in place. <code>l</code> was built with <code>font</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.set_font_size(z)</code>, <code>l.set_relative_font_size(z)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the size of <code>l</code> in place, in points or as a factor of the
+  style&#8217;s default. <code>l</code> was built with <code>font_size</code> or
+  <code>relative_font_size</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.set_font_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the colour of <code>l</code> in place. <code>l</code> was built with <code>font_color</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.set_text_align(a)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the alignment of <code>l</code> in place. <code>l</code> was built with
+  <code>text_align</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.enable(false)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Draw <code>l</code> at the theme&#8217;s <code>disabled_opacity</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>as_label&lt;T&gt;(conv, l)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A proxy over <code>l</code> and a <code>receiver&lt;T&gt;</code>. <code>value(v)</code> stores <code>v</code> and sets
+  the text of <code>l</code> to <code>conv(v)</code>; <code>value()</code> returns the stored value.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A title, three lines aligned against a longer one, and a label that
+shows a value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto title = label("Hello, Universe.")
+   .font(font_descr{"Open Sans"}.semi_bold())
+   .font_size(18)
+   .font_color(colors::antique_white);
+
+auto lines = vtile(
+   label("Elements: a C++ GUI library"),
+   label("left").text_align(canvas::left),
+   label("centre").text_align(canvas::center),
+   label("right").text_align(canvas::right));
+
+auto level = share(as_label&lt;double&gt;(
+   [](double v) { return std::to_string(int(v * 100)) + "%"; },
+   label("0%")));
+level-&gt;value(0.42);</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/labels_example.png"><img src="../_images/elements/labels_example.png" alt="The title in bold, the three short lines aligned left, centre and right below a longer line, and 42%" width="260px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A readout that turns gold while the signal clips. It is built with
+<code>font_color</code>, so it has <code>set_font_color</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto peak = share(label("0 dB").font_color(colors::gray[60]));
+
+// When the clipping state changes:
+peak-&gt;set_font_color(clipping ? colors::gold : colors::gray[60]);
+view_.refresh(*peak);</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/labels_readout.png"><img src="../_images/elements/labels_readout.png" alt="The readout in grey, and in gold while clipping" width="200px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A label style of its own: a smaller, dimmer note, left aligned. It
+overrides the defaults it changes and keeps the theme&#8217;s font. Its
+<code>base_type</code> names the style itself, the class the modifiers build on:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct note_styler : default_label_styler
+{
+   using base_type = note_styler;
+
+   float get_font_size() const override         { return 11; }
+   float get_default_font_size() const override { return 11; }
+   color get_font_color() const override        { return colors::gray[60]; }
+   int   get_text_align() const override        { return canvas::left | canvas::middle; }
+};
+
+using note_label = label_styler_gen&lt;basic_label_styler_base&lt;note_styler&gt;&gt;;
+
+auto gain = note_label("Gain");
+auto warning = note_label("Clipping").font_color(colors::gold);</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

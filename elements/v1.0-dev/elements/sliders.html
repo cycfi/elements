@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sliders :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="sliders.html">Sliders</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="sliders.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Sliders</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A slider is a value from 0.0 to 1.0, set by dragging a thumb along a
+track. The thumb and the track are elements the slider is given, so a
+slider&#8217;s look is whatever those two draw. The slider places them from
+its value (see <a href="../styles.html#_placement" class="xref page">Styles</a>). The stock ones are
+documented under the <a href="../styles/sliders.html" class="xref page">Sliders, Dials and
+Thumbwheels</a> styles. This page is the behavior, in three forms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>slider</code>, one thumb, a continuous value.</p>
+</li>
+<li>
+<p><code>selector&lt;N&gt;</code>, one thumb and <code>N</code> positions: the value snaps to the
+nearest, and the callback gets its index. The pointed thumb,
+<code>basic_tri_thumb&lt;size, direction&gt;</code>, suits it: it points at the
+position&#8217;s mark.</p>
+</li>
+<li>
+<p><code>range_slider</code>, two thumbs, a pair of values that do not cross.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/sliders.png"><img src="../_images/elements/sliders.png" alt="A slider, a four-way selector and a range slider, each with marks and labels, and a vertical slider" width="420px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A slider is horizontal or vertical by its track: horizontal when the
+track&#8217;s limits are wider than tall, vertical otherwise. Along a
+horizontal track the value runs from 0.0 at the left to 1.0 at the
+right; along a vertical one from 0.0 at the bottom to 1.0 at the top.
+The thumb&#8217;s centre travels the track less the thumb&#8217;s own width, so a
+thumb at 0.0 or 1.0 sits wholly inside the slider.</p>
+</div>
+<div class="sect2">
+<h3 id="_interaction"><a class="anchor" href="#_interaction"></a>Interaction</h3>
+<div class="paragraph">
+<p>A slider is a <a href="trackers.html" class="xref page">tracker</a> over a
+<a href="../support/receivers.html" class="xref page">receiver</a>. A press on the thumb takes hold
+of it where it was pressed, so it does not jump under the pointer; a
+press elsewhere on the track moves the thumb there on the first
+movement. Each movement sets the value from the pointer&#8217;s position and
+calls <code>on_change</code>; the release sets it one last time. The wheel moves
+the value by 0.005 per unit scrolled, along the track&#8217;s axis; a
+selector ignores the wheel. The gesture is reported to the view&#8217;s
+<code>on_tracking</code> as a tracker&#8217;s is.</p>
+</div>
+<div class="paragraph">
+<p><code>value(v)</code> sets the value from code, clamped to 0.0 to 1.0, without a
+callback; <code>edit(view, v)</code> sets it as the user would, calling <code>on_change</code>
+and reporting the gesture. Bound through <code>model_binder</code>, a slider
+follows its model and the model follows the slider.</p>
+</div>
+<div class="paragraph">
+<p>A range slider holds <code>double_range</code>, a <code>std::pair&lt;double, double&gt;</code>: the
+first thumb&#8217;s value and the second&#8217;s. Each thumb drags on its own, and
+stops a thumb&#8217;s width short of the other; Shift-drag moves both,
+keeping their distance; Alt-click when the thumbs overlap picks the
+other one. The two callbacks are <code>on_change.first</code> and
+<code>on_change.second</code>. The optional <code>offset_from_center</code> lets the thumbs
+come closer than their width, for thumbs drawn asymmetrically.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   class slider_base : public tracker&lt;&gt;, public receiver&lt;double&gt;
+   {
+   public:
+                              slider_base(double init_value);
+
+      double                  value() const override;
+      void                    value(double val) override;
+      void                    edit(view&amp; view_, double val) override;
+
+      rect                    track_bounds(context const&amp; ctx) const;
+      rect                    thumb_bounds(context const&amp; ctx) const;
+      virtual double          value_from_point(context const&amp; ctx, point p);
+
+      virtual element&amp;        thumb() = 0;
+      virtual element&amp;        track() = 0;
+   };
+
+   class basic_slider_base : public slider_base
+   {
+   public:
+      using slider_function = std::function&lt;void(double pos)&gt;;
+      slider_function         on_change;
+   };
+
+   template &lt;typename Thumb, typename Track, typename Base = basic_slider_base&gt;
+   class basic_slider : public Base { ... };
+
+   template &lt;typename Thumb, typename Track&gt;
+   basic_slider&lt;Thumb, Track, basic_slider_base&gt;
+   slider(Thumb&amp;&amp; thumb, Track&amp;&amp; track, double init_value = 0.0);
+
+   class basic_selector_base : public slider_base
+   {
+   public:
+      using selector_function = std::function&lt;void(size_t pos)&gt;;
+      selector_function       on_change;
+   };
+
+   template &lt;size_t num_states&gt;
+   class selector_base : public basic_selector_base { ... };
+
+   template &lt;size_t num_states, typename Thumb, typename Track&gt;
+   basic_slider&lt;Thumb, Track, selector_base&lt;num_states&gt;&gt;
+   selector(Thumb&amp;&amp; thumb, Track&amp;&amp; track, double init_value = 0.0);
+
+   using double_range = std::pair&lt;double, double&gt;;
+
+   class range_slider_base : public tracker&lt;&gt;, public receiver&lt;double_range&gt;
+   {
+   public:
+                              range_slider_base(double_range init_value);
+
+      double_range            value() const override;
+      void                    value(double_range val) override;
+      double                  value_first() const;
+      double                  value_second() const;
+      void                    value_first(double val);
+      void                    value_second(double val);
+      void                    edit(view&amp; view_, double_range val) override;
+   };
+
+   class basic_range_slider_base : public range_slider_base
+   {
+   public:
+      using slider_function = std::function&lt;void(double pos)&gt;;
+      using slider_function_pair = std::pair&lt;slider_function, slider_function&gt;;
+      slider_function_pair    on_change;
+   };
+
+   template &lt;concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track&gt;
+   basic_range_slider&lt;Thumb1, Thumb2, Track, basic_range_slider_base&gt;
+   range_slider(Thumb1&amp;&amp; thumb_min, Thumb2&amp;&amp; thumb_max, Track&amp;&amp; track
+    , double_range init_value = {0.0, 1.0});
+
+   template &lt;concepts::Element Thumb1, concepts::Element Thumb2, concepts::Element Track&gt;
+   basic_range_slider&lt;Thumb1, Thumb2, Track, basic_range_slider_offset_base&gt;
+   range_slider(Thumb1&amp;&amp; thumb_min, Thumb2&amp;&amp; thumb_max, Track&amp;&amp; track
+    , double_range init_value, float offset_from_center);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>basic_slider&lt;Thumb, Track, Base&gt;</code> holds the thumb and the track by
+value and hands them to <code>Base</code> through <code>thumb()</code> and <code>track()</code>. The
+<code>Base</code> is <code>basic_slider_base</code> for a slider and <code>selector_base&lt;N&gt;</code> for a
+selector; a class derived from <code>slider_base</code> that overrides
+<code>value_from_point</code> can be given as <code>Base</code> for a slider whose travel is
+not linear.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>s</code></dt>
+<dd>
+<p>A <code>slider_base</code>, or a class derived from it: a slider or a
+selector.</p>
+</dd>
+<dt class="hdlist1"><code>r</code></dt>
+<dd>
+<p>A <code>range_slider_base</code>, or a class derived from it.</p>
+</dd>
+<dt class="hdlist1"><code>v</code></dt>
+<dd>
+<p>A <code>double</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ctx</code></dt>
+<dd>
+<p>A <a href="../support/context.html" class="xref page">context</a> for the slider.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s.value()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value, 0.0 to 1.0.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s.value(v)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the value, clamped to 0.0 to 1.0. No callback. On a selector the
+  value snaps to the nearest position and <code>on_change</code> gets its index.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s.edit(view_, v)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the value as the user would: <code>on_change</code> is called and the gesture
+  reported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s.on_change = f</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f(v)</code> is called on each change the user makes. On a selector, <code>f(i)</code>
+  with the position&#8217;s index.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s.thumb_bounds(ctx)</code>, <code>s.track_bounds(ctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where the thumb and the track are, within <code>ctx.bounds</code>, for a styler
+  or a subclass drawing around them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>s.value_from_point(ctx, p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The value for the pointer at <code>p</code>: the position of the thumb&#8217;s centre
+  along its travel, clamped. Virtual, for a non-linear travel.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>r.value()</code>, <code>r.value(range)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Both values, as a <code>double_range</code>; set them, each clamped.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>r.value_first()</code>, <code>r.value_second()</code>, and their setters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One thumb&#8217;s value.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>r.on_change.first = f</code>, <code>r.on_change.second = f</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f(v)</code> is called when the respective thumb moves.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A slider bound to a model, with a label following it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">value_model&lt;double&gt; volume = 0.5;
+
+auto vol = share(slider(basic_thumb&lt;20&gt;(), basic_track&lt;5, false&gt;()));
+auto readout = share(label("50%"));
+
+model_binder binder{[&amp;view_](element&amp; e) { view_.refresh(e); }};
+binder.bind(volume, vol);
+binder.observe(volume,
+   [readout, &amp;view_](double v)
+   {
+      readout-&gt;set_text(std::to_string(int(v * 100)) + "%");
+      view_.refresh(*readout);
+   });</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/sliders_example.png"><img src="../_images/elements/sliders_example.png" alt="The bound slider at 0.75 with its readout showing 75%" width="240px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A four-way selector, and a range slider from 20% to 80%:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto mode = selector&lt;4&gt;(basic_tri_thumb&lt;28, direction::down&gt;(), basic_track&lt;5, false&gt;());
+mode.on_change = [](std::size_t i) { set_mode(i); };
+
+auto band = range_slider(
+   basic_thumb&lt;20&gt;(), basic_thumb&lt;20&gt;(), basic_track&lt;5, false&gt;(), {0.2, 0.8});
+band.on_change.first = [](double lo) { set_low(lo); };
+band.on_change.second = [](double hi) { set_high(hi); };</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

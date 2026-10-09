@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="440"
+     viewBox="0 0 750 440"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="209.383" y="14" width="96" height="44" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="257.383" y="39.9" text-anchor="middle" font-style="italic" fill="#1a1a1a">element</text>
+
+  <rect x="181.156" y="102" width="152.453" height="73" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="257.383" y="127.9" text-anchor="middle" fill="#1a1a1a">proxy_base</text>
+  <line x1="181.156" y1="137.9" x2="333.609" y2="137.9" stroke="#1565c0" stroke-width="1"/>
+  <text x="188.156" y="152.8" fill="#1a1a1a">subject() : element&amp;</text>
+
+  <rect x="166.016" y="219" width="182.734" height="90" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="257.383" y="244.9" text-anchor="middle" fill="#1a1a1a">basic_button</text>
+  <line x1="166.016" y1="254.9" x2="348.75" y2="254.9" stroke="#1565c0" stroke-width="1"/>
+  <text x="173.016" y="269.8" fill="#1a1a1a">value(), hilite(), tracking()</text>
+  <text x="173.016" y="286.8" fill="#1a1a1a">click(ctx, btn)</text>
+
+  <rect x="155.781" y="353" width="203.203" height="73" rx="4" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="257.383" y="378.9" text-anchor="middle" fill="#1a1a1a">proxy&lt;Styler, basic_button&gt;</text>
+  <line x1="155.781" y1="388.9" x2="358.984" y2="388.9" stroke="#1565c0" stroke-width="1"/>
+  <text x="162.781" y="403.8" fill="#1a1a1a">subject() : Styler&amp;</text>
+
+  <rect x="468.984" y="353" width="125.234" height="73" rx="4" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="531.602" y="378.9" text-anchor="middle" fill="#1a1a1a">Styler : element</text>
+  <line x1="468.984" y1="388.9" x2="594.219" y2="388.9" stroke="#43a047" stroke-width="1"/>
+  <text x="475.984" y="403.8" fill="#1a1a1a">draw(ctx)</text>
+
+  <line x1="257.383" y1="102" x2="257.383" y2="69" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="257.383" y1="219" x2="257.383" y2="186" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="257.383" y1="353" x2="257.383" y2="320" stroke="#5d5d5d" stroke-width="1.4"/>
+  <path d="M 531.6 353 L 531.6 44 Q 531.6 36 523.6 36 L 316.38 36" fill="none" stroke="#5d5d5d" stroke-width="1.4"/>
+  <line x1="372.984" y1="389.5" x2="468.984" y2="389.5" stroke="#5d5d5d" stroke-width="1.4"/>
+
+  <text x="420.984" y="383.5" text-anchor="middle" fill="#1a1a1a">subject()</text>
+  <polygon points="257.383,58 263.383,69 251.383,69" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.4"/>
+  <polygon points="257.383,175 263.383,186 251.383,186" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.4"/>
+  <polygon points="257.383,309 263.383,320 251.383,320" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.4"/>
+  <polygon points="305.383,36 316.383,30 316.383,42" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.4"/>
+  <polygon points="358.984,389.5 365.984,394.5 372.984,389.5 365.984,384.5" fill="#5d5d5d"/>
+</svg>

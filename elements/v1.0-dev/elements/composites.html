@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Composites :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="composites.html">Composites</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="composites.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Composites</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A composite is an element with zero or more children: a tile, a grid, a
+layer, a flow, a list. The common base of all composites is
+<code>composite_base</code>, which derives from <code>element</code> and from <code>storage</code>, the
+interface to a sequence of elements by index. <code>composite_base</code>
+implements the element protocol over that sequence: it draws each
+visible child in a <a href="../support/context.html" class="xref page">context</a> of the child&#8217;s own, routes a click, a drag
+or a scroll to the child under the point, moves the keyboard focus among
+the children, and reports to each child when the cursor enters and
+leaves it. A concrete composite supplies the geometry only: <code>limits</code>,
+<code>layout</code>, and <code>bounds_of</code>, which gives the bounds of child <code>ix</code> within
+the composite&#8217;s own. The rest is inherited.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/elements/composite_classes.svg" alt="composite_base derives from element and storage; vtile_element adds the geometry; composite&lt;Container, Base&gt; supplies the storage from a std container, as array_composite over a std::array or vector_composite over a std::vector" width="750px">
+</div>
+</div>
+<div class="paragraph">
+<p>The storage is supplied by <code>composite&lt;Container, Base&gt;</code>, which derives
+from a layout class <code>Base</code> and from a standard container of
+<code>element_ptr</code>, and implements <code>size()</code> and <code>at()</code> over the container.
+Two aliases cover the common cases. <code>array_composite&lt;N, Base&gt;</code> holds a
+<code>std::array</code>, fixed in size at compile time; a factory such as
+<code>vtile(a, b, c)</code> produces one. <code>vector_composite&lt;Base&gt;</code> holds a
+<code>std::vector</code>, which grows and shrinks, for a composite assembled at run
+time. <code>range_composite&lt;Base&gt;</code> is a third form: a view onto a contiguous
+part of another storage.</p>
+</div>
+<div class="sect2">
+<h3 id="_dispatch"><a class="anchor" href="#_dispatch"></a>Dispatch</h3>
+<div class="paragraph">
+<p>A composite hands each event to one child. For a press it finds the
+child under the point with <code>hit_element</code>, gives it the focus if it wants
+it, and calls its <code>click</code> in a context of its own; that child then gets
+every <code>drag</code> and the release, wherever the pointer has gone:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/elements/composite_click.svg" alt="A press on a composite: hit_element finds the child, new_focus gives it the focus, click goes to it in its own context; the drags and the release follow to the same child" width="750px">
+</div>
+</div>
+<div class="paragraph">
+<p>The cursor is tracked per child: <code>entering</code> when the pointer first lands
+on one, <code>hovering</code> while it stays, <code>leaving</code> when it goes, so a child can
+highlight itself. <code>key</code> and <code>text</code> go to the focused child; Tab and
+Shift-Tab move the focus to the next or previous child that wants it,
+and a click on a child that does not want focus takes the focus away.
+<code>scroll</code> goes to the child under the point, drops to the child the drag
+was last over.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   class storage
+   {
+   public:
+      virtual std::size_t     size() const = 0;
+      bool                    empty() const;
+      virtual element&amp;        at(std::size_t ix) const = 0;
+   };
+
+   class composite_base : public element, public storage
+   {
+   public:
+      // The element protocol, over the children
+      ...
+
+      struct hit_info
+      {
+         element*             element_ptr = nullptr;
+         element*             leaf_element_ptr = nullptr;
+         rect                 bounds = rect{};
+         int                  index = -1;
+      };
+
+      using for_each_callback =
+         std::function&lt;bool(element&amp; e, std::size_t ix, rect const&amp; r)&gt;;
+
+      virtual rect            bounds_of(context const&amp; ctx, std::size_t index) const = 0;
+      virtual hit_info        hit_element(context const&amp; ctx, point p, bool control) const;
+      virtual void            for_each_visible(context const&amp; ctx, for_each_callback f, bool reverse = false) const;
+      virtual bool            reverse_index() const;
+
+      int                     focus_index() const;
+      void                    focus(std::size_t index);
+      virtual void            reset();
+   };
+
+   template &lt;concepts::Container Container, concepts::Composite Base&gt;
+   class composite : public Base, public Container
+   {
+   public:
+      using base_type = Base;
+      using container_type = Container;
+
+      std::size_t             size() const override;
+      element&amp;                at(std::size_t ix) const override;
+   };
+
+   template &lt;size_t N, concepts::Composite Base&gt;
+   using array_composite = composite&lt;std::array&lt;element_ptr, N&gt;, Base&gt;;
+
+   template &lt;concepts::Composite Base&gt;
+   using vector_composite = composite&lt;std::vector&lt;element_ptr&gt;, Base&gt;;
+
+   template &lt;concepts::Composite Base&gt;
+   class range_composite : public Base
+   {
+   public:
+                              range_composite(storage&amp; container_, std::size_t first, std::size_t last);
+      std::size_t             size() const override;
+      element&amp;                at(std::size_t ix) const override;
+   };
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>concepts::Composite</code> is satisfied by a type derived from <code>storage</code>,
+<code>concepts::Container</code> by one with <code>size()</code>, <code>empty()</code> and <code>operator[]</code>
+giving an <code>element_ptr</code>. A <code>composite</code> is both its container and its
+base, so <code>r[1]</code> is the <code>element_ptr</code> and <code>r.at(1)</code> the element.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>c</code></dt>
+<dd>
+<p>A <code>composite_base</code>, or a class derived from it.</p>
+</dd>
+<dt class="hdlist1"><code>ctx</code></dt>
+<dd>
+<p>A <a href="../support/context.html" class="xref page">context</a> for <code>c</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ix</code></dt>
+<dd>
+<p>A <code>std::size_t</code> index, less than <code>c.size()</code>.</p>
+</dd>
+<dt class="hdlist1"><code>p</code></dt>
+<dd>
+<p>A <code>point</code> in view coordinates.</p>
+</dd>
+<dt class="hdlist1"><code>f</code></dt>
+<dd>
+<p>A <code>for_each_callback</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of children.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.at(ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Child <code>ix</code>, as an <code>element&amp;</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.bounds_of(ctx, ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Where child <code>ix</code> goes within <code>ctx.bounds</code>. The one function a layout
+  class must supply, with <code>limits</code> and <code>layout</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.hit_element(ctx, p, control)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The child at <code>p</code>: its pointer, the innermost element at <code>p</code> under it
+  (<code>leaf_element_ptr</code>), its bounds and its index; <code>nullptr</code> and <code>-1</code> if
+  none. With <code>control</code>, only children that want control are considered.
+  Children are tried from the last to the first when <code>reverse_index()</code>
+  is true, as a layer&#8217;s are.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.for_each_visible(ctx, f, reverse)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Call <code>f(child, ix, bounds)</code> for each child whose bounds intersect the
+  enclosing port, in order or reversed, until <code>f</code> returns <code>true</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.focus_index()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The index of the focused child, or <code>-1</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.focus(ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make child <code>ix</code> the focus, without telling it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.reset()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Forget the focus and the tracked children, as after the children
+  change.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A composite that stacks its children in rows of equal height. It supplies
+the geometry; the dispatch of drawing and events to the children is
+`composite_base&#8217;s:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">class rows_element : public composite_base
+{
+public:
+
+   view_limits limits(basic_context const&amp; ctx) const override
+   {
+      view_limits r{{0, 0}, {full_extent, 0}};
+      for (std::size_t i = 0; i != size(); ++i)
+      {
+         auto l = at(i).limits(ctx);
+         r.min.x = std::max(r.min.x, l.min.x);
+         r.min.y += l.min.y;
+         r.max.y += l.max.y;
+      }
+      r.max.y = std::min(r.max.y, full_extent);
+      return r;
+   }
+
+   void layout(context const&amp; ctx) override
+   {
+      for (std::size_t i = 0; i != size(); ++i)
+      {
+         context cctx{ctx, &amp;at(i), bounds_of(ctx, i)};
+         at(i).layout(cctx);
+      }
+   }
+
+   rect bounds_of(context const&amp; ctx, std::size_t index) const override
+   {
+      auto h = ctx.bounds.height() / size();
+      auto top = ctx.bounds.top + h * index;
+      return {ctx.bounds.left, top, ctx.bounds.right, top + h};
+   }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Its storage, and a factory in the library&#8217;s shape:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">using rows_composite = vector_composite&lt;rows_element&gt;;
+
+template &lt;concepts::Element... E&gt;
+auto rows(E&amp;&amp;... elements)
+{
+   using composite = array_composite&lt;sizeof...(elements), rows_element&gt;;
+   using container = typename composite::container_type;
+   composite r{};
+   r = container{{share(std::forward&lt;E&gt;(elements))...}};
+   return r;
+}
+
+auto three = rows(label("one"), label("two"), label("three"));
+
+rows_composite many;
+many.push_back(share(label("more")));</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

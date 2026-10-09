@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Drawing Utilities :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li>Support</li>
+    <li><a href="draw_utils.html">Drawing Utilities</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="draw_utils.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Drawing Utilities</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The drawing utilities are the primitives the default stylers draw with: a
+panel, a button face, a slider&#8217;s track and thumb, a dial&#8217;s knob, marks
+and labels. Each is a free function taking a <code>canvas</code> and drawing one
+thing at a given place; the stylers compose them. A custom styler can
+draw with them too, so it looks like the stock controls, or use one of
+them as a starting point.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/support/draw_utils_gallery.png"><img src="../_images/support/draw_utils_gallery.png" alt="Each drawing utility drawn once: a panel, a gradient box, an enabled and a disabled button, a track and thumb, a rectangular thumb, an indicator, a round rect, a knob with its indicator, radial marks and radial labels" width="580px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Top row: <code>draw_panel</code>, <code>draw_box_vgradient</code>, <code>draw_button</code> enabled and
+disabled. Middle: <code>draw_track</code> with <code>draw_thumb</code>, <code>draw_rect_thumb</code>,
+<code>draw_tri_thumb</code>, <code>draw_indicator</code>, <code>draw_round_rect</code> with two rounded
+corners. Bottom:
+<code>draw_knob</code> with <code>draw_radial_indicator</code>, <code>draw_radial_marks</code>,
+<code>draw_radial_labels</code>.</p>
+</div>
+<div class="paragraph">
+<p>The functions take their colors as arguments, except where the theme
+decides: <code>draw_button</code> reads the theme&#8217;s opacities, <code>draw_radial_marks</code>
+its tick widths and levels, and <code>draw_radial_labels</code> its label font and
+color. See <a href="theme.html" class="xref page">Theme</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+The simplest way to draw a custom element is to copy the primitive
+nearest to what it needs, from <code>lib/src/support/draw_utils.cpp</code>, into the
+element&#8217;s own code, and change it there. Each is a few dozen lines of
+canvas calls with no dependencies beyond the theme, so it is a starting
+point rather than an API to extend.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   namespace radial_consts
+   {
+      constexpr double _2pi = 2 * cycfi::pi;
+      constexpr double travel = 0.83;
+      constexpr double range = _2pi * travel;
+      constexpr double start_angle = _2pi * (1 - travel) / 2;
+      constexpr double offset = start_angle;
+   }
+
+   enum class direction { up, down, left, right };
+
+   struct corner_radii
+   {
+      float top_left, top_right, bottom_right, bottom_left;
+      corner_radii operator+(float v) const;
+      corner_radii operator-(float v) const;
+   };
+
+   void  draw_box_vgradient(canvas&amp; cnv, rect bounds, float corner_radius = 4.0);
+   void  draw_panel(canvas&amp; cnv, rect bounds, color c, float shadow, float corner_radius = 4.0);
+   void  draw_button(canvas&amp; cnv, rect bounds, color c, bool enabled, corner_radii corner_radii = {4, 4, 4, 4});
+   void  draw_round_rect(canvas&amp; cnv, rect bounds, corner_radii);
+   void  draw_knob(canvas&amp; cnv, circle cp, color c);
+   void  draw_indicator(canvas&amp; cnv, rect bounds, color c);
+   void  draw_thumb(canvas&amp; cnv, circle cp, color c, color ic);
+   void  draw_rect_thumb(canvas&amp; cnv, rect bounds, float radius, color c, color ic);
+   void  draw_tri_thumb(canvas&amp; cnv, rect bounds, direction dir, color c, color ic);
+   void  draw_track(canvas&amp; cnv, rect bounds);
+
+   void  draw_radial_indicator(canvas&amp; cnv, circle cp, float val, color c);
+   void  draw_radial_marks(canvas&amp; cnv, circle cp, float size, color c);
+   void  draw_radial_labels(
+            canvas&amp; cnv, circle cp, float font_size
+          , std::string const labels[], std::size_t num_labels
+         );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>radial_consts</code> describes a dial&#8217;s travel: 83% of a full turn, leaving a
+gap at the bottom. <code>start_angle</code> (and <code>offset</code>, the same value) is half
+that gap, measured from the bottom; <code>range</code> is the travel in radians. The
+dial, the radial indicator, marks and labels all use it, so they agree
+on where a value lies.</p>
+</div>
+<div class="paragraph">
+<p><code>corner_radii</code> names the four corner radii of a rounded rectangle, in
+clockwise order from the top left. <code>+</code> and <code>-</code> grow or shrink all four
+at once, for drawing an inset outline that keeps its corners concentric.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>cnv</code></dt>
+<dd>
+<p>An <code>artist::canvas</code>.</p>
+</dd>
+<dt class="hdlist1"><code>b</code></dt>
+<dd>
+<p>An <code>artist::rect</code>.</p>
+</dd>
+<dt class="hdlist1"><code>cp</code></dt>
+<dd>
+<p>An <code>artist::circle</code>: a center and a radius.</p>
+</dd>
+<dt class="hdlist1"><code>c</code>, <code>ic</code></dt>
+<dd>
+<p>An <code>artist::color</code>: a body color and an indicator color.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_panel(cnv, b, c, shadow, r)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A rounded rectangle filled with <code>c</code>, corner radius <code>r</code>, with a drop
+  shadow of the given size when <code>shadow &gt; 0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_box_vgradient(cnv, b, r)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A rounded rectangle with a faint vertical gradient, light at the top
+  and dark at the bottom, and a dark line along its bottom edge. Drawn
+  over whatever is there: a backdrop&#8217;s shading.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_button(cnv, b, c, enabled, radii)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A button face: <code>c</code>, shaded light to dark from top to bottom, with a
+  dark outline and the given corner radii. Disabled, it is drawn at the
+  theme&#8217;s <code>disabled_opacity</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_round_rect(cnv, b, radii)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Builds the path of a rounded rectangle with the given corner radii,
+  each clamped to half the smaller side. Nothing is drawn: the caller
+  fills or strokes it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_knob(cnv, cp, c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A dial&#8217;s knob: a bevelled disc of <code>c</code> with a highlight and a rim.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_indicator(cnv, b, c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A pill of <code>c</code> filling <code>b</code>: the mark on a knob or a thumb.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_radial_indicator(cnv, cp, val, c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The indicator of a knob at <code>cp</code>, at the angle of <code>val</code> (0 to 1) along
+  <code>radial_consts::range</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_thumb(cnv, cp, c, ic)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A slider&#8217;s round thumb: a disc of <code>c</code> with a highlight and a bevel, and
+  a dot of <code>ic</code> at its center.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_rect_thumb(cnv, b, radius, c, ic)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The rounded rectangle counterpart of <code>draw_thumb</code>, with an inset
+  rectangle of <code>ic</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_tri_thumb(cnv, b, dir, c, ic)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The pointed counterpart: a triangle with rounded corners filling <code>b</code>,
+  its point in direction <code>dir</code> (<code>up</code>, <code>down</code>, <code>left</code> or <code>right</code>), with a
+  smaller triangle of <code>ic</code> inset from it. A selector&#8217;s pointer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_track(cnv, b)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A slider&#8217;s track: a black groove filling <code>b</code>, with rounded ends
+  extending past it by its half width, and a faint highlight.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_radial_marks(cnv, cp, size, c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fifty ticks of <code>c</code> around a dial&#8217;s travel, just inside <code>cp</code>, every
+  fifth one major. <code>size</code> is the length of a major tick; widths and
+  levels come from the theme.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>draw_radial_labels(cnv, cp, font_size, labels, n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n</code> labels spread evenly along a dial&#8217;s travel, on the circle <code>cp</code>, in
+  the theme&#8217;s label font scaled by <code>font_size</code>. Fewer than two labels
+  draws nothing.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A custom styler for a slider&#8217;s thumb, drawn with <code>draw_thumb</code> in the
+control&#8217;s colors so it matches the stock one, but larger:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">struct big_thumb : element
+{
+   view_limits limits(basic_context const&amp;) const override
+   {
+      return {{32, 32}, {32, 32}};
+   }
+
+   void draw(context const&amp; ctx) override
+   {
+      auto const&amp; thm = get_theme();
+      draw_thumb(ctx.canvas, circle{center_point(ctx.bounds), 16}
+       , thm.default_button_color, thm.indicator_color);
+   }
+};
+
+auto s = slider(big_thumb{}, basic_track&lt;5, false&gt;(), 0.5);</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Element :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="element.html">Element</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="element.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Element</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Everything in a view is an <code>element</code>: a label, a slider, a tile of other
+elements, the window&#8217;s content as a whole. <code>element</code> is the base class they
+share, and this page documents the protocol it declares, which every other
+page in this documentation builds on.</p>
+</div>
+<div class="paragraph">
+<p>An element has no position. It does not know where it is or how big it is.
+Whoever draws it or sends it an event hands it a <a href="../support/context.html" class="xref page">context</a>, and the context
+carries the element&#8217;s <code>bounds</code> for that call, along with the <code>view</code> and the
+<code>canvas</code>. A container works out each child&#8217;s bounds when it needs them and
+passes them down, so one element can appear in more than one place, or in
+more than one view. See <a href="../support/context.html" class="xref page">Context</a>.</p>
+</div>
+<div class="paragraph">
+<p>The protocol is a set of virtual member functions, each with a default that
+does nothing or declines. A new element overrides the ones it needs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Layout: how much room the element wants (<code>limits</code>), how readily it takes
+more (<code>stretch</code>), and how many grid cells it covers (<code>span</code>).</p>
+</li>
+<li>
+<p>Drawing and refresh: <code>draw</code>, and <code>refresh</code> to have it drawn again.</p>
+</li>
+<li>
+<p>Control: the mouse, keyboard, cursor and scroll events. An element that
+wants any of them says so with <code>wants_control</code>.</p>
+</li>
+<li>
+<p>Focus: which element receives the keyboard.</p>
+</li>
+<li>
+<p>Drag and drop: files and data dragged over the element.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+The context an event handler receives carries a one pixel offscreen
+canvas, not the window&#8217;s. Anything drawn there is lost. To change what the
+element looks like, change its state and call <code>refresh</code>; the view then
+calls <code>draw</code> with a real canvas.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or, for this header alone:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/element.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   class element : public std::enable_shared_from_this&lt;element&gt;
+   {
+   public:
+                              element() {}
+                              virtual ~element() = default;
+
+   // Display
+
+      virtual view_limits     limits(basic_context const&amp; ctx) const;
+      virtual view_stretch    stretch() const;
+      virtual unsigned        span() const;
+      virtual element*        hit_test(context const&amp; ctx, point p, bool leaf, bool control);
+      virtual void            draw(context const&amp; ctx);
+      virtual void            layout(context const&amp; ctx);
+      virtual void            refresh(context const&amp; ctx, element&amp; e, int outward = 0);
+      void                    refresh(context const&amp; ctx, int outward = 0);
+
+      using context_function = std::function&lt;void(context const&amp; ctx)&gt;;
+      virtual void            in_context_do(context const&amp; ctx, element&amp; e, context_function f);
+
+   // Control
+
+      virtual bool            wants_control() const;
+      virtual bool            click(context const&amp; ctx, mouse_button btn);
+      virtual void            drag(context const&amp; ctx, mouse_button btn);
+      virtual bool            key(context const&amp; ctx, key_info k);
+      virtual bool            text(context const&amp; ctx, text_info info);
+      virtual bool            cursor(context const&amp; ctx, point p, cursor_tracking status);
+      virtual bool            scroll(context const&amp; ctx, point dir, point p);
+      virtual void            enable(bool state = true);
+      virtual bool            is_enabled() const;
+
+      enum focus_request { from_top, from_bottom, restore_previous };
+
+      virtual bool            wants_focus() const;
+      virtual void            begin_focus(focus_request req);
+      virtual bool            end_focus();
+      virtual element const*  focus() const;
+      virtual element*        focus();
+
+      friend void             relinquish_focus(context const&amp; ctx);
+
+      virtual void            track_drop(context const&amp; ctx, drop_info const&amp; info, cursor_tracking status);
+      virtual bool            drop(context const&amp; ctx, drop_info const&amp; info);
+
+      enum tracking { none, begin_tracking, while_tracking, end_tracking };
+
+      virtual std::string     class_name() const;
+
+   protected:
+
+      void                    on_tracking(context const&amp; ctx, tracking state);
+      void                    on_tracking(view&amp; view_, tracking state);
+   };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The concepts, type aliases and free functions declared with it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   namespace concepts
+   {
+      template &lt;typename T&gt;
+      concept Element = std::is_base_of_v&lt;element, std::decay_t&lt;T&gt;&gt;;
+
+      template &lt;typename T&gt;
+      concept ElementPtr = requires(T p)
+      {
+         { *p } -&gt; std::convertible_to&lt;element&amp;&gt;;
+      };
+   }
+
+   using element_ptr = std::shared_ptr&lt;element&gt;;
+   using element_const_ptr = std::shared_ptr&lt;element const&gt;;
+   using weak_element_ptr = std::weak_ptr&lt;element&gt;;
+   using weak_element_const_ptr = std::weak_ptr&lt;element const&gt;;
+
+   void relinquish_focus(context const&amp; ctx);
+
+   using cycfi::share;
+   using cycfi::get;
+
+   element empty();</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>Instance of a type derived from <code>element</code>.</p>
+</dd>
+<dt class="hdlist1"><code>bctx</code></dt>
+<dd>
+<p>A <a href="../support/context.html" class="xref page">basic_context</a>: the view and a canvas, with no bounds.</p>
+</dd>
+<dt class="hdlist1"><code>ctx</code></dt>
+<dd>
+<p>A <a href="../support/context.html" class="xref page">context</a> for <code>e</code>: a <code>basic_context</code> plus the element, its
+<code>bounds</code>, the enclosing element&#8217;s context (<code>parent</code>) and whether
+<code>e</code> and everything enclosing it is <code>enabled</code>.</p>
+</dd>
+<dt class="hdlist1"><code>p</code></dt>
+<dd>
+<p>A <code>point</code> in view coordinates.</p>
+</dd>
+<dt class="hdlist1"><code>leaf</code>, <code>control</code>, <code>state</code></dt>
+<dd>
+<p><code>bool</code> values.</p>
+</dd>
+<dt class="hdlist1"><code>target</code></dt>
+<dd>
+<p>An <code>element&amp;</code> somewhere in the hierarchy under <code>e</code>.</p>
+</dd>
+<dt class="hdlist1"><code>outward</code></dt>
+<dd>
+<p>An <code>int</code>, 0 or more.</p>
+</dd>
+<dt class="hdlist1"><code>f</code></dt>
+<dd>
+<p>A <code>context_function</code>, called as <code>f(ctx)</code>.</p>
+</dd>
+<dt class="hdlist1"><code>btn</code></dt>
+<dd>
+<p>A <code>mouse_button</code>: which button, whether it is <code>down</code>, the click
+count, the modifiers and the position, <code>pos</code>.</p>
+</dd>
+<dt class="hdlist1"><code>k</code></dt>
+<dd>
+<p>A <code>key_info</code>: the key code, the action (press, release or repeat)
+and the modifiers.</p>
+</dd>
+<dt class="hdlist1"><code>info</code></dt>
+<dd>
+<p>A <code>text_info</code>: a Unicode code point and the modifiers.</p>
+</dd>
+<dt class="hdlist1"><code>status</code></dt>
+<dd>
+<p>A <code>cursor_tracking</code>: <code>entering</code>, <code>hovering</code> or <code>leaving</code>.</p>
+</dd>
+<dt class="hdlist1"><code>dir</code></dt>
+<dd>
+<p>A <code>point</code> giving the scroll distance in x and y. It can be
+fractional.</p>
+</dd>
+<dt class="hdlist1"><code>req</code></dt>
+<dd>
+<p>A <code>focus_request</code>.</p>
+</dd>
+<dt class="hdlist1"><code>d</code></dt>
+<dd>
+<p>A <code>drop_info</code>: the dragged payload, keyed by MIME type, and the
+point <code>where</code> it is.</p>
+</dd>
+<dt class="hdlist1"><code>x</code></dt>
+<dd>
+<p>An object of a type derived from <code>element</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ptr</code></dt>
+<dd>
+<p>A <code>std::shared_ptr</code> to an element.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_layout"><a class="anchor" href="#_layout"></a>Layout</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.limits(bctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The smallest and largest size <code>e</code>
+                                      will take. The default is
+                                      <code>full_limits</code>: no minimum and
+                                      no practical maximum.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>view_limits</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.stretch()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How readily <code>e</code> takes extra space
+                                      beside its siblings in a tile. The
+                                      default is 1 on both axes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>view_stretch</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.span()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How many grid cells <code>e</code> covers. The
+                                      default is 1.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unsigned</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.layout(ctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Prepare to draw within <code>ctx.bounds</code>.
+                                      The view calls it before <code>draw</code>
+                                      whenever its size changes, and when
+                                      asked to lay out again. The default
+                                      does nothing; a container places its
+                                      children here.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a href="../layout/limits.html" class="xref page">Limits</a>, <a href="../layout/stretch.html" class="xref page">Stretch</a> and
+<a href="../layout/span.html" class="xref page">Span</a> cover how containers use the first three.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_drawing_and_refresh"><a class="anchor" href="#_drawing_and_refresh"></a>Drawing and Refresh</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.draw(ctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Draw <code>e</code> within
+                                       <code>ctx.bounds</code>, on
+                                       <code>ctx.canvas</code>. The default
+                                       draws nothing. Only the
+                                       view, or a container
+                                       drawing its children,
+                                       calls it.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.refresh(ctx, outward)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Have the view redraw
+                                       <code>e</code>. With an <code>outward</code> of
+                                       0, the default, the area
+                                       redrawn is <code>ctx.bounds</code>;
+                                       each step outward takes
+                                       the bounds of the next
+                                       enclosing element
+                                       instead.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.refresh(ctx, target, outward)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redraw <code>target</code>, found
+                                       under <code>e</code>. The default
+                                       acts only when <code>target</code>
+                                       is <code>e</code>; a container
+                                       searches its children.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.in_context_do(ctx, target, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Find <code>target</code> under <code>e</code>
+                                       and call <code>f</code> with the
+                                       context of <code>target</code>.
+                                       The default calls <code>f</code>
+                                       only when <code>target</code> is
+                                       <code>e</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A redraw is not immediate. <code>refresh</code> marks the area and returns, and the
+view draws it when the host next paints.</p>
+</div>
+<div class="paragraph">
+<p><code>in_context_do</code> is how code that holds an element, but no context for it,
+gets one: the view&#8217;s own <code>in_context_do(target, f)</code> walks down from the top
+and hands <code>f</code> the context <code>target</code> would be drawn with.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hit_testing"><a class="anchor" href="#_hit_testing"></a>Hit Testing</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hit_test(ctx, p, leaf, control)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The element at <code>p</code>, or
+                                         <code>nullptr</code>. The default
+                                         returns <code>&amp;e</code> when
+                                         <code>ctx.bounds</code> contains
+                                         <code>p</code>. For a container,
+                                         <code>leaf</code> asks for the
+                                         innermost element at <code>p</code>
+                                         rather than the child
+                                         containing it, and
+                                         <code>control</code> considers only
+                                         children that want
+                                         control.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>element*</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_control"><a class="anchor" href="#_control"></a>Control</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.wants_control()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether <code>e</code> takes mouse,
+                                      cursor and scroll
+                                      events. The default is
+                                      <code>false</code>. A container
+                                      wants control if any
+                                      child does.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.click(ctx, btn)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A button went down or
+                                      up over <code>e</code>. Return
+                                      <code>true</code> if handled. The
+                                      default returns <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.drag(ctx, btn)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The mouse moved with the
+                                      button still down. The
+                                      default does nothing.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.key(ctx, k)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A key was pressed,
+                                      released or repeated
+                                      while <code>e</code> has the focus.
+                                      Return <code>true</code> if
+                                      handled. The default
+                                      returns <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.text(ctx, info)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A character was typed
+                                      while <code>e</code> has the focus:
+                                      the text the keys made,
+                                      after the platform&#8217;s
+                                      input processing. Return
+                                      <code>true</code> if handled. The
+                                      default returns <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.cursor(ctx, p, status)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The cursor entered,
+                                      moved over or left <code>e</code>.
+                                      Return <code>true</code> to keep
+                                      the cursor shape <code>e</code>
+                                      set; if no element does,
+                                      the view sets the arrow.
+                                      The default returns
+                                      <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.scroll(ctx, dir, p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A scroll wheel or
+                                      gesture at <code>p</code>. Return
+                                      <code>true</code> if handled. The
+                                      default returns <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A container hands a mouse event to the child under the pointer, and
+considers only the children that want control; the others are passed over
+as if absent. <code>click</code> comes twice for each press, once with <code>btn.down</code> set
+and once without. The child that returns <code>true</code> for the press is the one
+that receives every <code>drag</code> that follows and the release, wherever the
+pointer has moved by then. A child that returns <code>false</code> for the press
+receives neither.</p>
+</div>
+<div class="paragraph">
+<p><code>key</code> and <code>text</code> do not go by position. They go to the focus.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enabling"><a class="anchor" href="#_enabling"></a>Enabling</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.enable(state)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enable or disable <code>e</code>.
+                                      The default does
+                                      nothing.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.is_enabled()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether <code>e</code> is enabled.
+                                      The default is <code>true</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The base class keeps no enabled state: an element that can be disabled
+overrides both. Nothing in the dispatch enforces it either. A disabled
+element is still sent its events; <code>ctx.enabled</code> is <code>false</code> for it, and for
+everything inside it, and it is up to the element to consult that and
+decline, and to draw itself dimmed.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_focus"><a class="anchor" href="#_focus"></a>Focus</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.wants_focus()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether <code>e</code> takes the
+                                      keyboard. The default is
+                                      <code>false</code>. A container
+                                      wants focus if any child
+                                      does.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.begin_focus(req)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e</code> is becoming the
+                                      focus. <code>req</code> says from
+                                      which end a container
+                                      picks its child: the
+                                      first that wants focus
+                                      (<code>from_top</code>), the last
+                                      (<code>from_bottom</code>), or the
+                                      one that had it before
+                                      (<code>restore_previous</code>). The
+                                      default does nothing.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.end_focus()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e</code> is losing the focus.
+                                      Return <code>false</code> to refuse,
+                                      and keep it. The default
+                                      returns <code>true</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.focus()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The element that has the
+                                      focus. The default is
+                                      <code>&amp;e</code>; a container
+                                      returns its focused
+                                      child, or <code>nullptr</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>element*</code>, or
+                                                                     <code>element const*</code>
+                                                                     for a <code>const</code> <code>e</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>relinquish_focus(ctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Give up the focus held
+                                      in the container
+                                      enclosing the element of
+                                      <code>ctx</code>, and in each
+                                      container above it.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A click on a child that wants focus gives it the focus. Within a container,
+the Tab key moves the focus to the next child that wants it, and Shift-Tab
+to the previous one; the focused child sees the key first, and the move
+happens only if it declines.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_drag_and_drop"><a class="anchor" href="#_drag_and_drop"></a>Drag and Drop</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.track_drop(ctx, d, status)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Something is being
+                                      dragged over <code>e</code>. The
+                                      default does nothing.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.drop(ctx, d)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">It was let go over <code>e</code>.
+                                      Return <code>true</code> if taken.
+                                      The default returns
+                                      <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bool</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_tracking"><a class="anchor" href="#_tracking"></a>Tracking</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>on_tracking(ctx, state)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protected. Tell the view
+                                      that a gesture on <code>e</code>
+                                      has begun, continues or
+                                      has ended.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>on_tracking(view, state)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same, for a caller
+                                      with the view but no
+                                      context.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A control calls these as the user works it, and the view passes each on to
+its <code>on_tracking</code> callback. That is how a plug-in host learns when to record
+automation: the press is <code>begin_tracking</code>, each movement <code>while_tracking</code>,
+the release <code>end_tracking</code>. A <code>while_tracking</code> that arrives with no
+<code>begin_tracking</code> before it is preceded by one the view supplies.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_diagnostics"><a class="anchor" href="#_diagnostics"></a>Diagnostics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.class_name()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A name for the type of
+                                      <code>e</code>, for debugging. The
+                                      default is the
+                                      demangled type name,
+                                      which varies by
+                                      compiler.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>std::string</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_free_functions"><a class="anchor" href="#_free_functions"></a>Free Functions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>empty()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An element that draws
+                                      nothing and takes no
+                                      events, with
+                                      <code>full_limits</code>. A
+                                      placeholder.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>element</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>share(x)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>x</code>, moved or copied
+                                      into a new
+                                      <code>std::shared_ptr</code>, ready
+                                      for <code>hold</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>std::shared_ptr</code> to the type of <code>x</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get(ptr)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <code>std::weak_ptr</code> to
+                                      what <code>ptr</code> owns.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>std::weak_ptr</code> to the same type</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>concepts::Element</code> is satisfied by any type derived from <code>element</code>, and
+<code>concepts::ElementPtr</code> by anything that dereferences to one. The factory
+functions in this documentation are constrained on them.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A square that turns gold when clicked, and back when clicked again. It asks
+for a fixed 60 by 60 pixels, takes clicks, and on each press flips its state
+and refreshes itself; <code>draw</code> does the rest.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">class swatch : public element
+{
+public:
+
+   view_limits limits(basic_context const&amp; /* ctx */) const override
+   {
+      return {{60, 60}, {60, 60}};
+   }
+
+   void draw(context const&amp; ctx) override
+   {
+      auto&amp; cnv = ctx.canvas;
+      cnv.fill_style(_on? colors::gold : colors::slate_gray);
+      cnv.add_round_rect(ctx.bounds.inset(4), 8);
+      cnv.fill();
+   }
+
+   bool wants_control() const override
+   {
+      return true;
+   }
+
+   bool click(context const&amp; ctx, mouse_button btn) override
+   {
+      if (btn.down)
+      {
+         _on = !_on;
+         refresh(ctx);
+      }
+      return true;
+   }
+
+private:
+
+   bool _on = false;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three of them in a row, the middle one clicked:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_.content(
+   align_center_middle(htile(swatch{}, swatch{}, swatch{})),
+   box(bkd_color)
+);</code></pre>
+</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<a class="image" href="../_images/elements/swatches.png"><img src="../_images/elements/swatches.png" alt="three rounded squares in a row, the middle one gold and the others grey" width="560px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Returning <code>true</code> for the press is what brings the release back to the
+swatch, and any drag in between. The release needs nothing done, so the
+swatch acts on the press alone.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Text :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="labels.html">Labels</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="text.html">Text</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="text.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Text</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Three elements show blocks of text, each built on the one before:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>static_text_box</code> shows text, wrapped to the width it is given.</p>
+</li>
+<li>
+<p><code>basic_text_box</code> adds editing: a caret, a selection, the keyboard, the
+mouse, the clipboard and undo.</p>
+</li>
+<li>
+<p><code>basic_input_box</code> is a single line of input, with a placeholder and
+callbacks for each edit and for Enter.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/text.png"><img src="../_images/elements/text.png" alt="A static text box of two wrapped lines, an editable text box with part of its text selected, and two input boxes, one showing its placeholder and one with text" width="440px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>For a single line that is not edited, use a
+<a href="labels.html" class="xref page">label</a>. The framed input box most applications
+use, <code>input_box</code>, is on the <a href="../styles/text_entry.html" class="xref page">Text Entry</a>
+styles page.</p>
+</div>
+<div class="sect2">
+<h3 id="_static_text_box"><a class="anchor" href="#_static_text_box"></a>Static Text Box</h3>
+<div class="paragraph">
+<p>A static text box draws its text in a font and colour, by default the
+theme&#8217;s <code>text_box_font</code> and <code>text_box_font_color</code>, wrapped at the width
+of its bounds. Line breaks in the text start new paragraphs. Its
+<a href="../layout/limits.html" class="xref page">limits</a> are at least 200 wide and as high as the lines the text takes
+at the width it was last laid out at, one line before the first layout;
+there is no maximum. After a change that alters the number of lines,
+lay the view out again.</p>
+</div>
+<div class="paragraph">
+<p>The text is UTF-32 inside, and every position is an index of a code
+point. It is read and replaced in UTF-32 or UTF-8, through
+<code>text_reader_u32</code> and <code>text_writer_u32</code> (see
+<a href="../support/text_utils.html" class="xref page">Text Utilities</a>), and as a
+<code>receiver&lt;std::u32string_view&gt;</code> (see
+<a href="../support/receivers.html" class="xref page">Receivers</a>). <code>insert</code>, <code>replace</code> and <code>erase</code>
+change part of it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_editable_text_box"><a class="anchor" href="#_editable_text_box"></a>Editable Text Box</h3>
+<div class="paragraph">
+<p>A <code>basic_text_box</code> takes the focus, and with it the keyboard. Its
+selection is a pair of positions, <code>select_start</code> and <code>select_end</code>; the
+caret is at <code>select_end</code>. They are equal when nothing is selected, and
+both <code>-1</code> when there is no caret at all, which is the case until the box
+first takes the focus. A selection made backwards, with Shift-Left or a
+drag to the left, has <code>select_start</code> after <code>select_end</code>.</p>
+</div>
+<div class="paragraph">
+<p>The mouse:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A click places the caret; Shift-click extends the selection to the
+click.</p>
+</li>
+<li>
+<p>A double click selects a word; a triple click selects a paragraph.</p>
+</li>
+<li>
+<p>A drag selects from the press to the pointer.</p>
+</li>
+<li>
+<p>Over the box, the cursor is an I-beam.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The keyboard, where Action is Command on macOS and Control elsewhere,
+and Word is Option on macOS and Control elsewhere (the key codes and
+modifiers are on the <a href="../application/view.html" class="xref page">View</a> page):</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Left, Right</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move the caret a character; with Word, a word. With Shift, extend the
+  selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Up, Down</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move the caret a line, at the horizontal position it was last placed
+  at by the mouse or by Left and Right.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Home, End</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move the caret to the start or the end of the text. With Shift, extend
+  the selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backspace, Delete</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete the selection, or the character before or after the caret.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start a new paragraph.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action-A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Select all.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action-X, Action-C, Action-V</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cut, copy and paste.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Action-Z, Action-Shift-Z</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Undo and redo.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Undo and redo go through the view&#8217;s undo stack, so they reach every
+text box in the view in the order the edits were made. Typing is undone
+a run at a time, not a character at a time; a run ends at any other
+edit, a caret move, a click, or when the box loses the focus.</p>
+</div>
+<div class="paragraph">
+<p><code>read_only()</code> keeps the selection and copying, and refuses every edit;
+no caret is drawn. A disabled box, or a box drawn in a disabled
+element, is drawn at the theme&#8217;s <code>disabled_opacity</code>; a disabled box
+refuses edits as well.</p>
+</div>
+<div class="paragraph">
+<p>The caret blinks every half second while the box has the focus. After
+each edit and caret movement, the box scrolls the enclosing
+<a href="ports.html" class="xref page">port</a> so the caret stays in view; a text box
+longer than its space belongs in a <code>vport</code> or a <code>scroller</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_input_box"><a class="anchor" href="#_input_box"></a>Input Box</h3>
+<div class="paragraph">
+<p>A <code>basic_input_box</code> is a text box of one line. Its height is one line in
+its font, and its width is unbounded: it goes inside a horizontal port,
+which shows part of it and scrolls with the caret. The stock
+<code>input_box</code> provides the port and a frame.</p>
+</div>
+<div class="paragraph">
+<p>While the box is empty, it shows its placeholder in its own font and the
+theme&#8217;s <code>inactive_font_color</code>. Four callbacks report what the user
+does:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>on_text(text)</code> after each change the user makes: typing, deleting,
+cutting, pasting, undo and redo.</p>
+</li>
+<li>
+<p><code>on_enter(text)</code> on Enter. Returning <code>true</code> gives up the focus;
+<code>false</code> keeps it, for an entry that is not yet acceptable.</p>
+</li>
+<li>
+<p><code>on_escape()</code> on Escape, which also gives up the focus.</p>
+</li>
+<li>
+<p><code>on_end_focus(text)</code> when the focus is about to leave. Returning
+<code>false</code> keeps it.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>An input box does not handle Tab, Up or Down, which go to the enclosing
+elements; Action-Left and Action-Right act as Home and End. A paste
+stops at the first line break. The text never grows past the theme&#8217;s
+<code>input_box_text_limit</code> characters: typing stops there, and a paste fills
+only the room left.</p>
+</div>
+<div class="paragraph">
+<p>When the box is neither focused nor under the pointer, its clip action
+decides which part of a text too long for the port is shown:
+<code>clip_right</code>, the default, shows the start and clips the end;
+<code>clip_left</code> shows the end and clips the start; <code>clip_none</code> leaves the
+port where it is.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   class static_text_box
+    : public element
+    , public text_reader_u32
+    , public text_writer_u32
+    , public receiver&lt;std::u32string_view&gt;
+   {
+   public:
+                              static_text_box(
+                                 std::string_view text
+                               , font_descr font_  = get_theme().text_box_font
+                               , color color_      = get_theme().text_box_font_color
+                              );
+
+      std::u32string_view     get_text() const override;
+      void                    set_text(std::u32string_view text) override;
+      void                    set_text(std::string_view text);
+      std::string             get_utf8() const;
+      void                    set_utf8(std::string_view text);
+
+      std::size_t             insert(std::size_t pos, std::string_view text);
+      std::size_t             replace(std::size_t pos, std::size_t len, std::string_view text);
+      void                    erase(std::size_t pos, std::size_t len);
+
+      point                   current_size() const;
+      void                    set_color(color c);
+      color                   get_color() const;
+      void                    set_font(font_descr f);
+      font const&amp;             get_font() const;
+   };
+
+   class basic_text_box : public static_text_box
+   {
+   public:
+                              basic_text_box(
+                                 std::string_view text
+                               , font_descr font_ = get_theme().text_box_font
+                              );
+
+      int                     select_start() const;
+      void                    select_start(int pos);
+      int                     select_end() const;
+      void                    select_end(int pos);
+      void                    select_all();
+      void                    select_none();
+      void                    home(bool shift = false);
+      void                    end(bool shift = false);
+
+      bool                    is_focus() const;
+      basic_text_box&amp;&amp;        read_only();
+      void                    read_only(bool read_only_);
+      bool                    editable() const;
+   };
+
+   class basic_input_box : public basic_text_box
+   {
+   public:
+      using text_function = std::function&lt;void(string_view text)&gt;;
+      using enter_function = std::function&lt;bool(string_view text)&gt;;
+      using escape_function = std::function&lt;void()&gt;;
+
+      enum clip_action { clip_none, clip_left, clip_right };
+
+                              basic_input_box(
+                                 std::string placeholder
+                               , font_descr font_ = get_theme().text_box_font
+                               , clip_action clip_action_ = clip_right
+                              );
+
+      text_function           on_text;
+      enter_function          on_enter;
+      escape_function         on_escape;
+      enter_function          on_end_focus;
+   };
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>st</code></dt>
+<dd>
+<p>A <code>static_text_box</code>, or a class derived from it.</p>
+</dd>
+<dt class="hdlist1"><code>tb</code></dt>
+<dd>
+<p>A <code>basic_text_box</code>, or a class derived from it.</p>
+</dd>
+<dt class="hdlist1"><code>in</code></dt>
+<dd>
+<p>A <code>basic_input_box</code>.</p>
+</dd>
+<dt class="hdlist1"><code>s</code></dt>
+<dd>
+<p>A <code>std::string_view</code> of UTF-8, or a <code>std::u32string_view</code>.</p>
+</dd>
+<dt class="hdlist1"><code>f</code></dt>
+<dd>
+<p>A <code>font_descr</code>.</p>
+</dd>
+<dt class="hdlist1"><code>c</code></dt>
+<dd>
+<p>A <code>color</code>.</p>
+</dd>
+<dt class="hdlist1"><code>pos</code>, <code>len</code></dt>
+<dd>
+<p><code>std::size_t</code> positions and lengths, in code points.</p>
+</dd>
+<dt class="hdlist1"><code>i</code></dt>
+<dd>
+<p>An <code>int</code> position, or <code>-1</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>static_text_box(s, f, c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A static text box of <code>s</code> in font <code>f</code> and colour <code>c</code>, by default the
+  theme&#8217;s.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.get_text()</code>, <code>st.get_utf8()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The text, in UTF-32 or UTF-8.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.set_text(s)</code>, <code>st.set_utf8(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replace the text.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.insert(pos, s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Insert <code>s</code> before <code>pos</code>. Returns the number of code points inserted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.replace(pos, len, s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replace <code>len</code> code points from <code>pos</code> with <code>s</code>. Returns the number of
+  code points inserted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.erase(pos, len)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Erase <code>len</code> code points from <code>pos</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.current_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The size the text took at the last layout.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st.set_color(c)</code>, <code>st.set_font(f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Change the colour or the font.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_text_box(s, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An editable text box of <code>s</code> in font <code>f</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tb.select_start(i)</code>, <code>tb.select_end(i)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set either end of the selection; a position past the text is ignored.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tb.select_all()</code>, <code>tb.select_none()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Select the whole text, or remove the selection and the caret.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tb.home(shift)</code>, <code>tb.end(shift)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move the caret to the start or the end of the text; with <code>shift</code>,
+  extend the selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tb.read_only()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make the box read only, as a modifier on construction:
+  <code>basic_text_box("&#8230;&#8203;").read_only()</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tb.read_only(b)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make the box read only, or editable again.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tb.editable()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether the box takes edits: neither read only nor disabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_input_box(p, f, a)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An input box with placeholder <code>p</code>, font <code>f</code> and clip action <code>a</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>in.on_text = fn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fn(text)</code> is called after each change the user makes, undo and redo
+  included.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>in.on_enter = fn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fn(text)</code> is called on Enter; it returns whether to give up the
+  focus.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>in.on_escape = fn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fn()</code> is called on Escape.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>in.on_end_focus = fn</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fn(text)</code> is called before the focus leaves; it returns whether to let
+  it go.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Notes in a scrolling box, and a name that must be entered before the
+focus moves on:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto notes = share(basic_text_box("Notes: the take at 2:14 is the keeper."));
+auto notes_pane = scroller(margin({5, 5, 5, 5}, hold(notes)), no_hscroll);
+
+auto [name_box, name] = input_box("Your name");
+name-&gt;on_enter =
+   [](std::string_view text)
+   {
+      if (text.empty())
+         return false;     // keep the focus until a name is entered
+      greet(text);
+      return true;
+   };</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/text_example.png"><img src="../_images/elements/text_example.png" alt="A framed notes box with its text, and an input box with its placeholder" width="320px"></a>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

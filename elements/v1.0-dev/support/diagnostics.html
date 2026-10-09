@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Logging and Diagnostics :: Elements Docs</title>
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Reference</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Application</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/collapsible.html">Collapsible</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="payload.html">Payload</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+        <li class="version is-current">
+          <a href="../index.html">v1.0-dev</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li>Reference</li>
+    <li>Support</li>
+    <li><a href="diagnostics.html">Logging and Diagnostics</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.0-dev</button>
+  <div class="version-menu">
+    <a class="version is-missing" href="../../v1.0/index.html">v1.0</a>
+    <a class="version is-current" href="diagnostics.html">v1.0-dev</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Logging and Diagnostics</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Four headers serve the diagnosis of an application in the field, where
+there is no console: a plugin in a host, an app on a user&#8217;s machine.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>support/log.hpp</code>: an always-on event log, written to a file in the
+user&#8217;s log directory, by category, with the level of each category set
+at run time through an environment variable.</p>
+</li>
+<li>
+<p><code>support/error_handler.hpp</code>: the hooks the library calls when a
+graphics context, a render surface, a font or an image fails. By
+default each writes to the log; an application can replace them.</p>
+</li>
+<li>
+<p><code>support/trace.hpp</code>: element traversal tracing, off by default, which
+records the path a click or drag takes down the element tree as JSON
+lines, for <code>tools/trace_graph.py</code> to turn into a call tree.</p>
+</li>
+<li>
+<p><code>support/perf.hpp</code>: frame timing, off by default, which an application
+turns on from the environment to measure and report its draw rate.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The log is built on <a href="https://github.com/odygrd/quill">quill</a>, and there is
+no wrapper around it: a call site uses quill&#8217;s <code>LOG_*</code> macros with a
+category logger. Logging is asynchronous, on a bounded queue that drops
+rather than blocks, so a burst of messages never stalls the UI or an
+audio thread.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These headers are not part of <code>elements.hpp</code>; include the one you use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/support/log.hpp&gt;
+#include &lt;elements/support/error_handler.hpp&gt;
+#include &lt;elements/support/trace.hpp&gt;
+#include &lt;elements/support/perf.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_log"><a class="anchor" href="#_the_log"></a>The Log</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   enum class log_cat
+   {
+      app, window, view, render, input, resource, layout, error, trace
+   };
+
+   void           log_init(std::string_view app_name = "elements");
+   void           log_shutdown();
+   logger_type*   logger(log_cat cat);
+   std::string    log_dir();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_categories"><a class="anchor" href="#_categories"></a>Categories</h3>
+<div class="paragraph">
+<p>Each category is a named quill logger with its own level. Messages below
+the level are discarded at the call site, at the cost of one comparison.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Covers</th>
+<th class="tableblock halign-left valign-top">Default level</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start and stop, the run loop, the startup banner</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>window</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host window creation, size, position, focus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>view</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Views: creation, attach and detach, size and scale</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>render</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The drawing backend: context creation, drawable size</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>input</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mouse, keyboard, scroll, drag and drop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fonts, search paths, resource resolution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>layout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Element layout and limits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Assertion failures, exceptions, unexpected states</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">error</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Element traversal tracing, to its own file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_run_time_control"><a class="anchor" href="#_run_time_control"></a>Run time control</h3>
+<div class="paragraph">
+<p><code>CYCFI_LOG</code> sets levels per category, as <code>category=level</code> pairs
+separated by commas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CYCFI_LOG=view=debug,render=debug,input=off ./my_app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The levels are <code>trace</code>, <code>debug</code>, <code>info</code>, <code>notice</code>, <code>warn</code>, <code>error</code> and
+<code>off</code>. A category not named keeps its default. The variable is read once,
+when the log starts.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_where_the_log_goes"><a class="anchor" href="#_where_the_log_goes"></a>Where the log goes</h3>
+<div class="paragraph">
+<p><code>log_init(app_name)</code> names the log directory and the files in it,
+<code>&lt;app_name&gt;.log</code> and <code>&lt;app_name&gt;-trace.jsonl</code>. The directory is the
+platform&#8217;s, for the user:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Platform</th>
+<th class="tableblock halign-left valign-top">Directory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macOS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>~/Library/Logs/&lt;app_name&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Windows</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>%LOCALAPPDATA%\&lt;app_name&gt;\Logs</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Linux</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>$XDG_STATE_HOME/&lt;app_name&gt;</code>, else <code>~/.local/state/&lt;app_name&gt;</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>CYCFI_LOG_DIR</code> overrides it on any platform. <code>log_dir()</code> returns the
+directory in use. The log file rotates at 5 MB, keeping three backups,
+and is appended to across sessions, so one file holds a history a user
+can send.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>log_init(name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start the log under <code>name</code>. Call it once, before anything logs, to
+  name the files; otherwise the first <code>logger</code> call starts the log as
+  <code>elements</code>. Further calls do nothing, except after a <code>log_shutdown</code>,
+  when it starts the backend again.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>logger(cat)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The logger for <code>cat</code>, for quill&#8217;s macros: <code>LOG_INFO(logger(cat), fmt,
+  args&#8230;&#8203;)</code>, and likewise <code>LOG_DEBUG</code>, <code>LOG_WARNING</code>, <code>LOG_ERROR</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>log_shutdown()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stop the backend, flushing what it holds. A plugin calls it when its
+  last instance goes; an application need not.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>log_dir()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The directory the log files are in.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/support/log.hpp&gt;
+
+log_init("my_app");          // ~/Library/Logs/my_app/my_app.log on macOS
+
+LOG_INFO(logger(log_cat::view), "resize {}x{}", w, h);
+LOG_DEBUG(logger(log_cat::render), "drawable {}x{} scale={}", w, h, scale);
+LOG_ERROR(logger(log_cat::error), "no GPU device");</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_error_handlers"><a class="anchor" href="#_error_handlers"></a>Error Handlers</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_declaration_2"><a class="anchor" href="#_declaration_2"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   enum class error_id
+   {
+      no_gpu_device,
+      graphics_context_failed,
+      render_surface_failed,
+      font_load_failed,
+      image_load_failed
+   };
+
+   class error_handler
+   {
+   public:
+      static error_handler&amp;   get();
+
+      using handler = std::function&lt;void(error_id id, std::string_view msg)&gt;;
+
+      handler                 on_error;
+      handler                 on_render_error;
+      handler                 on_resource_error;
+   };
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The library reports a failure it cannot recover from by calling one of
+the three handlers with an <code>error_id</code> and a message: <code>on_render_error</code>
+for a GPU device, graphics context or render surface that could not be
+made, <code>on_resource_error</code> for a font that could not be registered or an
+image that could not be loaded, <code>on_error</code> for the rest. The default
+handlers write the message to the log, under <code>render</code>, <code>resource</code> and
+<code>error</code>. An application replaces a handler to show the failure, or to
+stop:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">error_handler::get().on_resource_error =
+   [](error_id id, std::string_view msg)
+   {
+      show_alert(std::string{msg});
+   };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An image that cannot be loaded is reported, and then <code>image</code> throws
+<code>std::runtime_error</code>, so the element is never made.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tracing"><a class="anchor" href="#_tracing"></a>Tracing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With <code>CYCFI_LOG=trace=debug</code>, every click and drag the view receives is
+traced down the element tree: a record when a composite&#8217;s <code>click</code> or
+<code>drag</code> is entered and left, with the element&#8217;s class, bounds and
+arguments, and one for the control that handled it. Records are JSON
+lines in <code>&lt;app_name&gt;-trace.jsonl</code>. <code>tools/trace_graph.py</code> reads the file
+and prints the call tree of each gesture, or a Mermaid flowchart:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python3 tools/trace_graph.py ~/Library/Logs/my_app/my_app-trace.jsonl</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>trace.hpp</code> declares what the library&#8217;s composites call to write the
+records: <code>trace_scope</code>, <code>trace_leaf</code> and <code>trace_new_gesture</code>, plus
+<code>trace_enabled()</code>, true when the <code>trace</code> category is at <code>info</code> or
+below. A custom composite that routes events itself can use them the way
+<code>composite_base</code> does.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_frame_timing"><a class="anchor" href="#_frame_timing"></a>Frame Timing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>perf.hpp</code> times the frames the platform layer presents, for
+benchmarking: the Cocoa, Win32, GTK, X11 or Wayland code under the view,
+which renders each frame. It is off unless <code>ELEMENTS_PERF</code> is set:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ELEMENTS_PERF</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set to enable; a positive value is the number of frames to sample (default 600).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ELEMENTS_PERF_WARMUP</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frames discarded before sampling (default 60).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ELEMENTS_PERF_SCENE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A label for the report line.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The platform layer calls <code>perf::record</code> once per frame with its draw
+and flush time; <code>perf</code> measures the frame period itself. When the samples are in,
+it prints one line to standard output and exits the process:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">ELEMENTS_PERF platform=macos host=cocoa backend=skia scene=default pixels=2000x1400 samples=600 warmup=60 draw_flush_ms{median=...} frame_ms{median=...} fps{median=...,mean=...}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>perf::enabled()</code> says whether it is on; the platform layer renders
+differently when measured (vsync off, synchronous GPU submit). Every
+platform layer calls it; an application does not need to.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

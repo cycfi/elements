@@ -51,29 +51,29 @@
 <text x="379.0" y="88.33333333333333" font-size="10.0" text-anchor="end">Embedded (macOS Skia)</text>
 <text x="403.0" y="88.33333333333333" font-size="10.0">pass</text>
 <rect x="211.0" y="95.0" width="174.0" height="18.0" fill="#555"/>
-<rect x="385.0" y="95.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="385.0" y="95.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="379.0" y="107.33333333333333" font-size="10.0" text-anchor="end">Linux gtk (cairo)</text>
-<text x="403.0" y="107.33333333333333" font-size="10.0">fail</text>
+<text x="403.0" y="107.33333333333333" font-size="10.0">pass</text>
 <rect x="211.0" y="114.0" width="174.0" height="18.0" fill="#555"/>
 <rect x="385.0" y="114.0" width="36.0" height="18.0" fill="#e05d44"/>
 <text x="379.0" y="126.33333333333333" font-size="10.0" text-anchor="end">Linux gtk (skia)</text>
 <text x="403.0" y="126.33333333333333" font-size="10.0">fail</text>
 <rect x="422.0" y="0.0" width="150.0" height="18.0" fill="#555"/>
-<rect x="572.0" y="0.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="572.0" y="0.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="566.0" y="12.333333333333334" font-size="10.0" text-anchor="end">Linux wayland (cairo)</text>
-<text x="590.0" y="12.333333333333334" font-size="10.0">fail</text>
+<text x="590.0" y="12.333333333333334" font-size="10.0">pass</text>
 <rect x="422.0" y="19.0" width="150.0" height="18.0" fill="#555"/>
-<rect x="572.0" y="19.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="572.0" y="19.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="566.0" y="31.333333333333332" font-size="10.0" text-anchor="end">Linux wayland (skia)</text>
-<text x="590.0" y="31.333333333333332" font-size="10.0">fail</text>
+<text x="590.0" y="31.333333333333332" font-size="10.0">pass</text>
 <rect x="422.0" y="38.0" width="150.0" height="18.0" fill="#555"/>
 <rect x="572.0" y="38.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="566.0" y="50.333333333333336" font-size="10.0" text-anchor="end">Linux x11 (cairo)</text>
 <text x="590.0" y="50.333333333333336" font-size="10.0">pass</text>
 <rect x="422.0" y="57.0" width="150.0" height="18.0" fill="#555"/>
-<rect x="572.0" y="57.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="572.0" y="57.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="566.0" y="69.33333333333333" font-size="10.0" text-anchor="end">Linux x11 (skia)</text>
-<text x="590.0" y="69.33333333333333" font-size="10.0">fail</text>
+<text x="590.0" y="69.33333333333333" font-size="10.0">pass</text>
 <rect x="422.0" y="76.0" width="150.0" height="18.0" fill="#555"/>
 <rect x="572.0" y="76.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="566.0" y="88.33333333333333" font-size="10.0" text-anchor="end">Quartz2D (macOS Clang)</text>
@@ -99,9 +99,9 @@
 <text x="795.0" y="50.333333333333336" font-size="10.0" text-anchor="end">Tests (headless, Ubuntu GCC)</text>
 <text x="819.0" y="50.333333333333336" font-size="10.0">pass</text>
 <rect x="609.0" y="57.0" width="192.0" height="18.0" fill="#555"/>
-<rect x="801.0" y="57.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="801.0" y="57.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="795.0" y="69.33333333333333" font-size="10.0" text-anchor="end">Tests (headless, Windows MSVC)</text>
-<text x="819.0" y="69.33333333333333" font-size="10.0">fail</text>
+<text x="819.0" y="69.33333333333333" font-size="10.0">pass</text>
 <rect x="609.0" y="76.0" width="192.0" height="18.0" fill="#555"/>
 <rect x="801.0" y="76.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="795.0" y="88.33333333333333" font-size="10.0" text-anchor="end">Tests (headless, macOS Clang)</text>

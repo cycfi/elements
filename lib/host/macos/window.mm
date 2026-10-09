@@ -9,7 +9,15 @@
 
 namespace elements = cycfi::elements;
 
-#define ELEMENTS_WINDOW_CLASS ELEMENTS_CLASS_PREFIX##ElementsWindow
+// Named apart from any other Elements in the process, as the view class
+// is: see base_view.mm, which also explains the two-step paste.
+#if !defined(ELEMENTS_CLASS_PREFIX)
+# define ELEMENTS_CLASS_PREFIX
+#endif
+
+#define ELEMENTS_PASTE_(a, b) a##b
+#define ELEMENTS_PASTE(a, b) ELEMENTS_PASTE_(a, b)
+#define ELEMENTS_WINDOW_CLASS ELEMENTS_PASTE(ELEMENTS_CLASS_PREFIX, ElementsWindow)
 
 @interface ELEMENTS_WINDOW_CLASS : NSWindow
 {
@@ -18,7 +26,9 @@ namespace elements = cycfi::elements;
 }
 @end
 
+#if ELEMENTS_PASTE(ELEMENTS_CLASS_PREFIX, 1) != 1
 @compatibility_alias ElementsWindow ELEMENTS_WINDOW_CLASS;
+#endif
 
 @implementation ElementsWindow
 

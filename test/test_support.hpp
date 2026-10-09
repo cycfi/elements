@@ -26,6 +26,10 @@
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
 # include <elements/headless.hpp>
+# if defined(__APPLE__)
+#  include <CoreText/CoreText.h>
+#  include <filesystem>
+# endif
 #endif
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
@@ -72,6 +76,35 @@ namespace cycfi::elements::test
       rect     last_bounds = {};
    };
 
+   // On macOS the Cocoa host registers the fonts in the app bundle's
+   // resources when the first view is made. The headless host has no
+   // bundle, so the tests register the fonts the build copied next to
+   // them (test/resources) once, the same way: the icon font draws its
+   // glyphs instead of tofu.
+   inline void register_test_fonts()
+   {
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS) && defined(__APPLE__)
+      static bool const once = []
+      {
+         namespace fs = std::filesystem;
+         auto dir = fs::path{RESULTS_PATH}.parent_path().parent_path()
+            / "resources";
+         for (auto const& e : fs::directory_iterator{dir})
+         {
+            if (e.path().extension() != ".ttf")
+               continue;
+            auto url = CFURLCreateFromFileSystemRepresentation(
+               nullptr, reinterpret_cast<UInt8 const*>(e.path().c_str())
+             , e.path().string().size(), false);
+            CTFontManagerRegisterFontsForURL(url, kCTFontManagerScopeProcess, nullptr);
+            CFRelease(url);
+         }
+         return true;
+      }();
+      (void)once;
+#endif
+   }
+
    // A view plus an offscreen canvas of the same size: the pair a drawing
    // test needs.
    struct test_view
@@ -93,6 +126,7 @@ namespace cycfi::elements::test
        , offscr{img}
        , cnv{offscr.context()}
       {
+         register_test_fonts();
 #if defined(ELEMENTS_HOST_UI_LIBRARY_GTK) \
    || defined(ELEMENTS_HOST_UI_LIBRARY_WAYLAND)
          // GTK and Wayland size a view from their event loop, which the tests

@@ -166,10 +166,11 @@ TEST_CASE("Bound, a button follows the model and its click reaches back")
    // A button has no on_change, so the binder takes its click instead.
    // Together with the gesture above, that is a bound button: the model
    // shows in it, and what the user does to it lands where follow says.
+   // The model outlives the binder that observes it.
+   value_model<bool> model = false;
    auto button = share(toggle_button("toggle", 1.0));
    model_binder binder{[](element&) {}};
 
-   value_model<bool> model = false;
    bool got = false;
    binder.follow(model, button, [&got](bool v) { got = v; });
 

@@ -11,24 +11,60 @@ cmake_minimum_required(VERSION 3.16.0)
 # xvfb-run.
 set(elements_test_sources
    test_main.cpp
-   draw_cull_test.cpp
-   view_refresh_test.cpp
-   button_tracking_test.cpp
-   controls_marks_page_test.cpp
-   curve_editor_test.cpp
-   image_grid_test.cpp
-   button_body_test.cpp
-   view_teardown_test.cpp
+
+   # The library's own tests
+   lib/draw_cull_test.cpp
+   lib/view_refresh_test.cpp
+   lib/button_tracking_test.cpp
+   lib/curve_editor_test.cpp
+   lib/image_grid_test.cpp
+   lib/button_body_test.cpp
+   lib/view_teardown_test.cpp
+   lib/tri_thumb_test.cpp
+   lib/thumbwheel_test.cpp
+   lib/label_setters_test.cpp
+   lib/heading_levels_test.cpp
+   lib/max_size_test.cpp
+   lib/input_box_test.cpp
+   lib/text_stress_test.cpp
+   lib/utf8_test.cpp
+
+   # The documentation's page tests, one per page, by section
+   pages/support/context_test.cpp
+   pages/support/theme_test.cpp
+   pages/support/receivers_test.cpp
+   pages/support/draw_utils_test.cpp
+   pages/support/text_utils_test.cpp
+   pages/support/icons_test.cpp
+   pages/support/payload_test.cpp
+   pages/support/diagnostics_test.cpp
+   pages/elements/element_test.cpp
+   pages/elements/proxies_test.cpp
+   pages/elements/indirection_test.cpp
+   pages/elements/traversal_test.cpp
+   pages/elements/composites_test.cpp
+   pages/elements/selection_test.cpp
+   pages/elements/trackers_test.cpp
+   pages/elements/buttons_test.cpp
+   pages/elements/sliders_test.cpp
+   pages/elements/dials_test.cpp
+   pages/elements/thumbwheels_test.cpp
+   pages/elements/labels_test.cpp
+   pages/elements/text_test.cpp
+   pages/layout/collapsible_test.cpp
+   pages/styles/styles_test.cpp
+   pages/styles/marks_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})
 if (APPLE)
    # It runs the AppKit loop itself, to stop it without ending the process.
-   set_source_files_properties(view_teardown_test.cpp PROPERTIES
+   set_source_files_properties(lib/view_teardown_test.cpp PROPERTIES
       COMPILE_FLAGS "-x objective-c++ -fobjc-arc")
 endif()
 
 target_link_libraries(elements_test PRIVATE elements)
+target_include_directories(elements_test PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 # Artist's Quartz backend measures and draws text through Core Text and
 # AppKit whatever the host is. The Cocoa host brings those in itself; the

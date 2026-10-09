@@ -13,13 +13,16 @@
 # endif
 #endif
 
+#define CATCH_CONFIG_RUNNER
+#include <infra/catch.hpp>
+#include <cstdlib>
+#include <string>
+
 #if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
 
 // A GTK window is made only once the app is activated, and the tests run no
 // app loop. Activate it once, up front, so the tests' windows and views are
 // made at once, as in a running app.
-#define CATCH_CONFIG_RUNNER
-#include <infra/catch.hpp>
 #include <elements/app.hpp>
 
 // From GIO, which the GTK host links; the tests have no GTK include path.
@@ -34,18 +37,34 @@ extern "C"
    void g_application_activate(GApplication* application);
 }
 
+#endif
+
+namespace
+{
+   // The suite's log goes next to its other results, not to the user's log
+   // directory, with view at debug so the diagnostics page test can read a
+   // line back. log_init reads the variables once, on the first message.
+   void set_log_env()
+   {
+      std::string const dir = std::string{RESULTS_PATH} + "logs";
+#if defined(_WIN32)
+      _putenv_s("CYCFI_LOG_DIR", dir.c_str());
+      _putenv_s("CYCFI_LOG", "view=debug,input=off");
+#else
+      setenv("CYCFI_LOG_DIR", dir.c_str(), 1);
+      setenv("CYCFI_LOG", "view=debug,input=off", 1);
+#endif
+   }
+}
+
 int main(int argc, char* argv[])
 {
+   set_log_env();
+#if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
    cycfi::elements::app a{"elements test"};
    auto* g = g_application_get_default();
    g_application_register(g, nullptr, nullptr);
    g_application_activate(g);
+#endif
    return Catch::Session().run(argc, argv);
 }
-
-#else
-
-#define CATCH_CONFIG_MAIN
-#include <infra/catch.hpp>
-
-#endif

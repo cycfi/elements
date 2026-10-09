@@ -159,6 +159,12 @@ namespace cycfi::elements
       bool const titled = [window_ styleMask] & NSWindowStyleMaskTitled;
       auto minx = titled? std::max<float>(150, limits_.min.x) : limits_.min.x;
       auto miny = titled? std::max<float>(100, limits_.min.y) : limits_.min.y;
+
+      // No window can be larger than the screen: content wider or taller
+      // than any (an input box asks for the full extent) gets the screen.
+      auto const screen = [[NSScreen mainScreen] visibleFrame].size;
+      clamp_max(minx, float(screen.width));
+      clamp_max(miny, float(screen.height));
       [window_ setContentMinSize : NSSize{minx, miny}];
       [window_ setContentMaxSize : NSSize{limits_.max.x, limits_.max.y}];
 

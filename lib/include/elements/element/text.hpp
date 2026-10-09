@@ -162,6 +162,9 @@ namespace cycfi::elements
       char32_t const*         caret_position(context const& ctx, point p);
       caret_metrics           caret_info(context const& ctx, char32_t const* s);
 
+      // Called after undo or redo has restored the text.
+      virtual void            text_restored() {}
+
    private:
 
       struct state_saver;
@@ -222,8 +225,8 @@ namespace cycfi::elements
                               );
 
                               basic_input_box(
-                                 std::string placeholder = ""
-                               , clip_action clip_action_ = clip_right
+                                 std::string placeholder
+                               , clip_action clip_action_
                               );
 
                               basic_input_box(basic_input_box&& rhs) = default;
@@ -248,6 +251,7 @@ namespace cycfi::elements
    private:
 
       void                    paste(view& v, int start, int end) override;
+      void                    text_restored() override;
       void                    make_maximally_visible(context const& ctx);
       void                    limit_scroll_right(context const& ctx);
 

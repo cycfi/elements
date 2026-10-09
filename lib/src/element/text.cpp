@@ -171,6 +171,7 @@ namespace cycfi::elements
             _this->set_text(save_text);
             _this->select_start(save_select_start);
             _this->select_end(save_select_end);
+            _this->text_restored();
          }
       }
 
@@ -195,7 +196,7 @@ namespace cycfi::elements
       }
 
       draw_selection(ctx);
-      if (_enabled)
+      if (_enabled && ctx.enabled)
       {
          static_text_box::draw(ctx);
       }
@@ -215,6 +216,7 @@ namespace cycfi::elements
          return false;
 
       _show_caret = true;
+      _typing_state = {}; // the typing run, if any, ends here
 
       if (!btn.down) // released? return early
          return true;
@@ -296,7 +298,7 @@ namespace cycfi::elements
 
    void basic_text_box::drag(context const& ctx, mouse_button btn)
    {
-      char32_t const* first = &get_text()[0];
+      char32_t const* first = get_text().data();
       if (char32_t const* pos = caret_position(ctx, btn.pos))
       {
          _select_end = int(pos-first);
@@ -324,11 +326,7 @@ namespace cycfi::elements
        , std::function<void()> redo_f
       )
       {
-         if (typing_state)
-         {
-            ctx.view.add_undo({typing_state, undo_f});
-            typing_state = {}; // reset
-         }
+         typing_state = {}; // the typing run, if any, ends here
          ctx.view.add_undo({undo_f, redo_f});
       }
    }
@@ -343,13 +341,42 @@ namespace cycfi::elements
       if (_select_start == -1)
          return false;
 
+      // A surrogate or a value past U+10FFFF is not a character.
+      auto cp = info_.codepoint;
+      if (cp > 0x10FFFF || (cp >= 0xD800 && cp <= 0xDFFF))
+         return false;
+
       if (_select_start > _select_end)
          std::swap(_select_end, _select_start);
 
-      std::string text = codepoint_to_utf8(info_.codepoint);
+      std::string text = codepoint_to_utf8(cp);
 
+      // A run of typing is one undo step. It goes on the undo stack when
+      // it starts, so it keeps its place among the edits of other boxes;
+      // the state to redo is taken when it is undone.
       if (!_typing_state)
-         _typing_state = capture_state();
+      {
+         auto before = std::make_shared<state_saver>(this);
+         _state_savers.insert(before);
+         auto after = std::make_shared<state_saver_ptr>();
+         ctx.view.add_undo({
+            [before, after]()
+            {
+               if (auto* self = before->_this)
+               {
+                  *after = std::make_shared<state_saver>(self);
+                  self->_state_savers.insert(*after);
+                  before->restore();
+               }
+            },
+            [after]()
+            {
+               if (*after)
+                  (*after)->restore();
+            }
+         });
+         _typing_state = [before](){ before->restore(); };
+      }
 
       bool do_replace = false;
       if (_select_start == _select_end)
@@ -407,14 +434,14 @@ namespace cycfi::elements
       {
          bool up = k.key == key_code::up;
          caret_metrics info;
-         info = caret_info(ctx, &_text[_select_end]);
+         info = caret_info(ctx, _text.data() + _select_end);
          if (info.str)
          {
             auto y = up ? -info.line_height : +info.line_height;
             auto pos = point{ctx.bounds.left + _current_x, info.pos.y + y};
             char32_t const* cp = caret_position(ctx, pos);
             if (cp)
-               _select_end = int(cp - &_text[0]);
+               _select_end = int(cp - _text.data());
             else
                _select_end = up ? 0 : int(_text.size());
             move_caret = true;
@@ -423,7 +450,7 @@ namespace cycfi::elements
 
       auto next_char = [this, &_text]()
       {
-         if (_text.size() > 1 && _select_end < static_cast<int>(_text.size()))
+         if (_select_end < static_cast<int>(_text.size()))
             ++_select_end;
       };
 
@@ -481,8 +508,7 @@ namespace cycfi::elements
                if (editable())
                {
                   replace(start, end-start, "\n");
-                  _select_start += 1;
-                  _select_end = _select_start;
+                  _select_start = _select_end = start + 1;
                   save_x = true;
                   add_undo(ctx, _typing_state, undo_f, capture_state());
                   handled = true;
@@ -539,6 +565,7 @@ namespace cycfi::elements
 
             case key_code::home:
                {
+                  _typing_state = {};
                   this->home(k.modifiers & mod_shift);
                   ctx.view.refresh(ctx);
                   return true;
@@ -546,6 +573,7 @@ namespace cycfi::elements
 
             case key_code::end:
                {
+                  _typing_state = {};
                   this->end(k.modifiers & mod_shift);
                   ctx.view.refresh(ctx);
                   return true;
@@ -591,11 +619,7 @@ namespace cycfi::elements
             case key_code::z:
                if (editable() && (k.modifiers & mod_action))
                {
-                  if (_typing_state)
-                  {
-                     ctx.view.add_undo({_typing_state, undo_f});
-                     _typing_state = {}; // reset
-                  }
+                  _typing_state = {}; // the typing run, if any, ends here
 
                   if (k.modifiers & mod_shift)
                      ctx.view.redo();
@@ -612,6 +636,7 @@ namespace cycfi::elements
 
       if (move_caret)
       {
+         _typing_state = {}; // the typing run, if any, ends here
          clamp(_select_start, 0, int(_text.size()));
          clamp(_select_end, 0, int(_text.size()));
          if (!(k.modifiers & mod_shift))
@@ -775,7 +800,7 @@ namespace cycfi::elements
       auto  m = get_font().metrics();
       auto  x = ctx.bounds.left;
       auto  y = ctx.bounds.top + m.ascent;
-      auto  pos = get_layout().caret_point(s - &get_text()[0]);
+      auto  pos = get_layout().caret_point(s - get_text().data());
 
       pos.x += x;
       pos.y += y;
@@ -888,7 +913,7 @@ namespace cycfi::elements
       if (_select_end >= int(get_text().size()))
          info = caret_info(ctx, U"");
       else
-         info = caret_info(ctx, &get_text()[_select_end]);
+         info = caret_info(ctx, get_text().data() + _select_end);
 
       if (info.str)
       {
@@ -923,6 +948,7 @@ namespace cycfi::elements
    bool basic_text_box::end_focus()
    {
       _is_focus = false;
+      _typing_state = {}; // the typing run, if any, ends here
       return true;
    }
 
@@ -1009,7 +1035,7 @@ namespace cycfi::elements
             auto  m = get_font().metrics();
 
             canvas.text_align(canvas::left);
-            canvas.font(theme.text_box_font);
+            canvas.font(get_font());
             canvas.fill_style(theme.inactive_font_color);
             canvas.fill_text(
                _placeholder.c_str()
@@ -1020,22 +1046,17 @@ namespace cycfi::elements
       }
       else
       {
-         if (!ctx.enabled)
-         {
-            auto c = get_color();
-            set_color(c.opacity(0.5));
-            basic_text_box::draw(ctx);
-            set_color(c);
-         }
-         else
-         {
-            basic_text_box::draw(ctx);
-         }
+         basic_text_box::draw(ctx);
       }
    }
 
    bool basic_input_box::text(context const& ctx, text_info info)
    {
+      // Typing stops at the limit, unless it replaces a selection.
+      if (editable() && select_start() == select_end()
+         && get_text().size() >= get_theme().input_box_text_limit)
+         return true;
+
       bool r = basic_text_box::text(ctx, info);
       if (r && on_text)
          on_text(to_utf8(get_text()));
@@ -1105,32 +1126,35 @@ namespace cycfi::elements
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
 
-         std::string clip = clipboard();
+         std::u32string clip = to_utf32(clipboard());
          if (clip.empty())
             return;
 
-         std::string ins;
+         // Take the clipboard up to its first line break, and no more than
+         // leaves the text within input_box_text_limit.
+         auto nl = clip.find_first_of(U"\r\n");
+         if (nl != std::u32string::npos)
+            clip.resize(nl);
 
-         // Copy clip ito ins, stop when a newline is found.
-         // Also, limit ins to input_box_text_limit characters.
-         char const* p = &clip[0];
-         char const* last = p + clip.size();
+         auto const limit = get_theme().input_box_text_limit;
+         auto const kept = get_text().size() - (end_-start_);
+         auto const room = (kept < limit)? limit - kept : 0;
+         if (clip.size() > room)
+            clip.resize(room);
 
-         auto const max_chars = get_theme().input_box_text_limit;
-         for (std::size_t i = 0; (i < max_chars) && (p != last); ++p, ++i)
-         {
-            if (is_newline(uint8_t(*p)))
-               break;
-            ins += *p;
-         }
-
-         start_ += replace(start_, end_-start_, ins);
+         start_ += replace(start_, end_-start_, to_utf8(clip));
          select_start(start_);
          select_end(start_);
 
          if (on_text)
             on_text(to_utf8(get_text()));
       }
+   }
+
+   void basic_input_box::text_restored()
+   {
+      if (on_text)
+         on_text(to_utf8(get_text()));
    }
 
    void basic_input_box::delete_(bool forward)

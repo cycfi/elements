@@ -167,6 +167,7 @@ namespace cycfi::elements
       view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
       mouse_button            _current_button;
       bool                    _is_focus = false;
+      uint32_t                _high_surrogate = 0;    // a UTF-16 pair's first half
 
       using undo_stack_type = std::stack<undo_redo_task>;
       undo_stack_type         _undo_stack;

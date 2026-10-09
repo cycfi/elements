@@ -359,10 +359,33 @@ namespace cycfi::elements
       return handled;
    }
 
-   bool view::text(text_info const& info)
+   bool view::text(text_info const& info_)
    {
       if (_content.empty())
          return false;
+
+      // A host that hands over UTF-16, as Windows does with WM_CHAR, sends a
+      // character outside the basic plane as two surrogates. Join them into
+      // one character; drop a half that has no partner.
+      auto info = info_;
+      auto cp = info.codepoint;
+      if (cp >= 0xD800 && cp <= 0xDBFF)
+      {
+         _high_surrogate = cp;
+         return true;
+      }
+      if (cp >= 0xDC00 && cp <= 0xDFFF)
+      {
+         auto high = _high_surrogate;
+         _high_surrogate = 0;
+         if (high == 0)
+            return true;
+         info.codepoint = 0x10000 + ((high - 0xD800) << 10) + (cp - 0xDC00);
+      }
+      else
+      {
+         _high_surrogate = 0;
+      }
 
       bool handled = false;
       with_context_do(

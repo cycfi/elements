@@ -1415,8 +1415,14 @@ namespace cycfi::elements
       if (_view->egl_display != EGL_NO_DISPLAY)
          eglTerminate(_view->egl_display);
 #endif
+      // Synced, not just queued: a plugin's host destroys its own window
+      // once the view is gone, and a destroy still in the buffer would then
+      // name a window that no longer exists.
       if (_view->owns_window)
+      {
          XDestroyWindow(d, _view->window);
+         XSync(d, False);
+      }
       delete _view;
       _view = nullptr;
    }

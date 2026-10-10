@@ -113,10 +113,27 @@ namespace cycfi::elements
                return;
             constexpr float max = 10E6;
             auto win = GTK_WINDOW(_window->host);
+
+            // No window can be larger than the screen: content wider or
+            // taller than any (an input box asks for the full extent) gets
+            // the screen's work area.
+            float screen_w = max, screen_h = max;
+            auto display = gtk_widget_get_display(_window->host);
+            auto monitor = display? gdk_display_get_primary_monitor(display) : nullptr;
+            if (!monitor && display)
+               monitor = gdk_display_get_monitor(display, 0);
+            if (monitor)
+            {
+               GdkRectangle area;
+               gdk_monitor_get_workarea(monitor, &area);
+               screen_w = area.width;
+               screen_h = area.height;
+            }
+
             GdkGeometry hints;
-            hints.min_width = limits_.min.x;
+            hints.min_width = std::min<float>(limits_.min.x, screen_w);
             hints.max_width = std::min<float>(limits_.max.x, max);
-            hints.min_height = limits_.min.y;
+            hints.min_height = std::min<float>(limits_.min.y, screen_h);
             hints.max_height = std::min<float>(limits_.max.y, max);
 
             // A child not yet allocated (1x1, as one just added to a shown

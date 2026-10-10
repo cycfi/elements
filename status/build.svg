@@ -55,9 +55,9 @@
 <text x="379.0" y="107.33333333333333" font-size="10.0" text-anchor="end">Linux gtk (cairo)</text>
 <text x="403.0" y="107.33333333333333" font-size="10.0">pass</text>
 <rect x="211.0" y="114.0" width="174.0" height="18.0" fill="#555"/>
-<rect x="385.0" y="114.0" width="36.0" height="18.0" fill="#e05d44"/>
+<rect x="385.0" y="114.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="379.0" y="126.33333333333333" font-size="10.0" text-anchor="end">Linux gtk (skia)</text>
-<text x="403.0" y="126.33333333333333" font-size="10.0">fail</text>
+<text x="403.0" y="126.33333333333333" font-size="10.0">pass</text>
 <rect x="422.0" y="0.0" width="150.0" height="18.0" fill="#555"/>
 <rect x="572.0" y="0.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="566.0" y="12.333333333333334" font-size="10.0" text-anchor="end">Linux wayland (cairo)</text>

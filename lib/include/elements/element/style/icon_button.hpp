@@ -49,7 +49,9 @@ namespace cycfi::elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
-   // Icon button with body and two alternating icons
+   // Icon button with body and two alternating icons. Given two colours,
+   // each state shows its own icon on its own colour, at full strength:
+   // off_color while off, on_color while on.
    ////////////////////////////////////////////////////////////////////////////
    struct icon_button_styler2 : icon_button_styler_base
    {
@@ -63,6 +65,22 @@ namespace cycfi::elements
                                , _code1(code1)
                                , _code2(code2)
                                , _body_color(body_color)
+                               , _on_body_color(body_color)
+                              {}
+
+                              icon_button_styler2(
+                                 uint32_t code1
+                               , uint32_t code2
+                               , float size
+                               , color off_color
+                               , color on_color
+                              )
+                               : icon_button_styler_base(size)
+                               , _code1(code1)
+                               , _code2(code2)
+                               , _body_color(off_color)
+                               , _on_body_color(on_color)
+                               , _two_colors(true)
                               {}
 
       void                    draw(context const& ctx) override;
@@ -70,6 +88,8 @@ namespace cycfi::elements
       uint32_t                _code1;
       uint32_t                _code2;
       color                   _body_color;
+      color                   _on_body_color;
+      bool                    _two_colors = false;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -115,6 +135,22 @@ namespace cycfi::elements
    )
    {
       return toggle_button(icon_button_styler2{code1, code2, size, body_color});
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Make toggle icon_button with two alternating icons, each on a colour
+   // of its own: off_color while off, on_color while on
+   ////////////////////////////////////////////////////////////////////////////
+   inline auto toggle_icon_button(
+      uint32_t code1
+    , uint32_t code2
+    , float size
+    , color off_color
+    , color on_color
+   )
+   {
+      return toggle_button(
+         icon_button_styler2{code1, code2, size, off_color, on_color});
    }
 
    ////////////////////////////////////////////////////////////////////////////

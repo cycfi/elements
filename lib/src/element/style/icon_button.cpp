@@ -87,11 +87,21 @@ namespace cycfi::elements
       auto value = btn->value();
       auto hilite = btn->hilite();
       auto enabled = ctx.enabled;
+      auto code = value? _code2 : _code1;
+      auto size = _size * get_theme().icon_font._size;
 
-      draw_icon_button(
-         ctx, value? _code2 : _code1, _size * get_theme().icon_font._size
-         , _body_color, false, hilite, enabled
-      );
+      // Two colours: each state at full strength, in its own colour.
+      if (_two_colors)
+      {
+         draw_icon_button(
+            ctx, code, size, value? _on_body_color : _body_color
+          , true, hilite, enabled
+         );
+      }
+      else
+      {
+         draw_icon_button(ctx, code, size, _body_color, false, hilite, enabled);
+      }
    }
 
    void plain_icon_button_styler::draw(context const& ctx)

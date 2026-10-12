@@ -19,6 +19,7 @@ set(elements_test_sources
    lib/curve_editor_test.cpp
    lib/image_grid_test.cpp
    lib/button_body_test.cpp
+   lib/icon_button_test.cpp
    lib/view_teardown_test.cpp
    lib/tri_thumb_test.cpp
    lib/thumbwheel_test.cpp

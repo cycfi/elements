@@ -455,6 +455,18 @@ namespace cycfi::elements
 
             if (info->_target)
             {
+               // The target follows the client size here as well as in
+               // WM_SIZE. A view can change its own size while it draws, as
+               // when a zoom changes its limits, and a Resize made between
+               // BeginDraw and EndDraw fails (D2DERR_WRONG_STATE), which
+               // leaves the old size stretched into the new client area.
+               RECT cr;
+               GetClientRect(hwnd, &cr);
+               auto const client = D2D1::SizeU(cr.right - cr.left, cr.bottom - cr.top);
+               auto const target = info->_target->GetPixelSize();
+               if (client.width != target.width || client.height != target.height)
+                  info->_target->Resize(client);
+
                info->_target->BeginDraw();
                info->_target->SetTransform(D2D1::Matrix3x2F::Identity());
 

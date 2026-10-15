@@ -201,7 +201,7 @@ TEST_CASE("images page: image grid", "[images_page]")
 {
    auto img = numbered_cells(40, 30);
    auto menu = share(image_grid_menu(img, 4, 2, 1.0f));
-   auto cell = share(image_grid_cell(img, 4, 2, image_grid_highlight{}));
+   auto cell = share(image_grid_cell(img, 4, 2, swatch_highlighter{}));
    CHECK(menu->columns() == 4);
    CHECK(menu->rows() == 2);
    CHECK(menu->size() == 8);

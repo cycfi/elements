@@ -61,30 +61,24 @@ whose subject, however deep, is a `sprite`.
 
 === Image Grid
 
-An image grid cuts a picture into `columns` by `rows` cells of equal
-size, numbered from the top left, row by row, from 0. It has a current
-cell, its `value`.
+An image grid is a swatch grid of a picture (see
+xref:elements/swatches.adoc[Swatches]): the picture cut into `columns` by
+`rows` cells of equal size, numbered from the top left, row by row, from
+0, one cell current.
 
 image::elements/image_grid.png[alt="An image grid menu of eight numbered cells, cell 6 current and outlined, cell 3 under the pointer and tinted; beside it an image grid cell showing cell 6", width=340px, link={imagesdir}/elements/image_grid.png]
 
-* `image_grid_menu(picture, columns, rows, scale, styler)` shows every
-  cell, at `scale` times the picture's size. A press and a release on
-  the same cell pick it: it becomes the value, `on_change(i)` is called
-  if it changed, and an enclosing popup closes. The cell under the
-  pointer is _hot_.
-* `image_grid_cell(picture, columns, rows, styler)` shows the current
-  cell, as large as fits in its bounds, its proportions kept. It has no
-  size of its own.
+* `image_grid_menu(picture, columns, rows, scale, highlighter)` shows
+  every cell, at `scale` times the picture's size, to pick one from: a
+  `swatch_grid` of an `image`.
+* `image_grid_cell(picture, columns, rows, highlighter)` shows the
+  current cell alone, as large as fits in its bounds, its proportions
+  kept: a `swatch_cell` of an `image`.
 
-Each draws its cells and then, over each, the styler: an element that
-reads the cell being drawn, `drawing()`, and its state, `state(i)`,
-from the grid it finds with `find_parent`, as a styler does (see
-xref:styles.adoc[Styles]). The state is `current`, `hot` or `normal`.
-`image_grid_menu` without a styler uses `image_grid_highlight`, which
-outlines the current cell and tints the hot one.
-
-`value(i)` sets the current cell from code, clamped to the cells,
-without calling `on_change`.
+The highlighter is drawn over each cell shown. `image_grid_menu` without
+one uses `swatch_highlighter`, which outlines the current cell and tints
+the cell under the pointer. Picking, the value and its callback are a
+swatch grid's.
 
 == Include
 
@@ -131,51 +125,23 @@ namespace cycfi::elements
 
    using sprite = basic_sprite;
 
-   class basic_image_grid : public proxy_base
-   {
-   public:
-      using change_function = std::function<void(int)>;
-      enum cell_state { normal, hot, current };
-
-      int                     columns() const;
-      int                     rows() const;
-      int                     size() const;
-      image_ptr               get_image() const;
-
-      int                     value() const;
-      void                    value(int i);
-
-      int                     drawing() const;
-      virtual cell_state      state(int i) const;
-
-      change_function         on_change;
-   };
-
-   template <concepts::Element Styler>
-   using image_grid_menu_t =
-      proxy<remove_cvref_t<Styler>, basic_image_grid_menu>;
-
-   template <concepts::Element Styler>
-   using image_grid_cell_t =
-      proxy<remove_cvref_t<Styler>, basic_image_grid_cell>;
-
-   template <concepts::Element Styler, typename Image>
-   inline image_grid_menu_t<Styler>
+   template <concepts::Element Highlighter, typename Image>
+   auto
    image_grid_menu(
-      Image&& img, int columns, int rows, float scale, Styler&& styler);
+      Image&& img, int columns, int rows, float scale, Highlighter&& h);
 
    template <typename Image>
-   inline auto image_grid_menu(
-      Image&& img, int columns, int rows, float scale = 1);
+   auto
+   image_grid_menu(Image&& img, int columns, int rows, float scale = 1);
 
-   template <concepts::Element Styler, typename Image>
-   inline image_grid_cell_t<Styler>
-   image_grid_cell(Image&& img, int columns, int rows, Styler&& styler);
+   template <concepts::Element Highlighter, typename Image>
+   auto
+   image_grid_cell(Image&& img, int columns, int rows, Highlighter&& h);
 }
 ```
 
-`Image` is an `image_ptr` or an `fs::path`. `basic_image_grid_menu` and
-`basic_image_grid_cell` derive from `basic_image_grid`.
+`Image` is an `image_ptr` or an `fs::path`. The second
+`image_grid_menu` is in `elements/element/style/image_grid.hpp`.
 
 == Expressions
 
@@ -183,7 +149,8 @@ namespace cycfi::elements
 
 `img`:: An `image`.
 `s`:: A `sprite`.
-`g`:: An image grid, a menu or a cell.
+`c`, `r`:: `int`: the number of columns and rows.
+`hl`:: An element, the highlighter.
 `pic`:: An `fs::path` or an `image_ptr`.
 `k`:: A `float` scale.
 `h`:: A `float`, a frame's height as drawn.
@@ -222,17 +189,14 @@ namespace cycfi::elements
 | `s.index(i)`
 | Draw frame `i`; an index past the last is ignored.
 
-| `g.value()`
-| The current cell.
+| `image_grid_menu(pic, c, r, k, hl)`
+| A swatch grid of `pic` at `k` times its size, in `c` by `r` cells.
 
-| `g.value(i)`
-| Make cell `i` the current one, clamped, without a callback.
+| `image_grid_menu(pic, c, r [, k])`
+| The same, with a `swatch_highlighter`.
 
-| `g.on_change = f`
-| `f(i)` is called when the user picks a different cell.
-
-| `g.state(i)`
-| Cell `i`'s state, for a styler: `current`, `hot` or `normal`.
+| `image_grid_cell(pic, c, r, hl)`
+| A swatch cell of `pic`, in `c` by `r` cells, showing the current one.
 |===
 
 == Example

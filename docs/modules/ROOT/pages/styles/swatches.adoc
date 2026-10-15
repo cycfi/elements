@@ -1,0 +1,198 @@
+= Swatches
+
+include::../common.adoc[]
+
+== Overview
+
+The stock highlighters of swatches (see
+xref:elements/swatches.adoc[Swatches]). A highlighter is drawn over each
+swatch, and draws nothing of it, only marks over it.
+
+image::styles/swatches.png[alt="Three sets of swatches: an image grid of eight colored cells labeled Ruby to Rose, Sky current and outlined, Amber under the pointer and tinted; a palette of five colors, the fourth current and outlined; and a chart of three numbered boxes, the first framed, the second shaded, the third as drawn", width=720px, link={imagesdir}/styles/swatches.png]
+
+`swatch_highlighter` is for picking one of the swatches, as in the image
+grid and the palette of the figure. It outlines the current swatch and
+tints the hot one. Given a `label` function, it also writes a name at
+the top left of each swatch. `image_grid_menu` uses it unless given
+another styler.
+
+`region_highlighter` is for swatches that contain parts that change, as
+in the chart of the figure: boxes, where one box is selected and another
+switched off. Two things describe the parts:
+
+* `regions`: for each swatch, the rectangles of its parts. A rectangle
+  is given in the swatch's own unit square, (0, 0) at its top left and
+  (1, 1) at its bottom right.
+* `state`: a function that says, for a swatch and one of its parts,
+  whether the part is `lit`, drawn with a frame; `dimmed`, drawn shaded;
+  or `normal`, left as the swatch has it.
+
+== Highlighters
+
+=== Include
+
+```c++
+#include <elements/element/style/swatches.hpp>
+```
+
+=== Declaration
+
+```c++
+struct swatch_highlighter : element
+{
+                           swatch_highlighter();
+                           swatch_highlighter(color hot, color current);
+
+   using label_function = std::function<std::string(int swatch)>;
+
+   label_function          label;
+   color                   hot_color;
+   color                   current_color;
+   float                   line_width = 2.0f;
+   float                   corner_radius = 4.0f;
+   ...
+};
+
+struct region_highlighter : element
+{
+   enum region_state { normal, lit, dimmed };
+
+   using regions_type = std::vector<std::vector<rect>>;
+   using state_function =
+      std::function<region_state(int swatch, int region)>;
+
+                           region_highlighter(
+                              regions_type regions
+                            , state_function state);
+
+   regions_type            regions;
+   state_function          state;
+   color                   lit_color;
+   color                   dim_color;
+   float                   line_width = 2.0f;
+   float                   corner_radius = 3.0f;
+   ...
+};
+```
+
+=== Expressions
+
+==== Notation
+
+`hc`, `cc`        :: `color`: the hot swatch's tint and the current
+                     swatch's outline.
+`rs`              :: `region_highlighter::regions_type`, the regions of
+                     each swatch.
+`f`               :: A function taking a swatch and a region and
+                     returning its `region_state`.
+`h`               :: A `swatch_highlighter`.
+`rh`              :: A `region_highlighter`.
+
+==== Constructors and Assignment
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `swatch_highlighter()`           | Construct a `swatch_highlighter` in
+                                     the theme's `indicator_color`, the
+                                     tint at 0.25 opacity.
+| `swatch_highlighter(hc, cc)`     | Construct a `swatch_highlighter`
+                                     given `hc` (tint) and `cc`
+                                     (outline).
+| `region_highlighter(rs, f)`      | Construct a `region_highlighter`
+                                     given `rs` (regions) and `f`
+                                     (state).
+|===
+
+==== Access
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `h.label`                        | Access the function giving a
+                                     swatch's label: none.         | `label_function`
+| `h.hot_color`                    | Access the hot swatch's tint. | `color`
+| `h.current_color`                | Access the current swatch's
+                                     outline.                      | `color`
+| `h.line_width`                   | Access the outline's width:
+                                     2.                            | `float`
+| `h.corner_radius`                | Access the corners' radius:
+                                     4.                            | `float`
+| `rh.regions`                     | Access the regions of each
+                                     swatch.                       | `regions_type`
+| `rh.state`                       | Access the function giving a
+                                     region's state.               | `state_function`
+| `rh.lit_color`                   | Access a lit region's frame:
+                                     the theme's
+                                     `indicator_hilite_color`.     | `color`
+| `rh.dim_color`                   | Access a dimmed region's
+                                     shade: the theme's
+                                     `panel_color` at 0.7 opacity. | `color`
+| `rh.line_width`                  | Access the frame's width: 2.  | `float`
+| `rh.corner_radius`               | Access the corners' radius:
+                                     3.                            | `float`
+|===
+
+== Image Grid Menu
+
+=== Include
+
+```c++
+#include <elements/element/style/image_grid.hpp>
+```
+
+=== Declaration
+
+```c++
+template <typename Image>
+auto
+image_grid_menu(Image&& img, int columns, int rows, float scale = 1);
+```
+
+=== Expressions
+
+==== Notation
+
+`img`             :: An image, or an `image_ptr`.
+`c`, `r`          :: `int`: the number of columns and rows.
+`s`               :: Floating point value, the scale.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `image_grid_menu(img, c, r [, s])` | Make an image grid menu of `img`, in
+                                     `c` by `r` cells, at `s` times its
+                                     size, 1 unless given, drawn by a
+                                     `swatch_highlighter()`.
+|===
+
+== Example
+
+The labeled image grid of the figure:
+
+```c++
+#include <elements/element/style/image_grid.hpp>
+...
+using namespace cycfi::elements;
+...
+extern image_ptr swatches;
+...
+static char const* names[] = {"Ruby", "Amber", "Gold", "Moss", "Teal", "Sky", "Iris", "Rose"};
+
+swatch_highlighter look;
+look.label = [](int cell) { return std::string{names[cell]}; };   <1>
+auto palette = image_grid_menu(swatches, 4, 2, 1.0f, look);       <2>
+```
+
+<1> A name for each cell, at its top left.
+<2> Eight cells, 4 by 2, of the picture `swatches`.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

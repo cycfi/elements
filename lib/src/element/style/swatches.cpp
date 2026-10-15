@@ -3,35 +3,38 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 =============================================================================*/
-#include <elements/element/style/image_grid.hpp>
+#include <elements/element/style/swatches.hpp>
+#include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
 
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // image_grid_highlight
+   // swatch_highlighter
    ////////////////////////////////////////////////////////////////////////////
-   image_grid_highlight::image_grid_highlight()
-    : image_grid_highlight(
+   swatch_highlighter::swatch_highlighter()
+    : swatch_highlighter(
          get_theme().indicator_color.opacity(0.25)
        , get_theme().indicator_color)
    {}
 
-   image_grid_highlight::image_grid_highlight(color hot, color current)
+   swatch_highlighter::swatch_highlighter(color hot, color current)
     : hot_color(hot)
     , current_color(current)
    {}
 
-   void image_grid_highlight::draw(context const& ctx)
+   void swatch_highlighter::draw(context const& ctx)
    {
-      auto g = find_parent<basic_image_grid*>(ctx);
+      auto g = find_parent<basic_swatches*>(ctx);
       if (!g)
          return;
 
+      // Nothing set here reaches what is drawn next
       auto& cnv = ctx.canvas;
+      auto saved = cnv.new_state();
       auto const b = ctx.bounds.inset(line_width, line_width);
       auto const s = g->state(g->drawing());
-      if (s == basic_image_grid::hot)
+      if (s == basic_swatches::hot)
       {
          cnv.begin_path();
          cnv.add_round_rect(b, corner_radius);
@@ -58,31 +61,32 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // image_regions
+   // region_highlighter
    ////////////////////////////////////////////////////////////////////////////
-   image_regions::image_regions(regions_type regions_, state_function state_)
+   region_highlighter::region_highlighter(regions_type regions_, state_function state_)
     : regions(std::move(regions_))
     , state(std::move(state_))
     , lit_color(get_theme().indicator_hilite_color)
     , dim_color(get_theme().panel_color.opacity(0.7))
    {}
 
-   // Each region of the cell drawn, mapped from the cell's unit square
-   void image_regions::draw(context const& ctx)
+   // Each region of the swatch drawn, mapped from its unit square
+   void region_highlighter::draw(context const& ctx)
    {
-      auto g = find_parent<basic_image_grid*>(ctx);
+      auto g = find_parent<basic_swatches*>(ctx);
       if (!g || !state)
          return;
-      auto const cell = g->drawing();
-      if (cell < 0 || cell >= int(regions.size()))
+      auto const swatch = g->drawing();
+      if (swatch < 0 || swatch >= int(regions.size()))
          return;
 
       auto& cnv = ctx.canvas;
+      auto saved = cnv.new_state();
       auto const& b = ctx.bounds;
-      auto const& list = regions[cell];
+      auto const& list = regions[swatch];
       for (int i = 0; i != int(list.size()); ++i)
       {
-         auto const s = state(cell, i);
+         auto const s = state(swatch, i);
          if (s == normal)
             continue;
 

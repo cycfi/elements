@@ -47,7 +47,7 @@ Most stock stylers work this way. What each control offers:
 | `thumbwheel_base`
 | `value()`, a `point`.
 
-| `basic_image_grid`, `basic_curve_editor`
+| `basic_swatches` (an image grid), `basic_curve_editor`
 | `drawing()`, and `state(i)` of each item.
 |===
 

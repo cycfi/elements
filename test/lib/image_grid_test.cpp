@@ -19,7 +19,7 @@ namespace cycfi::elements::test
 {
    namespace
    {
-      using grid = basic_image_grid;
+      using grid = basic_swatch_grid;
 
       // Four columns by two rows of 20 by 20 cells
       image_ptr make_image()
@@ -38,7 +38,7 @@ namespace cycfi::elements::test
             (*seen)[g->drawing()] = {g->state(g->drawing()), ctx.bounds};
          }
 
-         using record = std::pair<grid::cell_state, rect>;
+         using record = std::pair<grid::swatch_state, rect>;
          std::shared_ptr<std::map<int, record>> seen =
             std::make_shared<std::map<int, record>>();
       };
@@ -180,11 +180,11 @@ TEST_CASE("image_grid_cell: the current cell, fitted, its proportions kept")
    CHECK(seen.at(5).first == grid::current);
 }
 
-TEST_CASE("image_regions: each region of the cell drawn is asked its state")
+TEST_CASE("region_highlighter: each region of the cell drawn is asked its state")
 {
    test_view tv{{100, 60}};
    std::vector<std::pair<int, int>> asked;
-   image_regions regions{
+   region_highlighter regions{
       {
          {}, {}, {}
        , {{0.1f, 0.1f, 0.4f, 0.4f}, {0.5f, 0.5f, 0.9f, 0.9f}}
@@ -192,7 +192,7 @@ TEST_CASE("image_regions: each region of the cell drawn is asked its state")
     , [&](int cell, int region)
       {
          asked.push_back({cell, region});
-         return region == 0? image_regions::lit : image_regions::dimmed;
+         return region == 0? region_highlighter::lit : region_highlighter::dimmed;
       }
    };
    auto cell = share(image_grid_cell(make_image(), 4, 2, regions));
@@ -214,11 +214,11 @@ TEST_CASE("image_regions: each region of the cell drawn is asked its state")
    CHECK(asked.empty());
 }
 
-TEST_CASE("image_grid_highlight: a label for each cell, where asked")
+TEST_CASE("swatch_highlighter: a label for each cell, where asked")
 {
    test_view tv{{200, 120}};
    std::vector<int> labeled;
-   image_grid_highlight highlight;
+   swatch_highlighter highlight;
    highlight.label = [&](int i)
    {
       labeled.push_back(i);

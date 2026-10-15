@@ -13,6 +13,7 @@
 #include <elements/element/style/child_window.hpp>
 #include <elements/element/style/curve_editor.hpp>
 #include <elements/element/style/image_grid.hpp>
+#include <elements/element/style/swatches.hpp>
 #include <elements/element/style/dial.hpp>
 #include <elements/element/style/grid_lines.hpp>
 #include <elements/element/style/group.hpp>

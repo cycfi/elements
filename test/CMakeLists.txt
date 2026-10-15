@@ -79,6 +79,7 @@ set(elements_test_sources
    pages/elements/drag_and_drop_test.cpp
    pages/elements/visibility_test.cpp
    pages/elements/curve_editor_test.cpp
+   pages/elements/swatches_test.cpp
    pages/layout/sizing_test.cpp
    pages/layout/stretch_test.cpp
    pages/layout/span_test.cpp
@@ -103,6 +104,7 @@ set(elements_test_sources
    pages/styles/captions_test.cpp
    pages/styles/text_entry_test.cpp
    pages/styles/curve_editor_style_test.cpp
+   pages/styles/swatches_style_test.cpp
    pages/styles/menus_test.cpp
    pages/styles/decorations_test.cpp
    pages/styles/buttons_test.cpp

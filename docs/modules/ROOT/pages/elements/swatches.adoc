@@ -1,0 +1,218 @@
+= Swatches
+
+include::../common.adoc[]
+
+== Overview
+
+Swatches are a set of small samples to pick one from: colors in a
+palette, thumbnails, presets, the cells of an image grid (see
+xref:elements/images.adoc#_image_grid[Image Grid]). One swatch is
+current, and one may be hot, under the pointer.
+
+image::elements/swatches.png[alt="A palette of five colors, the fourth current and outlined, the second under the pointer and tinted; beside it a swatch cell showing the fourth color alone", width=420px, link={imagesdir}/elements/swatches.png]
+
+A swatch grid makes swatches of any content: it cuts the element it
+holds, an image or anything drawn, into columns and rows of equal cells,
+and lets the user pick one. A swatch cell shows the current cell alone.
+
+An element made of swatches derives from `basic_swatches`, and has one
+highlighter, an element that marks the state of a swatch. The
+highlighter is not laid out with the swatches: the element draws its
+swatches, then draws the highlighter once for each swatch, over it, with
+the swatch's rectangle as its bounds. Each time, `drawing()` gives the
+highlighter the swatch it is drawing, and `state(i)` the state of that
+swatch. The stock highlighters are on the
+xref:styles/swatches.adoc[Swatches] styles page.
+
+== Swatches
+
+=== Include
+
+```c++
+#include <elements/element/swatches.hpp>
+```
+
+=== Declaration
+
+```c++
+class basic_swatches
+{
+public:
+
+   enum swatch_state { normal, hot, current };
+
+   virtual                 ~basic_swatches() = default;
+
+   virtual int             drawing() const = 0;
+   virtual swatch_state    state(int i) const = 0;
+   virtual int             value() const = 0;
+};
+```
+
+=== Expressions
+
+==== Notation
+
+`sw`              :: A `basic_swatches`, or a class derived from it.
+`i`               :: `int`, a swatch.
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `sw.drawing()`                   | Get the swatch being drawn.   | `int`
+| `sw.state(i)`                    | Get the state of swatch `i`:
+                                     `normal`, `hot` or `current`. | `swatch_state`
+| `sw.value()`                     | Get the current swatch.       | `int`
+|===
+
+`basic_swatches` is not an element: an element made of swatches derives
+from it as well, as `basic_swatch_grid` derives from `proxy_base` and
+`basic_swatches`.
+
+== Swatch Grid
+
+=== Include
+
+```c++
+#include <elements/element/swatch_grid.hpp>
+```
+
+=== Declaration
+
+```c++
+class basic_swatch_grid : public proxy_base, public basic_swatches
+{
+public:
+
+   using change_function = std::function<void(int)>;
+
+                           basic_swatch_grid(
+                              element_ptr highlighter
+                            , int columns, int rows);
+
+   int                     columns() const;
+   int                     rows() const;
+   int                     size() const;
+
+   int                     value() const override;
+   void                    value(int i);
+
+   change_function         on_change;
+   ...
+};
+
+class basic_swatch_cell : public basic_swatch_grid
+{
+   ...
+};
+
+template <concepts::Element Content, concepts::Element Highlighter>
+swatch_grid_t<Content>
+swatch_grid(int columns, int rows, Content&& content, Highlighter&& h);
+
+template <concepts::Element Content, concepts::Element Highlighter>
+swatch_cell_t<Content>
+swatch_cell(int columns, int rows, Content&& content, Highlighter&& h);
+```
+
+A swatch grid is a proxy: its subject is the content. It is as large as
+the content, and draws the content, then the highlighter over each cell.
+The cell under the pointer is hot, and a press and a release on the same
+cell pick it: it becomes the value, `on_change(i)` is called if it
+changed, and an enclosing popup closes.
+
+A swatch cell draws the content at its own size, scaled and moved so
+that the current cell, as large as fits, its proportions kept, fills the
+middle of its bounds, then the highlighter over it. It has no size of
+its own, and takes no clicks.
+
+=== Expressions
+
+==== Notation
+
+`c`, `r`          :: `int`: the number of columns and rows.
+`e`               :: An element, the content.
+`hl`              :: An element, the highlighter.
+`g`               :: A swatch grid or a swatch cell.
+`i`               :: `int`, a cell.
+`f`               :: A function taking a cell, `void(int)`.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `swatch_grid(c, r, e, hl)`       | Make a swatch grid of `e`, in `c` by
+                                     `r` cells, each highlighted by `hl`.
+| `swatch_cell(c, r, e, hl)`       | Make a swatch cell of `e`, in `c` by
+                                     `r` cells, showing the current one,
+                                     highlighted by `hl`.
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `g.columns()`                    | Get the number of columns.    | `int`
+| `g.rows()`                       | Get the number of rows.       | `int`
+| `g.size()`                       | Get the number of cells.      | `int`
+| `g.value()`                      | Get the current cell.         | `int`
+|===
+
+==== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `g.value(i)`                     | Set the current cell, clamped
+                                     to the cells. No callback.    | `void`
+|===
+
+==== Access
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `g.on_change`                    | Access the callback for a
+                                     cell the user picks.          | `change_function`
+|===
+
+== Example
+
+A palette of five colors, a swatch grid of drawn content:
+
+```c++
+#include <elements/element/swatch_grid.hpp>
+#include <elements/element/style/swatches.hpp>    // For swatch_highlighter
+#include <elements/element/style/misc.hpp>        // For box
+...
+using namespace cycfi::elements;
+...
+auto chip = [](color c) { return margin({3, 3, 3, 3}, box(c)); };
+
+auto colors_ = share(swatch_grid(5, 1,                           <1>
+   fixed_size({180, 36}, htile(
+      chip(rgba(200, 80, 70, 255)), chip(rgba(220, 150, 60, 255))
+    , chip(rgba(110, 180, 90, 255)), chip(rgba(70, 170, 170, 255))
+    , chip(rgba(80, 120, 200, 255))))
+ , swatch_highlighter{}));
+colors_->value(3);                                               <2>
+colors_->on_change = [](int i) { use_color(i); };                <3>
+```
+
+<1> Five cells in a row, over five boxes.
+<2> The fourth current.
+<3> Called when the user picks another.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

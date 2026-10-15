@@ -64,7 +64,19 @@
     <a class="nav-link" href="gallery.html">Gallery</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -89,22 +101,28 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Reference</span>
+    <a class="nav-link" href="reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/app.html">App</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/window.html">Window</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="view.html">View</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -312,7 +330,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Support</span>
+    <a class="nav-link" href="support.html">Support</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="support/canvas.html">Canvas</a>
@@ -382,6 +400,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Elements Library</a></li>
+    <li><a href="setup.html">Setup and Installation</a></li>
     <li><a href="testing.html">Testing Elements</a></li>
   </ul>
 </nav>
@@ -403,7 +422,158 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Running the test suite: the headless host and the recording backend, figures, and CI.</p>
+<p>The test suite is one program, <code>elements_test</code>, built from <code>test/</code> with
+Catch2. It holds two kinds of test:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The library&#8217;s own tests, in <code>test/lib/</code>: layout, drawing, input,
+undo, the clipboard, and the defects found and fixed, each kept as a
+test so that it stays fixed.</p>
+</li>
+<li>
+<p>The page tests, in <code>test/pages/</code>: one for each reference page. A page
+test checks what its page claims, compiles the page&#8217;s code, and draws
+the page&#8217;s figures. The tutorials have one more, which checks that each
+listing on a tutorial page matches the example it comes from.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The suite runs on any host. On a windowing host each test view is made on
+a real window that is never shown; on the <code>headless</code> host there are no
+windows at all, and the suite runs anywhere, with no display.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_the_tests"><a class="anchor" href="#_running_the_tests"></a>Running the Tests</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Turn the tests on at configure time, and build the <code>elements_test</code>
+target:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DELEMENTS_BUILD_TESTS=ON
+cmake --build build --target elements_test
+ctest --test-dir build/test --output-on-failure</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ctest</code> runs <code>elements_test</code> as one test, so its summary is one line. To
+see each test case, or run some of them, run the program from its
+directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cd build/test
+./elements_test                       # all of them
+./elements_test "[grids_page]"        # one page's tests
+./elements_test "grids page: *"       # by name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each page test is tagged with its page, as <code>[grids_page]</code> is.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_without_a_display"><a class="anchor" href="#_without_a_display"></a>Without a Display</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>headless</code> host has no windows: a view lays out and draws into an
+image, and takes events from direct calls. With it, the suite needs no
+display, no window manager and no session, and runs the same over SSH,
+in a container, or on a CI runner.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build-headless -G Ninja -DCMAKE_BUILD_TYPE=Release \
+   -DELEMENTS_HOST_UI_LIBRARY=headless -DELEMENTS_BUILD_TESTS=ON
+cmake --build build-headless --target elements_test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add <code>-DELEMENTS_RECORDING=ON</code> to draw with Artist&#8217;s recording backend,
+which keeps a journal of what was drawn and rasterizes nothing. Tests
+that check pixels are left out in this configuration; the rest check the
+journal or the layout.</p>
+</div>
+<div class="paragraph">
+<p>On Linux, the windowing hosts need a display. Without a desktop, run the
+suite under a virtual one: <code>xvfb-run -a ./elements_test</code> for GTK and X11,
+or a headless Weston for Wayland:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">weston --backend=headless-backend.so --socket=test-wayland --idle-time=0 &amp;
+WAYLAND_DISPLAY=test-wayland ./elements_test</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A virtual X display has no window manager, so nothing applies the size
+hints a window sets; the X11 host clamps a window&#8217;s size itself for that
+reason.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_figures"><a class="anchor" href="#_figures"></a>Figures</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The page tests draw the figures on the reference pages. Each figure is
+written to <code>build/test/results/</code>, and is copied to
+<code>docs/modules/ROOT/images/</code> by hand once it has been looked at: a test
+that draws a figure does not decide that the figure is right.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_in_ci"><a class="anchor" href="#_in_ci"></a>In CI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every push and pull request builds and tests on GitHub Actions:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Job</th>
+<th class="tableblock halign-left valign-top">What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quartz2D, Direct2D, Cairo, Skia</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The library and every example, built with each backend on each
+  platform it supports.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tests (headless)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The suite on the headless host with the recording backend, on macOS,
+  Windows and Linux.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Linux gtk, x11, wayland</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The suite on each Linux host, with Cairo and with Skia, under Xvfb or a
+  headless Weston.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedded</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>test/embed/</code>: two libraries, each with Elements inside, loaded into
+  one process, on each platform and backend. See
+  <a href="advanced_builds.html#_plug_ins" class="xref page">Plug-ins</a>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A second workflow runs the suite under the sanitizers each week; see
+<a href="advanced_builds.html#_sanitizers" class="xref page">Sanitizers</a>.</p>
 </div>
 <hr>
 <div class="paragraph">

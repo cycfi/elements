@@ -64,7 +64,19 @@
     <a class="nav-link" href="gallery.html">Gallery</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -89,22 +101,28 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Reference</span>
+    <a class="nav-link" href="reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/app.html">App</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/window.html">Window</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="view.html">View</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -312,7 +330,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Support</span>
+    <a class="nav-link" href="support.html">Support</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="support/canvas.html">Canvas</a>
@@ -382,6 +400,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Elements Library</a></li>
+    <li><a href="reference.html">Reference</a></li>
     <li><a href="application.html">Application</a></li>
   </ul>
 </nav>
@@ -402,6 +421,41 @@
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>These are the parts of a program that sit above the elements: the app,
+its windows, the view in each window, and the model that keeps a
+program&#8217;s data in step with the view. They are declared in the
+top-level headers, <code>app.hpp</code>, <code>window.hpp</code>, <code>view.hpp</code>, <code>base_view.hpp</code>
+and <code>model.hpp</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="application/app.html" class="xref page">App</a>: runs the event loop until it is
+stopped. A standalone program has one.</p>
+</li>
+<li>
+<p><a href="application/window.html" class="xref page">Window</a>: a window on the screen, with a
+title, a size, a position and limits on its size.</p>
+</li>
+<li>
+<p><a href="view.html" class="xref page">View</a>: the root of the user interface. It holds the
+elements, lays them out, draws them, passes them the user&#8217;s input,
+and runs the work the program posts to it.</p>
+</li>
+<li>
+<p><a href="model.html" class="xref page">Model</a>: a value that the elements linked to it show,
+so the program sets the value and the view follows.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Of the four, only the view is always there. A plug-in, such as an audio
+plug-in in a host, has no app and no window of its own: the plug-in
+host provides a native view, and the Elements view lives in it. The
+app and the window are kept thin for that reason, and the work is done
+by the view.</p>
+</div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>

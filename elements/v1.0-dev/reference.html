@@ -64,7 +64,19 @@
     <a class="nav-link" href="gallery.html">Gallery</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -87,24 +99,30 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="1">
+  <li class="nav-item is-current-page" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Reference</span>
+    <a class="nav-link" href="reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/app.html">App</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/window.html">Window</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="view.html">View</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -312,7 +330,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Support</span>
+    <a class="nav-link" href="support.html">Support</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="support/canvas.html">Canvas</a>
@@ -402,6 +420,93 @@
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The reference describes every public part of Elements, a page for each.
+The pages are grouped the way the headers are: the top-level headers
+under Application, <code>element/</code> under Elements, <code>element/style/</code> under
+Styles, and <code>support/</code> under Support.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="aspects.html" class="xref page">Design Aspects</a>: the ideas the library is built on,
+and the reasons for them. Read it first.</p>
+</li>
+<li>
+<p><a href="application.html" class="xref page">Application</a>: the app, its windows, the view in
+each window, and the model that connects a program&#8217;s data to the
+view.</p>
+</li>
+<li>
+<p><a href="elements.html" class="xref page">Elements</a>: the element protocol and every element
+in the library: layout, controls, text and images, and containers.</p>
+</li>
+<li>
+<p><a href="styles.html" class="xref page">Styles</a>: the stylers that draw the controls, and how
+a control and its styler work together.</p>
+</li>
+<li>
+<p>Support: the things the elements are built with: the
+<a href="support/canvas.html" class="xref page">canvas</a>, the <a href="support/context.html" class="xref page">context</a>
+an element is drawn in, the <a href="support/theme.html" class="xref page">theme</a>,
+<a href="support/icons.html" class="xref page">icons</a>, the <a href="support/clipboard.html" class="xref page">clipboard</a>,
+and more.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you are new to Elements, the <a href="tutorials.html" class="xref page">Tutorials</a> come
+first: each one links to the reference pages for what it uses.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading_a_page"><a class="anchor" href="#_reading_a_page"></a>Reading a Page</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each page that documents a header has the same parts, in the same
+order:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Overview</dt>
+<dd>
+<p>What the component is for, how it behaves, and how it
+relates to the rest of the library, often with a figure.</p>
+</dd>
+<dt class="hdlist1">Include</dt>
+<dd>
+<p>The header to include. <code>&lt;elements.hpp&gt;</code> brings in the whole
+library, and a page names its own header where including only that one
+is enough.</p>
+</dd>
+<dt class="hdlist1">Declaration</dt>
+<dd>
+<p>The declarations, as the header has them, with the
+implementation details left out.</p>
+</dd>
+<dt class="hdlist1">Expressions</dt>
+<dd>
+<p>What can be written with the component. A <em>Notation</em> list
+first names the variables the tables use, such as <code>e</code> for an element or
+<code>ctx</code> for a context. Then one or more tables give each expression and
+what it does: constructors and factory functions, then accessors,
+mutators and the other operations.</p>
+</dd>
+<dt class="hdlist1">Example</dt>
+<dd>
+<p>A short program, or part of one, that uses the component.
+Every example on these pages is compiled, and the claims a page makes
+are checked, by the page&#8217;s test in <code>test/pages/</code> (see
+<a href="testing.html" class="xref page">Testing Elements</a>).</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>A page that documents several related components, such as
+<a href="layout/tiles.html" class="xref page">Tiles</a>, repeats the Declaration and Expressions
+parts for each.</p>
+</div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>

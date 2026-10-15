@@ -65,7 +65,19 @@
     <a class="nav-link" href="gallery.html">Gallery</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -90,22 +102,28 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Reference</span>
+    <a class="nav-link" href="reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/app.html">App</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/window.html">Window</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="view.html">View</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -313,7 +331,7 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Support</span>
+    <a class="nav-link" href="support.html">Support</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="support/canvas.html">Canvas</a>
@@ -401,534 +419,233 @@
 <article class="doc">
 <h1 class="page">Setup and Installation</h1>
 <div class="sect1">
-<h2 id="_requirements"><a class="anchor" href="#_requirements"></a>Requirements</h2>
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Here are the basic tools that you need in order to use the library:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>A C&#43;&#43;20 compiler</p>
-</li>
-<li>
-<p>Git</p>
-</li>
-<li>
-<p><a href="https://cmake.org/">CMake</a> 3.16 or higher</p>
-</li>
-</ol>
-</div>
-<div class="sect2">
-<h3 id="_c20"><a class="anchor" href="#_c20"></a>C&#43;&#43;20</h3>
-<div class="paragraph">
-<p>Elements currently supports the MacOS, Windows and Linux.</p>
+<p>Elements builds with CMake on macOS, Windows and Linux. Each platform has
+a default host and a default drawing backend, and on macOS and Windows
+the defaults need nothing installed beyond the compiler and CMake. This
+page builds the library and its examples with those defaults, and you
+are then ready for the <a href="tutorials.html" class="xref page">Tutorials</a>.</p>
 </div>
 <div class="paragraph">
-<p>In the Mac, we support the <a href="https://developer.apple.com/xcode/">XCode</a> IDE.</p>
+<p>Everywhere, Elements needs:</p>
 </div>
-<div class="paragraph">
-<p>In Windows, we support Windows 10 with <a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2022</a>, although it will probably also work with older versions of the Visual Studio IDE.</p>
-</div>
-<div class="paragraph">
-<p>In Linux, we support both <a href="https://clang.llvm.org/">Clang</a> and <a href="https://gcc.gnu.org/">g&#43;&#43;</a>. Get the latest version with a C&#43;&#43;20 compiler.</p>
-</div>
-<div class="paragraph">
-<p>The <a href="https://www.jetbrains.com/clion/">CLion</a> IDE is supported on all platforms, it simply requires the CMakeLists.txt file to open and build the project.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_git"><a class="anchor" href="#_git"></a>Git</h3>
-<div class="paragraph">
-<p>Elements C&#43;&#43; GUI library, plus the Cycfi Infra library:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">git clone --recurse-submodules  https://github.com/cycfi/elements.git</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_cmake"><a class="anchor" href="#_cmake"></a>CMake</h3>
-<div class="paragraph">
-<p>Make sure you have <a href="https://cmake.org/">CMake</a> 3.15 or higher. Follow the <a href="https://cmake.org/install/">installation procedure</a> for your platform, or follow the instructions below for specific environments.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_required_libraries"><a class="anchor" href="#_required_libraries"></a>Required Libraries</h3>
-<div class="paragraph">
-<p>What Elements needs depends on the graphics backend, and the backend
-depends on the platform.</p>
-</div>
-<div class="paragraph">
-<p>On MacOS, Elements draws with <strong>Quartz2D</strong>, which is part of the operating
-system. There are no libraries to install and no package manager to set
-up: a C&#43;&#43; compiler and CMake are enough.</p>
-</div>
-<div class="paragraph">
-<p>Elsewhere, Elements draws with <strong>Cairo</strong>, and needs it and its companions:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a></p>
-</li>
-<li>
-<p><a href="https://cairographics.org/">Cairo</a></p>
-</li>
-<li>
-<p><a href="https://www.freedesktop.org/wiki/Software/fontconfig/">fontconfig</a></p>
-</li>
-<li>
-<p><a href="https://www.freetype.org/">freetype2</a></p>
-</li>
-<li>
-<p><a href="https://harfbuzz.github.io/">harfbuzz</a></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>On Linux, the GTK host additionally needs GTK3.</p>
-</div>
-<div class="paragraph">
-<p>Specific instructions are provided below for specific environments.</p>
-</div>
-<div class="paragraph">
-<p>Additionally, the following libraries are dragged as submodules:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>The <a href="https://github.com/cycfi/infra/">Cycfi infra library</a></p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Infra provides some basic groundwork common to Cycfi libraries, including Elements.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_macos"><a class="anchor" href="#_macos"></a>MacOS</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_install_required_libraries"><a class="anchor" href="#_install_required_libraries"></a>Install required libraries</h3>
-<div class="paragraph">
-<p>There are none. Elements draws with Quartz2D on MacOS, which comes with
-the system, so nothing needs to be installed and pkg-config is not
-required.</p>
-</div>
-<div class="paragraph">
-<p>You do need the command line developer tools, for the compiler and the
-system headers. If <code>git</code> or <code>clang</code> is missing, this installs them:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">xcode-select --install</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_install_cmake"><a class="anchor" href="#_install_cmake"></a>Install CMake</h3>
-<div class="paragraph">
-<p>Using <a href="https://brew.sh/">Homebrew</a>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">brew install cmake</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_generating_the_project_using_cmake"><a class="anchor" href="#_generating_the_project_using_cmake"></a>Generating the Project using CMake</h3>
-<div class="paragraph">
-<p>There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for the MacOS:</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_using_xcode"><a class="anchor" href="#_using_xcode"></a>Using XCode</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>CD to the elements library.</p>
-</li>
-<li>
-<p>Make a build directory inside the elements directory.</p>
-</li>
-<li>
-<p>CD to the build directory.</p>
-</li>
-<li>
-<p>invoke cmake.</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
-mkdir build
-cd build
-cmake -GXcode ../</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If you are having issues with code signing, disable it by setting the <code>CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED</code> variable to <code>NO</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If successful, CMake will generate an <a href="https://developer.apple.com/xcode/">XCode</a> project in the build directory. Open the project file <code>elements.xcodeproj</code> and build all. You should see a couple of example applications.</p>
-</div>
-<div class="paragraph">
-<p>If you are having problems with code signing, do this:</p>
-</div>
-<div class="paragraph">
-<p>Build Settings&#8594;Code Signing Identity for ALL_BUILD and elements, click, then choose "Other", then clear the text (empty). Do this for both ALL_BUILD and elements.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_windows"><a class="anchor" href="#_windows"></a>Windows</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_install_required_libraries_2"><a class="anchor" href="#_install_required_libraries_2"></a>Install required libraries</h3>
-<div class="paragraph">
-<p>The Windows port requires a package manager that supports the dependencies listed above. One popular package manager is <a href="https://vcpkg.io/en/">vcpkg</a>. We will use vcpkg in the setup instructions below.</p>
-</div>
-<div class="paragraph">
-<p>Clone and bootstrap the vcpkg dependency manager. I suggest placing it in <code>c:\</code> or <code>c:\Program Files</code>, but it does not really matter where.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">git clone https://github.com/microsoft/vcpkg
-.\vcpkg\bootstrap-vcpkg.bat</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Install the dependencies:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">vcpkg install pkgconf
-vcpkg install cairo
-vcpkg install libwebp</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<tbody>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
-</td>
-<td class="content">
-Installing Cairo already brings in the other dependencies.
-</td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A C&#43;&#43;20 compiler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clang, GCC, or MSVC. On Windows, Visual Studio 2022 version 17.14 or
+  later.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://git-scm.com/">Git</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">With submodule support.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://cmake.org/">CMake</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.16 or later; 3.21 or later to use the CMake presets.</p></td>
+</tr>
+</tbody>
 </table>
+<div class="paragraph">
+<p>Elements draws with <a href="https://github.com/cycfi/artist">Artist</a>, which comes
+with it as a submodule, along with the
+<a href="https://github.com/cycfi/infra/">Cycfi infra library</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_getting_the_code"><a class="anchor" href="#_getting_the_code"></a>Getting the Code</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">git clone --recurse-submodules https://github.com/cycfi/elements.git
+cd elements</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The commands on this page run from there. <code>--recurse-submodules</code> fetches
+Artist and infra. If you cloned without it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">git submodule update --init --recursive</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_on_macos"><a class="anchor" href="#_building_on_macos"></a>Building on macOS</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>The Xcode Command Line Tools provide the compiler, the system SDK and
+Git. If you do not have them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">xcode-select --install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CMake, and Ninja if you build from the command line, from
+<a href="https://brew.sh/">Homebrew</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">brew install cmake ninja</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That is all. The default backend is Quartz 2D, which is part of the
+system.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_install_cmake_2"><a class="anchor" href="#_install_cmake_2"></a>Install CMake</h3>
+<h3 id="_build"><a class="anchor" href="#_build"></a>Build</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>Follow the <a href="https://cmake.org/install/">installation procedure</a>.</p>
+<p>The examples are in <code>build/examples/</code>, each an application bundle: for
+example, <code>build/examples/hello_universe/HelloUniverse.app</code>.</p>
+</div>
+<div class="paragraph">
+<p>To work in Xcode instead, generate an Xcode project and open
+<code>build/elements.xcodeproj</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build -G Xcode</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If Xcode stops at code signing, configure with
+<code>-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_on_windows"><a class="anchor" href="#_building_on_windows"></a>Building on Windows</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prerequisites_2"><a class="anchor" href="#_prerequisites_2"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>Visual Studio 2022, version 17.14 or later, with the <em>Desktop development
+with C&#43;&#43;</em> workload. It includes CMake. Ninja, if you build from the
+command line, ships with Visual Studio too, or <code>choco install ninja</code>.</p>
+</div>
+<div class="paragraph">
+<p>The default backend is Direct2D, which uses system libraries only. Its one
+other need, a WebP decoder, is fetched and built by CMake. There is nothing
+to install.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_generating_the_project_using_cmake_2"><a class="anchor" href="#_generating_the_project_using_cmake_2"></a>Generating the Project using CMake</h3>
+<h3 id="_build_2"><a class="anchor" href="#_build_2"></a>Build</h3>
 <div class="paragraph">
-<p>If you have <a href="https://visualstudio.microsoft.com/vs/">Visual Studio 2022</a>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Use the Visual Studio GUI for a graphical development environment.</p>
-</li>
-<li>
-<p>Use NMake for make-style command-line builds.</p>
-</li>
-</ul>
-</div>
-<div class="sect3">
-<h4 id="_visual_studio_2022_gui"><a class="anchor" href="#_visual_studio_2022_gui"></a>Visual Studio 2022 GUI</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>CD to the elements library.</p>
-</li>
-<li>
-<p>Make a build directory inside the elements directory.</p>
-</li>
-<li>
-<p>CD to the build directory.</p>
-</li>
-<li>
-<p>invoke cmake.</p>
-</li>
-</ol>
+<p>From an <em>x64 Native Tools Command Prompt for VS 2022</em>, in the Start menu
+under Visual Studio 2022, which has the 64-bit compiler on its path:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
-mkdir build
-cd build</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You will need to tell cmake the location of the vcpkg toolchain file. That way, <code>find_package</code> will know where to find the installed libraries. If you installed vcpkg in <code>c:\</code> as suggested, you invoke cmake like this:</p>
+<p>The examples are in <code>build\examples\</code>: for example,
+<code>build\examples\hello_universe\HelloUniverse.exe</code>.</p>
+</div>
+<div class="paragraph">
+<p>To work in Visual Studio instead, generate a solution and open
+<code>build\elements.sln</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cmake -G"Visual Studio 17 2022" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake ../</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If successful, cmake will generate a Visual Studio solution in the build directory. Open the project file <code>elements.sln</code> and build all. You should see a couple of example applications.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_nmake"><a class="anchor" href="#_nmake"></a>NMake</h4>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Open a <em>Command Prompt for VS 2022</em>
-({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.</p>
-</li>
-<li>
-<p>CD to the elements library.</p>
-</li>
-<li>
-<p>Make a build directory inside the elements directory.</p>
-</li>
-<li>
-<p>CD to the build directory.</p>
-</li>
-<li>
-<p>invoke cmake.</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
-mkdir build
-cd build</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Again, you will need to tell cmake the location of the vcpkg toolchain file. If you installed vcpkg in <code>c:\</code> as suggested, you invoke cmake like this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cmake -G"NMake Makefiles" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake ../</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>If successful, cmake will generate NMake Make files in the build directory. Invoke <code>nmake</code> to build the binary.</p>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build -G "Visual Studio 17 2022"</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_windows_mingw_gtk"><a class="anchor" href="#_windows_mingw_gtk"></a>Windows (MinGW + Gtk)</h2>
+<h2 id="_building_on_linux"><a class="anchor" href="#_building_on_linux"></a>Building on Linux</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_install_msys2_toolchain_and_required_libraries"><a class="anchor" href="#_install_msys2_toolchain_and_required_libraries"></a>Install MSYS2 toolchain and required libraries</h3>
-<div class="quoteblock">
-<blockquote>
+<h3 id="_prerequisites_3"><a class="anchor" href="#_prerequisites_3"></a>Prerequisites</h3>
 <div class="paragraph">
-<p>MSYS2 is a software distro and building platform for Windows</p>
-</div>
-</blockquote>
-</div>
-<div class="paragraph">
-<p>Download <a href="https://www.msys2.org/">MSYS2</a> from its official website and install it. Its installation guide is on the home page.</p>
-</div>
-<div class="paragraph">
-<p>Open <code>MSYS2 MinGW 64-bit</code> or <code>MSYS2 MinGW 32-bit</code> from your start menu. Install tools and libraries:</p>
+<p>GCC or Clang with C&#43;&#43;20, CMake, and the development packages for the
+host and the drawing backend. On Linux, the default host is GTK 3 and the
+default backend is Cairo, from the system. On Ubuntu or Debian:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
-pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
-pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
-pacman -S ${MINGW_PACKAGE_PREFIX}-libwebp
-pacman -S make</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_install_cmake_3"><a class="anchor" href="#_install_cmake_3"></a>Install CMake</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">pacman -S ${MINGW_PACKAGE_PREFIX}-cmake</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_generating_the_project_using_cmake_3"><a class="anchor" href="#_generating_the_project_using_cmake_3"></a>Generating the Project using CMake</h3>
-<div class="paragraph">
-<p>There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for MSYS2:</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_using_unix_makefiles"><a class="anchor" href="#_using_unix_makefiles"></a>Using UNIX makefiles</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>CD to the elements library.</p>
-</li>
-<li>
-<p>Make a build directory inside the elements directory.</p>
-</li>
-<li>
-<p>CD to the build directory.</p>
-</li>
-<li>
-<p>invoke cmake. <code>-DELEMENTS_HOST_UI_LIBRARY=gtk</code> tells cmake to build with Gtk.</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
-mkdir build
-cd build
-cmake ../ -G "Unix Makefiles" -DELEMENTS_HOST_UI_LIBRARY=gtk</code></pre>
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">sudo apt-get update
+sudo apt-get install cmake ninja-build pkg-config \
+   libgtk-3-dev libcairo2-dev libfontconfig1-dev libfreetype6-dev \
+   libharfbuzz-dev libwebp-dev</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If successful, cmake will generate Unix Make files in the build directory.</p>
+<p>Elements also has native X11 and Wayland hosts, with packages of their
+own; <a href="advanced_builds.html#_host_ui_libraries" class="xref page">Advanced Builds</a> lists
+them.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_build_3"><a class="anchor" href="#_build_3"></a>Build</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The examples are in <code>build/examples/</code>: for example,
+<code>build/examples/hello_universe/HelloUniverse</code>.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_linux"><a class="anchor" href="#_linux"></a>Linux</h2>
+<h2 id="_the_examples"><a class="anchor" href="#_the_examples"></a>The Examples</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_install_required_libraries_3"><a class="anchor" href="#_install_required_libraries_3"></a>Install required libraries</h3>
 <div class="paragraph">
-<p>In addition to the requirements listed in the <a href="#requirements">requirements</a> section, the <a href="https://www.gtk.org/">GTK3 library</a> is also required by the Linux port of Elements.</p>
-</div>
-<div class="paragraph">
-<p>On Debian and derived distributions using <a href="https://linux.die.net/man/8/apt-get">apt-get</a> (requires <code>sudo</code>):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">sudo apt-get install libcairo2-dev
-sudo apt-get install libgtk-3-dev
-sudo apt-get install libwebp-dev</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_install_cmake_4"><a class="anchor" href="#_install_cmake_4"></a>Install CMake</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">sudo apt-get -y install cmake</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_generating_the_project_using_cmake_4"><a class="anchor" href="#_generating_the_project_using_cmake_4"></a>Generating the Project using CMake</h3>
-<div class="paragraph">
-<p>There are multiple ways to generate a project file using CMake depending on
-your platform and desired IDE, but here is an example for Linux:</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_using_unix_makefiles_2"><a class="anchor" href="#_using_unix_makefiles_2"></a>Using UNIX makefiles</h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>CD to the elements library.</p>
-</li>
-<li>
-<p>Make a build directory inside the elements directory.</p>
-</li>
-<li>
-<p>CD to the build directory.</p>
-</li>
-<li>
-<p>invoke cmake.</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">cd elements
-mkdir build
-cd build
-cmake -G "Unix Makefiles" ../</code></pre>
-</div>
+<p><code>examples/</code> has more than thirty programs, each a single <code>main.cpp</code>. The
+build makes all of them. Start with <code>hello_universe</code> and the
+<a href="tutorials.html" class="xref page">Tutorials</a>, which take five of the examples in order;
+the Tutorials page also lists what each of the others shows.</p>
 </div>
 <div class="paragraph">
-<p>If successful, cmake will generate Unix Make files in the build directory.</p>
-</div>
+<p>To start a program of your own, copy <code>empty</code>: a window with a background
+and nothing else. <a href="outside_project.html" class="xref page">Building Outside the Project</a>
+shows how to build the copy in a folder of its own.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_building_and_running_the_examples"><a class="anchor" href="#_building_and_running_the_examples"></a>Building and Running the examples</h2>
+<h2 id="_going_further"><a class="anchor" href="#_going_further"></a>Going Further</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If successful, cmake will generate a project file or makefiles in the build directory. Build the library and example programs using the generated makefiles or open the project file using your IDE and build all.</p>
-</div>
-<div class="paragraph">
-<p>You should see a couple of example applications in there that you can run. These examples are provided as starting points to get you up to speed in learning how to use the library. For simplicity, each example is contained in a single <code>main.cpp</code> source file.</p>
-</div>
-<div class="paragraph">
-<p>Feel free to inspect and mess with the examples. Each example demonstrates different aspects of the Elements library, from layout to control. You&#8217;d probably want to start with the &#8220;hello_universe&#8221; example, which is the Element&#8217;s hello-world counterpart. You can copy the &#8220;empty&#8221; example and use it as a boilerplate for your own project. See next section on how to copy an example and build outside the Elements project directory.</p>
-</div>
-<div class="paragraph">
-<p>Tips:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Resize the window and see the elements fluidly resize</p>
-</li>
-<li>
-<p>Use two-finger swipe to move the sliders and knobs</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_building_outside_the_project"><a class="anchor" href="#_building_outside_the_project"></a>Building Outside the Project</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The Elements project is set up so that you can easily copy and paste any of the examples outside the project, set -DELEMENTS_ROOT="path/to/elements", and the example should immediately build without any hassle.</p>
-</div>
-<div class="paragraph">
-<p>Here&#8217;s an example for XCode assuming the elements lib is in the same directory alongside the "hello_universe" example directory you copied to:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Copy the hello_universe example project directory.</p>
-</li>
-<li>
-<p>Make a build directory inside the hello_universe directory.</p>
-</li>
-<li>
-<p>CD to the build directory.</p>
-</li>
-<li>
-<p><code>cmake -GXcode -DELEMENTS_ROOT="../elements" ../</code></p>
-</li>
-</ol>
+<p>Each platform has more than one backend and, on Linux, more than one
+host. <a href="advanced_builds.html" class="xref page">Advanced Builds</a> covers choosing them,
+along with the build options, sanitizers and link-time optimization.
+<a href="testing.html" class="xref page">Testing Elements</a> covers the test suite.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
 <em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
 </div>
 </div>

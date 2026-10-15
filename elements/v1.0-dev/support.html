@@ -64,7 +64,19 @@
     <a class="nav-link" href="gallery.html">Gallery</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
@@ -89,22 +101,28 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Reference</span>
+    <a class="nav-link" href="reference.html">Reference</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="aspects.html">Design Aspects</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/app.html">App</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="application/window.html">Window</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="view.html">View</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -310,9 +328,9 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Support</span>
+    <a class="nav-link" href="support.html">Support</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="support/canvas.html">Canvas</a>
@@ -382,6 +400,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Elements Library</a></li>
+    <li><a href="reference.html">Reference</a></li>
     <li><a href="support.html">Support</a></li>
   </ul>
 </nav>
@@ -402,6 +421,57 @@
 <div class="sect1">
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The support headers, in <code>support/</code>, hold what the elements are built
+with: the surface they draw on, the context they are drawn in, the
+theme that gives them their look, and the utilities the stylers share.
+A program uses some of them directly, the theme and the clipboard most
+often; a custom element or styler uses most of them.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="support/canvas.html" class="xref page">Canvas</a>: the <a href="https://cycfi.github.io/artist/artist/v1.0-dev/index.html">Artist</a> drawing surface every
+element draws on.</p>
+</li>
+<li>
+<p><a href="support/context.html" class="xref page">Context</a>: where an element is and what it
+is drawn into, handed to it with each call.</p>
+</li>
+<li>
+<p><a href="support/theme.html" class="xref page">Theme</a>: the colors, fonts and sizes every
+control is drawn with.</p>
+</li>
+<li>
+<p><a href="support/receivers.html" class="xref page">Receivers</a>: the interface of an element
+that holds a value, and how changes to the value are reported.</p>
+</li>
+<li>
+<p><a href="support/draw_utils.html" class="xref page">Drawing Utilities</a>: the panels, button
+faces, tracks, thumbs, knobs and marks the stock stylers draw with.</p>
+</li>
+<li>
+<p><a href="support/text_utils.html" class="xref page">Text Utilities</a>: measuring and drawing
+text and icons, and reading and changing an element&#8217;s text through
+the element alone.</p>
+</li>
+<li>
+<p><a href="support/icons.html" class="xref page">Icons</a>: the icon font and the names of its
+icons.</p>
+</li>
+<li>
+<p><a href="support/payload.html" class="xref page">Payload</a>: the data a drag and drop carries,
+in one or more formats.</p>
+</li>
+<li>
+<p><a href="support/clipboard.html" class="xref page">Clipboard</a>: copying and pasting a payload.</p>
+</li>
+<li>
+<p><a href="support/diagnostics.html" class="xref page">Logging and Diagnostics</a>: the event log,
+draw tracing, performance counters and error handling.</p>
+</li>
+</ul>
+</div>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>

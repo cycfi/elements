@@ -232,6 +232,7 @@ TEST_CASE("layers page: an element below its minimum overflows, without clipping
    );
    tv.draw();
 
+#if !defined(ARTIST_RECORDING)
    auto in = pixel_at(tv.img, 25, 25);
    CHECK(in.r > 200);
    CHECK(in.g < 50);
@@ -240,6 +241,7 @@ TEST_CASE("layers page: an element below its minimum overflows, without clipping
    CHECK(past.g < 50);
    auto beyond = pixel_at(tv.img, 150, 150);
    CHECK(beyond.g > 200);
+#endif
 }
 
 TEST_CASE("layers page: a composite layer is used like a std::vector and shared like any element", "[layers_page]")
@@ -293,6 +295,7 @@ TEST_CASE("layers page: the example", "[layers_page]")
 
    // The badge is at 180 to 200, 0 to 20; the gold box at 50 to 150, 45 to
    // 105; the slate gray background fills the rest.
+#if !defined(ARTIST_RECORDING)
    auto badge = pixel_at(tv.img, 190, 10);
    CHECK(badge.r > 200);
    CHECK(badge.g < 50);
@@ -304,4 +307,5 @@ TEST_CASE("layers page: the example", "[layers_page]")
    CHECK(ground.r < 125);
    CHECK(ground.b > 130);
    CHECK(ground.b < 155);
+#endif
 }

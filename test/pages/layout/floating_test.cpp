@@ -185,10 +185,12 @@ TEST_CASE("floating page: the example", "[floating_page]")
    tv.draw();
    CHECK(fl->bounds() == rect{50, 50, 250, 150});
 
+#if !defined(ARTIST_RECORDING)
    // Gold (red 255) inside the bounds, dark slate gray (red 47) outside.
    CHECK(red_at(tv.img, 60, 60) > 200);
    CHECK(red_at(tv.img, 240, 140) > 200);
    CHECK(red_at(tv.img, 40, 40) < 100);
    CHECK(red_at(tv.img, 260, 100) < 100);
    CHECK(red_at(tv.img, 100, 160) < 100);
+#endif
 }

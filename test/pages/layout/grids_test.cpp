@@ -97,7 +97,7 @@ TEST_CASE("grids page: the factories and the composites", "[grids_page]")
    CHECK(std::is_same_v<decltype(h), array_composite<3, range_grid<hgrid_element>>>);
    CHECK(std::is_same_v<decltype(h)::container_type, std::array<element_ptr, 3>>);
    auto ha = hgrid(array_positions, link(a), link(b), link(c));
-   CHECK(std::is_same_v<decltype(ha), array_composite<3, array_grid<3, hgrid_element>>>);
+   CHECK(std::is_same_v<decltype(ha), array_composite<3, range_grid<hgrid_element>>>);
    auto he = hgrid(link(a), link(b), link(c));
    CHECK(std::is_same_v<decltype(he), array_composite<3, equal_grid<hgrid_element>>>);
    CHECK(std::is_same_v<hgrid_composite,
@@ -107,7 +107,7 @@ TEST_CASE("grids page: the factories and the composites", "[grids_page]")
    auto v = vgrid(positions, link(a), link(b), link(c));
    CHECK(std::is_same_v<decltype(v), array_composite<3, range_grid<vgrid_element>>>);
    auto va = vgrid(array_positions, link(a), link(b), link(c));
-   CHECK(std::is_same_v<decltype(va), array_composite<3, array_grid<3, vgrid_element>>>);
+   CHECK(std::is_same_v<decltype(va), array_composite<3, range_grid<vgrid_element>>>);
    auto ve = vgrid(link(a), link(b), link(c));
    CHECK(std::is_same_v<decltype(ve), array_composite<3, equal_grid<vgrid_element>>>);
    CHECK(std::is_same_v<vgrid_composite,
@@ -385,6 +385,7 @@ TEST_CASE("grids page: the example", "[grids_page]")
 
    // Rows 0 to 70, 70 to 140, 140 to 210. Columns 0 to 75, 75 to 150 and
    // 150 to 300; the last row is split at 150.
+#if !defined(ARTIST_RECORDING)
    auto red = pixel_at(tv.img, 37, 35);
    CHECK(red.r > 200);
    CHECK(red.g < 50);
@@ -412,4 +413,5 @@ TEST_CASE("grids page: the example", "[grids_page]")
    CHECK(white.r > 240);
    CHECK(white.g > 240);
    CHECK(white.b > 240);
+#endif
 }

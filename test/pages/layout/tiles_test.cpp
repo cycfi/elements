@@ -331,6 +331,7 @@ TEST_CASE("tiles page: the example", "[tiles_page]")
    // and 130 to 230. In the middle row, 290 extra width is split 1 : 2
    // after the 10 of space: gold 0 to 96.67, steel blue 106.67 to 300.
    // The swatches are 100 wide each.
+#if !defined(ARTIST_RECORDING)
    auto strip = pixel_at(tv.img, 150, 15);
    CHECK(strip.r > 100);
    CHECK(strip.r < 125);
@@ -351,4 +352,5 @@ TEST_CASE("tiles page: the example", "[tiles_page]")
    auto blue = pixel_at(tv.img, 250, 180);
    CHECK(blue.b > 200);
    CHECK(blue.r < 50);
+#endif
 }

@@ -228,18 +228,22 @@ TEST_CASE("decks page: the example", "[decks_page]")
    tv.draw();
 
    // The gold box is drawn first; after a flip, the slate gray one.
+#if !defined(ARTIST_RECORDING)
    auto gold = pixel_at(tv.img, 100, 50);
    CHECK(gold.r > 200);
    CHECK(gold.b < 50);
+#endif
 
    on_click(true);
    CHECK(pages->selected() == 1);
    tv.draw();
+#if !defined(ARTIST_RECORDING)
    auto gray = pixel_at(tv.img, 100, 50);
    CHECK(gray.r > 100);
    CHECK(gray.r < 125);
    CHECK(gray.b > 130);
    CHECK(gray.b < 155);
+#endif
 
    on_click(true);
    CHECK(pages->selected() == 0);

@@ -424,57 +424,105 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Elements Library provides a comprehensive set of elements for laying out
-elements in the view, including tiles, grids, flow layouts, floating
-elements, layers, alignment elements, scale elements, and span elements.</p>
+<p>Elements has no coordinates to set and no layout pass to write. Every
+element has <a href="layout/limits.html" class="xref page">limits</a>: the smallest and the largest it can be. A layout
+is a nesting of elements, and each element that holds others divides its
+space among them by their limits. When the window is resized, the view
+lays the nesting out again with the new space.</p>
 </div>
+<div class="paragraph">
+<p>The layout elements are of two kinds. Those that hold one element change
+its limits or its place within the space it is given: they size it,
+stretch it, align it, or put space around it. Those that hold several
+divide the space among them: in a row or a column, in a grid, one over
+another, or in rows that wrap.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_limits_and_size"><a class="anchor" href="#_limits_and_size"></a>Limits and Size</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>Tiles arrange elements in rows or columns, positioning them one after the
-other based on the child element&#8217;s sizing limits.</p>
+<p><a href="layout/limits.html" class="xref page">Limits</a>: the smallest and largest an element
+can be, and how the limits of nested elements combine.</p>
 </li>
 <li>
-<p>Grids offer a structured layout with rows and columns, using normalized
-coordinate placements.</p>
+<p><a href="layout/sizing.html" class="xref page">Sizing</a>: fixing an element&#8217;s size, or setting
+a smallest or largest one, and the collapsible elements, which can
+shrink to nothing along one axis and come back.</p>
 </li>
 <li>
-<p>The flow element arranges its children left to right, fitting as many as
-possible within each row, and moves to the next row once full.</p>
+<p><a href="layout/stretch.html" class="xref page">Stretch</a>: how much of the extra space an
+element takes when there is more than its siblings need.</p>
 </li>
 <li>
-<p>Floating elements allow for arbitrary positioning within containers.</p>
+<p><a href="layout/span.html" class="xref page">Span</a>: how many columns or rows of a grid an
+element takes.</p>
 </li>
 <li>
-<p>Layers enable elements to be stacked on top of each other.</p>
+<p><a href="layout/scale.html" class="xref page">Scale</a>: drawing an element and everything in it
+larger or smaller.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_placement"><a class="anchor" href="#_placement"></a>Placement</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="layout/alignment.html" class="xref page">Alignment</a>: placing an element within a
+space larger than it is.</p>
+</li>
+<li>
+<p><a href="layout/margins.html" class="xref page">Margins</a>: leaving space around an element.</p>
+</li>
+<li>
+<p><a href="layout/floating.html" class="xref page">Floating</a>: placing an element at a position
+of its own, apart from the layout around it.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_arranging_several_elements"><a class="anchor" href="#_arranging_several_elements"></a>Arranging Several Elements</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="layout/tiles.html" class="xref page">Tiles</a>: elements in a row or a column, each
+given room by its limits. The layout element used most.</p>
+</li>
+<li>
+<p><a href="layout/grids.html" class="xref page">Grids</a>: elements in a row or a column of cells
+whose boundaries are given as fractions of the space.</p>
+</li>
+<li>
+<p><a href="layout/layers.html" class="xref page">Layers</a>: elements over one another, each given
+the whole space.</p>
+</li>
+<li>
+<p><a href="layout/decks.html" class="xref page">Decks</a>: elements over one another, one of them
+shown and active at a time.</p>
+</li>
+<li>
+<p><a href="layout/flow.html" class="xref page">Flow</a>: elements left to right in rows, starting
+a new row when the next element does not fit.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The document also details the use of margins and sizing elements to provide
-proper spacing and ensure elements fit within the layout.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Alignment elements ensure correct positioning.</p>
-</li>
-<li>
-<p>Scale elements adjust size proportionally.</p>
-</li>
-<li>
-<p>Span elements extend across multiple grid cells.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>By combining these various layout elements, developers can create versatile,
-responsive, and visually consistent user interfaces that adapt seamlessly
-across different devices and screen sizes.</p>
+<p><a href="tutorials/layout.html" class="xref page">Laying Out a Window</a> uses most of these in one
+program.</p>
 </div>
 <hr>
 <div class="paragraph">
-<p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
 <em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
 </div>
 </div>

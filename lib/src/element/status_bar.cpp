@@ -65,13 +65,16 @@ namespace cycfi::elements
       _value = clamp(val, 0.0, 1.0);
    }
 
+   // The background, no larger than its limits, centered in the bar.
    rect status_bar_base::background_bounds(context const& ctx) const
    {
       auto const limits_ = background().limits(ctx);
-      auto bounds = ctx.bounds;
-      bounds.height(std::min<float>(limits_.max.y, bounds.height()));
-      bounds.width(std::min<float>(limits_.max.x, bounds.width()));
-      return bounds;
+      auto const& b = ctx.bounds;
+      auto const w = std::min<float>(limits_.max.x, b.width());
+      auto const h = std::min<float>(limits_.max.y, b.height());
+      auto const x = b.left + (b.width() - w) / 2;
+      auto const y = b.top + (b.height() - h) / 2;
+      return rect{x, y, x + w, y + h};
    }
 
    // A horizontal bar fills from the left, a vertical one from the bottom.

@@ -8,28 +8,18 @@
 
 #include <elements/element/slider.hpp>
 #include <elements/element/style/grid_lines.hpp>
+#include <elements/element/style/track.hpp>
 
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // The color of a thumb's indicator, the theme's when drawn, or a track's,
-   // black; or one given. A thumb or a track takes it as an empty base when
-   // it is the default, so the default costs nothing to hold.
+   // The color of a thumb's indicator: the theme's, read when drawn, or one
+   // given (fixed_color, track.hpp). A thumb takes it as an empty base when
+   // it is the theme's, so the default costs nothing to hold.
    ////////////////////////////////////////////////////////////////////////////
    struct theme_indicator
    {
       color operator()() const { return get_theme().indicator_color.level(1.5); }
-   };
-
-   struct fixed_color
-   {
-      color c;
-      color operator()() const { return c; }
-   };
-
-   struct default_track_color
-   {
-      color operator()() const { return colors::black; }
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -225,58 +215,6 @@ namespace cycfi::elements
       return {c};
    }
 
-
-   ////////////////////////////////////////////////////////////////////////////
-   // Basic Track (You can use this as the slider's track)
-   ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _size, bool _vertical = false, typename Color = default_track_color>
-   class basic_track_styler : Color, public element
-   {
-   public:
-
-      static unsigned const size = _size;
-      static bool const vertical = _vertical;
-      static unsigned const min_length = 64;
-
-                              basic_track_styler() = default;
-
-                              basic_track_styler(Color c)
-                               : Color(c)
-                              {}
-
-      view_limits             limits(basic_context const& ctx) const override;
-      void                    draw(context const& ctx) override;
-      std::string             class_name() const override { return "track"; }
-
-      basic_track_styler<_size, _vertical, fixed_color>
-                              track_color(color c) const
-                              { return {fixed_color{c}}; }
-   };
-
-   template <unsigned size, bool vertical, typename Color>
-   inline view_limits basic_track_styler<size, vertical, Color>
-      ::limits(basic_context const& /* ctx */) const
-   {
-	  auto sz = float(size);
-	  auto min_length_ = float(min_length);
-	  auto p1 = vertical ? point{sz, min_length} : point{ min_length_, sz};
-	  auto p2 = vertical ? point{sz, full_extent} : point{ full_extent, sz};
-	  return view_limits{p1, p2};
-   }
-
-   template <unsigned size, bool vertical, typename Color>
-   inline void basic_track_styler<size, vertical, Color>
-      ::draw(context const& ctx)
-   {
-      draw_track(ctx.canvas, ctx.bounds, static_cast<Color const&>(*this)());
-   }
-
-   template <unsigned size, bool vertical = false>
-   inline basic_track_styler<size, vertical>
-   basic_track()
-   {
-      return {};
-   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Slider Element Base (common base class for slider elements)

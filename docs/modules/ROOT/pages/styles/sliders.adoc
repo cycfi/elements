@@ -8,8 +8,9 @@ A slider is made of a thumb and a track, a dial of a knob, and a
 thumbwheel of the content it rolls (see xref:elements/sliders.adoc[Sliders],
 xref:elements/dials.adoc[Dials] and
 xref:elements/thumbwheels.adoc[Thumbwheels]). These are the stock parts:
-the thumbs and the track of a slider, the knob of a dial, a dial drawn
-from a sprite, and the bodies of a thumbwheel. The marks and labels that
+the thumbs of a slider, the knob of a dial, a dial drawn from a sprite,
+and the bodies of a thumbwheel. A slider's tracks are on
+xref:styles/tracks.adoc[Tracks]. The marks and labels that
 go around them are on xref:styles/marks.adoc[Marks and Scales].
 
 image::styles/sliders_style_basic.png[alt="Four sliders, with a round thumb, a rect thumb, a triangular thumb pointing down, and a round thumb with an orange indicator; and two knobs, 60 and 40 across", width=500px, link={imagesdir}/styles/sliders_style_basic.png]
@@ -87,56 +88,6 @@ The body is black unless `c` is given. The indicator is the theme's
 `indicator_color`, brightened, unless set with `indicator_color`: a thumb
 holds no color for it until then.
 
-== Tracks
-
-=== Include
-
-```c++
-#include <elements/element/style/slider.hpp>
-```
-
-=== Declaration
-
-```c++
-template <unsigned size, bool vertical = false, typename Color = default_track_color>
-class basic_track_styler : public element
-{
-public:
-
-   basic_track_styler<size, vertical, fixed_color>
-   track_color(color c) const;
-   ...
-};
-
-template <unsigned size, bool vertical = false>
-basic_track_styler<size, vertical>
-basic_track();
-```
-
-=== Expressions
-
-==== Notation
-
-`S`                 :: Unsigned integer, the thickness of the track.
-`V`                 :: `bool`: `true` for a vertical track.
-`c`                 :: A `color`, the track.
-`tr`                :: A track.
-
-==== Factory
-
-[cols="1,1"]
-|===
-| Expression                      | Semantics
-
-| `basic_track<S, [V]>()`         | Make a black track `S` thick,
-                                    horizontal unless `V` is `true`.
-| `tr.track_color(c)`             | Make a copy of `tr` in `c`.
-|===
-
-A track holds no color until `track_color` gives it one.
-
-A track is at least 64 long, and as long as it is given.
-
 === Example
 
 A horizontal slider with a round thumb, and a vertical one with a rect
@@ -145,6 +96,7 @@ thumb:
 ```c++
 #include <elements/element/style/slider.hpp>
 #include <elements/element/slider.hpp>      // For slider
+#include <elements/element/style/track.hpp> // For basic_track
 ...
 using namespace cycfi::elements;
 ...

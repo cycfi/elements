@@ -1,0 +1,437 @@
+= Tracks
+
+include::../common.adoc[]
+
+== Overview
+
+A track is the groove a slider's thumb runs along (see
+xref:elements/sliders.adoc[Sliders]). There are two: a plain track, and a
+fill track, which fills part of itself to show a value. With a fill track,
+one look serves a slider, a range slider, a progress bar, a busy bar and a
+VU meter.
+
+image::styles/tracks_fill.png[alt="Fill tracks: a slider filled to its thumb, a range slider filled between its thumbs, an orange fill, a teal fill on a gray track, a teal to orchid gradient, and a vertical slider filled from the bottom", width=480px, link={imagesdir}/styles/tracks_fill.png]
+
+A fill track in a slider fills from the start up to the thumb: from the
+left, or from the bottom of a vertical track. In a range slider, it fills
+between the two thumbs. As the foreground of a status bar (see
+xref:elements/status_bars.adoc[Status Bars]), it fills the part the bar
+gives it: up to the value of a progress bar, or the moving segment of a
+busy bar.
+
+image::styles/tracks_status.png[alt="Status bars: a square progress bar, two rounded progress bars, one of them orange and glowing, a busy bar's segment, three VU meters in green, yellow and red bands, the last one glowing, a glowing VU meter in a smooth gradient, and three glowing vertical VU meters", width=480px, link={imagesdir}/styles/tracks_status.png]
+
+A fill track may be filled in bands of color along its length instead of
+one color: green, then yellow, then red, for a VU meter. In a status bar,
+the bands are placed along the whole bar, so each band shows only once
+the value reaches it. A fill track may also be filled in a smooth
+gradient through color stops, placed the same way.
+
+A track has round ends, or square ends: its shape is a template
+argument, `track_shape::round` or `track_shape::square`. The stock status
+bars are square. A fill track may glow with `glow()`: the fill is drawn
+with a soft halo in its own color, each band in the band's color. The
+glow takes room at both sides of the track, as much as the track is
+thick. Each track is at least 64 long, and as long as it is
+given. Its colors are set by chaining,
+`basic_fill_track<5>().fill_color(c)`, and a track holds a color only when
+one is set: by default, it holds none.
+
+== Include
+
+```c++
+#include <elements/element/style/track.hpp>
+```
+
+== Basic Track
+
+=== Declaration
+
+```c++
+template <
+   unsigned size
+ , bool vertical = false
+ , typename Color = default_track_color
+ , track_shape shape = track_shape::round
+>
+class basic_track_styler : public element
+{
+public:
+
+   basic_track_styler<size, vertical, fixed_color, shape>
+   track_color(color c) const;
+   ...
+};
+
+enum class track_shape
+{
+   round
+ , square
+};
+
+template <
+   unsigned size
+ , bool vertical = false
+ , track_shape shape = track_shape::round
+>
+basic_track_styler<size, vertical, default_track_color, shape>
+basic_track();
+```
+
+=== Expressions
+
+==== Notation
+
+`S`                 :: Unsigned integer, the thickness of the track.
+`V`                 :: `bool`: `true` for a vertical track.
+`Sh`                :: A `track_shape`: `track_shape::round` or
+                       `track_shape::square`.
+`c`                 :: A `color`.
+`tr`                :: A track.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `basic_track<S, [V, Sh]>()`     | Make a black track `S` thick,
+                                    horizontal unless `V` is `true`, round
+                                    unless `Sh` is given.
+| `tr.track_color(c)`             | Make a copy of `tr` in `c`.
+|===
+
+== Fill Track
+
+=== Declaration
+
+```c++
+template <
+   unsigned size
+ , bool vertical = false
+ , typename Colors = fill_track_colors<default_track_color, default_fill_color>
+ , track_shape shape = track_shape::round
+ , bool glow = false
+>
+class basic_fill_track_styler : public element
+{
+public:
+
+   color                   track_color() const;
+   color                   fill_color() const;
+
+   basic_fill_track_styler<size, vertical, /* unspecified */>
+   track_color(color c) const;
+
+   basic_fill_track_styler<size, vertical, /* unspecified */>
+   fill_color(color c) const;
+
+   template <std::size_t N>
+   basic_fill_track_styler<size, vertical, /* unspecified */>
+   fill_colors(fill_band const (&bands)[N]) const;
+
+   template <std::size_t N>
+   basic_fill_track_styler<size, vertical, /* unspecified */>
+   fill_gradient(canvas::color_stop const (&stops)[N]) const;
+
+   basic_fill_track_styler<size, vertical, Colors, shape, true>
+   glow() const;
+   ...
+};
+
+struct fill_band
+{
+   float    to;
+   color    c;
+};
+
+template <
+   unsigned size
+ , bool vertical = false
+ , track_shape shape = track_shape::round
+>
+basic_fill_track_styler<size, vertical, /* unspecified */, shape>
+basic_fill_track();
+```
+
+=== Expressions
+
+==== Notation
+
+`S`                 :: Unsigned integer, the thickness of the track.
+`V`                 :: `bool`: `true` for a vertical track.
+`Sh`                :: A `track_shape`.
+`c`                 :: A `color`.
+`ft`                :: A fill track.
+`bands`             :: Braced `fill_band` values, `{to, c}`, each band
+                       from the one before up to `to`, a value from 0.0
+                       to 1.0 along the track.
+`stops`             :: Braced `canvas::color_stop` values, `{offset, c}`,
+                       each a color at `offset`, a value from 0.0 to 1.0
+                       along the track.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `basic_fill_track<S, [V, Sh]>()` | Make a fill track `S` thick,
+                                    horizontal unless `V` is `true`, round
+                                    unless `Sh` is given: black, filled in
+                                    the theme's `indicator_color`.
+| `ft.track_color(c)`             | Make a copy of `ft` with the track in
+                                    `c`.
+| `ft.fill_color(c)`              | Make a copy of `ft` with the fill in
+                                    `c`.
+| `ft.fill_colors(bands)`         | Make a copy of `ft` filled in `bands`.
+| `ft.fill_gradient(stops)`       | Make a copy of `ft` filled in a
+                                    gradient through `stops`.
+| `ft.glow()`                     | Make a copy of `ft` whose fill glows.
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                      | Semantics                     | Return Type
+
+| `ft.track_color()`              | Get the track's color.        | `color`
+| `ft.fill_color()`               | Get the fill's color.         | `color`
+|===
+
+=== Example
+
+A slider whose track fills up to its thumb, in teal on a gray track:
+
+```c++
+#include <elements/element/style/track.hpp>
+#include <elements/element/style/slider.hpp>   // For basic_thumb
+#include <elements/element/slider.hpp>         // For slider
+...
+using namespace cycfi::elements;
+...
+auto level = slider(
+   basic_thumb<20>(),
+   basic_fill_track<5>()                        <1>
+      .track_color(rgba(60, 60, 64, 255))
+      .fill_color(colors::light_sea_green),
+   0.8
+);
+```
+
+<1> A fill track, 5 thick, filled up to the thumb.
+
+== Radial Fill Track
+
+image::styles/tracks_radial.png[alt="Five dials with radial fill tracks: blue, orange, a glowing teal to orchid gradient with square ends, glowing green, yellow and red bands with square ends, and a blue track inside radial marks", width=530px, link={imagesdir}/styles/tracks_radial.png]
+
+A radial fill track is a ring around a dial's knob: a track along the
+dial's travel, filled from its start up to the dial's value. Like
+`radial_marks` (see xref:styles/sliders.adoc[Sliders, Dials and
+Thumbwheels]), it wraps the knob, and takes the dial's value from the dial
+it is in. The ring is `size` wide, and the track a quarter of `size`
+thick, in the middle of the ring. Its colors, bands, gradient and glow are
+set by chaining, as with a fill track; bands and a gradient are placed
+along the whole travel.
+
+A radial fill track may start at the center of the travel, 12 o'clock,
+instead: it then fills from the center to the value, on either side, as
+for a pan control.
+
+image::styles/tracks_pan.png[alt="Four pan dials: blue fills to the left of 12 o'clock, none at the center, to the right, and a glowing gradient with square ends, filled to the left", width=410px, link={imagesdir}/styles/tracks_pan.png]
+
+=== Declaration
+
+```c++
+template <
+   std::size_t size
+ , concepts::Element Subject
+ , typename Colors = fill_track_colors<default_track_color, default_fill_color>
+ , track_shape shape = track_shape::round
+ , bool glow = false
+ , track_origin origin = track_origin::start
+>
+class radial_fill_track_styler : public radial_styler_base<size, Subject>
+{
+public:
+
+   color                   track_color() const;
+   color                   fill_color() const;
+
+   radial_fill_track_styler<size, Subject, /* unspecified */, shape, glow, origin>
+   track_color(color c) const;
+
+   radial_fill_track_styler<size, Subject, /* unspecified */, shape, glow, origin>
+   fill_color(color c) const;
+
+   template <std::size_t N>
+   radial_fill_track_styler<size, Subject, /* unspecified */, shape, glow, origin>
+   fill_colors(fill_band const (&bands)[N]) const;
+
+   template <std::size_t N>
+   radial_fill_track_styler<size, Subject, /* unspecified */, shape, glow, origin>
+   fill_gradient(canvas::color_stop const (&stops)[N]) const;
+
+   radial_fill_track_styler<size, Subject, Colors, shape, true, origin>
+   glow() const;
+   ...
+};
+
+enum class track_origin
+{
+   start
+ , center
+};
+
+template <
+   std::size_t size
+ , track_shape shape = track_shape::round
+ , track_origin origin = track_origin::start
+ , concepts::Element Subject
+>
+radial_fill_track_styler<size, remove_cvref_t<Subject>, /* unspecified */, shape, false, origin>
+radial_fill_track(Subject&& subject);
+```
+
+=== Expressions
+
+==== Notation
+
+`S`                 :: Unsigned integer, the width of the ring.
+`Sh`                :: A `track_shape`.
+`O`                 :: A `track_origin`: `track_origin::start` or
+                       `track_origin::center`.
+`e`                 :: An element, the knob.
+`c`                 :: A `color`.
+`rt`                :: A radial fill track.
+`bands`, `stops`    :: As for a fill track.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `radial_fill_track<S, [Sh, O]>(e)` | Make a radial fill track around
+                                    `e`, in a ring `S` wide, round unless
+                                    `Sh` is given, filled from the start of
+                                    the travel unless `O` is given: black,
+                                    filled in the theme's `indicator_color`.
+| `rt.track_color(c)`             | Make a copy of `rt` with the track in
+                                    `c`.
+| `rt.fill_color(c)`              | Make a copy of `rt` with the fill in
+                                    `c`.
+| `rt.fill_colors(bands)`         | Make a copy of `rt` filled in `bands`.
+| `rt.fill_gradient(stops)`       | Make a copy of `rt` filled in a
+                                    gradient through `stops`.
+| `rt.glow()`                     | Make a copy of `rt` whose fill glows.
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                      | Semantics                     | Return Type
+
+| `rt.track_color()`              | Get the track's color.        | `color`
+| `rt.fill_color()`               | Get the fill's color.         | `color`
+|===
+
+=== Example
+
+A dial with a glowing track in a gradient, around a knob 50 across:
+
+```c++
+#include <elements/element/style/track.hpp>
+#include <elements/element/style/dial.hpp>     // For basic_knob
+...
+using namespace cycfi::elements;
+...
+auto gain = dial(
+   radial_fill_track<20, track_shape::square>(basic_knob<50>())   <1>
+      .glow()
+      .fill_gradient({
+         {0.0f, colors::light_sea_green}
+       , {1.0f, colors::medium_orchid}
+      }),
+   0.8
+);
+```
+
+<1> A ring 20 wide around the knob, with square ends.
+
+== Status Bars
+
+Stock status bars made of a square track and a square fill track. Each takes a value
+from 0.0 to 1.0, and `size`, the thickness, 6 unless given; a vertical bar
+fills from the bottom.
+
+=== Include
+
+```c++
+#include <elements/element/style/status_bar.hpp>
+```
+
+=== Declaration
+
+```c++
+template <unsigned size = 6, bool vertical = false>
+auto
+progress_bar(double init_value = 0.0);
+
+template <unsigned size = 6, bool vertical = false>
+auto
+busy_bar(double init_value = 0.0, double start_pos = 0.0);
+
+template <unsigned size = 6, bool vertical = false>
+auto
+vu_meter(double init_value = 0.0);
+```
+
+=== Expressions
+
+==== Notation
+
+`S`                 :: Unsigned integer, the thickness of the bar.
+`V`                 :: `bool`: `true` for a vertical bar.
+`v`, `p`            :: Floating point values from 0.0 to 1.0.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `progress_bar<[S, V]>([v])`     | Make a progress bar at `v`, 0.0
+                                    unless given.
+| `busy_bar<[S, V]>([v, p])`      | Make a busy bar, its segment from `p`
+                                    to `v`.
+| `vu_meter<[S, V]>([v])`         | Make a progress bar in green, yellow
+                                    above 0.7 and red above 0.9.
+|===
+
+Each returns the status bar of xref:elements/status_bars.adoc[Status
+Bars], with its expressions: `value(v)` sets the value, and a busy bar
+has `start` and `stop`. For other colors, make the bar from tracks:
+
+```c++
+#include <elements/element/style/status_bar.hpp>
+...
+using namespace cycfi::elements;
+...
+auto meter = progress_bar(                                        <1>
+   basic_track<6, false, track_shape::square>()
+ , basic_fill_track<6, false, track_shape::square>().fill_colors({
+      {0.8f, colors::light_sea_green}
+    , {1.0f, colors::orange}
+   })
+);
+```
+
+<1> A progress bar in teal, orange above 0.8.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

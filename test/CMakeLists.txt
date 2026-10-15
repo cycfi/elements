@@ -97,6 +97,7 @@ set(elements_test_sources
    pages/styles/notebooks_test.cpp
    pages/styles/toggles_test.cpp
    pages/styles/sliders_style_test.cpp
+   pages/styles/tracks_test.cpp
    pages/styles/menus_test.cpp
    pages/styles/decorations_test.cpp
    pages/styles/buttons_test.cpp

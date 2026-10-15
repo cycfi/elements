@@ -52,6 +52,7 @@
 **** xref:styles/buttons.adoc[Buttons]
 **** xref:styles/toggles.adoc[Check Boxes, Radio Buttons and Switches]
 **** xref:styles/sliders.adoc[Sliders, Dials and Thumbwheels]
+**** xref:styles/tracks.adoc[Tracks]
 **** xref:styles/marks.adoc[Marks and Scales]
 **** xref:styles/decorations.adoc[Borders and Decorations]
 **** xref:styles/groups.adoc[Groups and Panes]

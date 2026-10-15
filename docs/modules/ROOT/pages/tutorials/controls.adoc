@@ -1,0 +1,200 @@
+= Controls and Values
+
+include::../common.adoc[]
+
+== Overview
+
+The windows so far did not respond to anything. This tutorial adds
+controls, and the two things you do with a control: find out when the
+user changes it, and change it from your program.
+
+image::gallery/basic-sliders-and-knobs.png[alt="A window titled Basic Sliders And Knobs with three panes: Vertical Sliders, Horizontal Sliders and Knobs, each with three controls marked 0 to 10", width=600px, link={imagesdir}/gallery/basic-sliders-and-knobs.png]
+
+`examples/basic_sliders_and_knobs` makes three vertical sliders, three
+horizontal sliders and three knobs, and connects them in threes. Move
+any one and the other two in its group follow. Then
+`examples/buttons` does the same with a pair of buttons.
+
+A control holds a value. When the user changes it, the control calls a
+function you gave it, `on_change`, with the new value. When your
+program changes it, with `value(v)`, nothing is called; you set the
+value and redraw. Those two operations are all the connection there is,
+in this tutorial and in everything you build with Elements.
+
+== Making a Slider
+
+```c++
+// Here, we make a horizontal slider with slider markers.
+auto make_hslider(int index)
+{
+   hsliders[index] = share(      // Use `share` to make shared elements.
+      slider(
+         basic_thumb<25>(),      // Basic thumb 25px in diameter
+         make_markers<false>(),  // The slider markers
+         (index + 1) * 0.25)     // The default slider value
+      );
+
+   // Place a margin of 20 pixels at the left and right of the slider and
+   // align the slider at the middle. Use `hold` to hold shared elements.
+   return align_middle(hmargin({20, 20}, hold(hsliders[index])));
+}
+```
+
+A slider is assembled from parts: a thumb, and a track, here with
+marks and labels along it. You choose the parts, and the library
+supplies a few styles of each. Its value runs from 0 to 1, and the
+three sliders start at 0.25, 0.5 and 0.75. The parts are described in
+xref:elements/sliders.adoc[Sliders] and
+xref:styles/sliders.adoc[Slider Styles].
+
+The lines to notice are `share` and `hold`. Elements are values, and a
+layout holds copies. If the program wrote
+`vtile(slider(...), ...)`, the slider in the window would be a copy
+inside the tile, with no name, and there would be no way to reach it
+later. Instead:
+
+* `share(slider(...))` makes the slider once and returns a
+  `std::shared_ptr` to it, kept in `hsliders`.
+* `hold(hsliders[index])` puts that same slider into the layout,
+  through the pointer, without copying it.
+
+Now the slider on the screen and `hsliders[index]` are the same
+object. This pattern is used for every control a program needs to
+reach after it is placed.
+
+The knobs are made the same way, with `dial`, `radial_marks` and
+`basic_knob` (see xref:elements/dials.adoc[Dials]).
+
+== Connecting the Controls
+
+```c++
+// Here, we link the controls such that the Nth slider or knob will move together.
+void link_control(int index, view& view_)
+{
+   vsliders[index]->on_change =              // When vsliders[index] moves,
+      [index, &view_](double val)
+      {
+         hsliders[index]->value(val);        // set the value of hsliders[index]
+         dials[index]->value(val);           // set the value of dials[index]
+         view_.refresh(*hsliders[index]);    // Refresh hsliders[index]
+         view_.refresh(*dials[index]);       // Refresh dials[index]
+      };
+```
+
+Whenever the user moves the vertical slider, this function runs with
+the slider's new value. It sets the same value on the horizontal
+slider and the knob, then calls `view_.refresh` on each of them.
+
+Two things keep this simple. Setting a value with `value(v)` does not
+call that control's `on_change`, so the horizontal slider's handler
+does not run in turn, and the three handlers never chase each other
+round a loop. And setting a value does not redraw anything by itself;
+`view_.refresh(e)` is what puts the new position on the screen.
+
+The handlers for the horizontal slider and the knob are the same
+again, with the roles swapped. The connections are made once, after
+the content is in the view:
+
+```c++
+   view_.content(
+      make_controls(),                       // Make our controls
+      background                             // Add a background
+   );
+
+   link_controls(view_);                     // Link the controls.
+```
+
+== Buttons
+
+A button is a control whose value is on or off, and its callback is
+`on_click`. In `examples/buttons`, a latching button stays down once
+clicked, and a second button releases it:
+
+```c++
+   auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
+   auto reset           = share(button("Clear Latch", icons::lock_open, 1.0, bblue));
+```
+
+```c++
+   reset->on_click =
+      [lbutton = get(lbutton), reset = get(reset), &view_](bool) mutable
+      {
+         if (auto p = lbutton.lock())                                      <1>
+         {
+            p->value(0);                                                   <2>
+            view_.refresh(*p);
+         }
+
+         if (auto p = reset.lock())
+         {
+            (*p)->set_icon(icons::lock_open);                              <3>
+            p->enable(false);                                              <4>
+            view_.refresh(*p);
+         }
+      };
+```
+
+<1> The handler holds the buttons through `std::weak_ptr`, from
+    `get`, and locks one before using it. A handler that captured the
+    `shared_ptr` of its own button would keep the button alive for as
+    long as the handler, and the handler is part of the button: it
+    would never be freed.
+<2> Release the latch: the same `value(v)` as a slider's.
+<3> A button's styler holds its icon and label; `->` on the button
+    reaches it.
+<4> Disable the reset button until the latch is set again.
+
+The same shape as the sliders: a callback, `value(v)` on another
+control, and a refresh. xref:elements/buttons.adoc[Buttons] and
+xref:styles/buttons.adoc[Button Styles] cover the kinds of button and
+how they are drawn.
+
+== Running
+
+```sh
+cmake -B build
+cmake --build build --target BasicSlidersAndKnobs Buttons
+```
+
+The programs are in `build/examples/basic_sliders_and_knobs` and
+`build/examples/buttons`. Move any control; the other two in its group
+follow.
+
+== Try It
+
+* In `link_control`, delete the two `view_.refresh` lines from the
+  first handler. Move a vertical slider: the horizontal slider and the
+  knob do not move until something else redraws them. Resize the
+  window and they catch up.
+* Make the first group a pair instead of a trio: in `link_control`,
+  take the knob out of the vertical slider's handler.
+
+== Components Used
+
+[cols="1,2", options="header"]
+|===
+| Component | Role
+
+| xref:elements/sliders.adoc[`slider`]
+| A value set by dragging a thumb along a track.
+
+| xref:elements/dials.adoc[`dial`]
+| A value set by turning a knob.
+
+| xref:styles/sliders.adoc[`basic_thumb`, `basic_knob`, `slider_marks_lin`, `radial_marks`]
+| Draw the sliders and knobs and their marks.
+
+| xref:elements/buttons.adoc[`button`, `latching_button`]
+| Buttons, and their `on_click`.
+
+| xref:elements/element.adoc[`share`, `get`] and xref:elements/indirection.adoc[`hold`]
+| Keep a control the program can reach after it is placed.
+
+| xref:view.adoc[`view::refresh`]
+| Redraw a control whose value was set from code.
+|===
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -4,9 +4,211 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `examples/custom_control`.
+The library's controls cover a lot, and the tutorials so far used them
+as they come. Sooner or later a program needs something the library
+does not have. This tutorial writes one, with `examples/custom_control`:
+a circle with four handles on it. Drag a handle and the circle grows or
+shrinks. A dial beside it sets the same radius, a label shows the
+number, and a button resets it.
 
-// To be written.
+Every element in the library is a class derived from `element` that
+overrides a few of its virtual functions: one to draw, a few for the
+mouse and the keyboard, one to say how big it can be. Which ones you
+override is up to you; the rest have defaults. A custom control is
+written the same way, and once it exists it is placed and connected
+like any element from the library.
+
+== The Class
+
+```c++
+class my_custom_control : public tracker<>, public receiver<float>                     <1>
+{
+public:
+
+   using point_array = std::array<point, 4>;
+   constexpr static float default_value = 100;
+
+   // Element API
+   void        draw(context const& ctx) override;                                      <2>
+   bool        click(context const& ctx, mouse_button btn) override;
+   void        keep_tracking(context const& ctx, tracker_info& track_info) override;
+   bool        cursor(context const& ctx, point p, cursor_tracking status) override;
+
+   // Receiver API
+   float       value() const override     { return _radius; }                          <3>
+   void        value(float val) override  { _radius = val; }
+
+   // Provide an on_change callback
+   using on_change_f = std::function<void(float)>;
+   on_change_f on_change;                                                              <4>
+```
+
+<1> Two bases. `tracker<>` is an element that follows a drag from the
+    press to the release, so the control does not have to (see
+    xref:elements/trackers.adoc[Trackers]). `receiver<float>` declares
+    that the control holds a `float`, with the same `value()` and
+    `value(v)` as a slider (see xref:support/receivers.adoc[Receivers]).
+<2> The four functions the control overrides: drawing, the press, the
+    drag, and the cursor moving over it. Everything else, including
+    the keyboard, keeps its default.
+<3> The value is the circle's radius.
+<4> Called when the user changes the radius, as a slider's `on_change`
+    is. A control that reports its changes this way can be connected
+    like any other.
+
+The class does not override `limits`, so it has no size of its own and
+takes whatever space it is given. The program gives it 400 by 400 with
+`fixed_size`.
+
+== Drawing
+
+`draw` is called whenever the control has to be painted. It is given a
+{context}, which holds `ctx.bounds`, the rectangle the control
+occupies, and `ctx.canvas`, the surface to draw on. The control fills
+its background, draws the circle at the center of its bounds, then
+the four handles:
+
+```c++
+   // Draw a circle.
+   ctx.canvas.line_width(1.0);
+   ctx.canvas.stroke_style(color(0, 0, 0.5));
+   auto outer_ring = circle(center_point(ctx.bounds), _radius);
+   ctx.canvas.add_circle(outer_ring);
+   ctx.canvas.stroke();
+```
+
+The canvas is Artist's, with the usual drawing operations: paths,
+fills, strokes, text. {artist_canvas} lists them. `ctx.cursor_pos()`
+is where the pointer is, and the control uses it to draw a ring around
+the handle the pointer is near.
+
+== Handling the Mouse
+
+A press picks the handle under the pointer, if there is one:
+
+```c++
+bool my_custom_control::click(context const& ctx, mouse_button btn)
+{
+   // Call the tracker<> click member function
+   tracker<>::click(ctx, btn);                                        <1>
+```
+
+<1> `tracker` begins and ends the drag in its own `click`, so a control
+    that overrides `click` calls the base version first.
+
+While the button is held, each movement of the pointer calls
+`keep_tracking`. The control sets the radius to the pointer's distance
+from the center, reports it, and redraws:
+
+```c++
+void my_custom_control::keep_tracking(context const& ctx, tracker_info& track_info)
+{
+   auto center = center_point(ctx.bounds);
+   _radius = std::abs(distance(center, track_info.current));                          <1>
+   clamp(_radius, 50, 150);
+   if (on_change)
+      on_change(_radius);                                                             <2>
+   ctx.view.refresh(ctx);                                                             <3>
+}
+```
+
+<1> `track_info.current` is where the pointer is now; the tracker keeps
+    it up to date.
+<2> Report the new radius to the program.
+<3> Redraw this element. `ctx.view` is the view the control is in, and
+    `refresh(ctx)` marks the control's own rectangle, not the whole
+    window.
+
+`cursor` is called as the pointer enters the control, moves over it,
+and leaves. The control records whether the pointer is over it, so
+that `draw` can show the ring, and returns `false` so the cursor is
+passed on to other elements as well.
+
+== Placing and Connecting It
+
+The program keeps the control as a member, by value, and places it with
+`link`, which refers to it without copying:
+
+```c++
+   return
+      layer(
+         align_center_middle(
+            fixed_size({400, 400},
+               link(_my_control)             // Link our control
+            )),
+         image{"wall.jpg"}
+      );
+```
+
+The control, the dial and the label all show the one radius, so one
+function sets it on all three:
+
+```c++
+void my_app::set_value(float val)
+{
+   _my_control.value(val);                   // Set _my_control radius
+   _dial->value((val - 50) / 100);           // Set _dial value (normalized to 0.0...1.0)
+
+   // Set the label text
+   _label->set_text("Radius: " + std::to_string(int(std::round(val))));
+
+   // Refresh the view
+   _view.refresh();
+}
+```
+
+The control's `on_change`, the dial's `on_change` and the button's
+`on_click` all call `set_value`, the pattern from
+xref:tutorials/controls.adoc[Controls and Values]. A larger program
+would put the radius in a xref:tutorials/model.adoc[model] and link
+all three to it.
+
+The program itself is a class derived from `app`, with the window, the
+view and the elements as members. Everything the handlers refer to
+lives as long as the app does.
+
+== Running
+
+```sh
+cmake -B build
+cmake --build build --target CustomControl
+```
+
+The program is in `build/examples/custom_control`. Drag one of the
+handles on the circle, or turn the dial.
+
+== Try It
+
+* Change the stroke color of the circle in `draw`. Nothing outside
+  `draw` depends on how the control looks.
+* Change `default_value` to 75. The program opens with a smaller
+  circle, the dial a quarter of the way round, and the label reading
+  75.
+* Delete the `ctx.view.refresh(ctx)` line in `keep_tracking`. Drag a
+  handle: the label and the dial still follow, through `set_value`,
+  which refreshes the whole view.
+
+== Components Used
+
+[cols="1,2", options="header"]
+|===
+| Component | Role
+
+| xref:elements/element.adoc[`element`]
+| The functions a control overrides.
+
+| xref:elements/trackers.adoc[`tracker`]
+| Follows a drag from press to release.
+
+| xref:support/receivers.adoc[`receiver`]
+| The value the control holds.
+
+| xref:support/context.adoc[`context`] and xref:support/canvas.adoc[`canvas`]
+| Where the control is, and what it draws on.
+
+| xref:elements/indirection.adoc[`link`]
+| Places the control without copying it.
+|===
 
 '''
 

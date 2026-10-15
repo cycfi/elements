@@ -82,6 +82,7 @@ set(elements_test_sources
    pages/elements/swatches_test.cpp
    pages/application/app_test.cpp
    pages/application/window_test.cpp
+   pages/tutorials_test.cpp
    pages/layout/sizing_test.cpp
    pages/layout/stretch_test.cpp
    pages/layout/span_test.cpp

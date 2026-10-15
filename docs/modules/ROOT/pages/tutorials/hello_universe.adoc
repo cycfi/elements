@@ -4,9 +4,146 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `examples/hello_universe`.
+This is the first program to build: `examples/hello_universe`. It opens
+a window with a picture of space in it. The picture is bigger than the
+window, so you can scroll around it.
 
-// To be written.
+image::gallery/hello-universe.png[alt="A window titled Hello Universe showing a nebula, with scroll bars at the right and bottom", width=500px, link={imagesdir}/gallery/hello-universe.png]
+
+The program fits on one screen, and every Elements program you write
+will have the same shape: an _app_, a _window_, a _view_ in the window,
+and the _content_ you give the view. Once you can see those four parts
+here, you can see them in every other example.
+
+== The Program
+
+Here is the whole of `main.cpp`:
+
+```c++
+#include <elements.hpp>
+
+using namespace cycfi::elements;
+
+int main(int argc, char* argv[])
+{
+   app _app("Hello Universe");                                     <1>
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();                                               <2>
+   window _win(_app.name());                                       <3>
+   _win.on_close = [&_app]() { _app.stop(); };                     <4>
+
+   view view_(_win);                                               <5>
+
+   view_.content(                                                  <6>
+      scroller(image{"space.jpg"})
+   );
+
+   _app.run();                                                     <7>
+   return 0;
+}
+```
+
+<1> The xref:application/app.adoc[app] is the program as the
+    operating system sees it. It has a name, and it runs until it is
+    stopped. You make one.
+<2> `init_resources` loads the fonts and sets where image files are
+    looked for. The first view does this if you have not, so this
+    line moves the cost to startup, before any window is on screen.
+<3> A xref:application/window.adoc[window] on the screen, titled with
+    the app's name.
+<4> When the user closes the window, stop the app. Without this line
+    the window would close and the program would keep running, with
+    nothing to show.
+<5> The xref:view.adoc[view] lives in the window and holds the
+    elements. It draws them and passes them the user's input.
+<6> The content: an image, inside a scroller.
+<7> Run the app. `run` returns when the app is stopped, at <4>.
+
+`elements.hpp` includes the whole library. Everything in it is in the
+namespace `cycfi::elements`, and the examples bring that namespace in
+with `using namespace` to keep the code short.
+
+== The Window and the View
+
+The window is the frame that the operating system provides: the title
+bar, the border, the buttons that close and resize it. The view fills
+the inside of the window. The elements live in the view, and the view
+draws them, lays them out again when the window is resized, and passes
+them each click and key press.
+
+You give the view its content once, with `content`. From then on the
+view takes care of it.
+
+== The Content
+
+The content is two elements, one inside the other.
+`image{"space.jpg"}` is the picture. Its size is the picture's size.
+`scroller(...)` wraps the image in a scrolling port: it shows as much
+of the image as fits in the window and adds scroll bars for the rest.
+
+This is how everything in Elements is composed. An element is a value,
+and you make an interface by nesting elements inside one another:
+`scroller(image{...})` makes a scroller that holds an image, and
+`content(...)` gives the result to the view. The next tutorial nests
+several levels deep; the idea is the same.
+
+The file name `space.jpg` is a relative path, looked for in the
+search path that `init_resources` set, which includes the
+`resources` directory next to the program. The example's `CMakeLists.txt`
+lists the picture as a resource, and the build copies it there.
+
+== Running
+
+The example is built with the rest of the library (see
+xref:setup.adoc[Setup and Installation]). From the top of the Elements
+directory:
+
+```sh
+cmake -B build
+cmake --build build --target HelloUniverse
+```
+
+The program is in `build/examples/hello_universe`. Run it, make the
+window smaller than the picture, and scroll.
+
+== Try It
+
+Each of these is a one-line change. Rebuild and run after each.
+
+* Change the name given to `app`. The window's title changes with it,
+  because the window is titled with `_app.name()`.
+* Take the `scroller` away, leaving `view_.content(image{"space.jpg"})`.
+  Now the window cannot be made smaller than the picture. Every
+  element has _limits_, the smallest and largest it can be; the view
+  passes its content's limits on to the window; and an image's limits
+  are its own size. The scroller is what made the window resizable: a
+  scroller can be as small as its scroll bars.
+* Delete the `on_close` line. Close the window; the program is still
+  running. Stop it from the terminal.
+
+== Components Used
+
+[cols="1,2", options="header"]
+|===
+| Component | Role
+
+| xref:application/app.adoc[`app`]
+| The program. Runs until it is stopped.
+
+| xref:application/window.adoc[`window`]
+| The window on the screen.
+
+| xref:view.adoc[`view`]
+| Holds the elements, draws them, and passes them the user's input.
+
+| xref:elements/images.adoc[`image`]
+| The picture.
+
+| xref:elements/ports.adoc[`scroller`]
+| Scrolls the picture within the window.
+|===
 
 '''
 

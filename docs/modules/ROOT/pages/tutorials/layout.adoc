@@ -4,9 +4,345 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `examples/layout`.
+In Hello Universe the content was one element. A real window holds
+many, and they have to be arranged: some side by side, some stacked,
+some a fixed size, some filling whatever room is left. This tutorial
+is about that arrangement, with `examples/layout`.
 
-// To be written.
+image::gallery/layout.png[alt="A window titled Layout with a Layout menu at the top right. Two panels of gold boxes: at the left, boxes stacked vertically, some of a fixed height and some stretched to fill; at the right, boxes side by side, the same way across", width=600px, link={imagesdir}/gallery/layout.png]
+
+The program shows five arrangements of gold boxes, chosen from the
+Layout menu at the top right: boxes of a fixed size, aligned within
+their space; boxes that stretch to fill it; the two mixed; grids; and
+a flow that wraps boxes into rows. Resize the window and watch each
+one adapt.
+
+You will not find a single coordinate in the program. In Elements you
+do not place elements at positions; you nest them, and the elements
+that hold others divide their space among what they hold. Every
+element has _limits_, the smallest and largest it can be, and the
+division follows the limits. The job of laying out a window is choosing
+what to nest in what. The xref:layout.adoc[Layout] pages give every
+rule; this tutorial shows the ones you will use most.
+
+== Reading a Layout
+
+A layout is a nested expression. Read it from the inside out: the
+innermost element is the thing on the screen, and each element around
+it adds something: a margin, a size, an alignment. In this expression
+from the program,
+
+```c++
+   auto _box = margin_top(
+      {10},
+      hsize(150, rbox_)
+   );
+```
+
+`rbox_` is a rounded gold box, defined at the top of the program. It
+has no size of its own and fills whatever it is given. `hsize(150, ...)`
+gives it a width of 150. `+margin_top({10}, ...)+` adds 10 of empty space
+above it. The result, `_box`, is a box 150 wide, with a gap above.
+
+Elements are values, so `_box` can be used as many times as you like.
+Each use is a copy.
+
+== Fixed Sizes and Alignment
+
+A `vtile` stacks its elements top to bottom and gives each one the
+full width. A box 150 wide does not fill the width, so where does it
+go? `halign` decides:
+
+```c++
+auto make_vtile_aligns()
+{
+   auto _box = margin_top(
+      {10},
+      hsize(150, rbox_)
+   );
+
+   return margin(
+      {10, 40, 10, 10},                            <1>
+      hmin_size(150,                               <2>
+         vtile(
+            halign(0.0, _box),                     <3>
+            halign(0.2, _box),
+            halign(0.4, _box),
+            halign(0.6, _box),
+            halign(0.8, _box),
+            halign(1.0, _box)                      <4>
+         )
+      )
+   );
+}
+```
+
+<1> Space around the whole column: 10 at the left, 40 at the top (room
+    for the group's title), 10 at the right and the bottom.
+<2> The column is never narrower than 150, so a box always fits.
+<3> At the left of its space.
+<4> At the right. The values between place the box that fraction of
+    the way across.
+
+Run the program and choose "Fixed-Sized, Aligned Elements". The six
+boxes step from left to right. Widen the window and they spread out;
+the boxes stay 150 wide.
+
+The horizontal version, `make_htile_aligns`, is the same with the
+directions swapped: an `htile` places elements left to right and gives
+each the full height, `vsize` fixes a height, and `valign` places the
+box within it.
+
+== Stretching
+
+An element without a fixed size stretches to fill the space it is
+given. When a tile has more room than its elements need, it shares the
+extra among the ones that can stretch, in proportion to each one's
+_stretch_ value. The default is 1.0.
+
+```c++
+auto make_vtile_stretch()
+{
+   auto _box = margin_top(
+      {10},
+      rbox_
+   );
+
+   return margin(
+      {10, 40, 10, 10},
+      hmin_size(150,
+         vtile(
+            vstretch(1.0, _box),
+            vstretch(0.5, _box),                   <1>
+            vstretch(0.5, _box),
+            vstretch(0.5, _box),
+            vstretch(2.0, _box)                    <2>
+         )
+      )
+   );
+}
+```
+
+<1> Half the share of a box with the default stretch.
+<2> Twice the share.
+
+Choose "Stretchable Elements" and make the window taller. All five
+boxes grow, the last one fastest. See xref:layout/stretch.adoc[Stretch]
+for the rule.
+
+== Fixed and Stretching Together
+
+Most windows mix the two: a toolbar of a fixed height, say, above a
+document that takes the rest. The figure at the top of the page shows
+this pane. The fixed boxes keep their size and the stretching boxes
+share what is left.
+
+```c++
+auto make_vtile_mixed()
+{
+   auto _box = margin_top(
+      {10},
+      rbox_
+   );
+
+   auto _box2 = margin_top(
+      {10},
+      hsize(150, rbox_)
+   );
+
+   return margin(
+      {10, 40, 10, 10},
+      hmin_size(150,
+         vtile(
+            halign(0.0, vsize(40.0, _box2)),       <1>
+            vstretch(2.0, _box),                   <2>
+            vstretch(1.0, _box),
+            vstretch(0.5, vmin_size(20, _box)),    <3>
+            halign(1.0, vsize(40.0, _box2))        <4>
+         )
+      )
+   );
+}
+```
+
+<1> 40 high and 150 wide, at the left. Its height is fixed, so it does
+    not stretch.
+<2> Twice the share of the extra height.
+<3> Half the share, and never less than 20 high.
+<4> 40 high and 150 wide, at the right.
+
+== Grids
+
+A tile gives each element the room its limits allow. A grid divides its
+space into columns (`hgrid`) or rows (`vgrid`) first, and puts one
+element in each. With no coordinates the columns are equal. With
+coordinates, each one is where a column ends, as a fraction of the
+width:
+
+```c++
+   static std::array<float, 6> const hgrid_coords = {0.25, 0.45, 0.6, 0.75, 0.9, 1.0};
+```
+
+`span` lets an element take several columns:
+
+```c++
+   // 2nd element has span 3, 3rd has span 2
+   auto&& make_hgrid3 =
+      [_box]()
+      {
+         return
+            hgrid(
+               hgrid_coords,                       <1>
+               _box,
+               span(3, _box),                      <2>
+               span(2, _box)
+            );
+      };
+```
+
+<1> Six columns: the first a quarter of the width, the others narrower.
+<2> This box takes the next three columns.
+
+The pane stacks rows like this one in a `vgrid`. Choose "Grid
+Elements" to see them, and compare the two groups: one with equal
+columns, one with these coordinates. See xref:layout/grids.adoc[Grids]
+and xref:layout/span.adoc[Span].
+
+== Flow
+
+A flow places its elements left to right and starts a new row when the
+next one does not fit, like words in a paragraph. The program fills one
+with forty boxes of random sizes:
+
+```c++
+   static auto c = flow_composite{};                                                      <1>
+   for (int i = 0; i < num_elements; ++i)
+   {
+      auto w = min_size + ((double(std::rand()) * (max_width - min_size)) / RAND_MAX);
+      auto h = min_size + ((double(std::rand()) * (max_height - min_size)) / RAND_MAX);
+      auto _box = vsize(line_height, align_bottom(margin(
+         {5, 5, 5, 5}, fixed_size({float(w), float(h)}, rbox_)
+      )));
+      c.push_back(share(_box));                                                           <2>
+   }
+
+   auto flow_pane = margin(
+      {0, 50, 10, 10},
+      align_top(flow(c))                                                                  <3>
+   );
+```
+
+<1> A `flow_composite` holds the flow's elements, so they can be added
+    one at a time.
+<2> A composite holds its elements through shared pointers; `share`
+    makes one.
+<3> The flow, at the top of its space.
+
+Choose "Flow Elements" and change the window's width: the boxes
+reflow. See xref:layout/flow.adoc[Flow].
+
+== Switching Panes
+
+The program makes all five panes once, and shows one at a time. It
+does this with a holder whose element can be swapped:
+
+```c++
+   auto aligns = share(make_aligns());
+   auto percentages = share(make_percentages());
+   auto mixed = share(make_mixed());
+   auto flow = share(make_flow());
+   auto grids = share(make_grids());
+   auto content = hold_any(aligns);                <1>
+
+   view view_(_win);
+
+   align_menu_item.on_click = [&]()
+   {
+      content = aligns;                            <2>
+      view_.layout(content);                       <3>
+   };
+```
+
+```c++
+   auto top = align_right(hsize(120, menu));
+   auto main_pane = pane(top, link(content), false);          <4>
+   auto main_element = margin({10, 10, 10, 10}, main_pane);
+
+   view_.content(
+      main_element,                                           <5>
+      background
+   );
+```
+
+<1> `hold_any` makes a holder, starting with the first pane.
+<2> Choosing a menu item puts another pane in the holder.
+<3> The new pane has different limits, so the view lays out again.
+<4> `link` puts the holder in the layout by reference, without copying
+    it, so the pane shows whatever the holder has at the time.
+<5> `content` takes several elements, drawn one over the other: the
+    pane in front, the background behind.
+
+xref:elements/indirection.adoc[Indirection] covers `hold_any` and
+`link`, and xref:styles/menus.adoc[Menus] the menu.
+
+== Running
+
+```sh
+cmake -B build
+cmake --build build --target Layout
+```
+
+The program is in `build/examples/layout`. Choose each pane from the
+Layout menu and resize the window.
+
+== Try It
+
+* In `make_vtile_stretch`, change the last `vstretch(2.0, ...)` to
+  `vstretch(4.0, ...)`. The last box now takes four shares of the
+  extra height.
+* In `make_vtile_aligns`, replace every `halign(..., _box)` with
+  `_box`. Without an alignment, each box is placed at the left.
+* Swap `vtile` for `htile` in `make_vtile_stretch`. The boxes are now
+  side by side, each the full height, and they share the extra width
+  instead. `vstretch` has no effect across an `htile`; change each one
+  to `hstretch` to get the proportions back.
+
+== Components Used
+
+[cols="1,2", options="header"]
+|===
+| Component | Role
+
+| xref:layout/tiles.adoc[`vtile`, `htile`]
+| Stack elements top to bottom, or place them left to right.
+
+| xref:layout/alignment.adoc[`halign`, `valign`, `align_top`, `align_right`]
+| Place an element within a larger space.
+
+| xref:layout/sizing.adoc[`hsize`, `vsize`, `fixed_size`, `hmin_size`, `vmin_size`]
+| Fix a size, or set a smallest one.
+
+| xref:layout/stretch.adoc[`vstretch`, `hstretch`]
+| Set how much of the extra space an element takes.
+
+| xref:layout/margins.adoc[`margin`, `margin_top`, `margin_left`]
+| Leave space around an element.
+
+| xref:layout/grids.adoc[`hgrid`, `vgrid`] and xref:layout/span.adoc[`span`]
+| Place elements in columns and rows.
+
+| xref:layout/flow.adoc[`flow`]
+| Place elements in rows that wrap.
+
+| xref:elements/indirection.adoc[`hold_any`, `link`]
+| Show one pane at a time.
+
+| xref:styles/groups.adoc[`group`, `pane`]
+| Frame each pane and the window's content.
+
+| xref:styles/menus.adoc[`button_menu`, `menu_item`]
+| Choose the pane.
+|===
 
 '''
 

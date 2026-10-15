@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="220"
+     viewBox="0 0 750 220"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- application -->
+  <rect x="20" y="70" width="140" height="80" rx="8" fill="#fdeaf2" stroke="#d81b60" stroke-width="1.5"/>
+  <text x="90" y="115" text-anchor="middle" fill="#1a1a1a">application</text>
+
+  <!-- model -->
+  <rect x="290" y="40" width="170" height="140" rx="10" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="375" y="67" text-anchor="middle" fill="#1a1a1a">my_model</text>
+  <rect x="310" y="82" width="130" height="34" rx="6" fill="#ffffff" stroke="#1565c0" stroke-width="1"/>
+  <text x="375" y="104" text-anchor="middle" fill="#1a1a1a" font-family="Menlo, Consolas, monospace" font-size="13">_value</text>
+  <rect x="310" y="128" width="130" height="34" rx="6" fill="#ffffff" stroke="#1565c0" stroke-width="1"/>
+  <text x="375" y="150" text-anchor="middle" fill="#1a1a1a" font-family="Menlo, Consolas, monospace" font-size="13">_preset</text>
+
+  <!-- user interface -->
+  <rect x="590" y="10" width="140" height="200" rx="10" fill="#edf7ee" stroke="#43a047" stroke-width="1.5"/>
+  <text x="660" y="35" text-anchor="middle" fill="#1a1a1a">user interface</text>
+  <rect x="610" y="50" width="100" height="36" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="660" y="73" text-anchor="middle" fill="#1a1a1a">dial</text>
+  <rect x="610" y="100" width="100" height="36" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="660" y="123" text-anchor="middle" fill="#1a1a1a">text box</text>
+  <rect x="610" y="150" width="100" height="36" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="660" y="173" text-anchor="middle" fill="#1a1a1a">preset menu</text>
+
+  <!-- application <-> model -->
+  <line x1="160" y1="98" x2="288" y2="98" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="224" y="90" text-anchor="middle" fill="#555" font-size="12">sets</text>
+  <line x1="288" y1="122" x2="162" y2="122" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="224" y="140" text-anchor="middle" fill="#555" font-size="12">reads</text>
+
+  <!-- model <-> user interface -->
+  <line x1="460" y1="98" x2="588" y2="98" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="524" y="90" text-anchor="middle" fill="#555" font-size="12">updates</text>
+  <line x1="588" y1="122" x2="462" y2="122" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="524" y="140" text-anchor="middle" fill="#555" font-size="12">user edits</text>
+</svg>

@@ -335,9 +335,11 @@ namespace cycfi::elements
                auto i = std::find(_content.begin(), _content.end(), e);
                if (i != _content.end())
                {
-                  // Relinquish the focus if the element to be removed is the current focus
+                  // Relinquish the focus if the element to be removed is
+                  // the current focus
                   auto ix = i - _content.begin();
-                  if (_content.focus_index() == ix)
+                  bool const had_focus = _content.focus_index() == ix;
+                  if (had_focus)
                      relinquish_focus();
 
                   // Remove the element.
@@ -346,8 +348,22 @@ namespace cycfi::elements
                   // Lay it out
                   layout();
 
-                  // Restore previous focus
-                  _main_element.begin_focus(element::focus_request::restore_previous);
+                  // The focus it had goes to the top-most layer that takes
+                  // one, a menu under a submenu for instance, which then
+                  // has it where it was.
+                  if (had_focus)
+                  {
+                     for (auto j = int(_content.size()) - 1; j >= 0; --j)
+                     {
+                        if (_content.at(j).wants_focus())
+                        {
+                           _content.focus(j);
+                           break;
+                        }
+                     }
+                  }
+                  _main_element.begin_focus(
+                     element::focus_request::restore_previous);
                   refresh();
                   _is_focus = _main_element.focus();
                }

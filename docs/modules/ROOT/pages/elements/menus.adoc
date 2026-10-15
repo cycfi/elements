@@ -4,78 +4,54 @@ include::../common.adoc[]
 
 == Overview
 
-A menu is a xref:elements/popups.adoc[popup menu] that a button opens.
-The button is a `basic_button_menu`; the menu is any element, usually a
-column of menu items on a panel. A menu item can open a menu of its own:
-a submenu in a menu, and in a row of items, a menu bar. The stock menu
-buttons and items are on the xref:styles/menus.adoc[Styles: Menus] page.
+A menu is a xref:elements/popups.adoc[popup menu]: usually a column of
+menu items on a panel. A menu button opens one. A menu item can open one
+too: a submenu, in a menu, or a menu bar's menu, in a row of items. The
+stock buttons and items are on the xref:styles/menus.adoc[Styles: Menus]
+page.
 
 image::elements/menus_example.png[alt="A Dropdown Menu button with its menu open below it: items with shortcuts at the right, two of them dimmed, a separator line, and the third item highlighted", width=340px, link={imagesdir}/elements/menus_example.png]
 
 === Menu Buttons
 
-`menu(m)` gives the button its menu, `m`. A press on the button opens
-the menu beside it, where `position` says:
-
-[cols="1,2"]
-|===
-| `menu_position` | The menu
-
-| `bottom_right`
-| Below the button, from its left edge to the right. The default.
-
-| `bottom_left`
-| Below the button, from its right edge to the left.
-
-| `top_right`
-| Above the button, from its left edge to the right.
-
-| `top_left`
-| Above the button, from its right edge to the left.
-|===
-
-If the menu does not fit above or below the button and fits on the other
-side, it goes there; then it is moved along until it is inside the view.
+A `basic_button_menu` is a button with a menu, given with `menu(m)`. A
+press on the button opens it, above or below the button (`top_` or
+`bottom_` in `menu_position`), running right from the button's left edge
+or left from its right edge (`_right` or `_left`): `bottom_right` by
+default. A menu that does not fit on its side but fits on the other goes
+there, and is then moved into the view.
 
 The user picks an item with a click, or presses on the button, drags to
-the item and releases. A press outside the menu closes it. As the menu
-closes, the button's value goes back to `false`.
+the item and releases. A press outside the menu closes it, and the
+button's value goes back to `false`.
 
-`on_open_menu` is called with the button each time the menu opens,
-before it opens. A menu that changes can be built there, and given to
-the button with `menu`.
+`on_open_menu` is called with the button before the menu opens, each
+time. A menu that changes is built there and given with `menu`.
 
 === Menu Items
 
 `basic_menu_item(e)` makes `e` an item of a menu. The item under the
-pointer is highlighted in the theme's `indicator_color`. A press on an
-item calls its `on_click`, then closes the menu, along with any menus it
-was reached through.
+pointer is highlighted in the theme's `indicator_color`. A press on it
+calls its `on_click` and closes the menu, with any menus it was reached
+through.
 
-`is_enabled` is a function the item calls each time it needs to know
-whether it is enabled. A disabled item is not highlighted, is skipped by
-the arrow keys, and takes no click or shortcut; its look is up to `e`,
-drawn in a context with `enabled` false.
-
-While the menu is open, the Up and Down keys move the highlight to the
-item above or below, Enter picks the highlighted item, and Escape closes
-the menu.
+`is_enabled` says whether the item is enabled, and is called each time
+that is needed. A disabled item is never highlighted, takes no press,
+key or shortcut, and is drawn in a context with `enabled` false; how it
+looks is up to `e`.
 
 === Submenus and Menu Bars
 
-`menu(m)` gives an item a menu of its own, `m`, as `menu(m)` does a
-menu button. A press on the item opens `m`:
+`menu(m)` gives an item a menu of its own, as it does a menu button. A
+press on the item opens it:
 
-* From an item in a menu, to the item's right, or to its left if it fits
-  only there. The item shows an arrow at its right. Pointing at the item
-  opens its menu too.
-* From an item that is not in a menu, below the item, or above it if it
-  fits only there.
+* In a menu: to the item's right, or its left if only that fits. The
+  item shows an arrow, and pointing at it opens the submenu too.
+* Outside a menu: below the item, or above if only that fits.
 
-A row of items with menus, outside any menu, is a menu bar. While one of
-its menus is open, pointing at another item in the row opens that item's
-menu in its place. In a menu, pointing at another item closes the submenu
-that is open.
+A row of such items is a menu bar. While one of its menus is open,
+pointing at another title opens that title's menu in its place. In a
+menu, pointing at another item closes the open submenu.
 
 ```c++
 auto recent = menu_item("Open Recent");
@@ -99,12 +75,38 @@ auto bar = layer(                                           <1>
 
 image::elements/menus_bar.png[alt="A menu bar of File, Edit and Help. File is highlighted and its menu is open below it, with Open Recent highlighted and its submenu of three files open to its right", width=420px, link={imagesdir}/elements/menus_bar.png]
 
-Right opens the highlighted item's submenu, with its first item
-highlighted, and Left closes the submenu the highlight is in. In a menu opened from a bar, Left, and Right on an
-item with no submenu, move to the bar's previous or next menu, wrapping
-around. Escape closes one menu.
+=== Keys
 
-The items of a closed submenu keep their shortcuts.
+While a menu is open, it takes these keys:
+
+[cols="1,3"]
+|===
+| Key | Does
+
+| Up, Down
+| Move the highlight to the enabled item above or below. A menu opened
+  by a click starts with no item highlighted.
+
+| Enter
+| On an item with a submenu, opens it on its first item. On any other
+  item, picks it and closes every menu it was reached through.
+
+| Escape
+| Closes the menu the highlight is in. In a submenu, the item that opened
+  it stays highlighted.
+
+| Right
+| Opens the highlighted item's submenu, on its first item. In a menu
+  opened from a bar, on an item with no submenu, opens the bar's next
+  menu, with nothing highlighted.
+
+| Left
+| Closes the submenu the highlight is in. In a menu opened from a bar,
+  opens the bar's previous menu, with nothing highlighted.
+|===
+
+Moving across a bar wraps around at either end. When a submenu closes,
+the keys go back to the menu it was opened from.
 
 === Shortcuts
 
@@ -117,17 +119,15 @@ auto save = menu_item("Save", shortcut_key{key_code::s, mod_action});
 save.on_click = [&]{ doc.save(); };
 ```
 
-The shortcut calls `on_click` whether the menu is open or not. With the
-menu closed, it works as a hotkey (see xref:elements/element.adoc[Element]):
-it is taken only if the focus does not take the key itself, so a text
-box being edited keeps its own ⌘C. If two menus have the same shortcut,
-the first takes it: the one in the top layer, and in a layer's content
-the first in order. While a modal, such as a dialog, is open, no
-shortcut works: the modal has the focus and takes every key.
+A shortcut calls `on_click` whether its menu is open or not, a closed
+submenu's included. With the menu closed, it is a hotkey (see
+xref:elements/element.adoc[Element]): the menu gets the key only if the
+focus does not take it, so a text box being edited keeps its own ⌘C.
+When two menus have the same shortcut, the first takes it: the one in
+the top layer, and within a layer, the first in order. While a modal
+such as a dialog is open, no shortcut works.
 
-A menu built in `on_open_menu` has no items until it opens, and so no
-shortcuts before then.
-
+A menu built in `on_open_menu` has no shortcuts until it first opens.
 The minus and equal keys match with or without Shift, so a shortcut on
 `key_code::equal` is also the plus key.
 

@@ -356,6 +356,10 @@ namespace cycfi::elements
                               {}
 
       float                   get_corner_radius() const override;
+      float                   get_corner_radius_top_left() const override;
+      float                   get_corner_radius_top_right() const override;
+      float                   get_corner_radius_bottom_left() const override;
+      float                   get_corner_radius_bottom_right() const override;
       void                    set_corner_radius(float r);
 
    private:
@@ -978,7 +982,9 @@ namespace cycfi::elements
    inline button_styler::icon_placement
    button_styler_with_icon<Base>::get_icon_placement() const
    {
-      return icon_placement::icon_right;
+      // On the right, unless placed before the icon was given.
+      auto placement = Base::get_icon_placement();
+      return placement == icon_placement::icon_none? icon_placement::icon_right : placement;
    }
 
    template <concepts::ButtonStyler Base>
@@ -1063,6 +1069,31 @@ namespace cycfi::elements
 
    template <concepts::ButtonStyler Base>
    inline float button_styler_with_corner_radius<Base>::get_corner_radius() const
+   {
+      return _radius;
+   }
+
+   // Every corner: it overrides the corners given before it.
+   template <concepts::ButtonStyler Base>
+   inline float button_styler_with_corner_radius<Base>::get_corner_radius_top_left() const
+   {
+      return _radius;
+   }
+
+   template <concepts::ButtonStyler Base>
+   inline float button_styler_with_corner_radius<Base>::get_corner_radius_top_right() const
+   {
+      return _radius;
+   }
+
+   template <concepts::ButtonStyler Base>
+   inline float button_styler_with_corner_radius<Base>::get_corner_radius_bottom_left() const
+   {
+      return _radius;
+   }
+
+   template <concepts::ButtonStyler Base>
+   inline float button_styler_with_corner_radius<Base>::get_corner_radius_bottom_right() const
    {
       return _radius;
    }

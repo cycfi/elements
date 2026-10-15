@@ -4,9 +4,148 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/hidable.hpp`, `element/events_intercept.hpp`.
+Two kinds of proxy that change how an element takes part in the view:
+one hides it, the others see its events first.
 
-// To be written.
+=== Hiding
+
+`hidable(e)` is `e`, shown or hidden by its `is_hidden` flag. While
+hidden, `e` keeps its place in the layout, with the same limits, but it
+is not drawn, takes no mouse events, is not given the focus, and takes
+no hotkeys. Refresh the view after changing `is_hidden`.
+
+To remove an element from the layout instead, so that the others take
+its space, see xref:layout/collapsible.adoc[Collapsible].
+
+=== Intercepting Keys, Text and Clicks
+
+`key_intercept(e)` sees every key event meant for `e` before `e` does:
+its `on_key` is called with the key, and returns `true` to take it, or
+`false` to pass it on to `e`. `text_intercept(e)` does the same with
+the text events, through `on_text`, and `click_intercept(e)` with the
+mouse button events over `e`, through `on_click`.
+
+The key and text intercepts want the focus, so that those events come
+to them; a click intercept wants it only if `e` does. They see the
+events of whatever inside `e` has the focus: a key intercept around a
+dialog sees Enter while a text box in the dialog is being edited. The
+stock dialogs are made this way, with Enter and Escape mapped to their
+buttons (see xref:styles/dialogs.adoc[Child Windows and Dialogs]).
+
+```c++
+auto [box_, text] = input_box("");
+auto digits_only = text_intercept(box_);
+digits_only.on_text = [](text_info info)
+{
+   return info.codepoint < '0' || info.codepoint > '9';   // take, and drop, the rest
+};
+```
+
+A key intercept sees a key before anything inside it. A
+xref:elements/element.adoc[hotkey] sees a key after everything in the
+focus has passed on it.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   template <concepts::Element Subject>
+   class hidable_element : public proxy<Subject>
+   {
+   public:
+
+                              hidable_element(Subject subject);
+      bool                    is_hidden = false;
+   };
+
+   template <concepts::Element Subject>
+   inline hidable_element<remove_cvref_t<Subject>>
+   hidable(Subject&& subject);
+
+   template <concepts::Element Subject>
+   struct key_intercept_element : public proxy<Subject>
+   {
+      using key_function = std::function<bool(key_info k)>;
+
+      key_function   on_key = [](auto){ return false; };
+   };
+
+   template <concepts::Element Subject>
+   inline key_intercept_element<remove_cvref_t<Subject>>
+   key_intercept(Subject&& subject);
+
+   template <concepts::Element Subject>
+   struct text_intercept_element : public proxy<Subject>
+   {
+      using text_function = std::function<bool(text_info info)>;
+
+      text_function   on_text = [](auto){ return false; };
+   };
+
+   template <concepts::Element Subject>
+   inline text_intercept_element<remove_cvref_t<Subject>>
+   text_intercept(Subject&& subject);
+
+   template <concepts::Element Subject>
+   struct click_intercept_element : public proxy<Subject>
+   {
+      using click_function = std::function<bool(mouse_button btn)>;
+
+      click_function on_click = [](auto){ return false; };
+   };
+
+   template <concepts::Element Subject>
+   inline click_intercept_element<remove_cvref_t<Subject>>
+   click_intercept(Subject&& subject);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`e`:: An element.
+`h`:: A hidable.
+`ki`, `ti`, `ci`:: A key, a text and a click intercept.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `hidable(e)`
+| `e`, hidden while its `is_hidden` is `true`.
+
+| `h.is_hidden`
+| Whether `h` is hidden; `false` by default.
+
+| `key_intercept(e)`
+| `e`, its key events seen first by `on_key`.
+
+| `ki.on_key`
+| Called with each key event; returns `true` to take it.
+
+| `text_intercept(e)`
+| `e`, its text events seen first by `on_text`.
+
+| `ti.on_text`
+| Called with each text event; returns `true` to take it.
+
+| `click_intercept(e)`
+| `e`, its mouse button events seen first by `on_click`.
+
+| `ci.on_click`
+| Called with each button press and release over `e`; returns `true` to
+  take it.
+|===
 
 '''
 

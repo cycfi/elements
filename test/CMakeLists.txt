@@ -76,11 +76,14 @@ set(elements_test_sources
    pages/elements/menus_test.cpp
    pages/elements/lists_test.cpp
    pages/elements/drag_and_drop_test.cpp
+   pages/elements/visibility_test.cpp
    pages/layout/collapsible_test.cpp
    pages/styles/styles_test.cpp
    pages/styles/marks_test.cpp
    pages/styles/dialogs_test.cpp
    pages/styles/menus_test.cpp
+   pages/styles/decorations_test.cpp
+   pages/styles/buttons_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})

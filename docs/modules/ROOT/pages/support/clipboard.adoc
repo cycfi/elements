@@ -77,12 +77,6 @@ when the content is set and laid out, and tells the host. A
 NOTE: An element that overrides `drop` must also override `drop_types`
 to name what it takes: the host offers it nothing else.
 
-=== The Text Functions
-
-`clipboard()` and `clipboard(text)`, which read and write text only,
-remain, deprecated: they are `get_plain_text(get_clipboard({"text/plain"}))`
-and `set_clipboard({{"text/plain", text}})`.
-
 == Include
 
 ```c++
@@ -112,12 +106,6 @@ namespace cycfi::elements
 
    bool                    contains_plain_text(payload const& data);
    std::string             get_plain_text(payload const& data);
-
-   [[deprecated("Use get_plain_text(get_clipboard({\"text/plain\"})) instead.")]]
-   inline std::string clipboard();
-
-   [[deprecated("Use set_clipboard({{\"text/plain\", text}}) instead.")]]
-   inline void clipboard(std::string_view text);
 }
 ```
 

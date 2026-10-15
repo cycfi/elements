@@ -4,9 +4,193 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/border.hpp`, `element/style/misc.hpp`.
+Elements that draw and do nothing else: fills, panels, frames, title
+bars, icons, borders, and elements that draw with a function of your
+own. Each draws in the bounds it is given; put one behind content in a
+xref:layout/layers.adoc[layer], or size it with the
+xref:layout/sizing.adoc[sizing] elements.
 
-// To be written.
+=== Fills, Panels and Frames
+
+image::styles/decorations_elements.png[alt="Samples of the decorations, each labelled: box, rbox, panel, frame, title_bar, frame with a color, icon, and draw", width=600px, link={imagesdir}/styles/decorations_elements.png]
+
+`box(c)` fills its bounds with the color `c`, and `rbox(c, radius)`
+with rounded corners, of radius 4 by default.
+
+`panel` is the background of a group, a menu or a dialog: a rounded
+rectangle in the theme's `panel_color`, with a shadow (see
+xref:support/draw_utils.adoc[Drawing Utilities]). `panel(opacity)`
+replaces the color's alpha with `opacity`.
+
+`frame` outlines its bounds in the theme's `frame_color`, with its
+`frame_stroke_width` and `frame_corner_radius`. `frame(c, width, radius)`
+outlines them in `c` instead, with the line inside the bounds.
+
+`title_bar` is the background of a child window's title: a rounded
+rectangle with a vertical gradient.
+
+`icon(code, size)` draws the icon `code` (see
+xref:support/icons.adoc[Icons]) at `size` times the theme's icon font
+size, 1 by default. Unlike the others, it has a fixed size: the icon's.
+
+=== Drawing with a Function
+
+`draw(f)` calls `f(ctx)` to draw, with the element's
+xref:support/context.adoc[context]: a decoration of your own, with no
+class to write. `draw_value<T>(f)` is also a
+xref:support/receivers.adoc[receiver] of a `T`, and calls `f(ctx, v)`
+with the value it holds:
+
+```c++
+auto level = draw_value<float>(
+   [](context const& ctx, float v)
+   {
+      auto r = ctx.bounds;
+      r.top = r.bottom - r.height() * v;
+      ctx.canvas.fill_style(colors::light_sea_green);
+      ctx.canvas.fill_rect(r);
+   }
+);
+level.value(0.5);
+```
+
+=== Borders
+
+image::styles/decorations_borders.png[alt="Samples of the seven borders, each labelled: border, border_left, border_right, border_top, border_bottom, border_top_bottom and border_left_right", width=600px, link={imagesdir}/styles/decorations_borders.png]
+
+`border` draws a line along each edge of its bounds; `border_left`,
+`border_right`, `border_top` and `border_bottom` along one, and
+`border_top_bottom` and `border_left_right` along two. The lines are in
+the theme's `frame_color` and `frame_stroke_width`, centered on the
+edges.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   struct box_element : element
+   {
+               box_element(color color_);
+      color    _color;
+   };
+
+   inline auto box(color color_);
+
+   struct rbox_element : element
+   {
+               rbox_element(color color_, float radius = 4);
+      color    _color;
+      float    _radius;
+   };
+
+   inline auto rbox(color color_, float radius = 4);
+
+   template <typename F>
+   class draw_element : public element
+   {
+   public:
+            draw_element(F draw);
+   };
+
+   template <typename F>
+   inline draw_element<F> draw(F&& _draw);
+
+   template <typename T, typename F>
+   class draw_value_element : public basic_receiver<T>, public element
+   {
+   public:
+            draw_value_element(F draw);
+   };
+
+   template <typename T, typename F>
+   inline draw_value_element<T, remove_cvref_t<F>> draw_value(F&& f);
+
+   class panel : public element
+   {
+   public:
+                     panel(float opacity_ = get_theme().panel_color.alpha);
+   };
+
+   struct frame : public element
+   {
+                     frame() = default;
+                     frame(
+                        color color_
+                      , float width = get_theme().frame_stroke_width
+                      , float radius = get_theme().frame_corner_radius);
+   };
+
+   class title_bar : public element {};
+
+   struct icon : element
+   {
+                     icon(std::uint32_t code_, float size_ = 1.0);
+      std::uint32_t  _code;
+      float          _size;
+   };
+
+   struct border : public element {};
+   struct border_left : public element {};
+   struct border_right : public element {};
+   struct border_top : public element {};
+   struct border_bottom : public element {};
+   struct border_top_bottom : public element {};
+   struct border_left_right : public element {};
+}
+```
+
+The headers are `element/style/misc.hpp` and `element/style/border.hpp`.
+
+== Expressions
+
+=== Notation
+
+`c`:: A `color`.
+`r`, `w`, `s`, `o`:: A radius, a line width, a size and an opacity, `float`.
+`code`:: An icon's code point.
+`f`:: A function: `f(ctx)` for `draw`, `f(ctx, v)` for `draw_value`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `box(c)`, `rbox(c, r)`
+| A fill of `c`; with rounded corners of radius `r`, 4 by default.
+
+| `panel{}`, `panel(o)`
+| A group's background, in the theme's panel color; at opacity `o`.
+
+| `frame{}`
+| An outline in the theme's frame color, width and corner radius.
+
+| `frame(c, w, r)`
+| An outline in `c`, `w` wide, with corners of radius `r`, inside the
+  bounds.
+
+| `title_bar{}`
+| A child window's title background.
+
+| `icon(code, s)`
+| The icon `code`, at `s` times the theme's icon size.
+
+| `draw(f)`
+| An element that draws with `f(ctx)`.
+
+| `draw_value<T>(f)`
+| A receiver of a `T` that draws with `f(ctx, v)`.
+
+| `border{}`, `border_left{}`, ...
+| Lines along the edges of the bounds.
+|===
 
 '''
 

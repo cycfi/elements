@@ -45,7 +45,7 @@ namespace cycfi::elements
    {
       if (on_key(k))
          return true;
-      return this->subject().key(ctx, k);
+      return base_type::key(ctx, k);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ namespace cycfi::elements
    {
       if (on_text(info))
          return true;
-      return this->subject().text(ctx, info);
+      return base_type::text(ctx, info);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,6 @@ namespace cycfi::elements
 
       bool           click(context const& ctx, mouse_button btn) override;
       bool           wants_control() const override { return true; }
-      bool           wants_focus() const override { return true; }
       std::string    class_name() const override { return "click_intercept"; }
 
       using click_function = std::function<bool(mouse_button btn)>;
@@ -119,7 +118,7 @@ namespace cycfi::elements
    {
       if (on_click(btn))
          return true;
-      return this->subject().click(ctx, btn);
+      return base_type::click(ctx, btn);
    }
 }
 

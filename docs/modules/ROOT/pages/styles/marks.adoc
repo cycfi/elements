@@ -204,11 +204,6 @@ is the one at the bottom. A positive `size` puts them to the right of a
 vertical slider and below a horizontal one; a negative `size` puts them on
 the other side.
 
-NOTE: `slider_marks<size, num_divs, major_divs>` is deprecated. It counts
-total divisions and promotes every `num_divs / major_divs` of them to a
-major tick. Use `slider_marks_lin`, which counts major intervals and the
-subdivisions within each.
-
 === Example
 
 ```c++

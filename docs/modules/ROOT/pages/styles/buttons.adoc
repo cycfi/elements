@@ -4,9 +4,377 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/button.hpp`, `element/style/icon_button.hpp`, `element/style/sprite_button.hpp`.
+The stock looks of a button: a body with a label and an optional icon,
+an icon alone, or the frames of a picture. The behavior, momentary,
+toggle or latching, is on the xref:elements/buttons.adoc[Buttons] page;
+each look here goes with any of them.
 
-// To be written.
+=== Stock Buttons
+
+image::styles/buttons_stock.png[alt="Stock buttons: momentary; a red toggle, off and on; a toggle in the default color, on; a green latching button, on; blue buttons with an icon on the left and on the right; and a disabled button", width=360px, link={imagesdir}/styles/buttons_stock.png]
+
+`button(label)`, `toggle_button(label)` and `latching_button(label)`
+make a button of each kind with a text label. Each also takes, after
+the label, a relative `size`, 1 by default, which scales the text, the
+icon and the corner radii, and a `body_color`, the theme's
+`default_button_color` by default:
+
+```c++
+auto ok = button("OK");
+auto mute = toggle_button("Mute", 1.0, colors::red.opacity(0.4));
+```
+
+With an icon (see xref:support/icons.adoc[Icons]) as well, the icon
+goes on the side it is given on: `button(icons::cog, "Setup", 1.0)`
+puts it on the left, `button("Next", icons::right_circled, 1.0)` on
+the right. The same forms make toggle and latching buttons.
+
+While a button is on, its body is drawn in the active body color,
+which is the body color unless set, at 70% opacity, moved down and
+right by a pixel, as if pressed. While the pointer is over it, its text
+is brighter; while it is disabled, it is dimmed.
+
+=== The Button Styler
+
+The stock buttons are made with `button_styler`. Make one with a label,
+set what it draws with its member functions, and make a button of any
+kind with it:
+
+```c++
+auto next = momentary_button(
+   button_styler{"Next"}
+      .icon(icons::right_circled)
+      .align_right()
+      .body_color(colors::green.opacity(0.4))
+);
+```
+
+image::styles/buttons_styler.png[alt="Three rows of buttons: Left, Center and Right, with their labels aligned so; Rounded Left, Square Center and Rounded Right, together one bar rounded at its ends; and Large, Gold Text, and Rounded Top", width=480px, link={imagesdir}/styles/buttons_styler.png]
+
+Each member function returns a new styler, so the calls chain. If two
+calls set the same thing, the later one wins: `.corner_radius(4)` after
+`.rounded_corner_top_left(8)` makes all four corners 4. With no calls, a
+styler draws at size 1, centered, with no icon, in the theme's colors and
+`button_corner_radius`.
+
+A button `btn` made with a styler is a
+xref:elements/proxies.adoc[proxy] over it, and the styler holds its
+label: `btn->set_text("Done")` changes it, and `btn->get_text()` reads
+it.
+
+=== Icon Buttons
+
+image::styles/buttons_icons_sprites.png[alt="Top: icon buttons, a blue power button on, a magnifying glass, a left arrow in a circle, a left arrow, and a disabled one. Bottom: sprite buttons, a glowing power button on, a wave, an envelope, a bus, and a dimmed wave", width=480px, link={imagesdir}/styles/buttons_icons_sprites.png]
+
+`icon_button(code, size, body_color)` is a momentary button of an icon
+on a square body, and `toggle_icon_button(code, size, body_color)` a
+toggle. `toggle_icon_button(code1, code2, size, body_color)` shows
+`code1` while off and `code2` while on. `plain_icon_button(code, size)`
+has no body: the icon alone.
+
+=== Sprite Buttons
+
+`momentary_button(sp)`, `toggle_button(sp)` and `latching_button(sp)`, given
+a `sprite` (see xref:elements/images.adoc[Images]), make a button that
+shows one frame of it for each state: frame 0 while off, 1 while off
+with the pointer over it, 2 while on, and 3 while on with the pointer
+over it. A sprite with a fifth frame shows it while disabled.
+
+```c++
+sprite power = sprite{"power_180x632.png", 158 * 0.25, 0.25};
+auto power_button = toggle_button(power);
+```
+
+=== Bodies and Faces
+
+For a button whose content is not a label, `button_body(active, body)`
+is the body alone, drawn as a button's is, free to take any size: put
+it in a xref:layout/layers.adoc[layer] under the content. `button_face(off, on)`
+is a look made of two elements of any kind, drawn one while the button
+is off and the other while it is on.
+
+```c++
+auto play = toggle_button(
+   button_face(
+      icon{icons::play},
+      icon{icons::pause}
+   )
+);
+```
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   template <concepts::MomentaryButton Base = basic_button>
+   inline auto button(
+      std::string label
+    , float size = 1.0
+    , color body_color = get_theme().default_button_color);
+
+   template <concepts::MomentaryButton Base = basic_button>
+   inline auto button(
+      std::uint32_t icon_code
+    , std::string label
+    , float size
+    , color body_color = get_theme().default_button_color);
+
+   template <concepts::MomentaryButton Base = basic_button>
+   inline auto button(
+      std::string label
+    , std::uint32_t icon_code
+    , float size
+    , color body_color = get_theme().default_button_color);
+
+   // toggle_button and latching_button: the same three forms.
+
+   using button_styler = button_styler_gen<basic_button_styler>;
+
+   template <concepts::ButtonStyler Base>
+   struct button_styler_gen : Base
+   {
+      gen_size                         size(float size) const;
+      gen_body_color                   body_color(color color_) const;
+      gen_active_body_color            active_body_color(color color_) const;
+      gen_text_color                   text_color(color color_) const;
+      gen_icon                         icon(std::uint32_t code) const;
+      gen_icon_placement               icon_left() const;
+      gen_icon_placement               icon_right() const;
+      gen_icon_color                   icon_color(color color_) const;
+      gen_label_alignment              align_left() const;
+      gen_label_alignment              align_center() const;
+      gen_label_alignment              align_right() const;
+      gen_margin                       margin(rect margin) const;
+      gen_corner_radius                corner_radius(float r) const;
+      gen_individual_corners           corner_radius(
+                                          float top_left,
+                                          float top_right,
+                                          float bottom_right,
+                                          float bottom_left
+                                       ) const;
+
+      gen_rounded_half_up              rounded_top(float r) const;
+      gen_rounded_half_down            rounded_bottom(float r) const;
+      gen_rounded_half_left            rounded_left(float r) const;
+      gen_rounded_half_right           rounded_right(float r) const;
+
+      gen_rounded_half_default_up      rounded_top() const;
+      gen_rounded_half_default_down    rounded_bottom() const;
+      gen_rounded_half_default_left    rounded_left() const;
+      gen_rounded_half_default_right   rounded_right() const;
+
+      gen_rounded_corner_top_left      rounded_corner_top_left(float r) const;
+      gen_rounded_corner_top_right     rounded_corner_top_right(float r) const;
+      gen_rounded_corner_bottom_left   rounded_corner_bottom_left(float r) const;
+      gen_rounded_corner_bottom_right  rounded_corner_bottom_right(float r) const;
+   };
+
+   struct button_body : button_styler_base
+   {
+                              button_body(
+                                 color active = get_theme().default_button_color
+                               , color body = get_theme().default_button_color);
+
+      color                   body_color;
+      color                   active_body_color;
+      float                   corner_radius = get_theme().button_corner_radius;
+   };
+
+   template <concepts::Element Off, concepts::Element On>
+   inline button_face_element<remove_cvref_t<Off>, remove_cvref_t<On>>
+   button_face(Off&& off, On&& on);
+
+   inline auto icon_button(
+      uint32_t code
+    , float size = 1.0f
+    , color body_color = get_theme().default_button_color);
+
+   inline auto toggle_icon_button(
+      uint32_t code
+    , float size
+    , color body_color = get_theme().default_button_color);
+
+   inline auto toggle_icon_button(
+      uint32_t code1
+    , uint32_t code2
+    , float size
+    , color body_color = get_theme().default_button_color);
+
+   inline auto plain_icon_button(uint32_t code, float size = 1.0f);
+
+   template <
+      concepts::MomentaryButton Base = basic_button
+    , concepts::SpriteSubject Styler
+   >
+   inline proxy<remove_cvref_t<Styler>, sprite_button_styler<Base>>
+   momentary_button(Styler&& s);
+
+   // toggle_button and latching_button: the same, for a sprite.
+}
+```
+
+The headers are `element/style/button.hpp`, `element/style/icon_button.hpp`
+and `element/style/sprite_button.hpp`.
+
+== Expressions
+
+=== Notation
+
+`t`:: A label, `std::string`.
+`i`, `i2`:: Icon codes (see xref:support/icons.adoc[Icons]).
+`s`:: A relative size, `float`.
+`c`, `c2`:: Colors.
+`r`:: A corner radius, `float`.
+`tl`, `tr`, `br`, `bl`:: The radii of the top left, top right, bottom
+right and bottom left corners, `float`.
+`m`:: A margin, a `rect` of the space on each side: left, top, right and
+bottom.
+`st`:: A `button_styler`.
+`sp`:: A `sprite`.
+`e`, `e2`:: Elements.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `button(t, s, c)`
+| A momentary button labelled `t`, of the relative size `s` and the body
+  color `c`.
+
+| `button(i, t, s, c)`
+| The same, with the icon `i` on the left of the label.
+
+| `button(t, i, s, c)`
+| The same, with the icon `i` on the right of the label.
+
+| `toggle_button(t, s, c)`
+| A toggle button labelled `t`, of the relative size `s` and the body
+  color `c`. It also takes an icon, as `button` does.
+
+| `latching_button(t, s, c)`
+| A latching button labelled `t`, of the relative size `s` and the body
+  color `c`. It also takes an icon, as `button` does.
+
+| `+button_styler{t}+`
+| A styler of the label `t`.
+
+| `st.size(s)`
+| A copy of `st` drawn at the relative size `s`.
+
+| `st.body_color(c)`
+| A copy of `st` with the body color `c`.
+
+| `st.active_body_color(c)`
+| A copy of `st` with the body color `c` while the button is on.
+
+| `st.text_color(c)`
+| A copy of `st` with the label in the color `c`.
+
+| `st.icon(i)`
+| A copy of `st` with the icon `i`, on the right of the label unless an
+  earlier call placed it.
+
+| `st.icon_left()`
+| A copy of `st` with the icon on the left of the label.
+
+| `st.icon_right()`
+| A copy of `st` with the icon on the right of the label.
+
+| `st.icon_color(c)`
+| A copy of `st` with the icon in the color `c`.
+
+| `st.align_left()`
+| A copy of `st` with the label and icon at the left of the body.
+
+| `st.align_center()`
+| A copy of `st` with the label and icon at the center of the body.
+
+| `st.align_right()`
+| A copy of `st` with the label and icon at the right of the body.
+
+| `st.margin(m)`
+| A copy of `st` with the space `m` around the label and icon.
+
+| `st.corner_radius(r)`
+| A copy of `st` with every corner of radius `r`.
+
+| `st.corner_radius(tl, tr, br, bl)`
+| A copy of `st` with the corners of radius `tl`, `tr`, `br` and `bl`.
+
+| `st.rounded_top(r)`
+| A copy of `st` with the top corners of radius `r`, and the bottom
+  corners square unless an earlier call set them.
+
+| `st.rounded_bottom(r)`
+| A copy of `st` with the bottom corners of radius `r`, and the top
+  corners square unless an earlier call set them.
+
+| `st.rounded_left(r)`
+| A copy of `st` with the left corners of radius `r`, and the right
+  corners square unless an earlier call set them.
+
+| `st.rounded_right(r)`
+| A copy of `st` with the right corners of radius `r`, and the left
+  corners square unless an earlier call set them.
+
+| `st.rounded_top()`
+| `st.rounded_top(r)`, with `r` the theme's `button_corner_radius`; the
+  same for `rounded_bottom()`, `rounded_left()` and `rounded_right()`.
+
+| `st.rounded_corner_top_left(r)`
+| A copy of `st` with the top left corner of radius `r`, and the others
+  square unless an earlier call set them; the same for
+  `rounded_corner_top_right`, `rounded_corner_bottom_left` and
+  `rounded_corner_bottom_right`.
+
+| `momentary_button(st)`
+| A momentary button drawn by `st`.
+
+| `toggle_button(st)`
+| A toggle button drawn by `st`.
+
+| `latching_button(st)`
+| A latching button drawn by `st`.
+
+| `icon_button(i, s, c)`
+| A momentary button of the icon `i`, of the relative size `s`, on a
+  body of color `c`.
+
+| `toggle_icon_button(i, s, c)`
+| A toggle button of the icon `i`, of the relative size `s`, on a body
+  of color `c`.
+
+| `toggle_icon_button(i, i2, s, c)`
+| A toggle button showing `i` while off and `i2` while on.
+
+| `plain_icon_button(i, s)`
+| A momentary button of the icon `i`, of the relative size `s`, with no
+  body.
+
+| `momentary_button(sp)`
+| A momentary button showing a frame of `sp` for each state.
+
+| `toggle_button(sp)`
+| A toggle button showing a frame of `sp` for each state.
+
+| `latching_button(sp)`
+| A latching button showing a frame of `sp` for each state.
+
+| `button_body(c, c2)`
+| A button's body, `c` while on and `c2` while off.
+
+| `button_face(e, e2)`
+| A look of `e` while off and `e2` while on.
+|===
 
 '''
 

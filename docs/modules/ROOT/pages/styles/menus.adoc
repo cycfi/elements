@@ -138,9 +138,6 @@ namespace cycfi::elements
 }
 ```
 
-`diplay_shortcut`, the old name of `display_shortcut`, remains,
-deprecated.
-
 == Expressions
 
 === Notation

@@ -48,8 +48,11 @@
 **** xref:elements/menus.adoc[Menus]
 **** xref:elements/lists.adoc[Lists]
 *** xref:elements/drag_and_drop.adoc[Drag and Drop]
+*** xref:elements/visibility.adoc[Visibility and Event Interception]
 *** xref:styles.adoc[Styles]
+**** xref:styles/buttons.adoc[Buttons]
 **** xref:styles/marks.adoc[Marks and Scales]
+**** xref:styles/decorations.adoc[Borders and Decorations]
 **** xref:styles/dialogs.adoc[Child Windows and Dialogs]
 **** xref:styles/menus.adoc[Menus]
 ** Support

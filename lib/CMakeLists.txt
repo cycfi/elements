@@ -129,7 +129,6 @@ set(ELEMENTS_HEADERS
    include/elements/element.hpp
    include/elements/element/align.hpp
    include/elements/element/button.hpp
-   include/elements/element/collapsable.hpp
    include/elements/element/composite.hpp
    include/elements/element/curve_editor.hpp
    include/elements/element/image_grid.hpp

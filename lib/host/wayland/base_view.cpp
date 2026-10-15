@@ -846,6 +846,7 @@ namespace cycfi::elements
 #elif defined(ARTIST_SKIA)
                resize_backing(h);
 #endif
+               view->on_scale_change(float(sc));
                render(*view);
             }
          }
@@ -895,7 +896,10 @@ namespace cycfi::elements
       auto i = plat().views.find(get_surface(w));
       if (i == plat().views.end())
          return;
-      auto* h = platform_access::get_host_view(*i->second);
+      auto& view = *i->second;
+      auto* h = platform_access::get_host_view(view);
+      bool const opening = !h->configured;
+      bool const resized = h->size != point{float(content_w), float(content_h)};
       h->size = {float(content_w), float(content_h)};
       h->configured = true;
       if (std::getenv("ELEMENTS_WL_DEBUG"))
@@ -909,6 +913,10 @@ namespace cycfi::elements
          init_egl(h);
       resize_backing(h);
 #endif
+      if (opening)
+         view.on_open({h->size.x, h->size.y}, float(h->scale));
+      else if (resized)
+         view.on_size_change({h->size.x, h->size.y});
    }
 
    void view_render(host_window& w)

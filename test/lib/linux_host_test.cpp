@@ -4,9 +4,10 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 
    The X11 and Wayland hosts, driven through a real window by the same pump
-   their event loops use. On X11, a view is repainted once per turn of the
-   loop, however many refreshes were asked for in that turn: a refresh
-   marks an area, and the loop draws what was marked.
+   their event loops use. A view is told when it opens and when its size
+   changes, as on the other hosts. On X11, a view is repainted once per turn
+   of the loop, however many refreshes were asked for in that turn: a
+   refresh marks an area, and the loop draws what was marked.
 =============================================================================*/
 #include "test_support.hpp"
 
@@ -43,6 +44,27 @@ namespace
       int draws = 0;
    };
 
+   // A view that records what its host told it.
+   struct told_view : view
+   {
+      using view::view;
+
+      void on_open(extent size_, float scale_) override
+      {
+         opened = size_;
+         open_scale = scale_;
+      }
+
+      void on_size_change(extent size_) override
+      {
+         resized = size_;
+      }
+
+      extent                  opened = {0, 0};
+      float                   open_scale = 0;
+      extent                  resized = {0, 0};
+   };
+
    // One turn of the event loop, as app::run takes it.
    void turn()
    {
@@ -71,6 +93,23 @@ namespace
          std::this_thread::sleep_for(std::chrono::milliseconds(5));
       }
    }
+}
+
+TEST_CASE("host: a view is told when it opens and when it is resized", "[host_events]")
+{
+   window win{"", window::standard, rect{20, 20, 220, 220}};
+   told_view view_(win);
+   view_.content(std::make_shared<counter>());
+
+   turn_until([&] { return view_.opened.x > 0; });
+   CHECK(view_.opened.x == 200);
+   CHECK(view_.opened.y == 200);
+   CHECK(view_.open_scale > 0);
+
+   win.size({300, 250});
+   turn_until([&] { return view_.resized.x > 0; });
+   CHECK(view_.resized.x == 300);
+   CHECK(view_.resized.y == 250);
 }
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_X11)

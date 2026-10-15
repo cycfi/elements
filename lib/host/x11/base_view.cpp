@@ -1312,6 +1312,7 @@ namespace cycfi::elements
                   window_pixel_size(h->window, w, hgt);
                   h->size = {float(w / h->scale), float(hgt / h->scale)};
                   h->opened = true;
+                  view.on_open({h->size.x, h->size.y}, float(h->scale));
                }
                do_render(view);
                break;
@@ -1332,6 +1333,7 @@ namespace cycfi::elements
                   int ph = int(std::lround(h->size.y * new_scale));
                   XResizeWindow(plat().display, h->window, pw, ph);
                   create_backing(h, pw, ph);   // uses h->scale for device scale
+                  view.on_scale_change(float(new_scale));
                   do_render(view);
                }
                else
@@ -1342,6 +1344,8 @@ namespace cycfi::elements
                   {
                      create_backing(h, w, hgt);
                      h->size = {float(w / h->scale), float(hgt / h->scale)};
+                     if (h->opened)
+                        view.on_size_change({h->size.x, h->size.y});
                      do_render(view);   // repaint at the new size, no stale frame
                   }
                }

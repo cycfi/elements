@@ -69,7 +69,9 @@ image::styles/buttons_icons_sprites.png[alt="Top: icon buttons, a blue power but
 `icon_button(code, size, body_color)` is a momentary button of an icon
 on a square body, and `toggle_icon_button(code, size, body_color)` a
 toggle. `toggle_icon_button(code1, code2, size, body_color)` shows
-`code1` while off and `code2` while on. `plain_icon_button(code, size)`
+`code1` while off and `code2` while on.
+`toggle_icon_button(code1, code2, size, off_color, on_color)` also
+gives each state its own body color. `plain_icon_button(code, size)`
 has no body: the icon alone.
 
 === Sprite Buttons
@@ -206,6 +208,13 @@ namespace cycfi::elements
     , uint32_t code2
     , float size
     , color body_color = get_theme().default_button_color);
+
+   inline auto toggle_icon_button(
+      uint32_t code1
+    , uint32_t code2
+    , float size
+    , color off_color
+    , color on_color);
 
    inline auto plain_icon_button(uint32_t code, float size = 1.0f);
 
@@ -355,6 +364,10 @@ bottom.
 
 | `toggle_icon_button(i, i2, s, c)`
 | A toggle button showing `i` while off and `i2` while on.
+
+| `toggle_icon_button(i, i2, s, c, c2)`
+| A toggle button showing `i` on a body of color `c` while off, and
+  `i2` on a body of color `c2` while on.
 
 | `plain_icon_button(i, s)`
 | A momentary button of the icon `i`, of the relative size `s`, with no

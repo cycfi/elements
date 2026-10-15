@@ -62,6 +62,13 @@ TEST_CASE("buttons style page: snippets", "[buttons_style_page]")
       )
    );
    CHECK(!play.value());
+
+   // Each state on its own body color: the colors are checked in
+   // test/lib/icon_button_test.cpp.
+   auto transport = toggle_icon_button(
+      icons::play, icons::pause, 1.2, colors::green, colors::red);
+   transport.value(true);
+   CHECK(transport.value());
    (void) ok;
    (void) mute;
 }

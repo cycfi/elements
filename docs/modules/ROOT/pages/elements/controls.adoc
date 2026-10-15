@@ -16,6 +16,8 @@ and handles the mouse and keyboard, and a styler, any element, draws it
 * xref:elements/dials.adoc[Dials]: a value set by turning, as a knob.
 * xref:elements/thumbwheels.adoc[Thumbwheels]: a point, x and y, moved
   with the mouse.
+* xref:elements/curve_editor.adoc[Curve Editor]: points dragged to shape
+  a curve, as an envelope or an XY pad.
 
 '''
 

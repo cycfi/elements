@@ -9,6 +9,7 @@
 #include <elements/element/proxy.hpp>
 #include <elements/element/tracker.hpp>
 #include <elements/element/traversal.hpp>
+#include <elements/support/undo_anchor.hpp>
 #include <algorithm>
 #include <functional>
 #include <memory>
@@ -16,6 +17,15 @@
 
 namespace cycfi::elements
 {
+   class basic_curve_editor;
+   class curve_value;
+
+   std::shared_ptr<curve_value>
+   x_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i);
+
+   std::shared_ptr<curve_value>
+   y_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i);
+
    /**
     * \struct curve_point
     *
@@ -49,8 +59,10 @@ namespace cycfi::elements
     *    points, which one is being dragged and where to, and returns where
     *    it lands. All of these are places in the unit square, offsets
     *    summed; the editor turns the result back into an offset for an
-    *    offset point. The default keeps a point in the unit square and
-    *    between its neighbors. `movable` says which points may be dragged.
+    *    offset point. Unset, a point stays in the unit square and between
+    *    its neighbors, or, followed by an offset point, which moves with
+    *    it, no further left than the point before. `movable` says which
+    *    points may be dragged.
     *
     *    Each point is a node with its own callbacks, one per axis, which
     *    x_of and y_of hand out as controls of their own, for a model binder.
@@ -60,6 +72,15 @@ namespace cycfi::elements
     *    inserted and erased, by code or, where on_insert and on_erase
     *    allow it, by a double click, on_insert also given the place in
     *    the unit square.
+    *
+    *    Each drag, and each insert or erase by a double click, is a step on
+    *    the view's undo stack. A step holds only what the user did, so it
+    *    leaves alone what code has set since. Undoing a drag puts the
+    *    point back, reported through its callbacks as a drag is. Undoing an
+    *    erase inserts the same node again, through on_insert, and undoing
+    *    an insert erases it, through on_erase; refused, the step does
+    *    nothing. An insert or erase before an offset point changes that
+    *    point's offset, reported through its x callbacks.
     */
    class basic_curve_editor : public tracker<proxy_base>
    {
@@ -92,6 +113,8 @@ namespace cycfi::elements
                               basic_curve_editor(
                                  std::vector<curve_point> points
                                , element_ptr handle);
+                              basic_curve_editor(basic_curve_editor const& rhs);
+                              basic_curve_editor(basic_curve_editor&& rhs) = default;
 
       // The points, in order
       std::size_t             size() const   { return _nodes.size(); }
@@ -156,10 +179,44 @@ namespace cycfi::elements
 
    private:
 
+      friend std::shared_ptr<curve_value>
+      x_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i);
+
+      friend std::shared_ptr<curve_value>
+      y_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i);
+
+      static std::shared_ptr<curve_value>
+                              value_of(
+                                 std::shared_ptr<basic_curve_editor> editor
+                               , std::size_t i, bool is_y);
+
       int                     pick(context const& ctx, point p) const;
       float                   x_scale() const;
+      point                   default_place(
+                                 points_type const& pts
+                               , std::size_t i, point to) const;
       void                    move(std::size_t i, point to);
       void                    end_gesture(std::size_t i);
+      using values_type = std::vector<std::shared_ptr<curve_value>>;
+      using values_ptr = std::shared_ptr<values_type>;
+
+      bool                    insert_node(std::size_t i, node_ptr n);
+      int                     index_of(node_ptr const& n) const;
+      void                    report(node const& n, point old) const;
+      bool                    restore(node_ptr const& n, point pos);
+      bool                    put_back(
+                                 std::size_t i, node_ptr const& n
+                               , point place, values_ptr const& values);
+      bool                    take_out(
+                                 node_ptr const& n
+                               , values_ptr const& values);
+      void                    add_drag_undo(
+                                 context const& ctx, node_ptr n
+                               , point before, point after);
+      void                    add_point_undo(
+                                 context const& ctx, bool inserted
+                               , std::size_t i, node_ptr n, point place
+                               , values_ptr values);
       bool                    double_click(context const& ctx, point p);
 
       std::vector<node_ptr>   _nodes;
@@ -170,6 +227,13 @@ namespace cycfi::elements
       bool                    _x_gesture = false;
       bool                    _y_gesture = false;
       std::size_t             _drawing = 0;
+
+      undo_anchor<basic_curve_editor> _anchor;
+      point                   _drag_start;
+
+      // The axes handed out by x_of and y_of, kept for as long as their
+      // points are in the editor: a model binder holds them weakly.
+      values_type             _values;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -192,7 +256,8 @@ namespace cycfi::elements
       return p;
    }
 
-   // The default: in the unit square, between the neighbors
+   // In the unit square, between the neighbors: the default for a point
+   // not followed by an offset point
    inline point default_constraint(
       basic_curve_editor::points_type const& pts, std::size_t i, point to)
    {
@@ -227,6 +292,10 @@ namespace cycfi::elements
     *    for a model binder: a value(v) setter, an on_change and a gesture
     *    callback, the point's own. It holds its node, so a point erased
     *    from the editor leaves it harmless rather than dangling.
+    *
+    *    x_of and y_of hand one out, and the editor keeps it while its
+    *    point is in the editor, so it may be bound and let go: a model
+    *    binder holds it weakly. Asked again, they give the same one.
     */
    class curve_value
    {
@@ -248,26 +317,13 @@ namespace cycfi::elements
 
    private:
 
+      friend class basic_curve_editor;
+
       std::weak_ptr<basic_curve_editor> _editor;
       node_ptr                _node;
       bool                    _is_y;
    };
 
-   template <typename Editor>
-   inline std::shared_ptr<curve_value>
-   x_of(std::shared_ptr<Editor> editor, std::size_t i)
-   {
-      auto n = editor->node_at(i);
-      return std::make_shared<curve_value>(editor, n, false);
-   }
-
-   template <typename Editor>
-   inline std::shared_ptr<curve_value>
-   y_of(std::shared_ptr<Editor> editor, std::size_t i)
-   {
-      auto n = editor->node_at(i);
-      return std::make_shared<curve_value>(editor, n, true);
-   }
 
    ////////////////////////////////////////////////////////////////////////////
    // Inline implementation

@@ -22,12 +22,32 @@ namespace cycfi::elements
 
    basic_curve_editor::basic_curve_editor(
       std::vector<curve_point> points, element_ptr handle)
-    : constrain(default_constraint)
-    , _handle(std::move(handle))
+    : _handle(std::move(handle))
+    , _anchor(this)
    {
       _nodes.reserve(points.size());
       for (auto const& p : points)
          _nodes.push_back(make_node(p));
+   }
+
+   // A copy is an editor of its own: its points are new nodes, as the
+   // original's were, with no undo steps and no axes handed out.
+   basic_curve_editor::basic_curve_editor(basic_curve_editor const& rhs)
+    : tracker<proxy_base>(rhs)
+    , constrain(rhs.constrain)
+    , movable(rhs.movable)
+    , on_change(rhs.on_change)
+    , on_insert(rhs.on_insert)
+    , on_erase(rhs.on_erase)
+    , reach(rhs.reach)
+    , inset(rhs.inset)
+    , fit_width(rhs.fit_width)
+    , _handle(rhs._handle)
+    , _anchor(rhs._anchor)
+   {
+      _nodes.reserve(rhs._nodes.size());
+      for (auto const& n : rhs._nodes)
+         _nodes.push_back(std::make_shared<node>(*n));
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -75,30 +95,47 @@ namespace cycfi::elements
       _nodes[i]->spec.pos.y = v;
    }
 
-   // An offset point inserted splits the segment it lands in, and one
-   // erased merges two, so the points after it stay where they were.
+   // A point inserted or erased before an offset point leaves that point,
+   // and so the points after it, where they were: its offset is taken
+   // again from the point now before it.
    bool basic_curve_editor::insert(std::size_t i, curve_point p)
+   {
+      return insert_node(i, make_node(p));
+   }
+
+   bool basic_curve_editor::insert_node(std::size_t i, node_ptr n)
    {
       if (i > _nodes.size())
          return false;
-      if (p.offset_x && i > 0)
+      if (i < _nodes.size() && _nodes[i]->spec.offset_x)
       {
-         auto const at = position(i - 1).x + p.pos.x;
-         if (i < _nodes.size() && _nodes[i]->spec.offset_x)
-            _nodes[i]->spec.pos.x = position(i).x - at;
+         auto const& p = n->spec;
+         auto const at = p.offset_x && i > 0?
+            position(i - 1).x + p.pos.x : p.pos.x;
+         _nodes[i]->spec.pos.x = position(i).x - at;
       }
-      _nodes.insert(_nodes.begin() + i, make_node(p));
+      _nodes.insert(_nodes.begin() + i, std::move(n));
       return true;
+   }
+
+   int basic_curve_editor::index_of(node_ptr const& n) const
+   {
+      auto i = std::find(_nodes.begin(), _nodes.end(), n);
+      return i == _nodes.end()? -1 : int(i - _nodes.begin());
    }
 
    bool basic_curve_editor::erase(std::size_t i)
    {
       if (i >= _nodes.size())
          return false;
-      if (i + 1 < _nodes.size() && _nodes[i + 1]->spec.offset_x
-         && _nodes[i]->spec.offset_x)
-         _nodes[i + 1]->spec.pos.x += _nodes[i]->spec.pos.x;
+      if (i + 1 < _nodes.size() && _nodes[i + 1]->spec.offset_x)
+      {
+         auto const next = position(i + 1).x;
+         _nodes[i + 1]->spec.pos.x = i > 0? next - position(i - 1).x : next;
+      }
       auto const* n = _nodes[i].get();
+      std::erase_if(_values,
+         [n](auto const& v) { return v->_node.get() == n; });
       if (_hot == n)
          _hot = nullptr;
       if (_dragging == n)
@@ -195,7 +232,7 @@ namespace cycfi::elements
    void basic_curve_editor::move(std::size_t i, point to)
    {
       auto const pts = positions();
-      auto const at = constrain? constrain(pts, i, to) : to;
+      auto const at = constrain? constrain(pts, i, to) : default_place(pts, i, to);
 
       auto& n = *_nodes[i];
       auto const old = n.spec.pos;
@@ -224,6 +261,21 @@ namespace cycfi::elements
          on_change(i, at);
    }
 
+   // In the unit square, between the neighbors. A point followed by an
+   // offset point is bounded only by the point before it: the points after
+   // it move with it.
+   point basic_curve_editor::default_place(
+      points_type const& pts, std::size_t i, point to) const
+   {
+      if (i + 1 < _nodes.size() && _nodes[i + 1]->spec.offset_x)
+      {
+         to = in_unit_square(to);
+         to.x = std::max(to.x, i > 0? pts[i - 1].x : 0.0f);
+         return to;
+      }
+      return default_constraint(pts, i, to);
+   }
+
    void basic_curve_editor::end_gesture(std::size_t i)
    {
       auto const& n = *_nodes[i];
@@ -243,7 +295,13 @@ namespace cycfi::elements
       {
          if (!on_erase || !on_erase(std::size_t(at)))
             return false;
-         return erase(std::size_t(at));
+         auto const i = std::size_t(at);
+         auto const n = _nodes[i];
+         auto const place = position(i);
+         auto values = std::make_shared<values_type>();
+         take_out(n, values);
+         add_point_undo(ctx, false, i, n, place, values);
+         return true;
       }
 
       if (!on_insert)
@@ -261,7 +319,16 @@ namespace cycfi::elements
       np.pos = {offset? u.x - position(i - 1).x : u.x, u.y};
       if (!on_insert(i, {u.x, u.y}))
          return false;
-      return insert(i, np);
+
+      auto const n = make_node(np);
+      auto const next = i < _nodes.size()? _nodes[i] : nullptr;
+      auto const old = next? next->spec.pos : point{};
+      insert_node(i, n);
+      if (next)
+         report(*next, old);
+      add_point_undo(ctx, true, i, n, {u.x, u.y}
+       , std::make_shared<values_type>());
+      return true;
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -292,6 +359,141 @@ namespace cycfi::elements
       }
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Undo and redo
+   ////////////////////////////////////////////////////////////////////////////
+
+   // Report a node's held values changed from `old`, as a drag does: each
+   // axis that changed, between its gesture's begin and end.
+   void basic_curve_editor::report(node const& n, point old) const
+   {
+      auto axis = [](auto const& gesture, auto const& change, float v)
+      {
+         if (gesture)
+            gesture(true);
+         if (change)
+            change(v);
+         if (gesture)
+            gesture(false);
+      };
+      auto const now = n.spec.pos;
+      if (now.x != old.x)
+         axis(n.on_x_gesture, n.on_x_change, now.x);
+      if (now.y != old.y)
+         axis(n.on_y_gesture, n.on_y_change, now.y);
+   }
+
+   // Put a dragged point back as it held itself before or after the drag,
+   // reported as a drag is. false if the point has been erased since.
+   bool basic_curve_editor::restore(node_ptr const& n, point pos)
+   {
+      auto const at = index_of(n);
+      if (at < 0)
+         return false;
+      auto const i = std::size_t(at);
+      auto const old = n->spec.pos;
+      auto const old_place = position(i);
+      n->spec.pos = pos;
+      report(*n, old);
+      auto const place = position(i);
+      if ((place.x != old_place.x || place.y != old_place.y) && on_change)
+         on_change(i, place);
+      return true;
+   }
+
+   // Insert a node erased before, with the axes handed out for it, if it
+   // is not in the editor and on_insert allows it. The point after it,
+   // an offset point, takes its offset from it again.
+   bool basic_curve_editor::put_back(
+      std::size_t i, node_ptr const& n, point place, values_ptr const& values)
+   {
+      i = std::min(i, _nodes.size());
+      if (index_of(n) >= 0 || !on_insert || !on_insert(i, place))
+         return false;
+      auto const next = i < _nodes.size()? _nodes[i] : nullptr;
+      auto const old = next? next->spec.pos : point{};
+      insert_node(i, n);
+      _values.insert(_values.end(), values->begin(), values->end());
+      values->clear();
+      if (next)
+         report(*next, old);
+      return true;
+   }
+
+   // Erase a node, keeping the axes handed out for it. The point after it,
+   // an offset point, takes its offset from the point before.
+   bool basic_curve_editor::take_out(
+      node_ptr const& n, values_ptr const& values)
+   {
+      auto const at = index_of(n);
+      if (at < 0)
+         return false;
+      auto const i = std::size_t(at);
+      for (auto const& v : _values)
+      {
+         if (v->_node == n)
+            values->push_back(v);
+      }
+      auto const next = i + 1 < _nodes.size()? _nodes[i + 1] : nullptr;
+      auto const old = next? next->spec.pos : point{};
+      erase(i);
+      if (next)
+         report(*next, old);
+      return true;
+   }
+
+   void basic_curve_editor::add_drag_undo(
+      context const& ctx, node_ptr n, point before, point after)
+   {
+      auto& view_ = ctx.view;
+      auto step = [&view_, self = _anchor.ref(), n](point pos)
+      {
+         auto* e = *self;
+         if (!e || !e->restore(n, pos))
+            return false;
+         view_.refresh(*e);
+         return true;
+      };
+      view_.add_undo({
+         [step, before]() { return step(before); }
+       , [step, after]() { return step(after); }
+      });
+   }
+
+   void basic_curve_editor::add_point_undo(
+      context const& ctx, bool inserted, std::size_t i, node_ptr n
+    , point place, values_ptr values)
+   {
+      auto& view_ = ctx.view;
+      // Stale, the editor gone or the point already where the step would
+      // put it: false. Refused by the client: true, the press used up.
+      auto in = [&view_, self = _anchor.ref(), i, n, place, values]()
+      {
+         auto* e = *self;
+         if (!e || e->index_of(n) >= 0)
+            return false;
+         if (e->put_back(i, n, place, values))
+            view_.refresh(*e);
+         return true;
+      };
+      auto out = [&view_, self = _anchor.ref(), n, values]()
+      {
+         auto* e = *self;
+         if (!e)
+            return false;
+         auto const at = e->index_of(n);
+         if (at < 0)
+            return false;
+         if (e->on_erase && e->on_erase(std::size_t(at)) && e->take_out(n, values))
+            view_.refresh(*e);
+         return true;
+      };
+      if (inserted)
+         view_.add_undo({out, in});
+      else
+         view_.add_undo({in, out});
+   }
+
    bool basic_curve_editor::click(context const& ctx, mouse_button btn)
    {
       if (btn.down && btn.num_clicks == 2)
@@ -309,6 +511,7 @@ namespace cycfi::elements
             _dragging = _nodes[at].get();
             _last = _dragging;
             _x_gesture = _y_gesture = false;
+            _drag_start = _nodes[at]->spec.pos;
          }
       }
       else if (_dragging)
@@ -316,7 +519,12 @@ namespace cycfi::elements
          for (std::size_t i = 0; i != _nodes.size(); ++i)
          {
             if (_nodes[i].get() == _dragging)
+            {
                end_gesture(i);
+               auto const now = _nodes[i]->spec.pos;
+               if (now.x != _drag_start.x || now.y != _drag_start.y)
+                  add_drag_undo(ctx, _nodes[i], _drag_start, now);
+            }
          }
          _dragging = nullptr;
          ctx.view.refresh(ctx);
@@ -394,5 +602,31 @@ namespace cycfi::elements
    element* curve_value::refresh_target() const
    {
       return _editor.lock().get();
+   }
+
+   std::shared_ptr<curve_value> basic_curve_editor::value_of(
+      std::shared_ptr<basic_curve_editor> editor, std::size_t i, bool is_y)
+   {
+      auto n = editor->node_at(i);
+      for (auto const& v : editor->_values)
+      {
+         if (v->_node == n && v->_is_y == is_y)
+            return v;
+      }
+      auto v = std::make_shared<curve_value>(editor, n, is_y);
+      editor->_values.push_back(v);
+      return v;
+   }
+
+   std::shared_ptr<curve_value>
+   x_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i)
+   {
+      return basic_curve_editor::value_of(std::move(editor), i, false);
+   }
+
+   std::shared_ptr<curve_value>
+   y_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i)
+   {
+      return basic_curve_editor::value_of(std::move(editor), i, true);
    }
 }

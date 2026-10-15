@@ -455,3 +455,59 @@ TEST_CASE("text page: figure", "[text_page]")
    tv.draw();
    tv.img.save_png(std::string{RESULTS_PATH} + "elements_text.png");
 }
+
+TEST_CASE("text page: undo follows a moved text box", "[text_page]")
+{
+   text_view<basic_text_box> tv{share(basic_text_box("Hello"))};
+   tv.e->begin_focus(element::from_top);
+   tv.e->end();
+   tv.type(U" World");
+   REQUIRE(tv.e->get_utf8() == "Hello World");
+
+   // Moved into a new box, which takes the old one's place in the view
+   auto moved = share(std::move(*tv.e));
+   tv.view_.content(hold(moved));
+   tv.view_.layout();
+   tv.e.reset();                                  // the moved-from box goes
+
+   CHECK(tv.view_.undo());
+   CHECK(moved->get_utf8() == "Hello");
+   CHECK(tv.view_.redo());
+   CHECK(moved->get_utf8() == "Hello World");
+}
+
+TEST_CASE("text page: undo passes over a box that is gone", "[text_page]")
+{
+   test_view tv{extent{300, 120}, 1};
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+   headless::open(tv.view_);
+#endif
+   auto a = share(basic_text_box("a"));
+   auto b = share(basic_text_box("b"));
+   tv.view_.content(vtile(hold(a), hold(b)));
+   tv.view_.layout();
+   tv.draw();
+
+   auto type = [&](auto& box, char32_t ch)
+   {
+      box->begin_focus(element::from_top);
+      box->end();
+      tv.view_.in_context_do(*box, [&](context const& ctx)
+      {
+         box->text(ctx, text_info{ch, 0});
+      });
+      box->end_focus();
+   };
+   type(a, U'1');
+   type(b, U'2');
+   REQUIRE(a->get_utf8() == "a1");
+
+   // b goes: its step no longer applies, and one undo reaches a's
+   tv.view_.content(hold(a));
+   tv.view_.layout();
+   b.reset();
+   CHECK(tv.view_.undo());
+   CHECK(a->get_utf8() == "a");
+   CHECK(!tv.view_.has_undo());
+}
+

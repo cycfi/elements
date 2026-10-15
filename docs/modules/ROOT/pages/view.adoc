@@ -204,8 +204,19 @@ as if released.
 
 `add_undo(t)` records an `undo_redo_task`, a pair of functions that
 undo and redo a change. `undo()` calls the latest task's `undo`;
-`redo()` calls the latest undone task's `redo`. Each returns whether
-there was a task. Recording a task clears the redo history.
+`redo()` calls the latest undone task's `redo`. Recording a task clears
+the redo history.
+
+A task's functions return `false` when the change no longer applies,
+because the element or the part it changed is gone. The view then drops
+the task and tries the next, so one undo always undoes something while
+anything is left to undo. `undo()` and `redo()` return whether one did.
+
+An element's tasks reach it through an `undo_anchor`, a member of the
+element (in `elements/support/undo_anchor.hpp`). The anchor keeps the
+tasks right as the element changes: they follow it when it is moved, no
+task recorded before applies to a copy, and assigning to the element or
+destroying it leaves its tasks stale, to be dropped when reached.
 
 === Bindings
 
@@ -282,8 +293,8 @@ namespace cycfi::elements
 
       struct undo_redo_task
       {
-         std::function<void()> undo;
-         std::function<void()> redo;
+         std::function<bool()> undo;
+         std::function<bool()> redo;
       };
 
       void                    add_undo(undo_redo_task t);
@@ -475,10 +486,12 @@ the parent window, for a view inside a window another program owns.
 | Record `t`; forget what was undone.
 
 | `v.undo()`
-| Undo the latest; return whether there was one.
+| Undo the latest that still applies, dropping those that do not;
+  return whether one was undone.
 
 | `v.redo()`
-| Redo the latest undone; return whether there was one.
+| Redo the latest undone that still applies; return whether one was
+  redone.
 
 | `v.has_undo()`
 | Whether there is one to undo.

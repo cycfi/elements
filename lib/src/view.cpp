@@ -447,28 +447,33 @@ namespace cycfi::elements
       }
    }
 
+   // A task that no longer applies is dropped, and the next one tried.
    bool view::undo()
    {
-      if (has_undo())
+      while (has_undo())
       {
          auto t = _undo_stack.top();
          _undo_stack.pop();
-         _redo_stack.push(t);
-         t.undo();  // execute undo function
-         return true;
+         if (t.undo())
+         {
+            _redo_stack.push(t);
+            return true;
+         }
       }
       return false;
    }
 
    bool view::redo()
    {
-      if (has_redo())
+      while (has_redo())
       {
          auto t = _redo_stack.top();
-         _undo_stack.push(t);
          _redo_stack.pop();
-         t.redo();  // execute redo function
-         return true;
+         if (t.redo())
+         {
+            _undo_stack.push(t);
+            return true;
+         }
       }
       return false;
    }

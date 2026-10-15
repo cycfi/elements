@@ -4,9 +4,378 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/curve_editor.hpp`.
+A curve editor lets the user shape a curve by dragging its points. Use
+it for envelopes, EQ bands, transfer curves, automation lanes and XY
+pads.
 
-// To be written.
+image::elements/curve_editor.png[alt="Three curve editors: an envelope of five points with the pointer over its decay point, drawn larger and filled; a transfer curve with one movable point between two fixed ends; and an XY pad of one point with guides through it", width=560px, link={imagesdir}/elements/curve_editor.png]
+
+The points live in a unit square with y pointing up: (0, 0) is the
+bottom left and (1, 1) the top right. The editor insets the square by 8
+so that handles at the edges are drawn whole.
+
+A point's x is either a place in the square or an offset from the point
+before it. Offsets suit a curve whose segments are lengths of time, such
+as an envelope that plots the loudness of a note as it rises, falls and
+fades. Lengthening one segment pushes the rest later. Dragging an offset
+point moves every point after it. Inserting or erasing a point does not
+move the points that follow.
+
+The editor is a proxy. Its subject draws the curve, and a handle element
+draws each point. For the handle, `drawing()` gives the index of the
+point being drawn, and `state(i)` the state of point `i`: normal, hot
+(under the pointer) or dragging. The stock stylers are on the
+xref:styles/curve_editor.adoc[Curve Editor] styles page.
+
+=== Interaction
+
+The user moves a point by dragging it. A press takes hold of the nearest
+movable point within 12 of the pointer (the editor's `reach`). If points
+coincide, the one dragged last is taken; failing that, the later one. A
+point for which `movable` returns `false` is never taken.
+
+`constrain` is a function that limits where a dragged point may go. It
+is called with the points, the index of the dragged point and the
+pointer's place, all in the unit square, and returns the place the point
+moves to. Unset, a point stays in the square and between its neighbors.
+A point followed by an offset point is not bounded on the right, since
+that neighbor moves along.
+
+As the point moves, the callbacks of its axes are called in this order:
+
+. On the first move along an axis, that axis's gesture begins:
+  `on_x_gesture(true)` or `on_y_gesture(true)`.
+. Each move calls the change callback of each axis it changes,
+  `on_x_change` or `on_y_change`, then the editor's `on_change`.
+. Releasing the mouse ends the gesture of each axis that moved:
+  `on_x_gesture(false)` or `on_y_gesture(false)`.
+
+NOTE: A drag is one undo step. Undo and redo move the point and call its
+callbacks as a drag does. Values set by code are not undone.
+
+For designs that allow addition and removal of points, the client may
+provide their own `on_erase` and `on_insert` callbacks. To let the user
+erase points, set `on_erase`: double clicking a point then erases it if
+`on_erase` returns `true`. To let the user insert points, set
+`on_insert`: double clicking empty space then inserts a point if
+`on_insert` returns `true`. Either may refuse a particular point or
+place.
+
+NOTE: An insert or erase by a double click is also one undo step.
+Undoing an erase calls `on_insert`, and undoing an insert calls
+`on_erase`; if it returns `false`, nothing changes.
+
+To bind a point to a model rather than handle its callbacks, `x_of` and
+`y_of` turn one axis of one point into a control for a model binder (see
+xref:model.adoc[Model]).
+
+== Include
+
+```c++
+#include <elements/element/curve_editor.hpp>
+```
+
+== Declaration
+
+```c++
+struct curve_point
+{
+   point          pos;
+   bool           offset_x = false;
+};
+
+class basic_curve_editor : public tracker<proxy_base>
+{
+public:
+
+   using points_type = std::vector<point>;
+   using change_function = std::function<void(float)>;
+   using gesture_function = std::function<void(bool begin)>;
+   using point_function = std::function<void(std::size_t i, point pos)>;
+   using insert_function = std::function<bool(std::size_t i, point pos)>;
+   using erase_function = std::function<bool(std::size_t i)>;
+   using constrain_function = std::function<
+                              point(points_type const& pts
+                               , std::size_t i, point to)>;
+   using movable_function = std::function<bool(std::size_t i)>;
+
+   enum node_state { normal, hot, dragging };
+
+   struct node
+   {
+      curve_point       spec;
+      change_function   on_x_change;
+      change_function   on_y_change;
+      gesture_function  on_x_gesture;
+      gesture_function  on_y_gesture;
+   };
+
+   using node_ptr = std::shared_ptr<node>;
+
+                           basic_curve_editor(
+                              std::vector<curve_point> points
+                            , element_ptr handle);
+
+   std::size_t             size() const;
+   node&                   operator[](std::size_t i);
+   node const&             operator[](std::size_t i) const;
+   node_ptr                node_at(std::size_t i) const;
+
+   point                   position(std::size_t i) const;
+   points_type             positions() const;
+
+   float                   x(std::size_t i) const;
+   void                    x(std::size_t i, float v);
+   float                   y(std::size_t i) const;
+   void                    y(std::size_t i, float v);
+
+   bool                    insert(std::size_t i, curve_point p);
+   bool                    erase(std::size_t i);
+   bool                    is_movable(std::size_t i) const;
+
+   std::size_t             drawing() const;
+   node_state              state(std::size_t i) const;
+
+   rect                    plot(context const& ctx) const;
+   point                   to_screen(point p, rect plot) const;
+   point                   from_screen(point p, rect plot) const;
+
+   constrain_function      constrain;
+   movable_function        movable;
+   point_function          on_change;
+   insert_function         on_insert;
+   erase_function          on_erase;
+
+   float                   reach = 12.0f;
+   float                   inset = 8.0f;
+   bool                    fit_width = false;
+   ...
+};
+
+template <concepts::Element LineStyler, concepts::Element HandleStyler>
+proxy<remove_cvref_t<LineStyler>, basic_curve_editor>
+curve_editor(
+   std::vector<curve_point> points
+ , LineStyler&& lines
+ , HandleStyler&& handle);
+
+point in_unit_square(point p);
+point between_neighbors(
+   basic_curve_editor::points_type const& pts, std::size_t i, point p);
+point default_constraint(
+   basic_curve_editor::points_type const& pts, std::size_t i, point to);
+
+class curve_value
+{
+public:
+
+   void                    value(float v);
+   element*                refresh_target() const;
+
+   change_function&        on_change;
+   gesture_function*       on_gesture;
+   ...
+};
+
+std::shared_ptr<curve_value>
+x_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i);
+
+std::shared_ptr<curve_value>
+y_of(std::shared_ptr<basic_curve_editor> editor, std::size_t i);
+```
+
+== Expressions
+
+=== Notation
+
+`pts`             :: A `std::vector<curve_point>`, the points.
+`p`               :: A `curve_point`.
+`ls`              :: An element, the line styler.
+`hs`              :: An element, the handle styler.
+`e`               :: A `basic_curve_editor`, or a class derived from it.
+`ep`              :: A `std::shared_ptr` to a curve editor.
+`i`               :: `std::size_t`, the index of a point.
+`v`               :: A `float`.
+`u`               :: A `point` in the unit square.
+`s`               :: A `point` on the screen.
+`r`               :: A `rect`, the plot.
+`ctx`             :: A {context} for the editor.
+`at`              :: `basic_curve_editor::points_type`, the points as
+                     places in the unit square.
+`cv`              :: A `curve_value`.
+`f`               :: A function, of the type the expression's member
+                     names.
+
+=== Factory
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `curve_editor(pts, ls, hs)`      | Make a curve editor of `pts`, its
+                                     curve drawn by `ls` and each point by
+                                     `hs`.
+|===
+
+The curve editor is a `proxy` of `ls`, a `basic_curve_editor`.
+
+=== Indexing
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `e.size()`                       | Get the number of points.     | `std::size_t`
+| `e[i]`                           | Get the node of point `i`.    | `node&`
+| `e.node_at(i)`                   | Get the node of point `i`,
+                                     shared.                       | `node_ptr`
+|===
+
+=== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `e.position(i)`                  | Get point `i`'s place in the
+                                     unit square.                  | `point`
+| `e.positions()`                  | Get every point's place in the
+                                     unit square.                  | `points_type`
+| `e.x(i)`                         | Get point `i`'s x as it holds
+                                     it: an offset for an offset
+                                     point.                        | `float`
+| `e.y(i)`                         | Get point `i`'s y.            | `float`
+| `e.is_movable(i)`                | Get whether point `i` may be
+                                     dragged.                      | `bool`
+| `e.drawing()`                    | Get the point being drawn, for
+                                     a handle styler.              | `std::size_t`
+| `e.state(i)`                     | Get the state of point `i`.   | `node_state`
+| `e.plot(ctx)`                    | Get where the unit square is
+                                     drawn.                        | `rect`
+| `e.to_screen(u, r)`              | Convert `u` to the screen.    | `point`
+| `e.from_screen(s, r)`            | Convert `s` to the unit
+                                     square.                       | `point`
+|===
+
+=== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `e.x(i, v)`                      | Set point `i`'s x as it holds
+                                     it. No callback.              | `void`
+| `e.y(i, v)`                      | Set point `i`'s y. No
+                                     callback.                     | `void`
+|===
+
+=== Operation
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `e.insert(i, p)`                 | Insert `p` before point `i`,
+                                     or at the end. `false` if `i`
+                                     is past the end.              | `bool`
+| `e.erase(i)`                     | Erase point `i`. `false` if
+                                     there is none.                | `bool`
+|===
+
+=== Access
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `e.constrain`                    | Access the rule for where a
+                                     point lands.                  | `constrain_function`
+| `e.movable`                      | Access which points may be
+                                     dragged: all, unless set.     | `movable_function`
+| `e.on_change`                    | Access the callback for a
+                                     point the user moved, given
+                                     its place in the square.      | `point_function`
+| `e.on_insert`                    | Access the callback allowing
+                                     a double click to insert.     | `insert_function`
+| `e.on_erase`                     | Access the callback allowing
+                                     a double click to erase.      | `erase_function`
+| `e.reach`                        | Access how near a press takes
+                                     hold of a point: 12.          | `float`
+| `e.inset`                        | Access the inset of the plot
+                                     in the bounds: 8.             | `float`
+| `e.fit_width`                    | Access whether x is scaled so
+                                     the farthest point reaches the
+                                     right edge: `false`.          | `bool`
+| `e[i].spec`                      | Access point `i` as it holds
+                                     it.                           | `curve_point`
+| `e[i].on_x_change`               | Access the callback for a
+                                     change of point `i`'s x, as it
+                                     holds it.                     | `change_function`
+| `e[i].on_y_change`               | Access the callback for a
+                                     change of point `i`'s y.      | `change_function`
+| `e[i].on_x_gesture`              | Access the callback bracketing
+                                     a drag along x: `true` at the
+                                     start, `false` at the end.    | `gesture_function`
+| `e[i].on_y_gesture`              | Access the callback bracketing
+                                     a drag along y.               | `gesture_function`
+|===
+
+Only the user's actions call the callbacks; setting values in code does
+not. Use `fit_width` to preview a curve whose span varies.
+
+=== Functions
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `in_unit_square(u)`              | Clamp `u` to the unit square. | `point`
+| `between_neighbors(at, i, u)`    | Clamp `u`'s x between the
+                                     points before and after `i`.  | `point`
+| `default_constraint(at, i, u)`   | Clamp `u` to the unit square,
+                                     between the neighbors.        | `point`
+| `x_of(ep, i)`                    | Get point `i`'s x as a
+                                     control.                      | `std::shared_ptr<curve_value>`
+| `y_of(ep, i)`                    | Get point `i`'s y as a
+                                     control.                      | `std::shared_ptr<curve_value>`
+| `cv.value(v)`                    | Set the axis. No callback.    | `void`
+| `cv.refresh_target()`            | Get the editor, to refresh.   | `element*`
+|===
+
+Use the first three to build your own constraint. `x_of` and `y_of`
+return the same `curve_value` each time. The editor keeps it alive for
+as long as the point exists, so you can bind it and let it go; a model
+binder holds it weakly. Its `on_change` and `on_gesture` are the point's
+callbacks for that axis. Once the point is erased, setting the value does
+nothing.
+
+== Example
+
+An envelope, its first point fixed and its attack bound to a model:
+
+```c++
+#include <elements/element/style/curve_editor.hpp>
+...
+using namespace cycfi::elements;
+...
+value_model<float> attack = 0.2f;
+
+auto env = share(curve_editor({                        <1>
+   {{0.0f, 0.0f}}             // the start
+ , {{0.2f, 1.0f}, true}       // attack: 0.2 after the start
+ , {{0.2f, 0.6f}, true}       // decay
+ , {{0.3f, 0.6f}, true}       // sustain
+ , {{0.2f, 0.0f}, true}       // release
+}));
+env->movable = [](std::size_t i) { return i != 0; };   <2>
+
+model_binder binder{[&view_](element& e) { view_.refresh(e); }};
+binder.bind(attack, x_of(env, 1));                     <3>
+```
+
+<1> The stock stylers (see xref:styles/curve_editor.adoc[Curve Editor]).
+<2> The start stays where it is.
+<3> The attack point's offset, both ways.
 
 '''
 

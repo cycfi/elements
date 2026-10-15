@@ -18,6 +18,10 @@ theme's `text_box_font` unless given, at its size times `size`, and the
 padding is 0.3 of that size on each side. Given an element, `input_box`
 frames it, with a padding of 5 on each side unless given.
 
+NOTE: An input box edits with the facilities of a text box: the keys,
+the clipboard, and undo and redo. See
+xref:elements/text.adoc#_editable_text_box[Editable Text Box].
+
 == Include
 
 ```c++

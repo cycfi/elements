@@ -208,8 +208,8 @@ TEST_CASE("view page: undo and redo", "[view_page]")
    {
       int from = value;
       value = to;
-      tv.view_.add_undo({[&, from] { value = from; },
-                         [&, to] { value = to; }});
+      tv.view_.add_undo({[&, from] { value = from; return true; },
+                         [&, to] { value = to; return true; }});
    };
    set(1);
    set(2);
@@ -225,6 +225,33 @@ TEST_CASE("view page: undo and redo", "[view_page]")
    CHECK(value == 1);
    CHECK(tv.view_.undo());
    CHECK(value == 0);
+   CHECK(!tv.view_.undo());
+}
+
+TEST_CASE("view page: a task that no longer applies is dropped", "[view_page]")
+{
+   test_view tv{extent{100, 100}};
+   int value = 0;
+   bool stale = false;
+   tv.view_.add_undo({[&] { value = 1; return true; },
+                      [&] { value = 2; return true; }});
+   tv.view_.add_undo({[&] { return !stale; },
+                      [&] { return !stale; }});
+
+   // The latest no longer applies: one undo goes on to the one before
+   stale = true;
+   CHECK(tv.view_.undo());
+   CHECK(value == 1);
+   CHECK(!tv.view_.has_undo());
+
+   // and it is gone from redo too
+   CHECK(tv.view_.redo());
+   CHECK(value == 2);
+   CHECK(!tv.view_.has_redo());
+
+   // Nothing that applies: false
+   tv.view_.add_undo({[] { return false; }, [] { return false; }});
+   CHECK(tv.view_.undo());                       // the first task, still live
    CHECK(!tv.view_.undo());
 }
 

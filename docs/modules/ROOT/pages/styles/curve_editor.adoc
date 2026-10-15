@@ -1,12 +1,171 @@
-= Curve Editor and Image Grid
+= Curve Editor
 
 include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/curve_editor.hpp`, `element/style/image_grid.hpp`.
+The stock stylers of a curve editor (see
+xref:elements/curve_editor.adoc[Curve Editor]): `curve_lines` draws the
+curve, and `curve_handle` each point.
 
-// To be written.
+image::styles/curve_editor_styles.png[alt="Three curve editors with the same envelope: in the stock stylers, with straight segments; with bent segments; and in orange, with guides across at the middle and down through two points", width=560px, link={imagesdir}/styles/curve_editor_styles.png]
+
+`curve_lines` draws lines from point to point, filled down to the floor,
+and the floor itself, in the theme's `indicator_color` unless given. A
+segment is straight unless `shape` bends it: given the segment, 0 from
+the first point to the second, and how far along it is, 0 to 1, it says
+how far the height has gone from the segment's start to its end, 0 to 1.
+A bent segment is drawn in `steps` straight pieces.
+
+Guides are lines in the floor's color: one across at each of
+`horizontal_guides`, heights in the unit square, the floor at 0 the
+first, and one down through each point in `vertical_guides`. A
+transparent fill draws none. The editor is at least `min_size`, and as
+large as it is given.
+
+`curve_handle` draws a ring at each point that can be dragged, larger and
+filled while the pointer is over it or it is being dragged. A point that
+cannot be dragged has none.
+
+== Include
+
+```c++
+#include <elements/element/style/curve_editor.hpp>
+```
+
+== Declaration
+
+```c++
+struct curve_lines : element
+{
+   using shape_function =
+      std::function<float(std::size_t segment, float t)>;
+
+                           curve_lines();
+                           curve_lines(color line, color fill);
+
+   color                   line_color;
+   color                   fill_color;
+   color                   floor_color;
+   float                   line_width = 2.0f;
+   point                   min_size = {120, 60};
+
+   shape_function          shape;
+   int                     steps = 32;
+   std::vector<float>      horizontal_guides = {0.0f};
+   std::vector<std::size_t>
+                           vertical_guides;
+   ...
+};
+
+struct curve_handle : element
+{
+                           curve_handle();
+                           curve_handle(color ring, color interior);
+
+   color                   ring_color;
+   color                   interior_color;
+   float                   radius = 5.0f;
+   float                   line_width = 2.0f;
+   ...
+};
+
+auto
+curve_editor(std::vector<curve_point> points);
+```
+
+== Expressions
+
+=== Notation
+
+`pts`             :: A `std::vector<curve_point>`, the points.
+`lc`, `fc`        :: `color`: the line and the fill.
+`rc`, `ic`        :: `color`: the ring and the interior.
+`cl`              :: A `curve_lines`.
+`ch`              :: A `curve_handle`.
+
+=== Constructors and Assignment
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `curve_lines()`                  | Construct a `curve_lines` in the
+                                     theme's `indicator_color`, filled in
+                                     it at 0.15 opacity.
+| `curve_lines(lc, fc)`            | Construct a `curve_lines` given `lc`
+                                     (line) and `fc` (fill).
+| `curve_handle()`                 | Construct a `curve_handle` in the
+                                     theme's `indicator_color`, filled in
+                                     its opaque `panel_color`.
+| `curve_handle(rc, ic)`           | Construct a `curve_handle` given `rc`
+                                     (ring) and `ic` (interior).
+|===
+
+=== Factory
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `curve_editor(pts)`              | Make a curve editor of `pts`, drawn
+                                     by `curve_lines()` and
+                                     `curve_handle()`.
+|===
+
+=== Access
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `cl.line_color`                  | Access the line's color.      | `color`
+| `cl.fill_color`                  | Access the fill's color.      | `color`
+| `cl.floor_color`                 | Access the floor's and the
+                                     guides' color: the theme's
+                                     `ticks_color`.                | `color`
+| `cl.line_width`                  | Access the line's width: 2.   | `float`
+| `cl.min_size`                    | Access the smallest size:
+                                     120 by 60.                    | `point`
+| `cl.shape`                       | Access the function that bends
+                                     a segment: none.              | `shape_function`
+| `cl.steps`                       | Access the number of pieces of
+                                     a bent segment: 32.           | `int`
+| `cl.horizontal_guides`           | Access the heights of the
+                                     guides across: the floor.     | `std::vector<float>`
+| `cl.vertical_guides`             | Access the points the guides
+                                     down go through: none.        | `std::vector<std::size_t>`
+| `ch.ring_color`                  | Access the ring's color.      | `color`
+| `ch.interior_color`              | Access the interior's color.  | `color`
+| `ch.radius`                      | Access the ring's radius: 5,
+                                     and 7 while live.             | `float`
+| `ch.line_width`                  | Access the ring's width: 2.   | `float`
+|===
+
+== Example
+
+The orange envelope of the figure, its segments easing in:
+
+```c++
+#include <elements/element/style/curve_editor.hpp>
+...
+using namespace cycfi::elements;
+...
+extern std::vector<curve_point> points;
+...
+curve_lines lines{colors::orange, colors::orange.opacity(0.2)};
+lines.shape =                                                       <1>
+   [](std::size_t /*segment*/, float t)
+   {
+      return 1 - std::pow(1 - t, 3);     // fast at first, then easing
+   };
+lines.horizontal_guides = {0.0f, 0.5f};                             <2>
+
+auto env = curve_editor(points, lines, curve_handle{colors::orange, colors::black});
+```
+
+<1> The same bend for every segment.
+<2> The floor, and a guide across the middle.
 
 '''
 

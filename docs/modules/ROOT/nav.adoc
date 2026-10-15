@@ -32,6 +32,7 @@
 **** xref:elements/sliders.adoc[Sliders]
 **** xref:elements/dials.adoc[Dials]
 **** xref:elements/thumbwheels.adoc[Thumbwheels]
+**** xref:elements/curve_editor.adoc[Curve Editor]
 *** xref:elements/text_and_images.adoc[Text and Images]
 **** xref:elements/labels.adoc[Labels]
 **** xref:elements/text.adoc[Text]
@@ -61,6 +62,7 @@
 **** xref:styles/notebooks.adoc[Notebooks]
 **** xref:styles/dialogs.adoc[Child Windows and Dialogs]
 **** xref:styles/menus.adoc[Menus]
+**** xref:styles/curve_editor.adoc[Curve Editor]
 ** Support
 *** xref:support/canvas.adoc[Canvas]
 *** xref:support/context.adoc[Context]

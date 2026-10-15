@@ -73,10 +73,13 @@ namespace cycfi::elements
       void                    on_scale_change(float scale) override;
       void                    on_close() override;
 
+      // A pair of functions that undo and redo a change. Each returns
+      // false if the change no longer applies, its element or part gone:
+      // the view then drops it and goes on to the next.
       struct undo_redo_task
       {
-         std::function<void()> undo;
-         std::function<void()> redo;
+         std::function<bool()> undo;
+         std::function<bool()> redo;
       };
 
       void                    add_undo(undo_redo_task t);

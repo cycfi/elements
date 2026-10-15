@@ -10,6 +10,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/support/receiver.hpp>
 #include <elements/support/text_reader_writer.hpp>
+#include <elements/support/undo_anchor.hpp>
 #include <artist/text_layout.hpp>
 
 #include <string>
@@ -97,7 +98,6 @@ namespace cycfi::elements
                                  std::string_view text
                                , font_descr font_ = get_theme().text_box_font
                               );
-                              ~basic_text_box();
                               basic_text_box(basic_text_box&& rhs) = default;
 
       void                    draw(context const& ctx) override;
@@ -168,9 +168,8 @@ namespace cycfi::elements
    private:
 
       struct state_saver;
-      using state_saver_f = std::function<void()>;
+      using state_saver_f = std::function<bool()>;
       using state_saver_ptr = std::shared_ptr<state_saver>;
-      using state_saver_set = std::set<state_saver_ptr>;
 
       state_saver_f           capture_state();
 
@@ -184,7 +183,7 @@ namespace cycfi::elements
       bool                    _read_only : 1;
       bool                    _enabled : 1;
       bool                    _scroll_into_view : 1;
-      state_saver_set         _state_savers;
+      undo_anchor<basic_text_box> _anchor;
    };
 
    /**

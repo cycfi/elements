@@ -48,8 +48,8 @@ namespace cycfi::elements
       for (auto y : horizontal_guides)
       {
          auto const sy = at({0, y}).y;
-         cnv.move_to({ctx.bounds.left, sy});
-         cnv.line_to({ctx.bounds.right, sy});
+         cnv.move_to({b.left, sy});
+         cnv.line_to({b.right, sy});
       }
       for (auto i : vertical_guides)
       {

@@ -153,39 +153,40 @@ namespace cycfi::elements
     , _read_only{false}
     , _enabled{true}
     , _scroll_into_view{false}
+    , _anchor{this}
    {}
 
-   struct basic_text_box::state_saver : std::enable_shared_from_this<basic_text_box::state_saver>
+   // A saved state of a box, restored through the box's undo anchor: not
+   // at all once the box is gone or its content replaced.
+   struct basic_text_box::state_saver
    {
       state_saver(basic_text_box* this_)
-       : _this(this_)
+       : _ref(this_->_anchor.ref())
        , save_text(this_->get_text())
        , save_select_start(this_->_select_start)
        , save_select_end(this_->_select_end)
       {}
 
-      void restore()
+      basic_text_box* box() const { return *_ref; }
+
+      // false if the state no longer applies
+      bool restore()
       {
-         if (_this)
-         {
-            _this->set_text(save_text);
-            _this->select_start(save_select_start);
-            _this->select_end(save_select_end);
-            _this->text_restored();
-         }
+         auto* self = box();
+         if (!self)
+            return false;
+         self->set_text(save_text);
+         self->select_start(save_select_start);
+         self->select_end(save_select_end);
+         self->text_restored();
+         return true;
       }
 
-      basic_text_box*   _this;
+      undo_anchor<basic_text_box>::ref_type _ref;
       std::u32string    save_text;
       int               save_select_start;
       int               save_select_end;
    };
-
-   basic_text_box::~basic_text_box()
-   {
-      for (auto& ss : _state_savers)
-         ss.get()->_this = nullptr;
-   }
 
    void basic_text_box::draw(context const& ctx)
    {
@@ -321,9 +322,9 @@ namespace cycfi::elements
    {
       void add_undo(
          context const& ctx
-       , std::function<void()>& typing_state
-       , std::function<void()> undo_f
-       , std::function<void()> redo_f
+       , std::function<bool()>& typing_state
+       , std::function<bool()> undo_f
+       , std::function<bool()> redo_f
       )
       {
          typing_state = {}; // the typing run, if any, ends here
@@ -357,25 +358,22 @@ namespace cycfi::elements
       if (!_typing_state)
       {
          auto before = std::make_shared<state_saver>(this);
-         _state_savers.insert(before);
          auto after = std::make_shared<state_saver_ptr>();
          ctx.view.add_undo({
             [before, after]()
             {
-               if (auto* self = before->_this)
-               {
-                  *after = std::make_shared<state_saver>(self);
-                  self->_state_savers.insert(*after);
-                  before->restore();
-               }
+               auto* self = before->box();
+               if (!self)
+                  return false;
+               *after = std::make_shared<state_saver>(self);
+               return before->restore();
             },
             [after]()
             {
-               if (*after)
-                  (*after)->restore();
+               return *after && (*after)->restore();
             }
          });
-         _typing_state = [before](){ before->restore(); };
+         _typing_state = [before](){ return before->restore(); };
       }
 
       bool do_replace = false;
@@ -427,7 +425,7 @@ namespace cycfi::elements
 
       int start = std::min(_select_end, _select_start);
       int end = std::max(_select_end, _select_start);
-      std::function<void()> undo_f = capture_state();
+      std::function<bool()> undo_f = capture_state();
       auto _text = get_text();
 
       auto up_down = [this, &ctx, k, &move_caret, &_text]()
@@ -867,26 +865,11 @@ namespace cycfi::elements
       }
    }
 
-   std::function<void()>
+   basic_text_box::state_saver_f
    basic_text_box::capture_state()
    {
-      // garbage collect
-      for (auto i = _state_savers.begin(); i != _state_savers.end(); )
-      {
-         if (i->use_count() == 1)
-            i = _state_savers.erase(i);
-         else
-            ++i;
-      }
-
       auto saver_ptr = std::make_shared<state_saver>(this);
-      _state_savers.insert(saver_ptr);
-      return
-         [saver_ptr]()
-         {
-            if (saver_ptr.use_count() > 1)
-               saver_ptr->restore();
-         };
+      return [saver_ptr]() { return saver_ptr->restore(); };
    }
 
    void basic_text_box::scroll_into_view(context const& ctx, bool save_x)

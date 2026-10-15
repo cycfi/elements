@@ -90,10 +90,13 @@ modifiers are on the xref:view.adoc[View] page):
 | Undo and redo.
 |===
 
-Undo and redo go through the view's undo stack, so they reach every
-text box in the view in the order the edits were made. Typing is undone
-a run at a time, not a character at a time; a run ends at any other
-edit, a caret move, a click, or when the box loses the focus.
+Undo and redo go through the view's undo stack (see
+xref:view.adoc#_undo_and_redo[Undo and Redo]), so they reach every text
+box in the view, and every other element that records its edits there,
+such as a xref:elements/curve_editor.adoc[curve editor], in the order the
+edits were made. Typing is undone a run at a time, not a character at a
+time; a run ends at any other edit, a caret move, a click, or when the
+box loses the focus.
 
 `read_only()` keeps the selection and copying, and refuses every edit;
 no caret is drawn. A disabled box, or a box drawn in a disabled

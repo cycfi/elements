@@ -4,7 +4,58 @@ include::common.adoc[]
 
 == Overview
 
-// To be written.
+The reference describes every public part of Elements, a page for each.
+The pages are grouped the way the headers are: the top-level headers
+under Application, `element/` under Elements, `element/style/` under
+Styles, and `support/` under Support.
+
+* xref:aspects.adoc[Design Aspects]: the ideas the library is built on,
+  and the reasons for them. Read it first.
+* xref:application.adoc[Application]: the app, its windows, the view in
+  each window, and the model that connects a program's data to the
+  view.
+* xref:elements.adoc[Elements]: the element protocol and every element
+  in the library: layout, controls, text and images, and containers.
+* xref:styles.adoc[Styles]: the stylers that draw the controls, and how
+  a control and its styler work together.
+* Support: the things the elements are built with: the
+  xref:support/canvas.adoc[canvas], the xref:support/context.adoc[context]
+  an element is drawn in, the xref:support/theme.adoc[theme],
+  xref:support/icons.adoc[icons], the xref:support/clipboard.adoc[clipboard],
+  and more.
+
+If you are new to Elements, the xref:tutorials.adoc[Tutorials] come
+first: each one links to the reference pages for what it uses.
+
+== Reading a Page
+
+Each page that documents a header has the same parts, in the same
+order:
+
+Overview:: What the component is for, how it behaves, and how it
+relates to the rest of the library, often with a figure.
+
+Include:: The header to include. `<elements.hpp>` brings in the whole
+library, and a page names its own header where including only that one
+is enough.
+
+Declaration:: The declarations, as the header has them, with the
+implementation details left out.
+
+Expressions:: What can be written with the component. A _Notation_ list
+first names the variables the tables use, such as `e` for an element or
+`ctx` for a context. Then one or more tables give each expression and
+what it does: constructors and factory functions, then accessors,
+mutators and the other operations.
+
+Example:: A short program, or part of one, that uses the component.
+Every example on these pages is compiled, and the claims a page makes
+are checked, by the page's test in `test/pages/` (see
+xref:testing.adoc[Testing Elements]).
+
+A page that documents several related components, such as
+xref:layout/tiles.adoc[Tiles], repeats the Declaration and Expressions
+parts for each.
 
 '''
 

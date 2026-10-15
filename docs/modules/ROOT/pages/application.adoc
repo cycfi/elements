@@ -4,7 +4,27 @@ include::common.adoc[]
 
 == Overview
 
-// To be written.
+These are the parts of a program that sit above the elements: the app,
+its windows, the view in each window, and the model that keeps a
+program's data in step with the view. They are declared in the
+top-level headers, `app.hpp`, `window.hpp`, `view.hpp`, `base_view.hpp`
+and `model.hpp`.
+
+* xref:application/app.adoc[App]: runs the event loop until it is
+  stopped. A standalone program has one.
+* xref:application/window.adoc[Window]: a window on the screen, with a
+  title, a size, a position and limits on its size.
+* xref:view.adoc[View]: the root of the user interface. It holds the
+  elements, lays them out, draws them, passes them the user's input,
+  and runs the work the program posts to it.
+* xref:model.adoc[Model]: a value that the elements linked to it show,
+  so the program sets the value and the view follows.
+
+Of the four, only the view is always there. A plug-in, such as an audio
+plug-in in a host, has no app and no window of its own: the plug-in
+host provides a native view, and the Elements view lives in it. The
+app and the window are kept thin for that reason, and the work is done
+by the view.
 
 '''
 

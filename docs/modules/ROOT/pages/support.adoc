@@ -4,7 +4,32 @@ include::common.adoc[]
 
 == Overview
 
-// To be written.
+The support headers, in `support/`, hold what the elements are built
+with: the surface they draw on, the context they are drawn in, the
+theme that gives them their look, and the utilities the stylers share.
+A program uses some of them directly, the theme and the clipboard most
+often; a custom element or styler uses most of them.
+
+* xref:support/canvas.adoc[Canvas]: the {artist} drawing surface every
+  element draws on.
+* xref:support/context.adoc[Context]: where an element is and what it
+  is drawn into, handed to it with each call.
+* xref:support/theme.adoc[Theme]: the colors, fonts and sizes every
+  control is drawn with.
+* xref:support/receivers.adoc[Receivers]: the interface of an element
+  that holds a value, and how changes to the value are reported.
+* xref:support/draw_utils.adoc[Drawing Utilities]: the panels, button
+  faces, tracks, thumbs, knobs and marks the stock stylers draw with.
+* xref:support/text_utils.adoc[Text Utilities]: measuring and drawing
+  text and icons, and reading and changing an element's text through
+  the element alone.
+* xref:support/icons.adoc[Icons]: the icon font and the names of its
+  icons.
+* xref:support/payload.adoc[Payload]: the data a drag and drop carries,
+  in one or more formats.
+* xref:support/clipboard.adoc[Clipboard]: copying and pasting a payload.
+* xref:support/diagnostics.adoc[Logging and Diagnostics]: the event log,
+  draw tracing, performance counters and error handling.
 
 '''
 

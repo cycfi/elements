@@ -5,6 +5,7 @@
 =============================================================================*/
 #include <elements/element/menu.hpp>
 #include <infra/support.hpp>
+#include <utility>
 
 namespace cycfi::elements
 {
@@ -61,9 +62,18 @@ namespace cycfi::elements
 
    void basic_popup_menu_element::close(view& view_)
    {
+      if (_submenu)
+      {
+         auto submenu = std::exchange(_submenu, nullptr);
+         submenu->close(view_);
+      }
       basic_popup_element::close(view_);
       if (_menu_button)
          _menu_button->value(0);
+      if (_menu_item)
+         _menu_item->select(false);
+      if (_parent && _parent->_submenu == this)
+         _parent->_submenu = nullptr;
    }
 
    std::string basic_popup_element::class_name() const

@@ -13,6 +13,7 @@
 namespace cycfi::elements
 {
    class basic_button_menu;
+   class basic_menu_item_element;
 
    /**
     * \class basic_popup_element
@@ -99,7 +100,17 @@ namespace cycfi::elements
 
    private:
 
+      friend class basic_menu_item_element;
+
+      using menu_item = basic_menu_item_element;
+      using popup_menu = basic_popup_menu_element;
+
+      // Its place in a chain of menus: the item that opened it, the menu
+      // that item is in, and the submenu open in it.
       basic_button_menu*      _menu_button = nullptr;
+      menu_item*              _menu_item = nullptr;
+      popup_menu*             _parent = nullptr;
+      popup_menu*             _submenu = nullptr;
    };
 
    /**

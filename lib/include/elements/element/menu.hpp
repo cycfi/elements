@@ -253,9 +253,24 @@ namespace cycfi::elements
       void                    select(bool state) override;
       std::string             class_name() const override;
 
+                              template <typename Menu>
+      void                    menu(Menu&& menu_);
+
    private:
 
+      using popup_menu_ptr = std::shared_ptr<basic_popup_menu_element>;
+      using popup_menu = basic_popup_menu_element;
+
+      void                    open_menu(context const& ctx);
+      void                    close_sibling_menus(
+                                 context const& ctx, popup_menu* parent);
+      void                    follow_pointer(
+                                 context const& ctx, popup_menu* parent);
+      bool                    move_across(context const& ctx, bool right);
+      void                    open_next_menu(view& view_, bool right);
+
       bool                    _selected = false;
+      popup_menu_ptr          _menu;
    };
 
    /**
@@ -304,6 +319,22 @@ namespace cycfi::elements
    inline void basic_menu_item_element::select(bool state)
    {
       _selected = state;
+   }
+
+   /**
+    * \brief
+    *    Gives the menu item a menu of its own, a submenu, opened when the
+    *    item is pressed. In a menu it opens to the item's right; in a row of
+    *    items, a menu bar, below it.
+    *
+    * \param menu_
+    *    The menu's content, typically a `vtile` of menu items over a
+    *    `menu_background`.
+    */
+   template <typename Menu>
+   inline void basic_menu_item_element::menu(Menu&& menu_)
+   {
+      _menu = share(basic_popup_menu(std::forward<Menu>(menu_)));
    }
 }
 

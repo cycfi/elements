@@ -16,6 +16,7 @@ set(elements_test_sources
    lib/draw_cull_test.cpp
    lib/view_refresh_test.cpp
    lib/linux_host_test.cpp
+   lib/submenu_test.cpp
    lib/button_tracking_test.cpp
    lib/curve_editor_test.cpp
    lib/undo_anchor_test.cpp

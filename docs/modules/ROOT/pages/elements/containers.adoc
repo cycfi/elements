@@ -21,6 +21,8 @@ A container holds content and decides how much of it is shown, and where.
   the pointer rests on it.
 * xref:elements/menus.adoc[Menus]: menus that buttons open, and the
   shortcuts of their items.
+* xref:elements/lists.adoc[Lists]: columns and rows of many items, made
+  as they come into view.
 
 '''
 

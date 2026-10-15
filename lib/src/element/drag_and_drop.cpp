@@ -176,6 +176,8 @@ namespace cycfi::elements
    void drop_inserter_element::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
    {
       base_type::track_drop(ctx, info, status);
+      if (status == cursor_tracking::leaving)
+         _insertion_pos = -1;
       if (is_tracking())
       {
          static constexpr auto offset = 20;
@@ -239,9 +241,10 @@ namespace cycfi::elements
          on_move(_insertion_pos, indices);
          if (auto s = find_subject<selection_list_element*>(this))
          {
+            // Where the moved items land, as move_indices puts them.
             for (int i : indices)
             {
-               if (i <= _insertion_pos)
+               if (i < _insertion_pos)
                   --_insertion_pos;
             }
             s->update_selection(_insertion_pos, _insertion_pos+indices.size()-1);
@@ -258,6 +261,19 @@ namespace cycfi::elements
          if (auto s = find_subject<selection_list_element*>(this))
             s->select_none();
       }
+   }
+
+   draggable_element::draggable_element(draggable_element const& rhs)
+    : tracker<proxy_base>{static_cast<tracker<proxy_base> const&>(rhs)}
+    , selectable{rhs}
+    , _selected{rhs._selected}
+   {
+   }
+
+   draggable_element::~draggable_element()
+   {
+      if (_alive)
+         *_alive = false;
    }
 
    view_limits draggable_element::limits(basic_context const& ctx) const
@@ -430,9 +446,9 @@ namespace cycfi::elements
             auto where = ctx.canvas.user_to_device(track_info.current);
 
             ctx.view.post(250ms,
-               [bounds, num_boxes, &view = ctx.view, this, di, where]()
+               [bounds, num_boxes, &view = ctx.view, this, alive = _alive, di, where]()
                {
-                  if (is_tracking())
+                  if (*alive && is_tracking())
                   {
                      _drag_image = share(
                         floating(bounds,
@@ -499,30 +515,28 @@ namespace cycfi::elements
          ctx.view.refresh();
 
          auto* di = find_parent<drop_inserter_element*>(ctx);
+
+         // Did we actually do a drag? Move first: the drag leaving the
+         // inserter ends its insertion position.
+         if (maybe_dragged && di)
+         {
+            if (auto *s = find_parent<selection_list_element*>(ctx))
+            {
+               auto indices = s->get_selection();
+               if (indices.size())
+               {
+                  di->move(std::move(indices));
+                  track_info.processed = true;
+               }
+            }
+         }
+
          if (di)
          {
             payload pl;
             pl[address_to_string(di)] = {};
             auto where = ctx.canvas.user_to_device(track_info.current);
             ctx.view.track_drop({pl, where}, cursor_tracking::leaving);
-         }
-
-         // Did we actually do a drag?
-         if (maybe_dragged)
-         {
-            if (di)
-            {
-               if (auto *s = find_parent<selection_list_element*>(ctx))
-               {
-                  auto indices = s->get_selection();
-                  if (indices.size())
-                  {
-                     di->move(std::move(indices));
-                     track_info.processed = true;
-                  }
-               }
-            }
-            return;
          }
       }
    }

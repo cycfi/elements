@@ -4,9 +4,257 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/drag_and_drop.hpp`.
+Drag and drop moves data to an element: data dragged in from another
+application, such as files from the desktop, or dragged within the
+application, from one element to another. The data of a drop is a
+xref:support/payload.adoc[payload], keyed by MIME type.
 
-// To be written.
+An element that takes drops is a drop receiver. The receivers so far
+are `drop_box`, which takes data dropped on it, and `drop_inserter`,
+which rearranges the items of a list and takes data dropped between
+them.
+
+=== Drop Receivers
+
+A `drop_receiver` is a proxy that takes drops of the MIME types it is
+made with. A drag over it that holds one of those types makes it
+_tracking_ until the drag leaves or drops; one that holds none of them
+is ignored. The view gathers the MIME types of its receivers and tells
+the host, so that the host offers it only drags of those types (see
+xref:support/clipboard.adoc#_drop_types[Clipboard: Drop Types]).
+
+`drop_box(e, types)` is a receiver over `e` that draws a frame around
+`e`, in the theme's `indicator_color`, while it is tracking. A drop of
+one of its types calls `on_drop` with the `drop_info`: its payload,
+`data`, and where it was dropped, `where`. `on_drop` returns whether it
+took the drop.
+
+image::elements/drag_and_drop_box.png[alt="A picture of a nebula, framed in blue, under the words Drop a picture here", width=420px, link={imagesdir}/elements/drag_and_drop_box.png]
+
+=== Rearranging a List
+
+`drop_inserter(e, types)` is a receiver over a
+xref:elements/selection.adoc[selection list] of `e`, a
+xref:elements/lists.adoc[list] whose items are each `draggable(item)`.
+
+image::elements/drag_and_drop_list.png[alt="A list of file paths, two of them selected; a drag image of the two follows the pointer, and a line under the last path marks where they will go", width=420px, link={imagesdir}/elements/drag_and_drop_list.png]
+
+The items are selected with the mouse and the keys of a selection list.
+A press on a selected item, held for a quarter of a second, starts a
+drag of the selection; a press with Shift or the action modifier
+(Command on macOS, Control on the others) only extends the selection.
+While the drag is over the list, a line between two items marks where
+the items will go, and the list scrolls to keep the pointer in view.
+Releasing the mouse more than 10 pixels from the press moves the
+selected items there; Escape ends the drag with no move.
+
+The inserter calls:
+
+[cols="1,2"]
+|===
+| Function | When
+
+| `on_move(pos, indices)`
+| The items at `indices` were dragged to before item `pos`.
+
+| `on_erase(indices)`
+| The items at `indices` were erased, by Delete or Backspace.
+
+| `on_drop(info, pos)`
+| Data of one of its types was dropped before item `pos`. Returns
+  whether it took the drop.
+
+| `on_select(indices, latest)`
+| The selection changed, by click or key; `latest` is the item last
+  selected.
+|===
+
+The inserter moves and erases the list's cells itself; `on_move` and
+`on_erase` make the same change to the items, with `move_indices` and
+`erase_indices` (see xref:elements/lists.adoc[Lists]). For a drop,
+`on_drop` inserts the items and tells the list with `insert`.
+
+The insertion line and the drop position go by the pointer's vertical
+position: the inserter is for a vertical list.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class drop_receiver : public proxy_base
+   {
+   public:
+
+      using mime_types = std::set<std::string>;
+
+                              drop_receiver(std::initializer_list<std::string> mime_types_);
+
+      bool                    is_tracking() const;
+      bool                    accepts(drop_info const& info) const;
+      mime_types const&       get_mime_types() const;
+      mime_types&             get_mime_types();
+   };
+
+   class drop_box_element : public drop_receiver
+   {
+   public:
+
+      using on_drop_function = std::function<bool(drop_info const& info)>;
+
+      on_drop_function        on_drop = [](drop_info const& /*info*/){ return false; };
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, drop_box_element>
+   drop_box(Subject&& subject, std::initializer_list<std::string> mime_types);
+
+   class drop_inserter_element : public drop_receiver
+   {
+   public:
+
+      using indices_type = std::vector<std::size_t>;
+      using on_drop_function = std::function<bool(drop_info const& info, std::size_t ix)>;
+      using on_move_function = std::function<void(std::size_t pos, indices_type const& indices)>;
+      using on_delete_function = std::function<void(indices_type const& indices)>;
+      using on_select_function = std::function<void(indices_type const& indices, std::size_t latest)>;
+
+      on_drop_function        on_drop = [](drop_info const&, std::size_t){ return false; };
+      on_move_function        on_move = [](std::size_t, indices_type const&){};
+      on_delete_function      on_erase = [](indices_type const&){};
+      on_select_function      on_select = [](indices_type const&, std::size_t){};
+
+      int                     insertion_pos() const;
+      void                    move(indices_type const& indices);
+      void                    erase(indices_type const& indices);
+   };
+
+   template <concepts::Element Subject>
+   auto drop_inserter(Subject&& subject, std::initializer_list<std::string> mime_types);
+
+   class draggable_element : public tracker<proxy_base>, public selectable
+   {
+   public:
+
+      bool                    is_selected() const override;
+      void                    select(bool state) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, draggable_element>
+   draggable(Subject&& subject);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`e`:: An element.
+`types`:: MIME types, as an initializer list of strings.
+`r`:: A drop receiver.
+`d`:: A drop inserter.
+`ix`:: A `std::vector<std::size_t>` of indices.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `drop_box(e, types)`
+| `e`, taking drops of `types`, framed while a drag of them is over it.
+
+| `r.is_tracking()`
+| Whether a drag of one of its types is over `r`.
+
+| `r.accepts(info)`
+| Whether the drop holds one of its types.
+
+| `drop_inserter(e, types)`
+| A selection list of `e`, a list of draggable items, that the items are
+  dragged within, and that takes drops of `types`.
+
+| `d.insertion_pos()`
+| Where the items being dragged would go, while a drag is over the
+  list; -1 otherwise.
+
+| `d.move(ix)`, `d.erase(ix)`
+| Move the items at `ix` to the insertion position, or erase them, as
+  a drag or Delete does.
+
+| `draggable(e)`
+| `e`, as an item that can be selected and dragged.
+|===
+
+== Example
+
+`examples/list_arranger`, in the figure: a list of file paths to
+rearrange, and to drop files into.
+
+```c++
+auto && make_row = [&](size_t index)
+{
+   // If we start with an empty paths vector, we still need to give it a prototypical
+   // element in order to establish the size limits.
+   std::string path = paths.empty()? std::string{"Empty"} : paths[index].string();
+
+   return share(
+      draggable(
+         align_left(label(path))
+      )
+   );
+};
+
+auto cp = basic_vcell_composer(list_size, make_row);
+auto list = vlist(cp, false);
+auto drop_inserter_ =
+   share(
+      drop_inserter(
+         margin({10, 10, 15, 10}, link(list)),
+         {"text/uri-list"}
+      )
+   );
+
+drop_inserter_->on_drop =
+   [&](drop_info const& info, std::size_t ix)
+   {
+      if (contains_filepaths(info.data))
+      {
+         auto new_paths = get_filepaths(info.data);
+         paths.insert(ix+paths.begin(), new_paths.begin(), new_paths.end());
+         list.insert(ix, new_paths.size());
+         view_.refresh();
+         return true;
+      }
+      return false;
+   };
+
+drop_inserter_->on_move =
+   [&](std::size_t pos, std::vector<std::size_t> const& indices)
+   {
+      move_indices(paths, pos, indices);
+      view_.refresh();
+   };
+
+drop_inserter_->on_erase =
+   [&](std::vector<std::size_t> const& indices)
+   {
+      erase_indices(paths, indices);
+      view_.refresh();
+   };
+
+view_.content(
+   vscroller(align_left_top(hold(drop_inserter_))),
+   make_bkd()
+);
+```
 
 '''
 

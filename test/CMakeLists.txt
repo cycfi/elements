@@ -74,6 +74,8 @@ set(elements_test_sources
    pages/elements/popups_test.cpp
    pages/elements/tooltips_test.cpp
    pages/elements/menus_test.cpp
+   pages/elements/lists_test.cpp
+   pages/elements/drag_and_drop_test.cpp
    pages/layout/collapsible_test.cpp
    pages/styles/styles_test.cpp
    pages/styles/marks_test.cpp

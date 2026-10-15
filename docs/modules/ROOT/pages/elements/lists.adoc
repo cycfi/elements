@@ -4,9 +4,286 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/list.hpp`.
+A list shows a column or a row of items, any number of them, by making
+an element for an item only when the item comes into view. A cell
+composer makes the elements and gives the size of each cell. `list`, or
+its alias `vlist`, lays the cells out top to bottom; `hlist`, left to
+right. A list is usually put in a xref:elements/ports.adoc[scroller].
 
-// To be written.
+image::elements/lists_example.png[alt="A list of rows reading This is item number 1, 2, 3 and so on, in a scroller whose thumb is a sliver at the top", width=320px, link={imagesdir}/elements/lists_example.png]
+
+=== Cell Composers
+
+A cell composer gives the number of items, the element of each item,
+and the size of each cell. It derives from the abstract class
+`cell_composer`. Along the list's main axis, the vertical for a `list`,
+each cell has a size of its own; across it, every cell has the same
+limits:
+
+[cols="2,3,1"]
+|===
+| Member | Semantics | Return Type
+
+| `size()`
+| The number of items.
+| `std::size_t`
+
+| `resize(n)`
+| Make it `n` items.
+| `void`
+
+| `compose(i)`
+| The element of item `i`.
+| `element_ptr`
+
+| `main_axis_size(i, ctx)`
+| The size of cell `i` along the main axis: its height, in a `list`.
+| `float`
+
+| `secondary_axis_limits(ctx)`
+| The `min` and `max` of the cells across the list: their width, in a
+  `list`.
+| `cell_composer::limits`
+|===
+
+`basic_cell_composer(size, f)`, also named `basic_vcell_composer`, makes
+a composer of `size` items for a `list`, whose element for item `i` is
+`f(i)`, an `element_ptr`. Every cell has the size of item 0's element:
+its minimum height, and its minimum and maximum width. Item 0 is made
+once, to measure it, when the list has items. `basic_hcell_composer` is
+the same for an `hlist`, measuring item 0's width and height limits.
+
+`basic_cell_composer(min, main, size, f)` is given the sizes instead:
+each cell is `main` along the main axis, and at least `min` across it.
+`basic_cell_composer(min, max, main, size, f)` also limits it to `max`
+across.
+
+The factories put together the stock composers, each a class template
+over the next: `fixed_length_cell_composer` keeps the number of items,
+`function_cell_composer` calls a function, and
+`fixed_derived_limits_cell_composer` (`vfixed_` and `hfixed_`) or
+`static_limits_cell_composer` gives the sizes. A composer of your own
+derives from `cell_composer` or from these.
+
+=== Cells In and Out of View
+
+The list calls the composer's `compose(i)` when cell `i` first comes
+into view, and lays out and draws the element while the cell is in view.
+
+By default, the list releases the element when its cell leaves the
+view, and calls `compose(i)` again when the cell returns. The new
+element does not have the old one's state, such as text typed into it.
+To retain that state:
+
+* The composer stores each element it makes and returns the same one
+  each time, as `examples/active_list` does.
+* Or `list(composer, false)` retains every element it is given.
+
+=== Changing the Items
+
+Change the items first, then tell the list:
+
+[cols="1,2"]
+|===
+| Call | When
+
+| `l.insert(pos, n)`
+| `n` items were inserted before item `pos`.
+
+| `l.erase(indices)`
+| The items at `indices` were erased.
+
+| `l.move(pos, indices)`
+| The items at `indices` were moved, in their order, to before item
+  `pos`.
+
+| `l.resize(n)`
+| There are `n` items now; the cells are made again.
+
+| `l.clear()`
+| There are no items.
+
+| `l.update()`
+| The items changed: the cells are made again, and measured.
+|===
+
+`insert` and `erase` also resize the composer. The changes are made at
+the next draw, in the order they were asked for; then refresh the view.
+The indices may be in any order. The focus moves with its cell, and ends
+if its cell is erased.
+
+`move_indices(v, pos, indices)` and `erase_indices(v, indices)` make the
+same changes to a `std::vector`, for the items themselves. Their indices
+must be in ascending order, with no repeats:
+
+```c++
+std::vector<char> v = {'a', 'b', 'c', 'd', 'e'};
+move_indices(v, 1, {3, 4});      // a d e b c
+erase_indices(v, {0, 2});        // d b c
+```
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class cell_composer : public std::enable_shared_from_this<cell_composer>
+   {
+   public:
+
+      struct limits
+      {
+         float min = 0;
+         float max = full_extent;
+      };
+
+      virtual std::size_t     size() const = 0;
+      virtual void            resize(size_t s) = 0;
+      virtual element_ptr     compose(std::size_t index) = 0;
+      virtual limits          secondary_axis_limits(basic_context const& ctx) const = 0;
+      virtual float           main_axis_size(std::size_t index, basic_context const& ctx) const = 0;
+   };
+
+   template <typename F>
+   inline auto basic_cell_composer(std::size_t size, F&& compose);
+
+   template <typename F>
+   inline auto basic_vcell_composer(std::size_t size, F&& compose);
+
+   template <typename F>
+   inline auto basic_hcell_composer(std::size_t size, F&& compose);
+
+   template <typename F>
+   inline auto basic_cell_composer(
+      float min_secondary_axis_size
+    , float main_axis_size
+    , std::size_t size
+    , F&& compose
+   );
+
+   template <typename F>
+   inline auto basic_cell_composer(
+      float min_secondary_axis_size
+    , float max_secondary_axis_size
+    , float main_axis_size
+    , std::size_t size
+    , F&& compose
+   );
+
+   class list : public composite_base
+   {
+   public:
+
+      using composer_ptr = std::shared_ptr<cell_composer>;
+      using indices_type = std::vector<std::size_t>;
+
+                                 list(composer_ptr composer, bool manage_externally = true);
+
+      void                       update();
+      void                       clear();
+      void                       resize(size_t n);
+      bool                       manage_externally() const;
+      void                       move(std::size_t pos, indices_type const& indices);
+      void                       insert(std::size_t pos, std::size_t num_items);
+      void                       erase(indices_type const& indices);
+   };
+
+   using vlist = list;
+
+   class hlist : public list
+   {
+   public:
+                                 hlist(composer_ptr ptr, bool manage_externally = true);
+   };
+
+   template <typename T>
+   inline void move_indices(std::vector<T>& v, std::size_t pos, std::vector<std::size_t> const& indices);
+
+   template <typename T>
+   inline void erase_indices(std::vector<T>& v, std::vector<std::size_t> const& indices);
+}
+```
+
+The stock composer class templates are declared in the header, with the
+deprecated names `dynamic_list`, `vdynamic_list`, `hdynamic_list`,
+`basic_vertical_cell_composer` and `basic_horizontal_cell_composer`.
+
+== Expressions
+
+=== Notation
+
+`cp`:: A `std::shared_ptr` to a cell composer.
+`f`:: A function taking an index and returning an `element_ptr`.
+`l`:: A `list` or `hlist`.
+`n`, `pos`, `i`:: Indices or counts, `std::size_t`.
+`ix`:: A `std::vector<std::size_t>` of indices.
+`v`:: A `std::vector`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `basic_cell_composer(n, f)`, `basic_vcell_composer(n, f)`
+| A composer of `n` items for a `list`, sized by item 0.
+
+| `basic_hcell_composer(n, f)`
+| A composer of `n` items for an `hlist`, sized by item 0.
+
+| `basic_cell_composer(min, main, n, f)`
+| A composer of `n` items, each `main` long and at least `min` across.
+
+| `basic_cell_composer(min, max, main, n, f)`
+| The same, at most `max` across.
+
+| `list(cp)`, `vlist(cp)`, `hlist(cp)`
+| A list of the items of `cp`, top to bottom or left to right.
+
+| `list(cp, false)`
+| A list that keeps every element it made.
+
+| `l.insert(pos, n)`, `l.erase(ix)`, `l.move(pos, ix)`
+| Items were inserted, erased or moved.
+
+| `l.resize(n)`, `l.clear()`, `l.update()`
+| The items changed; the cells are made again.
+
+| `move_indices(v, pos, ix)`, `erase_indices(v, ix)`
+| Move or erase the items of `v` at `ix`.
+|===
+
+== Example
+
+`examples/list`: a million rows.
+
+```c++
+auto&& draw_cell =
+   [](std::size_t index)
+   {
+      auto text = "This is item number " + std::to_string(index+1);
+      return share(margin({20, 2, 20, 2}, align_left(label(text))));
+   };
+
+auto my_composer =
+   basic_cell_composer(
+      1000000,                // size (number of rows)
+      draw_cell               // Composer function
+   );
+
+auto content = share(list{my_composer});
+
+view_.content(
+   vscroller(hold(content)),
+   background
+);
+```
 
 '''
 

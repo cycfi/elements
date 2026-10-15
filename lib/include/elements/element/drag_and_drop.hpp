@@ -171,7 +171,7 @@ namespace cycfi::elements
       void                    erase(indices_type const& indices);
       std::string             class_name() const override;
 
-   public:
+   private:
 
       int                     _insertion_pos = -1;
    };
@@ -231,6 +231,11 @@ namespace cycfi::elements
    {
    public:
 
+                              draggable_element() = default;
+                              draggable_element(draggable_element const& rhs);
+                              draggable_element(draggable_element&& rhs) = default;
+                              ~draggable_element();
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
@@ -251,6 +256,10 @@ namespace cycfi::elements
 
       bool                    _selected = false;
       drag_image_ptr          _drag_image;
+
+      // False once the element is gone, for the drag image step posted
+      // at the press.
+      std::shared_ptr<bool>   _alive = std::make_shared<bool>(true);
    };
 
    /**

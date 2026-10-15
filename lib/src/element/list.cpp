@@ -6,16 +6,13 @@
 #include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
 #include <elements/view.hpp>
+#include <algorithm>
 
 namespace cycfi::elements
 {
    list::list(composer_ptr composer, bool manage_externally)
     : _composer(composer)
     , _manage_externally(manage_externally)
-    , _update_request{true}
-    , _move_request{false}
-    , _insert_request{false}
-    , _erase_request{false}
    {}
 
    list::list(list const& rhs)
@@ -27,11 +24,6 @@ namespace cycfi::elements
     , _previous_window_end{rhs._previous_window_end}
     , _main_axis_full_size{rhs._main_axis_full_size}
     , _layout_id{rhs._layout_id}
-    , _update_request{true}
-    , _move_request{false}
-    , _insert_request{false}
-    , _erase_request{false}
-    , _request_info{nullptr}
    {}
 
    list::list(list&& rhs)
@@ -43,12 +35,6 @@ namespace cycfi::elements
     , _previous_window_end{rhs._previous_window_end}
     , _main_axis_full_size{rhs._main_axis_full_size}
     , _layout_id{rhs._layout_id}
-    , _update_request{true}
-    , _move_request{false}
-    , _insert_request{false}
-    , _erase_request{false}
-    , _relinquish_focus_request{false}
-    , _request_info{nullptr}
    {}
 
    list& list::operator=(list const& rhs)
@@ -64,11 +50,8 @@ namespace cycfi::elements
          _main_axis_full_size = rhs._main_axis_full_size;
          _layout_id = rhs._layout_id;
          _update_request = true;
-         _move_request = false;
-         _insert_request = false;
-         _erase_request = false;
          _relinquish_focus_request = false;
-         _request_info.reset();
+         _requests.clear();
       }
       return *this;
    }
@@ -86,11 +69,8 @@ namespace cycfi::elements
          _main_axis_full_size = rhs._main_axis_full_size;
          _layout_id = rhs._layout_id;
          _update_request = true;
-         _move_request = false;
-         _insert_request = false;
-         _erase_request = false;
          _relinquish_focus_request = false;
-         _request_info.reset();
+         _requests.clear();
       }
       return *this;
    }
@@ -244,17 +224,20 @@ namespace cycfi::elements
 
       if (reverse)
       {
+         // From the last cell that starts before the end of the port, back
+         // to the first that ends after its start.
          auto it = std::upper_bound(
             _cells.begin(), _cells.end(),
             main_axis_port_end - main_axis_start,
             [](double pivot, auto const& cell)
             {
-               return pivot < (cell.pos + cell.main_axis_size);
+               return pivot < cell.pos;
             }
          );
 
-         do
+         while (it != _cells.begin())
          {
+            --it;
             auto& cell = *it;
             rect bounds = ctx.bounds;
             set_bounds(bounds, main_axis_start, cell);
@@ -265,10 +248,7 @@ namespace cycfi::elements
             }
             if (main_axis_port_start > get_main_axis_end(bounds))
                break;
-
-            ++it;
          }
-         while (it != _cells.begin());
       }
       else
       {
@@ -350,40 +330,38 @@ namespace cycfi::elements
       this->update();
    }
 
+   namespace
+   {
+      // Sorted, without repeats: as move_indices and erase_indices take
+      // them.
+      list::indices_type sorted(list::indices_type indices)
+      {
+         std::sort(indices.begin(), indices.end());
+         indices.erase(std::unique(indices.begin(), indices.end()), indices.end());
+         return indices;
+      }
+   }
+
    void list::move(std::size_t pos, indices_type const& indices)
    {
-      _move_request = true;
-      if (!_request_info)
-         _request_info = std::make_unique<request_info>();
-      _request_info->_move_pos = pos;
-      _request_info->_move_indices = indices;
-}
+      _requests.push_back({request::move_, pos, 0, sorted(indices)});
+   }
 
    void list::insert(std::size_t pos, std::size_t num_items)
    {
-      _insert_request = true;
-      if (!_request_info)
-         _request_info = std::make_unique<request_info>();
-      _request_info->_insert_pos = pos;
-      _request_info->_insert_num_items = num_items;
+      _requests.push_back({request::insert_, pos, num_items, {}});
    }
 
    void list::erase(indices_type const& indices)
    {
-      _erase_request = true;
-      if (!_request_info)
-         _request_info = std::make_unique<request_info>();
-      _request_info->_delete_indices = indices;
+      _requests.push_back({request::erase_, 0, 0, sorted(indices)});
    }
 
-   void list::move(basic_context const& ctx) const
+   // Lay the cells end to end again, after the cells change.
+   void list::place_cells(basic_context const& ctx) const
    {
-      auto const& _move_indices = _request_info->_move_indices;
-      auto _move_pos = _request_info->_move_pos;
-      move_indices(_cells, _move_pos, _move_indices);
-
       double y = 0;
-      auto size = _composer->size();
+      auto size = std::min(_composer->size(), _cells.size());
       for (std::size_t i = 0; i != size; ++i)
       {
          auto main_axis_size = _composer->main_axis_size(i, ctx);
@@ -391,72 +369,81 @@ namespace cycfi::elements
          _cells[i].main_axis_size = main_axis_size;
          y += main_axis_size;
       }
+      _main_axis_full_size = y;
       ++_layout_id;
-      _move_request = false;
    }
 
-   void list::insert(basic_context const& ctx) const
+   void list::move(basic_context const& ctx, request const& r) const
    {
-      auto _insert_pos = _request_info->_insert_pos;
-      auto _insert_num_items = _request_info->_insert_num_items;
-
-      this->_composer->resize(this->_composer->size() + _insert_num_items);
-      _cells.insert(_cells.begin()+_insert_pos, _insert_num_items, cell_info{});
-
-      double y = 0;
-      auto size = _composer->size();
-      _main_axis_full_size = 0;
-      for (std::size_t i = 0; i != size; ++i)
+      auto focus = focus_index();
+      if (focus != -1)
       {
-         auto main_axis_size = _composer->main_axis_size(i, ctx);
-         _cells[i].pos = y;
-         _cells[i].main_axis_size = main_axis_size;
-         y += main_axis_size;
-         _main_axis_full_size = y;
+         // Where the focused cell goes.
+         indices_type order(_cells.size());
+         for (std::size_t i = 0; i != order.size(); ++i)
+            order[i] = i;
+         move_indices(order, r.pos, r.indices);
+         auto i = std::find(order.begin(), order.end(), std::size_t(focus));
+         const_cast<list*>(this)->focus(i - order.begin());
       }
-
-      ++_layout_id;
-      _insert_request = false;
+      move_indices(_cells, r.pos, r.indices);
+      place_cells(ctx);
    }
 
-   void list::erase(basic_context const& ctx) const
+   void list::insert(basic_context const& ctx, request const& r) const
    {
-      auto const& _delete_indices = _request_info->_delete_indices;
-      this->_composer->resize(this->_composer->size() - _delete_indices.size());
-      erase_indices(_cells, _delete_indices);
+      auto pos = std::min(r.pos, _cells.size());
+      _composer->resize(_composer->size() + r.num_items);
+      _cells.insert(_cells.begin()+pos, r.num_items, cell_info{});
 
-      double y = 0;
-      auto size = _composer->size();
-      _main_axis_full_size = 0;
-      for (std::size_t i = 0; i != size; ++i)
+      auto focus = focus_index();
+      if (focus != -1 && pos <= std::size_t(focus))
+         const_cast<list*>(this)->focus(focus + r.num_items);
+      place_cells(ctx);
+   }
+
+   void list::erase(basic_context const& ctx, request const& r) const
+   {
+      auto const& indices = r.indices;
+      _composer->resize(_composer->size() - indices.size());
+      erase_indices(_cells, indices);
+
+      // Let go of the focus if its cell is gone, or follow it if not.
+      auto focus = focus_index();
+      if (focus != -1)
       {
-         auto main_axis_size = _composer->main_axis_size(i, ctx);
-         _cells[i].pos = y;
-         _cells[i].main_axis_size = main_axis_size;
-         y += main_axis_size;
-         _main_axis_full_size = y;
-         if (int(i) == focus_index())
+         if (std::binary_search(indices.begin(), indices.end(), std::size_t(focus)))
+         {
             _relinquish_focus_request = true;
+         }
+         else
+         {
+            auto before = std::lower_bound(indices.begin(), indices.end(), std::size_t(focus))
+               - indices.begin();
+            const_cast<list*>(this)->focus(focus - before);
+         }
       }
-
-      ++_layout_id;
-      _erase_request = false;
+      place_cells(ctx);
    }
 
    void list::sync(basic_context const& ctx) const
    {
+      // An update makes every cell again: the requests before it are moot.
       if (_update_request)
-         update(ctx);
-      if (_request_info)
       {
-         if (_move_request)
-            move(ctx);
-         if (_insert_request)
-            insert(ctx);
-         if (_erase_request)
-            erase(ctx);
+         update(ctx);
+         _requests.clear();
       }
-      _request_info.reset();
+      for (auto const& r : _requests)
+      {
+         switch (r.kind)
+         {
+            case request::move_:    move(ctx, r); break;
+            case request::insert_:  insert(ctx, r); break;
+            case request::erase_:   erase(ctx, r); break;
+         }
+      }
+      _requests.clear();
    }
 
    ////////////////////////////////////////////////////////////////////////////

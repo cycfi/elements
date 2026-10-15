@@ -11,7 +11,7 @@
 #include <vector>
 #include <functional>
 #include <set>
-#include<iostream>
+#include <iostream>
 
 namespace cycfi::elements
 {
@@ -503,11 +503,22 @@ namespace cycfi::elements
 
    private:
 
+      struct request
+      {
+         enum kind_type { move_, insert_, erase_ };
+
+         kind_type               kind;
+         std::size_t             pos = 0;
+         std::size_t             num_items = 0;
+         indices_type            indices;
+      };
+
       void                       sync(basic_context const& ctx) const;
       void                       update(basic_context const& ctx) const;
-      void                       move(basic_context const& ctx) const;
-      void                       insert(basic_context const& ctx) const;
-      void                       erase(basic_context const& ctx) const;
+      void                       move(basic_context const& ctx, request const& r) const;
+      void                       insert(basic_context const& ctx, request const& r) const;
+      void                       erase(basic_context const& ctx, request const& r) const;
+      void                       place_cells(basic_context const& ctx) const;
 
       composer_ptr               _composer;
       bool                       _manage_externally;
@@ -518,23 +529,12 @@ namespace cycfi::elements
       mutable double             _main_axis_full_size = 0;
       mutable int                _layout_id = 0;
 
-      mutable bool               _update_request:1;
-      mutable bool               _move_request:1;
-      mutable bool               _insert_request:1;
-      mutable bool               _erase_request:1;
-      mutable bool               _relinquish_focus_request:1;
+      mutable bool               _update_request = true;
+      mutable bool               _relinquish_focus_request = false;
 
-      struct request_info
-      {
-         std::size_t                _move_pos;
-         std::vector<std::size_t>   _move_indices;
-         std::size_t                _insert_pos;
-         std::size_t                _insert_num_items;
-         std::vector<std::size_t>   _delete_indices;
-      };
-
-      using request_info_ptr = std::unique_ptr<request_info>;
-      mutable request_info_ptr      _request_info;
+      // Moves, inserts and erases, in the order they were asked for, made
+      // at the next sync.
+      mutable std::vector<request> _requests;
    };
 
    // The old name is deprecated
@@ -771,6 +771,9 @@ namespace cycfi::elements
    inline cell_composer::limits
    fixed_derived_limits_cell_composer<Base>::secondary_axis_limits(basic_context const& ctx) const
    {
+      // No cell to measure: nothing is kept, for when there are cells.
+      if (this->size() == 0)
+         return {0, full_extent};
       if (_secondary_axis_limits.min == -1)
          get_limits(ctx);
       return _secondary_axis_limits;
@@ -797,6 +800,8 @@ namespace cycfi::elements
    template <typename Base>
    inline float fixed_derived_limits_cell_composer<Base>::main_axis_size(std::size_t /*index*/, basic_context const& ctx) const
    {
+      if (this->size() == 0)
+         return 0;
       if (_main_axis_size == -1)
          get_limits(ctx);
       return _main_axis_size;

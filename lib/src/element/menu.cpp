@@ -98,6 +98,40 @@ namespace cycfi::elements
          return items;
       }
 
+      // The first enabled menu item in e, depth first.
+      basic_menu_item_element* first_item(element& e)
+      {
+         if (auto item = find_element<basic_menu_item_element*>(&e))
+            return item->is_enabled()? item : nullptr;
+
+         if (auto c = find_element<composite_base*>(&e))
+         {
+            for (std::size_t i = 0; i != c->size(); ++i)
+            {
+               if (auto item = first_item(c->at(i)))
+                  return item;
+            }
+         }
+         return nullptr;
+      }
+
+      // Unselects every menu item in e: a menu opens with nothing selected
+      // from the last time it was open.
+      void unselect_items(element& e)
+      {
+         if (auto item = find_element<basic_menu_item_element*>(&e))
+         {
+            item->select(false);
+            return;
+         }
+
+         if (auto c = find_element<composite_base*>(&e))
+         {
+            for (std::size_t i = 0; i != c->size(); ++i)
+               unselect_items(c->at(i));
+         }
+      }
+
       basic_menu_item_element* selected_item(context const& ctx)
       {
          for (auto [r, e] : sibling_items(ctx))
@@ -277,6 +311,7 @@ namespace cycfi::elements
       auto* parent = find_parent<basic_popup_menu_element*>(ctx);
       close_sibling_menus(ctx, parent);
 
+      unselect_items(*_menu);
       auto const size = _menu->limits(ctx).min;
       auto const b = submenu_bounds(ctx, size, parent != nullptr);
       context mctx{view_, ctx.canvas, _menu.get(), b};
@@ -295,21 +330,20 @@ namespace cycfi::elements
    }
 
    // One menu open at a time among siblings: in a menu, its submenu; in a
-   // bar, the menu of any other item.
+   // bar, the menu of any other item. Only this item stays selected.
    void basic_menu_item_element::close_sibling_menus(
       context const& ctx, basic_popup_menu_element* parent)
    {
-      if (parent)
-      {
-         if (parent->_submenu && parent->_submenu != _menu.get())
-            parent->_submenu->close(ctx.view);
-         return;
-      }
+      if (parent && parent->_submenu && parent->_submenu != _menu.get())
+         parent->_submenu->close(ctx.view);
 
       for (auto [r, e] : sibling_items(ctx))
       {
-         if (e != this && e->_menu && e->_menu->is_open(ctx.view))
+         if (e == this)
+            continue;
+         if (!parent && e->_menu && e->_menu->is_open(ctx.view))
             e->_menu->close(ctx.view);
+         e->select(false);
       }
    }
 
@@ -350,6 +384,74 @@ namespace cycfi::elements
          };
    }
 
+   // Enter on the selected item: open its submenu, or pick it, closing
+   // every menu it was reached through.
+   bool basic_menu_item_element::pick(context const& ctx)
+   {
+      auto* selected = selected_item(ctx);
+      if (selected && selected->_menu)
+      {
+         selected->open_by_key(ctx.view);
+         return true;
+      }
+
+      if (selected)
+      {
+         if (selected->on_click)
+            selected->on_click();
+         selected->select(false);
+      }
+      close_all(ctx);
+      return true;
+   }
+
+   // Escape: close the menu the item is in. A submenu's item stays
+   // selected in the menu it was opened from, for the keys that follow.
+   bool basic_menu_item_element::back_out(context const& ctx)
+   {
+      if (auto* selected = selected_item(ctx))
+         selected->select(false);
+
+      auto* menu = find_parent<basic_popup_menu_element*>(ctx);
+      if (menu && menu->_parent)
+      {
+         close_submenu(ctx.view, menu);
+      }
+      else if (auto* popup = find_parent<basic_popup_element*>(ctx))
+      {
+         popup->close(ctx.view);
+      }
+      return true;
+   }
+
+   // Closes a submenu from the keyboard. The item that opened it stays
+   // selected.
+   void basic_menu_item_element::close_submenu(view& view_, popup_menu* menu)
+   {
+      auto* owner = menu->_menu_item;
+      menu->close(view_);
+      if (owner)
+      {
+         owner->select(true);
+         view_.refresh();
+      }
+   }
+
+   // Closes every menu the item in ctx was reached through.
+   void basic_menu_item_element::close_all(context const& ctx)
+   {
+      if (auto* menu = find_parent<basic_popup_menu_element*>(ctx))
+      {
+         while (menu->_parent)
+            menu = menu->_parent;
+         menu->close(ctx.view);
+      }
+      else if (auto* popup = find_parent<basic_popup_element*>(ctx))
+      {
+         popup->close(ctx.view);
+      }
+   }
+
    // Right opens the selected item's submenu, and Left closes the submenu
    // this item is in. In a menu opened from a bar, either moves on to the
    // bar's next menu.
@@ -360,13 +462,12 @@ namespace cycfi::elements
 
       if (right && selected && selected->_menu)
       {
-         ctx.view.in_context_do(*selected,
-            [selected](context const& sctx) { selected->open_menu(sctx); });
+         selected->open_by_key(ctx.view);
          return true;
       }
       if (!right && menu && menu->_parent)
       {
-         menu->close(ctx.view);
+         close_submenu(ctx.view, menu);
          return true;
       }
       if (menu && !menu->_parent && menu->_menu_item)
@@ -397,10 +498,25 @@ namespace cycfi::elements
 
             auto const n = std::ptrdiff_t(menus.size());
             auto const at = ((i - menus.begin()) + (right? 1 : -1) + n) % n;
+            // As a click on its title opens it: nothing selected.
             auto* next = menus[at];
             ctx.view.in_context_do(*next,
                [next](context const& nctx) { next->open_menu(nctx); });
          });
+   }
+
+   // A submenu opened from the keyboard starts on its first enabled item,
+   // for the keys that follow.
+   void basic_menu_item_element::open_by_key(view& view_)
+   {
+      view_.in_context_do(*this,
+         [this](context const& ctx) { open_menu(ctx); });
+
+      if (auto item = first_item(*_menu))
+      {
+         item->select(true);
+         view_.refresh();
+      }
    }
 
    element* basic_menu_item_element::hit_test(context const& ctx, point p, bool /*leaf*/, bool /*control*/)
@@ -427,7 +543,6 @@ namespace cycfi::elements
       // release from a button_menu reaches it as a press.
       if (!btn.down)
          return ctx.enabled && is_enabled() && ctx.bounds.includes(btn.pos);
-      auto* popup = find_parent<basic_popup_element*>(ctx);
 
       bool result = false;
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(btn.pos))
@@ -435,18 +550,7 @@ namespace cycfi::elements
          if (on_click)
             on_click();
          select(false);
-
-         // Choosing an item closes every menu it was reached through.
-         if (auto menu = find_parent<basic_popup_menu_element*>(ctx))
-         {
-            while (menu->_parent)
-               menu = menu->_parent;
-            menu->close(ctx.view);
-         }
-         else if (popup)
-         {
-            popup->close(ctx.view);
-         }
+         close_all(ctx);
          result = true;
       }
       auto proxy_result = proxy_base::click(ctx, btn);
@@ -460,30 +564,10 @@ namespace cycfi::elements
          switch (k.key)
          {
             case key_code::enter:
-            case key_code::escape:
-            {
-               // Close the popup
-               if (auto _popup = find_parent<basic_popup_element*>(ctx))
-                  _popup->close(ctx.view);
+               return pick(ctx);
 
-               auto [c, cctx] = find_composite(ctx);
-               if (c)
-               {
-                  for (std::size_t i = 0; i != c->size(); ++i)
-                  {
-                     auto e = find_element<basic_menu_item_element*>(&c->at(i));
-                     if (e && e->is_selected())
-                     {
-                        if (k.key == key_code::enter && e->on_click)
-                           e->on_click();
-                        e->select(false);
-                        break;
-                     }
-                  }
-               }
-               return true;
-            }
-            break;
+            case key_code::escape:
+               return back_out(ctx);
 
             case key_code::right:
             case key_code::left:

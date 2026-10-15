@@ -99,8 +99,8 @@ auto bar = layer(                                           <1>
 
 image::elements/menus_bar.png[alt="A menu bar of File, Edit and Help. File is highlighted and its menu is open below it, with Open Recent highlighted and its submenu of three files open to its right", width=420px, link={imagesdir}/elements/menus_bar.png]
 
-Right opens the highlighted item's submenu, and Left closes the submenu
-the highlight is in. In a menu opened from a bar, Left, and Right on an
+Right opens the highlighted item's submenu, with its first item
+highlighted, and Left closes the submenu the highlight is in. In a menu opened from a bar, Left, and Right on an
 item with no submenu, move to the bar's previous or next menu, wrapping
 around. Escape closes one menu.
 

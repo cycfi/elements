@@ -268,6 +268,11 @@ namespace cycfi::elements
                                  context const& ctx, popup_menu* parent);
       bool                    move_across(context const& ctx, bool right);
       void                    open_next_menu(view& view_, bool right);
+      void                    open_by_key(view& view_);
+      bool                    pick(context const& ctx);
+      bool                    back_out(context const& ctx);
+      void                    close_all(context const& ctx);
+      static void             close_submenu(view& view_, popup_menu* menu);
 
       bool                    _selected = false;
       popup_menu_ptr          _menu;

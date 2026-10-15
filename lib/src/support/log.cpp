@@ -164,10 +164,15 @@ namespace cycfi::elements
       // Sandboxed host (Logic Pro, the AU hosting service) denies, and it
       // refuses a second backend in one process (two plugins each with
       // their own copy of quill). Skip the check.
+      //
+      // With nothing to write, the backend sleeps 10 ms between looks at
+      // the queues. quill's default, 500 ns, keeps the thread spinning at
+      // about 15% of a core in an idle program.
       quill::BackendOptions backend_options()
       {
          quill::BackendOptions options;
          options.check_backend_singleton_instance = false;
+         options.sleep_duration = std::chrono::milliseconds{10};
          return options;
       }
 

@@ -379,6 +379,11 @@ namespace cycfi::elements
       std::optional<mime_types> const&
                            accepted_drop_types() const { return _drop_types; }
 
+      // Where the text caret is, in view coordinates. A text box being
+      // edited tells the host, so the input method's composition and
+      // candidate windows can sit at the caret.
+      void                 text_caret(rect bounds);
+
    private:
 
       host_view_handle     _view;

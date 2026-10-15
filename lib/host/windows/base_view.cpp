@@ -31,6 +31,7 @@
 #include <artist/canvas.hpp>
 #include <artist/resources.hpp>
 #include <system_error>
+#include <imm.h>
 #include "drag_and_drop.hpp"
 #include "transfer.hpp"
 
@@ -1097,6 +1098,36 @@ namespace cycfi::elements
    void base_view::accept_drop_types(mime_types const& types)
    {
       _drop_types = types;
+   }
+
+   // Place the input method's composition window at the caret, and keep
+   // its candidate list from covering the caret's line.
+   void base_view::text_caret(rect bounds)
+   {
+      HIMC imc = ImmGetContext(_view);
+      if (!imc)
+         return;
+
+      auto scale = get_scale_for_window(_view);
+      RECT r;
+      r.left = LONG(bounds.left * scale);
+      r.top = LONG(bounds.top * scale);
+      r.right = LONG(bounds.right * scale);
+      r.bottom = LONG(bounds.bottom * scale);
+
+      COMPOSITIONFORM composition = {};
+      composition.dwStyle = CFS_POINT;
+      composition.ptCurrentPos = {r.left, r.top};
+      ImmSetCompositionWindow(imc, &composition);
+
+      CANDIDATEFORM candidate = {};
+      candidate.dwIndex = 0;
+      candidate.dwStyle = CFS_EXCLUDE;
+      candidate.ptCurrentPos = {r.left, r.bottom};
+      candidate.rcArea = r;
+      ImmSetCandidateWindow(imc, &candidate);
+
+      ImmReleaseContext(_view, imc);
    }
 
    // Nothing to do here: this host finds its resources by path and needs

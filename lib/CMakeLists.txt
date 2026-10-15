@@ -547,9 +547,10 @@ if (WIN32 AND NOT MSVC)
    target_link_libraries(elements PUBLIC ws2_32 artist)
 endif()
 
-# Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN
+# Replace missing Shcore library removed by WIN32_LEAN_AND_MEAN, and the
+# input method library the Windows host places the IME windows with
 if (WIN32)
-   target_link_libraries(elements PUBLIC Shcore artist)
+   target_link_libraries(elements PUBLIC Shcore imm32 artist)
 endif()
 
 # The Win32 Skia host renders through WGL + Ganesh GL (lib/host/windows/

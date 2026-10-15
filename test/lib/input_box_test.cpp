@@ -205,3 +205,24 @@ TEST_CASE("a text box in a disabled element is dimmed by the theme", "[input_box
    CHECK(brightness(make_text(), false, true) == Approx(dim).margin(16));
 }
 #endif
+
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+TEST_CASE("a focused text box tells the host where its caret is", "[input_box]")
+{
+   input_view v{share(basic_input_box{})};
+   v.draw();
+   auto const first = headless::text_caret(v.view_);
+   REQUIRE(first);
+   CHECK(first->top >= 0);
+   CHECK(first->bottom <= 60);
+   CHECK(first->height() > 0);
+
+   // Typing moves it right, along the same line.
+   v.type(U"abc");
+   v.draw();
+   auto const then = headless::text_caret(v.view_);
+   REQUIRE(then);
+   CHECK(then->left > first->left);
+   CHECK(then->top == first->top);
+}
+#endif

@@ -1419,6 +1419,12 @@ namespace cycfi::elements
       [ns_view registerForDraggedTypes : drop_types(_drop_types)];
    }
 
+   // The input method's windows are not placed at the caret on this
+   // host yet.
+   void base_view::text_caret(rect /* bounds */)
+   {
+   }
+
    // Types of the pasteboard's own making, a custom MIME type's, are not
    // listed here: clipboard_contains finds them.
    std::vector<std::string> clipboard_types()

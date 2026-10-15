@@ -1052,6 +1052,12 @@ namespace cycfi::elements
       _drop_types = types;
    }
 
+   // The input method's windows are not placed at the caret on this
+   // host yet.
+   void base_view::text_caret(rect /* bounds */)
+   {
+   }
+
    // Nothing to do here: this host finds its resources by path and needs
    // no registration step. Declared for every platform so a plugin may
    // call it at load time without knowing which one it is on.

@@ -1189,6 +1189,12 @@ namespace cycfi::elements
       _drop_types = types;
    }
 
+   // The input method's windows are not placed at the caret on this
+   // host yet.
+   void base_view::text_caret(rect /* bounds */)
+   {
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Data transfer: the clipboard and drag and drop
    //

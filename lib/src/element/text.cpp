@@ -712,12 +712,17 @@ namespace cycfi::elements
          caret_bounds = rect{caret.left, caret.top, caret.left+width, caret.bottom};
       }
 
-      if (_is_focus && has_caret && !_caret_started)
+      if (!_is_focus || !has_caret)
+         return;
+
+      // The caret in view coordinates, for the host's input method
+      auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
+      auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
+      ctx.view.text_caret({tl.x, tl.y, br.x, br.y});
+
+      if (!_caret_started)
       {
-         // We convert the caret bounds to device coordinates and expand it by 2 pixels
-         // on all sides for good measure.
-         auto tl = ctx.canvas.user_to_device(caret_bounds.top_left());
-         auto br = ctx.canvas.user_to_device(caret_bounds.bottom_right());
+         // Expand the caret bounds by 2 pixels on all sides for good measure.
          caret_bounds = {tl.x-2, tl.y-2, br.x+2, br.y+2};
 
          _caret_started = true;

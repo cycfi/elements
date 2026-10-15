@@ -7,6 +7,7 @@
 #define ELEMENTS_HEADLESS_SEPTEMBER_13_2026
 
 #include <elements/base_view.hpp>
+#include <optional>
 #include <vector>
 
 namespace cycfi::elements::headless
@@ -29,6 +30,10 @@ namespace cycfi::elements::headless
    // order asked, in view coordinates. A refresh of the whole view is its
    // full bounds.
    std::vector<rect>    take_invalidated(base_view& v);
+
+   // The text caret the view last reported with text_caret, in view
+   // coordinates, if any.
+   std::optional<rect>  text_caret(base_view& v);
 
    // Move the cursor, as a host does before it reports a mouse event.
    void                 cursor_pos(base_view& v, point p);

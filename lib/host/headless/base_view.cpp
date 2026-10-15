@@ -113,6 +113,11 @@ namespace cycfi::elements
       _drop_types = types;
    }
 
+   void base_view::text_caret(rect bounds)
+   {
+      _view->text_caret = bounds;
+   }
+
    std::vector<std::string> clipboard_types()
    {
       std::vector<std::string> types;
@@ -163,6 +168,11 @@ namespace cycfi::elements::headless
    std::vector<rect> take_invalidated(base_view& v)
    {
       return std::exchange(v.host()->invalidated, {});
+   }
+
+   std::optional<rect> text_caret(base_view& v)
+   {
+      return v.host()->text_caret;
    }
 
    void cursor_pos(base_view& v, point p)

@@ -10,6 +10,7 @@
 #define ELEMENTS_HEADLESS_HOST_SEPTEMBER_13_2026
 
 #include <elements/base_view.hpp>
+#include <optional>
 #include <vector>
 
 namespace cycfi::elements
@@ -23,11 +24,12 @@ namespace cycfi::elements
 
    struct host_view
    {
-      extent            size;
-      float             scale = 1;
-      point             cursor_position;
-      std::vector<rect> invalidated;      // refresh areas, in order asked
-      host_window*      window = nullptr;
+      extent               size;
+      float                scale = 1;
+      point                cursor_position;
+      std::vector<rect>    invalidated;      // refresh areas, in order asked
+      std::optional<rect>  text_caret;       // the caret last reported
+      host_window*         window = nullptr;
    };
 }
 

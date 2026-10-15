@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="398"
+     viewBox="0 0 750 398"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="570.945" y="246" width="128.578" height="138" rx="10" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="635.234" y="276" text-anchor="middle" fill="#1a1a1a">layers</text>
+
+  <rect x="54.7656" y="24" width="140.469" height="78" rx="8" fill="#fdeaf2" stroke="#d81b60" stroke-width="1.5"/>
+  <text x="125" y="59.4" text-anchor="middle" fill="#1a1a1a">host</text>
+  <text x="125" y="76.4" text-anchor="middle" fill="#1a1a1a">window or plug-in</text>
+
+  <rect x="325.234" y="24" width="120" height="78" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="385.234" y="67.9" text-anchor="middle" fill="#1a1a1a">base_view</text>
+
+  <rect x="575.234" y="24" width="120" height="78" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="635.234" y="67.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="604.898" y="152" width="60.6719" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="635.234" y="178.9" text-anchor="middle" fill="#1a1a1a">scale</text>
+
+  <rect x="584.945" y="290" width="100.578" height="36" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="635.234" y="312.9" text-anchor="middle" fill="#1a1a1a">popup (top)</text>
+
+  <rect x="584.945" y="334" width="100.578" height="36" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="635.234" y="356.9" text-anchor="middle" fill="#1a1a1a">content</text>
+
+  <line x1="195.234" y1="50" x2="325.234" y2="50" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="325.234" y1="76" x2="195.234" y2="76" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="445.234" y1="50" x2="575.234" y2="50" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="575.234" y1="76" x2="445.234" y2="76" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="635.234" y1="102" x2="635.234" y2="152" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="635.234" y1="196" x2="635.234" y2="246" stroke="#1565c0" stroke-width="1.4"/>
+
+  <text x="260.234" y="43" text-anchor="middle" fill="#1a1a1a">events, draw</text>
+  <text x="260.234" y="95" text-anchor="middle" fill="#1a1a1a">platform calls</text>
+  <text x="510.234" y="43" text-anchor="middle" fill="#1a1a1a">virtual calls</text>
+  <text x="510.234" y="95" text-anchor="middle" fill="#1a1a1a">requests</text>
+  <text x="645.234" y="226" fill="#1a1a1a">context</text>
+
+  <polygon points="325.234,50 316.234,54 316.234,46" fill="#1565c0"/>
+  <polygon points="195.234,76 204.234,72 204.234,80" fill="#43a047"/>
+  <polygon points="575.234,50 566.234,54 566.234,46" fill="#1565c0"/>
+  <polygon points="445.234,76 454.234,72 454.234,80" fill="#43a047"/>
+  <polygon points="635.234,152 631.234,143 639.234,143" fill="#1565c0"/>
+  <polygon points="635.234,246 631.234,237 639.234,237" fill="#1565c0"/>
+</svg>

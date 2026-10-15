@@ -574,6 +574,7 @@ namespace cycfi::elements
       if (k.action == key_action::release)
       {
          keys.erase(k.key);
+         _view.key(k);
          return;
       }
 

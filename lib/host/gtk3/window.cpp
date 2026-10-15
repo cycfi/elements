@@ -17,6 +17,7 @@ namespace cycfi::elements
    struct host_window
    {
       GtkWidget* host = nullptr;
+      window* owner = nullptr;
       std::vector<std::function<void()>> on_activate;
 
       // Work deferred until the app activates holds a weak reference to
@@ -38,6 +39,17 @@ namespace cycfi::elements
       h.on_activate.push_back(f);
    }
 
+   namespace
+   {
+      gboolean on_window_delete(GtkWidget*, GdkEvent*, gpointer user_data)
+      {
+         auto* w = static_cast<host_window*>(user_data)->owner;
+         if (w && w->on_close)
+            w->on_close();
+         return false;  // and let GTK close the window
+      }
+   }
+
    float get_scale(GtkWidget* widget)
    {
       auto gdk_win = gtk_widget_get_window(widget);
@@ -47,6 +59,7 @@ namespace cycfi::elements
    window::window(std::string const& name, int style_, rect const& bounds)
     :  _window(new host_window)
    {
+      _window->owner = this;
       // Chicken and egg. GTK wants us to create windows only
       // after the app is activated. So we have a scheme to
       // defer actions. If the app is not activated make_window is
@@ -67,6 +80,8 @@ namespace cycfi::elements
             if (!(style_ & with_title))
                gtk_window_set_decorated(GTK_WINDOW(win), false);
             _window->host = win;
+            g_signal_connect(win, "delete-event",
+               G_CALLBACK(on_window_delete), _window);
 
             for (auto f : _window->on_activate)
                f();
@@ -86,7 +101,10 @@ namespace cycfi::elements
    window::~window()
    {
       if (_window->host)
+      {
+         g_signal_handlers_disconnect_by_data(_window->host, _window);
          g_object_unref(_window->host);
+      }
       delete _window;
    }
 

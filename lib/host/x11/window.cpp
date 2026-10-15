@@ -10,13 +10,15 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
+#include <algorithm>
 #include <cmath>
 
 namespace cycfi::elements
 {
    struct host_window
    {
-      ::Window window = 0;
+      ::Window              window = 0;
+      view_limits           limits = {{0, 0}, {10E6, 10E6}};
    };
 
    ::Window get_window(host_window& h) { return h.window; }
@@ -88,14 +90,20 @@ namespace cycfi::elements
 
    void window::size(point const& p)
    {
+      // Clamped here as well as by the size hints: without a window
+      // manager, nothing else applies them.
+      auto const& l = _window->limits;
+      float const w = std::clamp(p.x, l.min.x, std::max(l.min.x, l.max.x));
+      float const h = std::clamp(p.y, l.min.y, std::max(l.min.y, l.max.y));
       Display* d = get_display();
       double scale = window_scale(_window->window);
       XResizeWindow(d, _window->window,
-         (unsigned)std::lround(p.x * scale), (unsigned)std::lround(p.y * scale));
+         (unsigned)std::lround(w * scale), (unsigned)std::lround(h * scale));
    }
 
    void window::limits(view_limits limits_)
    {
+      _window->limits = limits_;
       Display* d = get_display();
       double scale = window_scale(_window->window);
       XSizeHints* hints = XAllocSizeHints();

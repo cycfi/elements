@@ -105,11 +105,15 @@ def rounded(pts):
 
 class Block:
     def __init__(self, label, kind='component', width=None, height=None,
-                 shape='box', dashed=False):
+                 shape='box', dashed=False, radius=None, fill=None,
+                 stroke=None):
         self.label = label
         self.kind = kind
         self.shape = shape                      # box, pill or circle
         self.dashed = dashed
+        self.radius = radius                    # a box's corners, 8 if not given
+        self.fill = fill                        # the kind's colours if not given
+        self.stroke = stroke
         lines = label.split('\n') if label else ['']
         self.h = height or ROW + (len(lines) - 1) * LINE
         self.w = width or (max(text_width(t) for t in lines) + 2 * PAD)
@@ -137,6 +141,8 @@ class Block:
 
     def svg(self):
         fill, stroke = STYLES[self.kind]
+        fill = self.fill or fill
+        stroke = self.stroke or stroke
         out = []
         if self.shape == 'circle':
             r = self.w / 2
@@ -144,7 +150,8 @@ class Block:
                        'stroke="%s" stroke-width="1.5"/>'
                        % (self.cx, self.cy, r, fill, stroke))
         else:
-            rx = self.h / 2 - 1 if self.shape == 'pill' else 8
+            rx = self.h / 2 - 1 if self.shape == 'pill' else (
+                8 if self.radius is None else self.radius)
             dash = ' stroke-dasharray="5,3"' if self.dashed else ''
             out.append('  <rect x="%g" y="%g" width="%g" height="%g" rx="%g" '
                        'fill="%s" stroke="%s" stroke-width="1.5"%s/>'

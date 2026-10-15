@@ -33,6 +33,9 @@
 *** xref:elements/thumbwheels.adoc[Thumbwheels]
 *** xref:elements/labels.adoc[Labels]
 *** xref:elements/text.adoc[Text]
+*** xref:elements/images.adoc[Images]
+*** xref:elements/status_bars.adoc[Status Bars]
+*** xref:elements/ports.adoc[Ports and Scrollers]
 ** xref:styles.adoc[Styles]
 *** xref:styles/marks.adoc[Marks and Scales]
 ** Support

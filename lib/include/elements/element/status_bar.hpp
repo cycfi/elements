@@ -10,6 +10,7 @@
 
 #include <elements/element/element.hpp>
 #include <elements/support/receiver.hpp>
+#include <memory>
 #include <type_traits>
 
 namespace cycfi::elements
@@ -66,9 +67,9 @@ namespace cycfi::elements
                                , Foreground&& fg
                                , Args&& ...args
                               )
-                               : Base(args...)
-                               , _background(std::forward<Foreground>(bg))
-                               , _foreground(std::forward<Background>(fg))
+                               : Base(std::forward<Args>(args)...)
+                               , _background(std::forward<Background>(bg))
+                               , _foreground(std::forward<Foreground>(fg))
                               {}
 
       element const&          background() const override { return _background; }
@@ -83,7 +84,11 @@ namespace cycfi::elements
    };
 
    template <concepts::Element Background, concepts::Element Foreground>
-   inline basic_status_bar<Background, Foreground, status_bar_base>
+   using progress_bar_t =
+      basic_status_bar<Background, Foreground, status_bar_base>;
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   inline progress_bar_t<Background, Foreground>
    progress_bar(Background&& bg, Foreground&& fg, double init_value = 0.0)
    {
       return {
@@ -100,6 +105,8 @@ namespace cycfi::elements
                                  double init_value = 0.0
                                , double start_pos = 0.0
                               );
+                              busy_bar_base(busy_bar_base const& rhs);
+                              ~busy_bar_base();
 
       void                    start_pos(double val);
       double                  start_pos() const { return _start_pos; }
@@ -122,10 +129,18 @@ namespace cycfi::elements
       double                  _animation_width;
       double                  _status;
       duration                _time;
+
+      // Cleared when the bar is destroyed: an animation step still posted
+      // to the view then does nothing.
+      std::shared_ptr<bool>   _alive = std::make_shared<bool>(true);
    };
 
    template <concepts::Element Background, concepts::Element Foreground>
-   inline basic_status_bar<Background, Foreground, busy_bar_base>
+   using busy_bar_t =
+      basic_status_bar<Background, Foreground, busy_bar_base>;
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   inline busy_bar_t<Background, Foreground>
    busy_bar(
       Background&& bg
     , Foreground&& fg

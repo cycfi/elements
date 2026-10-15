@@ -4,9 +4,256 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/image.hpp`, `element/image_grid.hpp`.
+Three elements draw pictures:
 
-// To be written.
+* `image` draws a picture at a scale of its size, fitted to the space it
+  is given, or filling it.
+* `sprite` draws one frame of a strip of frames, chosen by index.
+* `image_grid_menu` and `image_grid_cell` show a picture cut into a grid
+  of cells: the menu shows every cell and picks one; the cell shows the
+  one picked.
+
+image::elements/images.png[alt="One picture three ways: at a scale, in the middle of its box; fitted, with bands above and below; and filled, stretched to the box", width=560px, link={imagesdir}/elements/images.png]
+
+The picture is an Artist `image`, loaded from a file or drawn in code,
+held through an `image_ptr`, a `std::shared_ptr` to it. A picture that
+cannot be used, a file that cannot be loaded or a null `image_ptr`, is
+reported to the xref:support/diagnostics.adoc[error handler] as
+`image_load_failed`, and then thrown.
+
+=== Image
+
+`image(picture, scale)` draws the picture at `scale` times its size,
+1.0 by default. Its {limits} are that size, as both the minimum and the
+maximum.
+
+`image(picture, image::fit)` and `image(picture, image::fill)` have no
+size of their own: their limits are from zero to `full_extent`, and the
+picture is drawn to the bounds the element is given. `fit` keeps the
+picture's proportions, drawing it as large as fits and centring it;
+`fill` stretches it to the bounds on each axis.
+
+`set_image` replaces the picture; a picture that cannot be used is
+reported and thrown, and the old one is kept. A scaled image takes the
+new picture's size, so lay the view out again after a change of size.
+
+=== Sprite
+
+A sprite is an image of frames of one size, one under the other, of
+which it draws one. `sprite(path, height, scale)` takes the height of a
+frame as it is drawn, after `scale`; the sprite is the strip's width
+times `scale` wide and `height` high. `num_frames()` is the strip's
+height divided by the frame's, and `index(i)` selects the frame to draw,
+ignoring an index past the last. A sprite is the subject of the sprite
+button and dial stylers, which set its index from their value; see
+xref:styles.adoc[Styles].
+
+image::elements/sprite.png[alt="Five frames of a knob sprite, at indexes 0, 25, 50, 75 and 99, the knob turned further at each", width=440px, link={imagesdir}/elements/sprite.png]
+
+The same sprite, its index stepped through all its frames, beside a sprite
+of another strip: 101 frames of a knob drawn for a large, hi-fi amplifier
+look, shown larger. The look is the strip's alone.
+
+pass:a[<div class="sprite-stage"><div class="sprite-knob" style="background-image: url({imagesdir}/elements/knob_sprites.png)" role="img" aria-label="The white knob sprite turning through its frames"></div><div class="sprite-knob-hifi" style="background-image: url({imagesdir}/elements/knob_sprites_hifi.png)" role="img" aria-label="The hi-fi knob sprite turning through its frames"></div></div>]
+
+`concepts::SpriteSubject` is satisfied by a `sprite` and by any proxy
+whose subject, however deep, is a `sprite`.
+
+=== Image Grid
+
+An image grid cuts a picture into `columns` by `rows` cells of equal
+size, numbered from the top left, row by row, from 0. It has a current
+cell, its `value`.
+
+image::elements/image_grid.png[alt="An image grid menu of eight numbered cells, cell 6 current and outlined, cell 3 under the pointer and tinted; beside it an image grid cell showing cell 6", width=340px, link={imagesdir}/elements/image_grid.png]
+
+* `image_grid_menu(picture, columns, rows, scale, styler)` shows every
+  cell, at `scale` times the picture's size. A press and a release on
+  the same cell pick it: it becomes the value, `on_change(i)` is called
+  if it changed, and an enclosing popup closes. The cell under the
+  pointer is _hot_.
+* `image_grid_cell(picture, columns, rows, styler)` shows the current
+  cell, as large as fits in its bounds, its proportions kept. It has no
+  size of its own.
+
+Each draws its cells and then, over each, the styler: an element that
+reads the cell being drawn, `drawing()`, and its state, `state(i)`,
+from the grid it finds with `find_parent`, as a styler does (see
+xref:styles.adoc[Styles]). The state is `current`, `hot` or `normal`.
+`image_grid_menu` without a styler uses `image_grid_highlight`, which
+outlines the current cell and tints the hot one.
+
+`value(i)` sets the current cell from code, clamped to the cells,
+without calling `on_change`.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   using artist::image_ptr;
+
+   class image : public element
+   {
+   public:
+      static constexpr auto fit = fit_enum{};
+      static constexpr auto fill = fill_enum{};
+
+                              image(fs::path const& path, float scale = 1);
+                              image(image_ptr img, float scale = 1);
+                              image(fs::path const& path, fit_enum);
+                              image(image_ptr img, fit_enum);
+                              image(fs::path const& path, fill_enum);
+                              image(image_ptr img, fill_enum);
+
+      virtual point           size() const;
+      float                   scale() const;
+      void                    set_image(image_ptr img);
+      void                    set_image(fs::path const& path);
+      image_ptr               get_image() const;
+   };
+
+   class basic_sprite : public image
+   {
+   public:
+                              basic_sprite(fs::path const& path, float height, float scale = 1);
+
+      std::size_t             num_frames() const;
+      std::size_t             index() const;
+      void                    index(std::size_t index_);
+   };
+
+   using sprite = basic_sprite;
+
+   class basic_image_grid : public proxy_base
+   {
+   public:
+      using change_function = std::function<void(int)>;
+      enum cell_state { normal, hot, current };
+
+      int                     columns() const;
+      int                     rows() const;
+      int                     size() const;
+      image_ptr               get_image() const;
+
+      int                     value() const;
+      void                    value(int i);
+
+      int                     drawing() const;
+      virtual cell_state      state(int i) const;
+
+      change_function         on_change;
+   };
+
+   template <concepts::Element Styler>
+   using image_grid_menu_t =
+      proxy<remove_cvref_t<Styler>, basic_image_grid_menu>;
+
+   template <concepts::Element Styler>
+   using image_grid_cell_t =
+      proxy<remove_cvref_t<Styler>, basic_image_grid_cell>;
+
+   template <concepts::Element Styler, typename Image>
+   inline image_grid_menu_t<Styler>
+   image_grid_menu(
+      Image&& img, int columns, int rows, float scale, Styler&& styler);
+
+   template <typename Image>
+   inline auto image_grid_menu(
+      Image&& img, int columns, int rows, float scale = 1);
+
+   template <concepts::Element Styler, typename Image>
+   inline image_grid_cell_t<Styler>
+   image_grid_cell(Image&& img, int columns, int rows, Styler&& styler);
+}
+```
+
+`Image` is an `image_ptr` or an `fs::path`. `basic_image_grid_menu` and
+`basic_image_grid_cell` derive from `basic_image_grid`.
+
+== Expressions
+
+=== Notation
+
+`img`:: An `image`.
+`s`:: A `sprite`.
+`g`:: An image grid, a menu or a cell.
+`pic`:: An `fs::path` or an `image_ptr`.
+`k`:: A `float` scale.
+`h`:: A `float`, a frame's height as drawn.
+`i`:: An index.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `image(pic, k)`
+| The picture at `k` times its size, 1.0 by default.
+
+| `image(pic, image::fit)`
+| The picture, as large as fits in the bounds, its proportions kept,
+  centred.
+
+| `image(pic, image::fill)`
+| The picture stretched to the bounds.
+
+| `img.size()`
+| The size drawn, for a scaled image; `{-1, -1}` for a fitted or filled
+  one.
+
+| `img.set_image(pic)`
+| Replace the picture.
+
+| `sprite(path, h, k)`
+| A sprite of the strip at `path`, its frames `h` high as drawn, at scale
+  `k`.
+
+| `s.num_frames()`
+| The number of frames in the strip.
+
+| `s.index(i)`
+| Draw frame `i`; an index past the last is ignored.
+
+| `g.value()`, `g.value(i)`
+| The current cell; set it from code, clamped, without a callback.
+
+| `g.on_change = f`
+| `f(i)` is called when the user picks a different cell.
+
+| `g.state(i)`
+| Cell `i`'s state, for a styler: `current`, `hot` or `normal`.
+|===
+
+== Example
+
+A picture filling the view behind a knob sprite that shows a value from
+0.0 to 1.0:
+
+```c++
+auto knob = share(sprite{"knob_sprites.png", 64, 0.5});
+
+auto show = [knob, &view_](double v)
+{
+   knob->index(std::size_t(v * (knob->num_frames() - 1)));
+   view_.refresh(*knob);
+};
+
+view_.content(
+   align_center_middle(hold(knob)),
+   image{"space.jpg", image::fill}
+);
+show(0.7);
+```
+
+image::elements/images_example.png[alt="The knob, turned to 0.7, in the middle of the picture filling the view", width=240px, link={imagesdir}/elements/images_example.png]
 
 '''
 

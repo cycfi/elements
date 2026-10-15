@@ -4,9 +4,204 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/status_bar.hpp`.
+A status bar shows a value from 0.0 to 1.0 that the application sets: the
+progress of a task, or that a task is busy. It is drawn from two elements
+the application gives it, a background for the whole bar and a foreground
+for the part that shows the value, so its look is whatever those two
+draw. There are two kinds:
 
-// To be written.
+* `progress_bar` shows how far a task has come: its foreground covers
+  `value` of the bar.
+* `busy_bar` shows that a task is running, when how far it has come is not
+  known: a segment of the foreground sweeps across the bar for as long as
+  it runs.
+
+A bar wider than it is high runs from the left; one higher than it is
+wide runs from the bottom up. The bar takes its size from its
+background's {limits}, at least as large as its foreground's.
+
+=== Progress Bar
+
+A progress bar's foreground covers `value` of the bar: from the left in a
+horizontal bar, from the bottom in a vertical one. At 0.0 only the
+background shows; at 1.0 the foreground covers it.
+
+pass:a[<div class="status-anim" style="background-image: url({imagesdir}/elements/status_bars_progress.png)" role="img" aria-label="A horizontal and a vertical progress bar filling, the vertical one from the bottom"></div>]
+
+A progress bar is a `receiver<double>` (see
+xref:support/receivers.adoc[Receivers]): `value(v)` sets the value,
+clamped to 0.0 to 1.0, and a model bound to it drives it. Setting the
+value does not redraw the bar; refresh it after a change, as the example
+does.
+
+=== Busy Bar
+
+A busy bar's foreground is a segment, from `start_pos` to `value`. While
+it runs, the segment, `animation_width` long, 0.2 of the bar by default,
+enters at one end, sweeps across, and leaves at the other, a hundredth of
+the bar at a time, then starts again.
+
+pass:a[<div class="status-anim" style="background-image: url({imagesdir}/elements/status_bars_busy.png)" role="img" aria-label="A horizontal and a vertical busy bar, each segment sweeping across, the vertical one upward"></div>]
+
+`start(view, interval)` starts the sweep, a step every `interval`;
+`stop(view)` stops it and empties the bar. Each step refreshes the bar
+alone. A bar destroyed while it runs stops with it: a step already posted
+to the view does nothing.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class status_bar_base : public element, public receiver<double>
+   {
+   public:
+                              status_bar_base(double init_value);
+
+      double                  value() const override;
+      void                    value(double val) override;
+
+      virtual rect            background_bounds(context const& ctx) const;
+      virtual rect            foreground_bounds(context const& ctx) const;
+   };
+
+   class busy_bar_base : public status_bar_base
+   {
+   public:
+                              busy_bar_base(double init_value = 0.0, double start_pos = 0.0);
+
+      void                    start_pos(double val);
+      double                  start_pos() const;
+      void                    animation_width(double val);
+      double                  animation_width() const;
+
+      void                    start(view& view_, duration time);
+      void                    stop(view& view_);
+      bool                    is_stopped() const;
+   };
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   using progress_bar_t =
+      basic_status_bar<Background, Foreground, status_bar_base>;
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   inline progress_bar_t<Background, Foreground>
+   progress_bar(Background&& bg, Foreground&& fg, double init_value = 0.0);
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   using busy_bar_t =
+      basic_status_bar<Background, Foreground, busy_bar_base>;
+
+   template <concepts::Element Background, concepts::Element Foreground>
+   inline busy_bar_t<Background, Foreground>
+   busy_bar(
+      Background&& bg
+    , Foreground&& fg
+    , double init_value = 0.0
+    , double start_pos = 0.0
+   );
+}
+```
+
+`basic_status_bar<Background, Foreground, Base>` holds the two elements
+and derives from `Base`. `concepts::StatusBar` is satisfied by a class
+derived from `status_bar_base`.
+
+== Expressions
+
+=== Notation
+
+`bg`, `fg`:: Elements: the background and the foreground.
+`b`:: A progress bar or a busy bar.
+`y`:: A busy bar.
+`v`:: A `double`, 0.0 to 1.0.
+`view_`:: A `view`.
+`dt`:: A `duration`, the interval between steps.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `progress_bar(bg, fg, v)`
+| A progress bar of `bg` and `fg` at value `v`, 0.0 by default.
+
+| `busy_bar(bg, fg)`
+| A busy bar of `bg` and `fg`, stopped.
+
+| `b.value()`, `b.value(v)`
+| The value; set it, clamped. Refresh the bar after.
+
+| `y.start(view_, dt)`
+| Start the sweep, a step every `dt`.
+
+| `y.stop(view_)`
+| Stop the sweep and empty the bar.
+
+| `y.is_stopped()`
+| Whether the sweep is stopped.
+
+| `y.animation_width(v)`
+| The segment's length, as a part of the bar.
+
+| `y.start_pos(v)`
+| The segment's start, as the sweep sets it; its end is `value`.
+|===
+
+== Example
+
+The progress and busy bars of `examples/status_bars`: a button starts and
+stops them; the progress bars fill a step every 10 ms until full.
+
+```c++
+using bar_list = std::vector<std::shared_ptr<status_bar_base>>;
+
+bool run = false;
+void prog_animate(bar_list bars, view& view_)
+{
+   if (!run)
+      return;
+
+   for (auto& bar : bars)
+   {
+      bar->value(std::min(bar->value() + 0.005, 1.0));
+      view_.refresh(*bar);
+   }
+   if (bars.front()->value() >= 1.0)
+   {
+      run = false;
+      return;
+   }
+   view_.post(10ms, [bars, &view_]() { prog_animate(bars, view_); });
+}
+
+auto prog_bar = share(progress_bar(rbox(colors::black), rbox(pgold)));
+auto bsy_bar = share(busy_bar(rbox(colors::black), rbox(bgreen)));
+
+start_stop.on_click =
+   [=, &view_](bool state)
+   {
+      if (state)
+      {
+         bsy_bar->start(view_, 10ms);
+         run = true;
+         prog_bar->value(0.0);
+         prog_animate({prog_bar}, view_);
+      }
+      else
+      {
+         bsy_bar->stop(view_);
+         run = false;
+      }
+   };
+```
 
 '''
 

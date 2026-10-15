@@ -33,6 +33,18 @@ namespace cycfi::elements
             error_id::image_load_failed, "invalid image: " + path.string());
          throw std::runtime_error{"Error: Invalid image: " + path.string()};
       }
+
+      // A picture given in code: null or empty is reported, then thrown.
+      image_ptr checked(image_ptr img)
+      {
+         if (!img || !img->impl())
+         {
+            error_handler::get().on_resource_error(
+               error_id::image_load_failed, "invalid image");
+            throw std::runtime_error{"Error: Invalid image."};
+         }
+         return img;
+      }
    }
 
    image::image(fs::path const& path, float scale)
@@ -42,15 +54,9 @@ namespace cycfi::elements
    }
 
    image::image(image_ptr image_, float scale)
-    : _image(image_)
+    : _image(checked(std::move(image_)))
     , _scale(scale)
    {
-      if (!_image->impl())
-      {
-         error_handler::get().on_resource_error(
-            error_id::image_load_failed, "invalid image");
-         throw std::runtime_error{"Error: Invalid image."};
-      }
    }
 
    image::image(fs::path const& path, fit_enum)
@@ -129,26 +135,15 @@ namespace cycfi::elements
       }
    }
 
+   // Checked before it is kept: a picture that fails leaves the old one.
    void image::set_image(image_ptr img)
    {
-      _image = img;
-      if (!_image->impl())
-      {
-         error_handler::get().on_resource_error(
-            error_id::image_load_failed, "invalid image");
-         throw std::runtime_error{"Error: Invalid image."};
-      }
+      _image = checked(std::move(img));
    }
 
    void image::set_image(fs::path const& path)
    {
-      _image = std::make_shared<artist::image>(path);
-      if (!_image->impl())
-      {
-         error_handler::get().on_resource_error(
-            error_id::image_load_failed, "invalid image: " + path.string());
-         throw std::runtime_error{"Error: Invalid image."};
-      }
+      _image = load(path);
    }
 
    basic_sprite::basic_sprite(fs::path const& path, float height, float scale)

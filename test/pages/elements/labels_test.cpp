@@ -23,10 +23,25 @@ namespace
    {
       using base_type = note_styler;
 
-      float get_font_size() const override         { return 11; }
-      float get_default_font_size() const override { return 11; }
-      color get_font_color() const override        { return colors::gray[60]; }
-      int   get_text_align() const override        { return canvas::left | canvas::middle; }
+      float get_font_size() const override
+      {
+         return 11;
+      }
+
+      float get_default_font_size() const override
+      {
+         return 11;
+      }
+
+      color get_font_color() const override
+      {
+         return colors::gray[60];
+      }
+
+      int get_text_align() const override
+      {
+         return canvas::left | canvas::middle;
+      }
    };
 
    using note_label = label_styler_gen<basic_label_styler_base<note_styler>>;

@@ -147,8 +147,16 @@ namespace cycfi::elements
     *    scale it is drawn at, and the element drawn over each cell. See
     *    image_grid_highlight (elements/element/style/image_grid.hpp).
     */
+   template <concepts::Element Styler>
+   using image_grid_menu_t =
+      proxy<remove_cvref_t<Styler>, basic_image_grid_menu>;
+
+   template <concepts::Element Styler>
+   using image_grid_cell_t =
+      proxy<remove_cvref_t<Styler>, basic_image_grid_cell>;
+
    template <concepts::Element Styler, typename Image>
-   inline proxy<remove_cvref_t<Styler>, basic_image_grid_menu>
+   inline image_grid_menu_t<Styler>
    image_grid_menu(
       Image&& img, int columns, int rows, float scale, Styler&& styler)
    {
@@ -165,7 +173,7 @@ namespace cycfi::elements
     *    (elements/element/style/image_grid.hpp).
     */
    template <concepts::Element Styler, typename Image>
-   inline proxy<remove_cvref_t<Styler>, basic_image_grid_cell>
+   inline image_grid_cell_t<Styler>
    image_grid_cell(Image&& img, int columns, int rows, Styler&& styler)
    {
       return {

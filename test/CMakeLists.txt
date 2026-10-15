@@ -29,6 +29,9 @@ set(elements_test_sources
    lib/input_box_test.cpp
    lib/text_stress_test.cpp
    lib/utf8_test.cpp
+   lib/image_test.cpp
+   lib/status_bar_test.cpp
+   lib/scroller_test.cpp
 
    # The documentation's page tests, one per page, by section
    pages/support/context_test.cpp
@@ -52,6 +55,9 @@ set(elements_test_sources
    pages/elements/thumbwheels_test.cpp
    pages/elements/labels_test.cpp
    pages/elements/text_test.cpp
+   pages/elements/images_test.cpp
+   pages/elements/status_bars_test.cpp
+   pages/elements/ports_test.cpp
    pages/layout/collapsible_test.cpp
    pages/styles/styles_test.cpp
    pages/styles/marks_test.cpp
@@ -116,6 +122,7 @@ endif()
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/results)
 target_compile_definitions(elements_test PRIVATE
    RESULTS_PATH="${CMAKE_CURRENT_BINARY_DIR}/results/"
+   EXAMPLES_PATH="${CMAKE_CURRENT_LIST_DIR}/../examples/"
 )
 
 # The fonts the widgets ask for at startup, laid out flat in resources/ as

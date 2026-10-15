@@ -286,6 +286,7 @@ namespace cycfi::elements
       point             _offset;
       tracking_status   _tracking;
       int               _traits;
+      bool              _over_bar = false;   // the pointer is over a scroll bar
    };
 
    //--------------------------------------------------------------------------

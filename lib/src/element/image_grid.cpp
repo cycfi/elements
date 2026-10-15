@@ -15,6 +15,24 @@ namespace cycfi::elements
 {
    namespace
    {
+      // Artist throws on a file it cannot find or decode. Report it as a
+      // resource error first, so the application's handler sees the path.
+      image_ptr load(fs::path const& path)
+      {
+         try
+         {
+            auto img = std::make_shared<artist::image>(path);
+            if (img->impl())
+               return img;
+         }
+         catch (std::exception const&)
+         {
+         }
+         error_handler::get().on_resource_error(
+            error_id::image_load_failed, "invalid image: " + path.string());
+         throw std::runtime_error{"Error: Invalid image: " + path.string()};
+      }
+
       image_ptr checked(image_ptr img, std::string const& what)
       {
          if (!img || !img->impl())
@@ -38,9 +56,7 @@ namespace cycfi::elements
 
    basic_image_grid::basic_image_grid(
       fs::path const& path, int columns, int rows)
-    : basic_image_grid(
-         checked(std::make_shared<artist::image>(path), ": " + path.string())
-       , columns, rows)
+    : basic_image_grid(load(path), columns, rows)
    {}
 
    void basic_image_grid::value(int i)

@@ -23,6 +23,7 @@ Produces, in docs/modules/ROOT/images/ (or the directory given):
    styles/styler_pull.svg      -- a styler reading its control's state
    styles/styler_place.svg     -- a control placing its stylers
    styles/styler_push.svg      -- a control passing its value to its styler
+   elements/port_area.svg      -- a port over its subject, with scroll bars
 
 Usage: python3 docs/scripts/gen_block_figures.py [out_dir]
 """
@@ -30,7 +31,7 @@ Usage: python3 docs/scripts/gen_block_figures.py [out_dir]
 import os
 import sys
 
-from blockdiag import Figure, Block, GAP
+from blockdiag import Figure, Block, GAP, text_width
 from seqdiag import Sequence
 from umldiag import ClassDiagram, Class, HEAD as HEAD_UML
 
@@ -562,11 +563,78 @@ def styler_push():
     return seq.write(os.path.join(OUT, 'styles', 'styler_push.svg'))
 
 
+def port_area():
+    # The subject, the whole scrollable area; the port over its top left,
+    # the part shown at alignment 0, 0; the scroll bars along the port's
+    # right and bottom edges, their thumbs as long as the part shown and at
+    # the start. The alignments run across the subject.
+    f = Figure()
+    sw, sh = 520.0, 320.0               # the subject
+    pw, ph = 285.0, 172.0               # the port
+    bar = 12.0
+    x0 = (f.width - sw) / 2 + 20       # room at the left for valign
+    y0 = f.margin + 40
+
+    # Square corners: a port clips to a plain rectangle.
+    subject = f.place(Block('', 'plain', width=sw, height=sh, radius=0),
+                      x0, y0)
+    port = f.place(Block('', 'component', width=pw, height=ph, radius=0),
+                   x0, y0)
+
+    # The bars, inside the port, as scroller_base draws them: the track a
+    # filled rectangle, the thumb a rounded one across it, its corners a
+    # third of the bar's width, lighter and thinly outlined.
+    track = dict(radius=0, fill='#cfd8e3', stroke='#cfd8e3')
+    thumb = dict(radius=bar / 3, fill='#eef2f7', stroke='#8c96a3')
+    vtrack = f.place(Block('', 'plain', width=bar, height=ph - bar, **track),
+                     port.right - bar, port.top)
+    htrack = f.place(Block('', 'plain', width=pw - bar, height=bar, **track),
+                     port.left, port.bottom - bar)
+    f.place(Block('', 'plain', width=bar, height=(ph - bar) * ph / sh,
+                  **thumb), vtrack.left, vtrack.top)
+    f.place(Block('', 'plain', width=(pw - bar) * pw / sw, height=bar,
+                  **thumb), htrack.left, htrack.top)
+
+    f.label('port: the part shown', port.left + 14, port.top + 28)
+    f.label('subject: the whole scrollable area', subject.right - 14,
+            subject.bottom - 16, anchor='end')
+
+    # The alignments, across the subject: <-- 0.0 --- name --- 1.0 -->,
+    # the line broken where each word sits.
+    def axis(name, a, b, at, horizontal):
+        pad = 6
+        words = [('0.0', a + 36), (name, (a + b) / 2), ('1.0', b - 36)]
+        if horizontal:
+            half = [text_width(w) / 2 + pad for w, _ in words]
+        else:
+            half = [9 + pad for _ in words]
+        cuts = [a]
+        for (w, c), h in zip(words, half):
+            cuts += [c - h, c + h]
+        cuts.append(b)
+
+        def pt(v):
+            return (v, at) if horizontal else (at, v)
+        f.path([pt(cuts[1]), pt(cuts[0])], 'signal')
+        for i in (2, 4):
+            f.path([pt(cuts[i]), pt(cuts[i + 1])], 'signal', head=False)
+        f.path([pt(cuts[6]), pt(cuts[7])], 'signal')
+        for w, c in words:
+            x, y = pt(c)
+            f.label(w, x, y + 5, anchor='middle')
+
+    axis('halign', subject.left, subject.right, subject.top - 16, True)
+    axis('valign', subject.top, subject.bottom, subject.left - 24, False)
+
+    os.makedirs(os.path.join(OUT, 'elements'), exist_ok=True)
+    return f.write(os.path.join(OUT, 'elements', 'port_area.svg'))
+
+
 FIGURES = [context_chain, receiver_gui, receiver_button, receiver_code,
            receiver_button_code, proxy_draw, proxy_classes, indirect_classes,
            traversal_down, traversal_up, composite_classes, composite_click,
            selection, tracker_classes, tracker_drag, styler_classes,
-           styler_pull, styler_place, styler_push]
+           styler_pull, styler_place, styler_push, port_area]
 
 if __name__ == '__main__':
     for make in FIGURES:

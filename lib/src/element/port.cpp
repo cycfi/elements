@@ -379,9 +379,13 @@ namespace cycfi::elements
       view_limits e_limits = subject().limits(ctx);
       bool redraw = false;
 
-      if (allow_hscroll())
+      // Only content larger than the port scrolls.
+      double const overflow_x = e_limits.min.x - ctx.bounds.width();
+      double const overflow_y = e_limits.min.y - ctx.bounds.height();
+
+      if (allow_hscroll() && overflow_x > 0)
       {
-         double dx = (-dir.x / (e_limits.min.x - ctx.bounds.width()));
+         double dx = -dir.x / overflow_x;
          if ((dx > 0 && halign() < 1.0) || (dx < 0 && halign() > 0.0))
          {
             double alx = halign() + dx;
@@ -391,9 +395,9 @@ namespace cycfi::elements
          }
       }
 
-      if (allow_vscroll())
+      if (allow_vscroll() && overflow_y > 0)
       {
-         double dy = (-dir.y / (e_limits.min.y - ctx.bounds.height()));
+         double dy = -dir.y / overflow_y;
          if ((dy > 0 && valign() < 1.0) || (dy < 0 && valign() > 0.0))
          {
             double aly = valign() + dy;
@@ -522,7 +526,8 @@ namespace cycfi::elements
          if (_tracking == tracking_v)
          {
             p.y -= _offset.y + ctx.bounds.top;
-            valign_(p.y / (sb.vscroll_bounds.height() - b.height()));
+            if (auto room = sb.vscroll_bounds.height() - b.height(); room > 0)
+               valign_(p.y / room);
             return true;
          }
       }
@@ -544,15 +549,15 @@ namespace cycfi::elements
             else if (sb.hscroll_bounds.includes(p))
             {
                // page left or right
-               double page = b.width() / sb.vscroll_bounds.width();
+               double page = b.width() / sb.hscroll_bounds.width();
                if (p.x < b.left)
                {
-                  halign_(valign() - page);
+                  halign_(halign() - page);
                   return true;
                }
                else if (p.x > b.right)
                {
-                  halign_(valign() + page);
+                  halign_(halign() + page);
                   return true;
                }
             }
@@ -562,7 +567,8 @@ namespace cycfi::elements
          if (_tracking == tracking_h)
          {
             p.x -= _offset.x + ctx.bounds.left;
-            halign_(p.x / (sb.hscroll_bounds.width() - b.width()));
+            if (auto room = sb.hscroll_bounds.width() - b.width(); room > 0)
+               halign_(p.x / room);
             return true;
          }
       }
@@ -574,14 +580,20 @@ namespace cycfi::elements
    {
       if (has_scrollbars())
       {
+         // A bar lights up under the pointer: redraw when the pointer is
+         // over one, or has just left it, and not otherwise.
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
-         if (sb.hscroll_bounds.includes(p) || sb.vscroll_bounds.includes(p))
-         {
+         bool const over = status != cursor_tracking::leaving &&
+            ((sb.has_h && sb.hscroll_bounds.includes(p)) ||
+             (sb.has_v && sb.vscroll_bounds.includes(p)));
+         if (over || _over_bar)
             ctx.view.refresh(ctx);
+         _over_bar = over;
+         if (over)
+         {
             set_cursor(cursor_type::arrow);
             return true;
          }
-         ctx.view.refresh(ctx);
       }
       return port_element::cursor(ctx, p, status);
    }
@@ -600,10 +612,10 @@ namespace cycfi::elements
       {
          scrollbar_bounds sb = get_scrollbar_bounds(ctx);
 
-         if (sb.has_h)
-            bounds.right -= thm.scrollbar_width;
          if (sb.has_v)
-            bounds.bottom -= thm.scrollbar_width;
+            bounds.right -= thm.scrollbar_width;   // the vertical bar is at the right
+         if (sb.has_h)
+            bounds.bottom -= thm.scrollbar_width;  // the horizontal bar, at the bottom
       }
 
       if (!bounds.includes(r))
@@ -638,11 +650,13 @@ namespace cycfi::elements
       {
          clamp(align, 0.0, 1.0);
          valign(align);
+         on_scroll(point(halign(), align));
          ctx.view.refresh(ctx);
       };
 
       bool handled = proxy_base::key(ctx, k);
-      if (!handled && (k.action == key_action::press || k.action == key_action::repeat))
+      if (!handled && (k.action == key_action::press || k.action == key_action::repeat)
+         && get_scrollbar_bounds(ctx).has_v)
       {
          switch (k.key)
          {

@@ -426,8 +426,9 @@
 <div class="paragraph">
 <p>A menu is a <a href="popups.html" class="xref page">popup menu</a> that a button opens.
 The button is a <code>basic_button_menu</code>; the menu is any element, usually a
-column of menu items on a panel. The stock menu buttons and items are on
-the <a href="../styles/menus.html" class="xref page">Styles: Menus</a> page.</p>
+column of menu items on a panel. A menu item can open a menu of its own:
+a submenu in a menu, and in a row of items, a menu bar. The stock menu
+buttons and items are on the <a href="../styles/menus.html" class="xref page">Styles: Menus</a> page.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -489,8 +490,9 @@ the button with <code>menu</code>.</p>
 <h3 id="_menu_items"><a class="anchor" href="#_menu_items"></a>Menu Items</h3>
 <div class="paragraph">
 <p><code>basic_menu_item(e)</code> makes <code>e</code> an item of a menu. The item under the
-pointer is highlighted in the theme&#8217;s <code>indicator_color</code>. A click on an
-item calls its <code>on_click</code>, then closes the menu.</p>
+pointer is highlighted in the theme&#8217;s <code>indicator_color</code>. A press on an
+item calls its <code>on_click</code>, then closes the menu, along with any menus it
+was reached through.</p>
 </div>
 <div class="paragraph">
 <p><code>is_enabled</code> is a function the item calls each time it needs to know
@@ -502,6 +504,77 @@ drawn in a context with <code>enabled</code> false.</p>
 <p>While the menu is open, the Up and Down keys move the highlight to the
 item above or below, Enter picks the highlighted item, and Escape closes
 the menu.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_submenus_and_menu_bars"><a class="anchor" href="#_submenus_and_menu_bars"></a>Submenus and Menu Bars</h3>
+<div class="paragraph">
+<p><code>menu(m)</code> gives an item a menu of its own, <code>m</code>, as <code>menu(m)</code> does a
+menu button. A press on the item opens <code>m</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>From an item in a menu, to the item&#8217;s right, or to its left if it fits
+only there. The item shows an arrow at its right. Pointing at the item
+opens its menu too.</p>
+</li>
+<li>
+<p>From an item that is not in a menu, below the item, or above it if it
+fits only there.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A row of items with menus, outside any menu, is a menu bar. While one of
+its menus is open, pointing at another item in the row opens that item&#8217;s
+menu in its place. In a menu, pointing at another item closes the submenu
+that is open.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto recent = menu_item("Open Recent");
+recent.menu(
+   layer(vtile(menu_item("Nebula.elm"), menu_item("Pulsar.elm")), panel{})
+);
+
+auto file = menu_item("File");
+file.menu(
+   layer(vtile(menu_item("New"), menu_item("Open..."), recent), panel{})
+);
+
+auto bar = layer(                                           <i class="conum" data-value="1"></i><b>(1)</b>
+   htile(hmin(file), hmin(edit), hmin(help), element{}),    <i class="conum" data-value="2"></i><b>(2)</b>
+   menu_background{}
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The bar is a row of menu items on the menu background.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>hmin</code> keeps each title at its own width, and the empty element takes
+the rest of the row.</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/menus_bar.png"><img src="../_images/elements/menus_bar.png" alt="A menu bar of File, Edit and Help. File is highlighted and its menu is open below it, with Open Recent highlighted and its submenu of three files open to its right" width="420px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>Right opens the highlighted item&#8217;s submenu, with its first item
+highlighted, and Left closes the submenu the highlight is in. In a menu opened from a bar, Left, and Right on an
+item with no submenu, move to the bar&#8217;s previous or next menu, wrapping
+around. Escape closes one menu.</p>
+</div>
+<div class="paragraph">
+<p>The items of a closed submenu keep their shortcuts.</p>
 </div>
 </div>
 <div class="sect2">
@@ -605,6 +678,9 @@ shortcuts before then.</p>
 
       bool                    is_selected() const override;
       void                    select(bool state) override;
+
+                              template &lt;typename Menu&gt;
+      void                    menu(Menu&amp;&amp; menu_);
    };
 
    template &lt;concepts::Element Subject&gt;
@@ -700,6 +776,10 @@ shortcuts before then.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The shortcut of <code>i</code>.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>i.menu(m)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make <code>m</code> the menu <code>i</code> opens: a submenu, or a menu bar&#8217;s menu.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>shortcut_key{k, mods}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>k</code> with <code>mods</code>; <code>mod_action</code> adds the platform&#8217;s command modifier.</p></td>
 </tr>
@@ -721,20 +801,27 @@ Oscillator also enable and disable two others.</p>
 <pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Show which item was chosen, by click or by its shortcut
 void alert(view&amp; view_, std::string text)
 {
-   open_popup(message_box1(view_, std::move(text), icons::info, []{}), view_);
+   auto msg = message_box1(view_, std::move(text), icons::info, []{});
+   open_popup(msg, view_);
+}
+
+// A menu item that just says it was chosen. The shortcut is optional.
+template &lt;typename... Shortcut&gt;
+auto chosen_item(view&amp; view_, char const* text, Shortcut... shortcut)
+{
+   auto item = menu_item(text, shortcut...);
+   item.on_click = [&amp;view_, text]() { alert(view_, text); };
+   return item;
 }
 
 auto make_popup_menu(char const* title, menu_position pos, view&amp; view_)
 {
-   auto popup  = button_menu(title, pos);
-
    auto skf = shortcut_key{key_code::f, mod_action};
    auto skp = shortcut_key{key_code::p, mod_action};
-
-   auto quantum_feedback_loop = menu_item("Quantum Feedback Loop", skf);
-   auto psionic_wave_oscillator = menu_item("Psionic Wave Oscillator", skp);
-   auto photonic_mesh = menu_item("Photonic Mesh");
-   auto antimatter_soup = menu_item("Antimatter Soup");
+   auto quantum_feedback = menu_item("Quantum Feedback Loop", skf);
+   auto psionic_wave = menu_item("Psionic Wave Oscillator", skp);
+   auto photonic_mesh = chosen_item(view_, "Photonic Mesh");
+   auto antimatter_soup = chosen_item(view_, "Antimatter Soup");
 
    // Here's how you dynamically enable or disable menu items:
    // Just give it a function that returns the enabled state.
@@ -744,17 +831,19 @@ auto make_popup_menu(char const* title, menu_position pos, view&amp; view_)
 
    // Here's how you attach functions that will be called when a
    // menu item is selected:
-   quantum_feedback_loop.on_click =
+   quantum_feedback.on_click =
       [&amp;view_]()
       {
          enable = true;
-         alert(view_, "Quantum Feedback Loop: Photonic Mesh and Antimatter Soup enabled");
+         alert(view_, "Quantum Feedback Loop: "
+            "Photonic Mesh and Antimatter Soup enabled");
       };
-   psionic_wave_oscillator.on_click =
+   psionic_wave.on_click =
       [&amp;view_]()
       {
          enable = false;
-         alert(view_, "Psionic Wave Oscillator: Photonic Mesh and Antimatter Soup disabled");
+         alert(view_, "Psionic Wave Oscillator: "
+            "Photonic Mesh and Antimatter Soup disabled");
       };
 
    auto sk1 = shortcut_key{key_code::g, mod_action};
@@ -762,34 +851,25 @@ auto make_popup_menu(char const* title, menu_position pos, view&amp; view_)
    auto sk3 = shortcut_key{key_code::b, mod_action+mod_alt};
 
    // The rest just say they were chosen
-   auto alerting =
-      [&amp;view_](auto item, std::string text)
-      {
-         item.on_click = [&amp;view_, text]() { alert(view_, text); };
-         return item;
-      };
-   photonic_mesh.on_click = [&amp;view_]() { alert(view_, "Photonic Mesh"); };
-   antimatter_soup.on_click = [&amp;view_]() { alert(view_, "Antimatter Soup"); };
-
    auto menu =
       layer(
          vtile(
             photonic_mesh,
-            quantum_feedback_loop,
-            psionic_wave_oscillator,
-            alerting(menu_item("Gaia Abiogenesis", sk1), "Gaia Abiogenesis"),
+            quantum_feedback,
+            psionic_wave,
+            chosen_item(view_, "Gaia Abiogenesis", sk1),
             menu_item_spacer(),
-            alerting(menu_item("Chaotic Synchronicity", sk2), "Chaotic Synchronicity"),
-            alerting(menu_item("Omega Quadrant"), "Omega Quadrant"),
+            chosen_item(view_, "Chaotic Synchronicity", sk2),
+            chosen_item(view_, "Omega Quadrant"),
             antimatter_soup,
-            alerting(menu_item("Dark Beta Quarks", sk3), "Dark Beta Quarks"),
-            alerting(menu_item("Cosmic Infrared Shift"), "Cosmic Infrared Shift")
+            chosen_item(view_, "Dark Beta Quarks", sk3),
+            chosen_item(view_, "Cosmic Infrared Shift")
          ),
          panel{}
       );
 
+   auto popup = button_menu(title, pos);
    popup.menu(hsize(300, menu));
-
    return popup;
 }</code></pre>
 </div>

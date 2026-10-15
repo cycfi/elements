@@ -154,3 +154,18 @@ TEST_CASE("payload: plain text", "[clipboard]")
    CHECK(!contains_plain_text(b));
    CHECK(get_plain_text(b).empty());
 }
+
+TEST_CASE("clipboard: text beyond ASCII comes back whole", "[clipboard]")
+{
+   test_view tv{extent{100, 100}, 1};
+   if (!clipboard_works())
+      return;
+
+   // Two-, three- and four-byte UTF-8, and text long enough that a buffer
+   // sized for the UTF-8 bytes would be too small for the UTF-16 ones.
+   std::string text = "caf\xC3\xA9 \xE6\x97\xA5\xE6\x9C\xAC \xF0\x9F\x8E\xB8";
+   for (int i = 0; i != 6; ++i)
+      text += text;
+   clipboard_text(text);
+   CHECK(clipboard_text() == text);
+}

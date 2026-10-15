@@ -4,9 +4,349 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/slider.hpp`, `element/style/dial.hpp`, `element/style/sprite_dial.hpp`, `element/style/thumbwheel.hpp`.
+A slider is made of a thumb and a track, a dial of a knob, and a
+thumbwheel of the content it rolls (see xref:elements/sliders.adoc[Sliders],
+xref:elements/dials.adoc[Dials] and
+xref:elements/thumbwheels.adoc[Thumbwheels]). These are the stock parts:
+the thumbs and the track of a slider, the knob of a dial, a dial drawn
+from a sprite, and the bodies of a thumbwheel. The marks and labels that
+go around them are on xref:styles/marks.adoc[Marks and Scales].
 
-// To be written.
+image::styles/sliders_style_basic.png[alt="Four sliders, with a round thumb, a rect thumb, a triangular thumb pointing down, and a round thumb with an orange indicator; and two knobs, 60 and 40 across", width=500px, link={imagesdir}/styles/sliders_style_basic.png]
+
+== Thumbs
+
+A thumb is drawn as a body with an indicator: a disc, a rounded rectangle, or a triangle pointing
+where its point is. Each has a fixed size, given as template arguments.
+
+=== Include
+
+```c++
+#include <elements/element/style/slider.hpp>
+```
+
+=== Declaration
+
+```c++
+template <unsigned size, typename Indicator = theme_indicator>
+class basic_thumb_styler : public element
+{
+public:
+
+   basic_thumb_styler<size, fixed_indicator>
+   indicator_color(color c) const;
+   ...
+};
+
+template <unsigned size>
+basic_thumb_styler<size>
+basic_thumb(color c = colors::black);
+
+template <unsigned width, unsigned height, unsigned radius = 4>
+basic_rect_thumb_styler<width, height, radius>
+basic_rect_thumb(color c = colors::black);
+
+template <unsigned size, direction dir = direction::up>
+basic_tri_thumb_styler<size, dir>
+basic_tri_thumb(color c = colors::black);
+```
+
+`basic_rect_thumb_styler` and `basic_tri_thumb_styler` have the same
+`indicator_color`.
+
+=== Expressions
+
+==== Notation
+
+`S`, `W`, `H`, `R`  :: Unsigned integer sizes: the size of a round or
+                       triangular thumb, the width, height and corner
+                       radius of a rect thumb.
+`D`                 :: A `direction`: `direction::up`, `down`, `left` or
+                       `right`.
+`c`                 :: A `color`, the body of the thumb.
+`i`                 :: A `color`, the indicator.
+`th`                :: A thumb.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `basic_thumb<S>([c])`           | Make a round thumb, `S` across.
+| `basic_rect_thumb<W, H, [R]>([c])` | Make a rect thumb, `W` by `H`, with
+                                    corners of radius `R`, 4 unless given.
+| `basic_tri_thumb<S, [D]>([c])`  | Make a triangular thumb, `S` across,
+                                    pointing to `D`, up unless given.
+| `th.indicator_color(i)`         | Make a copy of `th` with the
+                                    indicator in `i`.
+|===
+
+
+The body is black unless `c` is given. The indicator is the theme's
+`indicator_color`, brightened, unless set with `indicator_color`: a thumb
+holds no color for it until then.
+
+== Tracks
+
+=== Include
+
+```c++
+#include <elements/element/style/slider.hpp>
+```
+
+=== Declaration
+
+```c++
+template <unsigned size, bool vertical = false, typename Color = default_track_color>
+class basic_track_styler : public element
+{
+public:
+
+   basic_track_styler<size, vertical, fixed_color>
+   track_color(color c) const;
+   ...
+};
+
+template <unsigned size, bool vertical = false>
+basic_track_styler<size, vertical>
+basic_track();
+```
+
+=== Expressions
+
+==== Notation
+
+`S`                 :: Unsigned integer, the thickness of the track.
+`V`                 :: `bool`: `true` for a vertical track.
+`c`                 :: A `color`, the track.
+`tr`                :: A track.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `basic_track<S, [V]>()`         | Make a black track `S` thick,
+                                    horizontal unless `V` is `true`.
+| `tr.track_color(c)`             | Make a copy of `tr` in `c`.
+|===
+
+A track holds no color until `track_color` gives it one.
+
+A track is at least 64 long, and as long as it is given.
+
+=== Example
+
+A horizontal slider with a round thumb, and a vertical one with a rect
+thumb:
+
+```c++
+#include <elements/element/style/slider.hpp>
+#include <elements/element/slider.hpp>      // For slider
+...
+using namespace cycfi::elements;
+...
+auto hslider = slider(basic_thumb<20>(), basic_track<5>(), 0.3);               <1>
+auto vslider = slider(basic_rect_thumb<24, 12>(), basic_track<5, true>(), 0.5); <2>
+```
+
+<1> A round thumb, 20 across, on a horizontal track 5 thick, at 0.3.
+<2> A rect thumb, 24 by 12, on a vertical track, at 0.5.
+
+== Knobs
+
+A knob is a dial's round body, with an indicator in the theme's
+`indicator_color` that turns with the dial's value.
+
+=== Include
+
+```c++
+#include <elements/element/style/dial.hpp>
+```
+
+=== Declaration
+
+```c++
+template <std::size_t size>
+basic_knob_styler<size>
+basic_knob(color c = colors::black);
+```
+
+=== Expressions
+
+==== Notation
+
+`S`                 :: Unsigned integer, the size of the knob.
+`c`                 :: A `color`, the knob.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `basic_knob<S>([c])`            | Make a knob, `S` across, black unless
+                                    `c` is given.
+|===
+
+=== Example
+
+```c++
+#include <elements/element/style/dial.hpp>
+#include <elements/element/dial.hpp>        // For dial
+...
+using namespace cycfi::elements;
+...
+auto volume = dial(basic_knob<60>(), 0.3);   <1>
+```
+
+<1> A knob 60 across, at 0.3.
+
+== Sprite Dials
+
+image::styles/sliders_style_sprite.png[alt="Three sprite knobs at 0.0, 0.5 and 1.0, the pointer turned from lower left to lower right", width=360px, link={imagesdir}/styles/sliders_style_sprite.png]
+
+A sprite dial draws a frame of a `sprite` for its value (see
+xref:elements/images.adoc[Images]): the first frame at 0, the last at 1,
+and the nearest frame between.
+
+=== Include
+
+```c++
+#include <elements/element/style/sprite_dial.hpp>
+```
+
+=== Declaration
+
+```c++
+template <concepts::SpriteSubject Styler>
+proxy<remove_cvref_t<Styler>, sprite_dial_styler<basic_dial>>
+dial(Styler&& styler, double init_value = 0.0);
+```
+
+=== Expressions
+
+==== Notation
+
+`sp`                :: A `sprite`, its frames the knob's positions.
+`v`                 :: Floating point value from 0.0 to 1.0.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `dial(sp [, v])`                | Make a dial drawn from `sp`, at `v`, 0
+                                    unless given.
+|===
+
+=== Example
+
+A knob from a sprite of 128 by 128 frames, at a third of its size:
+
+```c++
+#include <elements/element/style/sprite_dial.hpp>
+...
+using namespace cycfi::elements;
+...
+float const knob_scale = 1.0/3;
+sprite knob = sprite{
+   "knob_sprites_white_128x128.png",
+   128 * knob_scale, knob_scale                <1>
+};
+auto gain = dial(knob, 0.5);                   <2>
+```
+
+<1> A frame's height, and the scale it is drawn at.
+<2> A dial at 0.5, its middle frame.
+
+== Thumbwheel Bodies
+
+image::styles/sliders_style_thumbwheel.png[alt="A thumbwheel in a frame, showing Item no. 1", width=300px, link={imagesdir}/styles/sliders_style_thumbwheel.png]
+
+A thumbwheel body is a port over its content that the thumbwheel's value
+moves: the content rolls as the wheel turns. A body that is quantized
+steps from item to item: with a quantize of `1/(N - 1)`, for content of `N`
+items, it shows one item at a time and comes to rest on an item. A body
+that is not quantized rolls smoothly, and is as large as it is given.
+
+=== Include
+
+```c++
+#include <elements/element/style/thumbwheel.hpp>
+```
+
+=== Declaration
+
+```c++
+template <concepts::Element Subject>
+proxy<remove_cvref_t<Subject>, basic_vthumbwheel_element>
+basic_vthumbwheel(Subject&& subject, double quantize_ = 0.0);
+
+template <concepts::Element Subject>
+proxy<remove_cvref_t<Subject>, basic_hthumbwheel_element>
+basic_hthumbwheel(Subject&& subject, double quantize_ = 0.0);
+
+template <typename F>
+auto
+vthumbwheel(std::size_t num_items, F&& compose);
+```
+
+=== Expressions
+
+==== Notation
+
+`e`                 :: An element, the content: items in a column or a
+                       row.
+`q`                 :: Floating point value, the step between items, from
+                       0.0 to 1.0.
+`n`                 :: `std::size_t`, the number of items.
+`f`                 :: A function taking an item's index and returning
+                       an `element_ptr`, the item.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                      | Semantics
+
+| `basic_vthumbwheel(e [, q])`    | Make a body that rolls `e` up and
+                                    down, quantized to steps of `q`, not
+                                    quantized unless given.
+| `basic_hthumbwheel(e [, q])`    | Make a body that rolls `e` left and
+                                    right, quantized to steps of `q`.
+| `vthumbwheel(n, f)`             | Make a thumbwheel of `n` items made
+                                    by `f`, in a column, one showing at a
+                                    time.
+|===
+
+`basic_vthumbwheel` and `basic_hthumbwheel` return the subject of a
+`thumbwheel`. `vthumbwheel` returns a `thumbwheel`: its items are a list
+(see xref:elements/lists.adoc[Lists]), quantized to one item a step.
+
+=== Example
+
+A thumbwheel of twenty items, from `examples/thumbwheels`:
+
+```c++
+#include <elements/element/style/thumbwheel.hpp>
+#include <elements/element/label.hpp>       // For label
+#include <elements/element/style/misc.hpp>  // For frame
+...
+using namespace cycfi::elements;
+...
+auto compose = [](std::size_t index)
+{
+   return share(align_center_middle(label("Item no. " + std::to_string(index+1))));
+};
+
+auto wheel = layer(vthumbwheel(20, compose), frame{});   <1>
+```
+
+<1> Twenty items, one showing, in a frame.
 
 '''
 

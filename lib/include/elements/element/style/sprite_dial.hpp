@@ -8,6 +8,7 @@
 
 #include <elements/element/dial.hpp>
 #include <elements/element/image.hpp>
+#include <cmath>
 #include <type_traits>
 
 namespace cycfi::elements
@@ -66,7 +67,7 @@ namespace cycfi::elements
    {
       if (auto sp = find_subject<sprite*>(this))
       {
-         sp->index(this->value() * (sp->num_frames()-1));
+         sp->index(std::round(this->value() * (sp->num_frames()-1)));
          Base::draw(ctx);
       }
    }

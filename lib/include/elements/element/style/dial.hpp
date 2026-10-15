@@ -7,6 +7,9 @@
 #define ELEMENTS_STYLE_DIAL_AUGUST_30_2016
 
 #include <elements/element/dial.hpp>
+#include <elements/element/traversal.hpp>
+#include <elements/support/draw_utils.hpp>
+#include <elements/support/theme.hpp>
 
 namespace cycfi::elements
 {

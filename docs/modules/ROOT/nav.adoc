@@ -50,8 +50,12 @@
 *** xref:elements/visibility.adoc[Visibility and Event Interception]
 *** xref:styles.adoc[Styles]
 **** xref:styles/buttons.adoc[Buttons]
+**** xref:styles/toggles.adoc[Check Boxes, Radio Buttons and Switches]
+**** xref:styles/sliders.adoc[Sliders, Dials and Thumbwheels]
 **** xref:styles/marks.adoc[Marks and Scales]
 **** xref:styles/decorations.adoc[Borders and Decorations]
+**** xref:styles/groups.adoc[Groups and Panes]
+**** xref:styles/notebooks.adoc[Notebooks]
 **** xref:styles/dialogs.adoc[Child Windows and Dialogs]
 **** xref:styles/menus.adoc[Menus]
 ** Support

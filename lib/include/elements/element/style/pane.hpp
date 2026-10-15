@@ -9,6 +9,8 @@
 #include <elements/element/tile.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/margin.hpp>
+#include <elements/element/align.hpp>
+#include <elements/element/label.hpp>
 #include <elements/element/style/misc.hpp>
 
 namespace cycfi::elements
@@ -53,6 +55,7 @@ namespace cycfi::elements
          title_bar{},
          std::forward<Heading>(heading),
          std::forward<Content>(content),
+         get_theme().panel_color.alpha,
          center_heading
       );
    }
@@ -67,7 +70,7 @@ namespace cycfi::elements
    {
       return pane(
          heading(std::move(title)).relative_font_size(title_size),
-         content,
+         std::forward<Content>(content),
          center_heading
       );
    }
@@ -85,7 +88,7 @@ namespace cycfi::elements
       return pane_ex(
          std::forward<TitleBar>(title_bar),
          heading(std::move(title)).relative_font_size(title_size),
-         content,
+         std::forward<Content>(content),
          opacity,
          center_heading
       );
@@ -101,7 +104,7 @@ namespace cycfi::elements
    {
       return pane(
          heading(title).relative_font_size(title_size),
-         content,
+         std::forward<Content>(content),
          center_heading
       );
    }
@@ -119,7 +122,7 @@ namespace cycfi::elements
       return pane_ex(
          std::forward<TitleBar>(title_bar),
          heading(title).relative_font_size(title_size),
-         content,
+         std::forward<Content>(content),
          opacity,
          center_heading
       );

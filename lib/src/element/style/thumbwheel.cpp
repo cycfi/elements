@@ -5,12 +5,24 @@
 =============================================================================*/
 #include <elements/element/style/thumbwheel.hpp>
 #include <elements/view.hpp>
+#include <cmath>
 
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
    // basic_thumbwheel_element
    ////////////////////////////////////////////////////////////////////////////
+   basic_thumbwheel_element::basic_thumbwheel_element(basic_thumbwheel_element const& rhs)
+    : receiver<double>(rhs)
+    , _quantize(rhs._quantize)
+   {
+   }
+
+   basic_thumbwheel_element::~basic_thumbwheel_element()
+   {
+      *_alive = false;
+   }
+
    double basic_thumbwheel_element::value() const
    {
       return align();
@@ -34,12 +46,13 @@ namespace cycfi::elements
          auto br = ctx.canvas.user_to_device(ctx.bounds.bottom_right());
          auto bounds = rect{tl.x, tl.y, br.x, br.y};
          _aligner =
-            [this, &view = ctx.view, bounds](double val)
+            [this, alive = _alive, &view = ctx.view, bounds](double val)
             {
                view.post(
-                  [this, &view, val, bounds]()
+                  [this, alive, &view, val, bounds]()
                   {
-                     do_align(view, bounds, val);
+                     if (*alive)
+                        do_align(view, bounds, val);
                   }
                );
             };
@@ -48,29 +61,40 @@ namespace cycfi::elements
 
    void basic_thumbwheel_element::do_align(view& view_, rect const& bounds, double val)
    {
+      // A tenth of the way at each step, until there.
       auto curr = align();
       auto diff = val - curr;
       if (std::abs(diff) < (_quantize / 10))
       {
          align(val);
-         if (diff > 0)
+         if (diff != 0)
             view_.refresh(bounds);
       }
       else
       {
          align(curr + diff/10);
          view_.refresh(bounds);
+         view_.post(
+            [this, alive = _alive, &view_, bounds, val]()
+            {
+               if (*alive)
+                  do_align(view_, bounds, val);
+            }
+         );
       }
    }
 
    ////////////////////////////////////////////////////////////////////////////
    // basic_vthumbwheel_element
    ////////////////////////////////////////////////////////////////////////////
+   // Quantized, one item of the subject shows; continuous, the wheel is a
+   // port of the size it is given.
    view_limits basic_vthumbwheel_element::limits(basic_context const& ctx) const
    {
+      if (quantize() <= 0)
+         return vport_element::limits(ctx);
       auto lim = port_base::limits(ctx);
-      auto num_elements = (1.0 / quantize()) + 1;
-      lim.min.y /= num_elements;
+      lim.min.y /= std::round(1.0 / quantize()) + 1;
       lim.max.y = lim.min.y;
       return lim;
    }
@@ -97,8 +121,10 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits basic_hthumbwheel_element::limits(basic_context const& ctx) const
    {
+      if (quantize() <= 0)
+         return hport_element::limits(ctx);
       auto lim = port_base::limits(ctx);
-      lim.min.x *= quantize();
+      lim.min.x /= std::round(1.0 / quantize()) + 1;
       lim.max.x = lim.min.x;
       return lim;
    }

@@ -9,6 +9,7 @@
 #include <elements/support/theme.hpp>
 #include <elements/element/element.hpp>
 #include <elements/support/text_utils.hpp>
+#include <elements/view.hpp>
 #include <string>
 #include <utility>
 

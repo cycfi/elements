@@ -12,10 +12,31 @@
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
+   // The color of a thumb's indicator, the theme's when drawn, or a track's,
+   // black; or one given. A thumb or a track takes it as an empty base when
+   // it is the default, so the default costs nothing to hold.
+   ////////////////////////////////////////////////////////////////////////////
+   struct theme_indicator
+   {
+      color operator()() const { return get_theme().indicator_color.level(1.5); }
+   };
+
+   struct fixed_color
+   {
+      color c;
+      color operator()() const { return c; }
+   };
+
+   struct default_track_color
+   {
+      color operator()() const { return colors::black; }
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
    // Basic Thumb (You can use this as the slider's thumb)
    ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _size>
-   class basic_thumb_styler : public element
+   template <unsigned _size, typename Indicator = theme_indicator>
+   class basic_thumb_styler : Indicator, public element
    {
    public:
 
@@ -25,29 +46,38 @@ namespace cycfi::elements
                                : _color(c)
                               {}
 
+                              basic_thumb_styler(color c, Indicator indicator)
+                               : Indicator(indicator)
+                               , _color(c)
+                              {}
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       std::string             class_name() const override { return "thumb"; }
+
+      basic_thumb_styler<_size, fixed_color>
+                              indicator_color(color c) const
+                              { return {_color, fixed_color{c}}; }
 
    private:
 
       color                   _color;
    };
 
-   template <unsigned size>
-   inline view_limits basic_thumb_styler<size>
+   template <unsigned size, typename Indicator>
+   inline view_limits basic_thumb_styler<size, Indicator>
       ::limits(basic_context const& /* ctx */) const
    {
 	  auto pt = point{float(size), float(size)};
 	  return view_limits{pt, pt};
    }
 
-   template <unsigned size>
-   inline void basic_thumb_styler<size>::draw(context const& ctx)
+   template <unsigned size, typename Indicator>
+   inline void basic_thumb_styler<size, Indicator>::draw(context const& ctx)
    {
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
-      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  indicator_color = static_cast<Indicator const&>(*this)();
       auto  cp = circle{center_point(ctx.bounds), size/2.0f};
 
       draw_thumb(cnv, cp, _color, indicator_color);
@@ -59,14 +89,16 @@ namespace cycfi::elements
       return {c};
    }
 
+
    ////////////////////////////////////////////////////////////////////////////
    // Basic Rect Thumb: basic_thumb's shape changed and nothing else. A
    // round rect of its own width and height, with the same body, the same
    // highlight and the same indicator inside it, so a panel may mix the
    // two without them looking like they came from different places.
    ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _width, unsigned _height, unsigned _radius = 4>
-   class basic_rect_thumb_styler : public element
+   template <unsigned _width, unsigned _height, unsigned _radius = 4
+    , typename Indicator = theme_indicator>
+   class basic_rect_thumb_styler : Indicator, public element
    {
    public:
 
@@ -79,30 +111,39 @@ namespace cycfi::elements
                                : _color(c)
                               {}
 
+                              basic_rect_thumb_styler(color c, Indicator indicator)
+                               : Indicator(indicator)
+                               , _color(c)
+                              {}
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       std::string             class_name() const override { return "thumb"; }
+
+      basic_rect_thumb_styler<_width, _height, _radius, fixed_color>
+                              indicator_color(color c) const
+                              { return {_color, fixed_color{c}}; }
 
    private:
 
       color                   _color;
    };
 
-   template <unsigned width, unsigned height, unsigned radius>
-   inline view_limits basic_rect_thumb_styler<width, height, radius>
+   template <unsigned width, unsigned height, unsigned radius, typename Indicator>
+   inline view_limits basic_rect_thumb_styler<width, height, radius, Indicator>
       ::limits(basic_context const& /* ctx */) const
    {
       auto pt = point{float(width), float(height)};
       return view_limits{pt, pt};
    }
 
-   template <unsigned width, unsigned height, unsigned radius>
-   inline void basic_rect_thumb_styler<width, height, radius>
+   template <unsigned width, unsigned height, unsigned radius, typename Indicator>
+   inline void basic_rect_thumb_styler<width, height, radius, Indicator>
       ::draw(context const& ctx)
    {
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
-      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  indicator_color = static_cast<Indicator const&>(*this)();
       auto  c = center_point(ctx.bounds);
       auto  bounds = rect{
          c.x - (width/2.0f), c.y - (height/2.0f)
@@ -118,12 +159,13 @@ namespace cycfi::elements
       return {c};
    }
 
+
    ////////////////////////////////////////////////////////////////////////////
    // Basic Triangular Thumb: a pointer, for a selector pointing at its
    // marks. `dir` is where the point goes.
    ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _size, direction _dir>
-   class basic_tri_thumb_styler : public element
+   template <unsigned _size, direction _dir, typename Indicator = theme_indicator>
+   class basic_tri_thumb_styler : Indicator, public element
    {
    public:
 
@@ -135,30 +177,39 @@ namespace cycfi::elements
                                : _color(c)
                               {}
 
+                              basic_tri_thumb_styler(color c, Indicator indicator)
+                               : Indicator(indicator)
+                               , _color(c)
+                              {}
+
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       std::string             class_name() const override { return "thumb"; }
+
+      basic_tri_thumb_styler<_size, _dir, fixed_color>
+                              indicator_color(color c) const
+                              { return {_color, fixed_color{c}}; }
 
    private:
 
       color                   _color;
    };
 
-   template <unsigned size, direction dir>
-   inline view_limits basic_tri_thumb_styler<size, dir>
+   template <unsigned size, direction dir, typename Indicator>
+   inline view_limits basic_tri_thumb_styler<size, dir, Indicator>
       ::limits(basic_context const& /* ctx */) const
    {
       auto pt = point{float(size), float(size)};
       return view_limits{pt, pt};
    }
 
-   template <unsigned size, direction dir>
-   inline void basic_tri_thumb_styler<size, dir>
+   template <unsigned size, direction dir, typename Indicator>
+   inline void basic_tri_thumb_styler<size, dir, Indicator>
       ::draw(context const& ctx)
    {
       auto& thm = get_theme();
       auto& cnv = ctx.canvas;
-      auto  indicator_color = thm.indicator_color.level(1.5);
+      auto  indicator_color = static_cast<Indicator const&>(*this)();
       auto  c = center_point(ctx.bounds);
       auto  bounds = rect{
          c.x - (size/2.0f), c.y - (size/2.0f)
@@ -174,11 +225,12 @@ namespace cycfi::elements
       return {c};
    }
 
+
    ////////////////////////////////////////////////////////////////////////////
    // Basic Track (You can use this as the slider's track)
    ////////////////////////////////////////////////////////////////////////////
-   template <unsigned _size, bool _vertical = false>
-   class basic_track_styler : public element
+   template <unsigned _size, bool _vertical = false, typename Color = default_track_color>
+   class basic_track_styler : Color, public element
    {
    public:
 
@@ -186,21 +238,23 @@ namespace cycfi::elements
       static bool const vertical = _vertical;
       static unsigned const min_length = 64;
 
-                              basic_track_styler(color c = colors::black)
-                               : _color(c)
+                              basic_track_styler() = default;
+
+                              basic_track_styler(Color c)
+                               : Color(c)
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
       void                    draw(context const& ctx) override;
       std::string             class_name() const override { return "track"; }
 
-   private:
-
-      color                   _color;
+      basic_track_styler<_size, _vertical, fixed_color>
+                              track_color(color c) const
+                              { return {fixed_color{c}}; }
    };
 
-   template <unsigned size, bool vertical>
-   inline view_limits basic_track_styler<size, vertical>
+   template <unsigned size, bool vertical, typename Color>
+   inline view_limits basic_track_styler<size, vertical, Color>
       ::limits(basic_context const& /* ctx */) const
    {
 	  auto sz = float(size);
@@ -210,18 +264,18 @@ namespace cycfi::elements
 	  return view_limits{p1, p2};
    }
 
-   template <unsigned size, bool vertical>
-   inline void basic_track_styler<size, vertical>
+   template <unsigned size, bool vertical, typename Color>
+   inline void basic_track_styler<size, vertical, Color>
       ::draw(context const& ctx)
    {
-      draw_track(ctx.canvas, ctx.bounds);
+      draw_track(ctx.canvas, ctx.bounds, static_cast<Color const&>(*this)());
    }
 
    template <unsigned size, bool vertical = false>
    inline basic_track_styler<size, vertical>
-   basic_track(color c = colors::black)
+   basic_track()
    {
-      return {c};
+      return {};
    }
 
    ////////////////////////////////////////////////////////////////////////////

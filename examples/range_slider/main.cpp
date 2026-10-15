@@ -160,7 +160,7 @@ auto make_log_range_slider(view& _view)
 {
    double min_val = 1e-4;
    double max_val = 1e0;
-   auto track = basic_track<5, false>(colors::black);
+   auto track = basic_track<5, false>();
    auto _range_slider = share(range_slider(
       basic_thumb<20>(),
       basic_thumb<20>(),
@@ -312,7 +312,7 @@ auto make_log_range_slider(view& _view)
 
 auto make_default_range_slider(view& _view)
 {
-   auto track = basic_track<5, false>(colors::black);
+   auto track = basic_track<5, false>();
    auto _range_slider = share(range_slider(
       basic_rect_thumb<8, 27, 2>(colors::light_gray),
       basic_rect_thumb<8, 27, 2>(colors::light_gray),
@@ -329,7 +329,7 @@ auto make_default_range_slider(view& _view)
 
 auto make_overlapping_range_slider(view& _view)
 {
-   auto track = basic_track<5, false>(colors::black);
+   auto track = basic_track<5, false>();
    auto _range_slider = share(range_slider(
       basic_rect_thumb<8, 27, 2>(colors::lime_green.level(0.8)),
       basic_rect_thumb<8, 27, 2>(colors::orange_red.level(0.8)),

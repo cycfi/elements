@@ -4,9 +4,272 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/check_box.hpp`, `element/style/radio_button.hpp`, `element/style/slide_switch.hpp`, `element/style/toggle_selector.hpp`.
+Check boxes, radio buttons and slide switches are buttons that show an
+on or off state (see xref:elements/buttons.adoc[Buttons]). A check box is a
+toggle: each click turns it on or off. A radio button is a choice: in a
+group of them, turning one on turns the others off, and a click on one
+that is on leaves it on. A slide switch is a toggle drawn as a switch,
+its thumb sliding to the side it is turned to.
 
-// To be written.
+image::styles/toggles.png[alt="Check boxes: checked, not checked and disabled; radio buttons: selected, not selected and disabled; slide switches: on, off and disabled", width=520px, link={imagesdir}/styles/toggles.png]
+
+A check box and a radio button have a label at the right of the box or
+the circle. Each is as large as its label and no larger: to put it in a
+column of other elements, align it (see
+xref:layout/alignment.adoc[Alignment]). A slide switch has no label, and
+is the theme's `slide_button_size`. Disabled, each is dimmed and takes no
+clicks. Their colors are the theme's (see xref:support/theme.adoc[Theme]).
+
+== Check Boxes
+
+=== Include
+
+```c++
+#include <elements/element/style/check_box.hpp>
+```
+
+=== Declaration
+
+```c++
+struct check_box_styler : toggle_selector
+{
+   using toggle_selector::toggle_selector;
+   ...
+};
+
+auto
+check_box(std::string text);
+```
+
+=== Expressions
+
+==== Notation
+
+`text`            :: A `std::string`, the label.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                  | Semantics
+
+| `check_box(text)`           | Make a check box labelled `text`, off.
+|===
+
+`check_box` returns a toggle button drawn by a `check_box_styler` (see
+xref:elements/buttons.adoc[Buttons] for its expressions).
+
+== Radio Buttons
+
+=== Include
+
+```c++
+#include <elements/element/style/radio_button.hpp>
+```
+
+=== Declaration
+
+```c++
+struct radio_button_styler : toggle_selector
+{
+   using toggle_selector::toggle_selector;
+   ...
+};
+
+auto
+radio_button(std::string text);
+```
+
+=== Expressions
+
+==== Notation
+
+`text`            :: A `std::string`, the label.
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                  | Semantics
+
+| `radio_button(text)`        | Make a radio button labelled `text`,
+                                not selected.
+|===
+
+`radio_button` returns a `choice` drawn by a `radio_button_styler` (see
+xref:elements/buttons.adoc[Buttons]). Selecting a radio button deselects the
+others in the nearest composite that holds it, even when they are wrapped
+in a proxy, such as `align_left`. A radio button in a nested composite is
+in that composite's group instead.
+
+=== Example
+
+A group of radio buttons, from `examples/buttons`:
+
+```c++
+#include <elements/element/style/radio_button.hpp>
+#include <elements/element/tile.hpp>        // For vtile_spaced
+#include <elements/element/align.hpp>       // For align_left
+...
+using namespace cycfi::elements;
+...
+auto  radio_button1 = radio_button("Eons from now");
+auto  radio_button2 = radio_button("Ultra-sentient particles");
+auto  radio_button3 = radio_button("The stratosphere is electrified");
+auto  radio_button4 = radio_button("No, no, not me");
+
+radio_button1.select(true);                             <1>
+radio_button4.enable(false); // Disable this one        <2>
+
+auto  radio_buttons =
+      vtile_spaced(10.0, // space in between            <3>
+         align_left(radio_button1),
+         align_left(radio_button2),
+         align_left(radio_button3),
+         align_left(radio_button4)
+      );
+```
+
+<1> The first is selected to begin with.
+<2> A disabled radio button takes no clicks.
+<3> One tile: the four are a group.
+
+== Slide Switches
+
+=== Include
+
+```c++
+#include <elements/element/style/slide_switch.hpp>
+```
+
+=== Declaration
+
+```c++
+class slide_switch_styler : public element
+{
+   ...
+};
+
+auto
+slide_switch();
+```
+
+=== Expressions
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                  | Semantics
+
+| `slide_switch()`            | Make a slide switch, off.
+|===
+
+`slide_switch` returns a toggle button drawn by a `slide_switch_styler`
+(see xref:elements/buttons.adoc[Buttons]). The switch is the theme's
+`slide_button_on_color` while on and `slide_button_base_color` while off,
+with a thumb of `slide_button_thumb_color`. The thumb slides to its side
+over a few frames, each time the switch is turned.
+
+== Toggle Selector
+
+`toggle_selector` is the base of the check box and radio button stylers:
+an element with a label that takes the size of a box and its label, and
+redraws as the pointer moves over it. A styler of your own for a box and a
+label derives from it and draws.
+
+=== Include
+
+```c++
+#include <elements/element/style/toggle_selector.hpp>
+```
+
+=== Declaration
+
+```c++
+struct toggle_selector : element
+{
+                           toggle_selector(std::string text);
+
+   std::string             _text;
+   ...
+};
+```
+
+=== Expressions
+
+==== Notation
+
+`text`            :: A `std::string`, the label.
+`ts`              :: A `toggle_selector`.
+
+==== Constructors and Assignment
+
+[cols="1,1"]
+|===
+| Expression                  | Semantics
+
+| `toggle_selector(text)`     | Construct a `toggle_selector` labelled
+                                `text`.
+|===
+
+==== Access
+
+[cols="1,1,1"]
+|===
+| Expression                  | Semantics                       | Return Type
+
+| `ts._text`                  | Access the label.               | `std::string`
+|===
+
+=== Example
+
+A toggle drawn as a star, filled while on, with its label:
+
+```c++
+#include <elements/element/style/toggle_selector.hpp>
+#include <elements/element/button.hpp>          // For toggle_button
+#include <elements/element/traversal.hpp>       // For find_parent
+#include <elements/support/icon_ids.hpp>        // For icons
+...
+using namespace cycfi::elements;
+...
+struct star_styler : toggle_selector                                    <1>
+{
+   using toggle_selector::toggle_selector;
+
+   void draw(context const& ctx) override
+   {
+      auto btn = find_parent<basic_button*>(ctx);                       <2>
+      if (!btn)
+         return;
+
+      auto& cnv = ctx.canvas;
+      auto const& thm = get_theme();
+      rect box = ctx.bounds.move(15, 0);                                <3>
+      box.width(box.height());
+
+      auto on = btn->value();
+      draw_icon(cnv, box, on? icons::star : icons::star_empty, 16,
+         on? colors::gold : thm.label_font_color);
+
+      cnv.fill_style(thm.label_font_color);
+      cnv.font(thm.label_font);
+      cnv.text_align(cnv.left | cnv.middle);
+      cnv.fill_text(_text, point{box.right + 10, center_point(ctx.bounds).y});  <4>
+   }
+};
+...
+auto favorite = toggle_button(star_styler{"Favorite"});                <5>
+```
+
+<1> The size, a box and the label, comes from `toggle_selector`.
+<2> The button the styler draws, for its value.
+<3> The box, where a check box has its check.
+<4> The label, at the right of the box.
+<5> A toggle drawn by the styler.
+
+image::styles/toggles_selector.png[alt="Two star toggles: Favorite, off, with an empty star, and Starred, on, with a filled gold star", width=300px, link={imagesdir}/styles/toggles_selector.png]
 
 '''
 

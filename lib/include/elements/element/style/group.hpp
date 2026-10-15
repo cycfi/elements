@@ -8,6 +8,9 @@
 
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
+#include <elements/element/layer.hpp>
+#include <elements/element/label.hpp>
+#include <elements/element/style/misc.hpp>
 
 namespace cycfi::elements
 {

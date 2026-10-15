@@ -4,9 +4,265 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/group.hpp`, `element/style/pane.hpp`.
+Groups and panes gather related elements under a title. A group outlines
+its elements with a frame and puts the title at the top, inside the frame.
+A pane puts its elements on a panel, under a title bar.
 
-// To be written.
+The title of a group is drawn over the top of its content: the content
+leaves room for it, usually with a top margin. The title of a pane is in
+its own bar, above the content, so the content needs no room for it.
+
+== Groups
+
+image::styles/groups_groups.png[alt="Three groups, each with Content inside: Group, framed, with its title centered; Left, framed, with its title at the left; and Unframed, with no frame", width=600px, link={imagesdir}/styles/groups_groups.png]
+
+=== Include
+
+```c++
+#include <elements/element/style/group.hpp>
+```
+
+=== Declaration
+
+```c++
+template <typename Content>
+auto
+group(
+   std::string title
+ , Content&& content
+ , float label_size = 1.0
+ , bool center_heading = true
+);
+
+template <typename Content>
+auto
+group(Content&& content);
+
+template <typename Content>
+auto
+unframed_group(
+   std::string title
+ , Content&& content
+ , float label_size = 1.0
+ , bool center_heading = true
+);
+
+template <typename Heading, typename Content>
+auto
+make_group(
+   Heading&& heading
+ , Content&& content
+ , bool center_heading = true
+);
+
+template <typename Heading, typename Content>
+auto
+make_unframed_group(
+   Heading&& heading
+ , Content&& content
+ , bool center_heading = true
+);
+```
+
+=== Expressions
+
+==== Notation
+
+`title`           :: A `std::string`, the title.
+`e`               :: An element, the content.
+`h`               :: An element, the heading.
+`s`               :: Floating point value for the size of the title,
+                     relative to the theme's heading font size.
+`c`               :: `bool`: `true` to center the title, `false` to put it
+                     at the left.
+
+==== Factory
+
+Each returns an element.
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `group(title, e [, s, c])`       | Make a group of `e` in a frame, titled
+                                     `title`. The title is centered unless
+                                     `c` is `false`.
+| `group(e)`                       | Make a group of `e` in a frame, with no
+                                     title.
+| `unframed_group(title, e [, s, c])` | Make a group of `e`, titled `title`,
+                                     with no frame.
+| `make_group(h, e [, c])`         | Make a group of `e` in a frame, with the
+                                     heading `h` in place of a title.
+| `make_unframed_group(h, e [, c])` | Make a group of `e`, with the heading
+                                     `h`, and no frame.
+|===
+
+The title is a heading in the theme's heading font (see
+xref:support/theme.adoc[Theme]); the frame is a `frame` (see
+xref:styles/decorations.adoc[Borders and Decorations]).
+
+=== Example
+
+A group of check boxes, from `examples/buttons`. The content's top margin
+of 45 leaves room for the title:
+
+```c++
+#include <elements/element/style/group.hpp>
+#include <elements/element/style/check_box.hpp>   // For check_box
+#include <elements/element/tile.hpp>              // For vtile_spaced
+...
+using namespace cycfi::elements;
+...
+auto  check_box1 = check_box("Reionizing electrons");
+auto  check_box2 = check_box("The Nexus Meridian Unfolding");
+auto  check_box3 = check_box("Serenity Dreamscape Exploration");
+auto  check_box4 = check_box("Forever Disabled");
+auto  check_box5 = check_box("Forever Checked");
+
+check_box1.value(true);
+check_box2.value(true);
+check_box3.value(true);
+check_box4.enable(false); // Disable this one
+check_box5.value(true);
+check_box5.enable(false);
+
+auto  check_boxes =
+      group("Check boxes",                         <1>
+         margin({10, 45, 20, 20},                  <2>
+            vtile_spaced(10.0, // space in between
+               align_left(check_box1),
+               align_left(check_box2),
+               align_left(check_box3),
+               align_left(check_box4),
+               align_left(check_box5)
+            )
+         )
+      );
+```
+
+<1> A framed group, titled "Check boxes".
+<2> The content, its top margin leaving room for the title.
+
+image::styles/groups_example.png[alt="A framed group titled Check boxes, with five check boxes: three checked, one disabled, and one checked and disabled", width=360px, link={imagesdir}/styles/groups_example.png]
+
+== Panes
+
+image::styles/groups_panes.png[alt="Two panes, each with Content on a panel: Pane, with its title centered in the title bar, and Left, with its title at the left", width=600px, link={imagesdir}/styles/groups_panes.png]
+
+=== Include
+
+```c++
+#include <elements/element/style/pane.hpp>
+```
+
+=== Declaration
+
+```c++
+template <typename Content>
+auto
+pane(
+   std::string title
+ , Content&& content
+ , float title_size = 1.0
+ , bool center_heading = true
+);
+
+template <typename Heading, typename Content>
+auto
+pane(
+   Heading&& heading
+ , Content&& content
+ , bool center_heading = true
+);
+
+template <typename TitleBar, typename Content>
+auto
+pane_ex(
+   TitleBar&& title_bar
+ , std::string title
+ , Content&& content
+ , float title_size = 1.0
+ , float opacity = get_theme().panel_color.alpha
+ , bool center_heading = true
+);
+
+template <typename TitleBar, typename Heading, typename Content>
+auto
+pane_ex(
+   TitleBar&& title_bar
+ , Heading&& heading
+ , Content&& content
+ , float opacity = get_theme().panel_color.alpha
+ , bool center_heading = true
+);
+```
+
+=== Expressions
+
+==== Notation
+
+`title`           :: A `std::string`, the title.
+`e`               :: An element, the content.
+`h`               :: An element, the heading.
+`tb`              :: An element, the title bar.
+`s`               :: Floating point value for the size of the title,
+                     relative to the theme's heading font size.
+`o`               :: Floating point value from 0.0 to 1.0 for the opacity
+                     of the panel.
+`c`               :: `bool`: `true` to center the title, `false` to put it
+                     at the left.
+
+==== Factory
+
+Each returns an element.
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `pane(title, e [, s, c])`        | Make a pane of `e` on a panel, under a
+                                     title bar titled `title`. The title is
+                                     centered unless `c` is `false`.
+| `pane(h, e [, c])`               | Make a pane of `e`, with the heading `h`
+                                     in place of a title.
+| `pane_ex(tb, title, e [, s, o, c])` | Make a pane of `e` under the title bar
+                                     `tb`, on a panel of opacity `o`.
+| `pane_ex(tb, h, e [, o, c])`     | Make a pane of `e` under the title bar
+                                     `tb`, with the heading `h`, on a panel
+                                     of opacity `o`.
+|===
+
+A pane's panel is a `panel`, at the theme's panel opacity unless `o` says
+otherwise, and its title bar a `title_bar` (see
+xref:styles/decorations.adoc[Borders and Decorations]). The stock child
+windows are panes with a title bar that moves the window (see
+xref:styles/dialogs.adoc[Child Windows and Dialogs]).
+
+=== Example
+
+A pane of settings:
+
+```c++
+#include <elements/element/style/pane.hpp>
+#include <elements/element/style/check_box.hpp>   // For check_box
+#include <elements/element/tile.hpp>              // For vtile_spaced
+...
+using namespace cycfi::elements;
+...
+auto settings =
+   pane("Settings",                                <1>
+      margin({20, 20, 20, 20},                     <2>
+         vtile_spaced(10.0,
+            align_left(check_box("Snap to grid")),
+            align_left(check_box("Show rulers"))
+         )
+      )
+   );
+```
+
+<1> A pane titled "Settings", the title centered.
+<2> The content, under the title bar: its margin needs no room for the
+    title.
 
 '''
 

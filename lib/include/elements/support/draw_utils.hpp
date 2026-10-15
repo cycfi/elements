@@ -48,7 +48,7 @@ namespace cycfi::elements
             canvas& cnv, rect bounds, float radius, color c, color ic);
    void  draw_tri_thumb(
             canvas& cnv, rect bounds, direction dir, color c, color ic);
-   void  draw_track(canvas& cnv, rect bounds);
+   void  draw_track(canvas& cnv, rect bounds, color c = colors::black);
 
    void  draw_radial_indicator(canvas& cnv, circle cp, float val, color c);
    void  draw_radial_marks(canvas& cnv, circle cp, float size, color c);

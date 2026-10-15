@@ -9,6 +9,7 @@
 #include <elements/element/thumbwheel.hpp>
 #include <elements/element/list.hpp>
 #include <elements/element/port.hpp>
+#include <memory>
 
 namespace cycfi::elements
 {
@@ -33,6 +34,9 @@ namespace cycfi::elements
        : _quantize(quantize_)
       {}
 
+      basic_thumbwheel_element(basic_thumbwheel_element const& rhs);
+      ~basic_thumbwheel_element();
+
       virtual void         align(double val) = 0;
       virtual double       align() const = 0;
       double               value() const override;
@@ -50,6 +54,9 @@ namespace cycfi::elements
 
       float                _quantize;
       align_function       _aligner;
+
+      // False once the wheel is gone, for its posted steps.
+      std::shared_ptr<bool> _alive = std::make_shared<bool>(true);
    };
 
    struct basic_vthumbwheel_element : vport_element, basic_thumbwheel_element

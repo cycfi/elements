@@ -11,16 +11,40 @@
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
 #include <elements/element/layer.hpp>
-#include <elements/element/layer.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/view.hpp>
+#include <memory>
 #include <stdexcept>
 #include <string>
+#include <tuple>
+#include <type_traits>
 
 namespace cycfi::elements
 {
    namespace detail
    {
+      // The number of pages a deck holds, when it is fixed: a deck made
+      // with deck(...) holds a std::array.
+      template <typename Pages, typename = void>
+      struct fixed_pages : std::false_type {};
+
+      template <typename Pages>
+      struct fixed_pages<Pages, std::void_t<
+         decltype(std::tuple_size<typename Pages::container_type>::value)>>
+       : std::true_type
+      {
+         static constexpr std::size_t size =
+            std::tuple_size<typename Pages::container_type>::value;
+      };
+
+      template <typename Pages, std::size_t num_tabs>
+      constexpr void check_pages()
+      {
+         if constexpr (fixed_pages<Pages>::value)
+            static_assert(fixed_pages<Pages>::size == num_tabs,
+               "The number of pages and tabs do not match.");
+      }
+
       template <typename Pages, typename Tab, typename... RestTabs>
       void link_tabs(view& view_, Pages pages_, std::size_t index, Tab tab_, RestTabs... rest)
       {
@@ -71,6 +95,11 @@ namespace cycfi::elements
    template <typename Pages, typename Tab, typename... RestTabs>
    void link_tabs(view& view_, Pages pages, Tab tab, RestTabs... rest)
    {
+      detail::check_pages<
+         typename std::pointer_traits<Pages>::element_type
+       , sizeof...(RestTabs) + 1
+      >();
+
       auto const num_pages = pages->size();
       auto const num_tabs = sizeof...(RestTabs) + 1;
       if (num_pages != num_tabs)
@@ -86,6 +115,7 @@ namespace cycfi::elements
    template <typename Pages, typename... Tabs>
    auto vnotebook(view& view_, Pages&& pages, Tabs&&... tabs)
    {
+      detail::check_pages<remove_cvref_t<Pages>, sizeof...(Tabs)>();
       return detail::vnotebook(
          view_
        , share(std::forward<Pages>(pages))
@@ -96,6 +126,7 @@ namespace cycfi::elements
    template <typename Pages, typename... Tabs>
    auto hnotebook(view& view_, Pages&& pages, Tabs&&... tabs)
    {
+      detail::check_pages<remove_cvref_t<Pages>, sizeof...(Tabs)>();
       return detail::hnotebook(
          view_
        , share(std::forward<Pages>(pages))

@@ -4,9 +4,115 @@ include::common.adoc[]
 
 == Overview
 
-Running the test suite: the headless host and the recording backend, figures, and CI.
+The test suite is one program, `elements_test`, built from `test/` with
+Catch2. It holds two kinds of test:
 
-// To be written.
+* The library's own tests, in `test/lib/`: layout, drawing, input,
+  undo, the clipboard, and the defects found and fixed, each kept as a
+  test so that it stays fixed.
+* The page tests, in `test/pages/`: one for each reference page. A page
+  test checks what its page claims, compiles the page's code, and draws
+  the page's figures. The tutorials have one more, which checks that each
+  listing on a tutorial page matches the example it comes from.
+
+The suite runs on any host. On a windowing host each test view is made on
+a real window that is never shown; on the `headless` host there are no
+windows at all, and the suite runs anywhere, with no display.
+
+== Running the Tests
+
+Turn the tests on at configure time, and build the `elements_test`
+target:
+
+[,sh]
+----
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DELEMENTS_BUILD_TESTS=ON
+cmake --build build --target elements_test
+ctest --test-dir build/test --output-on-failure
+----
+
+`ctest` runs `elements_test` as one test, so its summary is one line. To
+see each test case, or run some of them, run the program from its
+directory:
+
+[,sh]
+----
+cd build/test
+./elements_test                       # all of them
+./elements_test "[grids_page]"        # one page's tests
+./elements_test "grids page: *"       # by name
+----
+
+Each page test is tagged with its page, as `[grids_page]` is.
+
+== Without a Display
+
+The `headless` host has no windows: a view lays out and draws into an
+image, and takes events from direct calls. With it, the suite needs no
+display, no window manager and no session, and runs the same over SSH,
+in a container, or on a CI runner.
+
+[,sh]
+----
+cmake -B build-headless -G Ninja -DCMAKE_BUILD_TYPE=Release \
+   -DELEMENTS_HOST_UI_LIBRARY=headless -DELEMENTS_BUILD_TESTS=ON
+cmake --build build-headless --target elements_test
+----
+
+Add `-DELEMENTS_RECORDING=ON` to draw with Artist's recording backend,
+which keeps a journal of what was drawn and rasterizes nothing. Tests
+that check pixels are left out in this configuration; the rest check the
+journal or the layout.
+
+On Linux, the windowing hosts need a display. Without a desktop, run the
+suite under a virtual one: `xvfb-run -a ./elements_test` for GTK and X11,
+or a headless Weston for Wayland:
+
+[,sh]
+----
+weston --backend=headless-backend.so --socket=test-wayland --idle-time=0 &
+WAYLAND_DISPLAY=test-wayland ./elements_test
+----
+
+A virtual X display has no window manager, so nothing applies the size
+hints a window sets; the X11 host clamps a window's size itself for that
+reason.
+
+== Figures
+
+The page tests draw the figures on the reference pages. Each figure is
+written to `build/test/results/`, and is copied to
+`docs/modules/ROOT/images/` by hand once it has been looked at: a test
+that draws a figure does not decide that the figure is right.
+
+== In CI
+
+Every push and pull request builds and tests on GitHub Actions:
+
+[cols="1,3", options="header"]
+|===
+| Job | What it covers
+
+| Quartz2D, Direct2D, Cairo, Skia
+| The library and every example, built with each backend on each
+  platform it supports.
+
+| Tests (headless)
+| The suite on the headless host with the recording backend, on macOS,
+  Windows and Linux.
+
+| Linux gtk, x11, wayland
+| The suite on each Linux host, with Cairo and with Skia, under Xvfb or a
+  headless Weston.
+
+| Embedded
+| `test/embed/`: two libraries, each with Elements inside, loaded into
+  one process, on each platform and backend. See
+  xref:advanced_builds.adoc#_plug_ins[Plug-ins].
+|===
+
+A second workflow runs the suite under the sanitizers each week; see
+xref:advanced_builds.adoc#_sanitizers[Sanitizers].
 
 '''
 

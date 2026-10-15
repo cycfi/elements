@@ -1,310 +1,179 @@
 = Setup and Installation
-:pp: {plus}{plus}
 
 include::common.adoc[]
 
-== Requirements
+== Overview
 
-Here are the basic tools that you need in order to use the library:
+Elements builds with CMake on macOS, Windows and Linux. Each platform has
+a default host and a default drawing backend, and on macOS and Windows
+the defaults need nothing installed beyond the compiler and CMake. This
+page builds the library and its examples with those defaults, and you
+are then ready for the xref:tutorials.adoc[Tutorials].
 
-. A C{pp}20 compiler
-. Git
-. https://cmake.org/[CMake] 3.16 or higher
+Everywhere, Elements needs:
 
-=== C{pp}20
+[cols="1,3"]
+|===
+| A {cpp}20 compiler
+| Clang, GCC, or MSVC. On Windows, Visual Studio 2022 version 17.14 or
+  later.
 
-Elements currently supports the MacOS, Windows and Linux.
+| https://git-scm.com/[Git]
+| With submodule support.
 
-In the Mac, we support the https://developer.apple.com/xcode/[XCode] IDE.
+| https://cmake.org/[CMake]
+| 3.16 or later; 3.21 or later to use the CMake presets.
+|===
 
-In Windows, we support Windows 10 with https://visualstudio.microsoft.com/vs/[Visual Studio 2022], although it will probably also work with older versions of the Visual Studio IDE.
+Elements draws with https://github.com/cycfi/artist[Artist], which comes
+with it as a submodule, along with the
+https://github.com/cycfi/infra/[Cycfi infra library].
 
-In Linux, we support both https://clang.llvm.org/[Clang] and https://gcc.gnu.org/[g{pp}]. Get the latest version with a C{pp}20 compiler.
+== Getting the Code
 
-The https://www.jetbrains.com/clion/[CLion] IDE is supported on all platforms, it simply requires the CMakeLists.txt file to open and build the project.
-
-=== Git
-
-Elements C{pp} GUI library, plus the Cycfi Infra library:
-
+[,sh]
 ----
-git clone --recurse-submodules  https://github.com/cycfi/elements.git
+git clone --recurse-submodules https://github.com/cycfi/elements.git
+cd elements
 ----
 
-=== CMake
+The commands on this page run from there. `--recurse-submodules` fetches
+Artist and infra. If you cloned without it:
 
-Make sure you have https://cmake.org/[CMake] 3.15 or higher. Follow the https://cmake.org/install/[installation procedure] for your platform, or follow the instructions below for specific environments.
+[,sh]
+----
+git submodule update --init --recursive
+----
 
-=== Required Libraries
+== Building on macOS
 
-What Elements needs depends on the graphics backend, and the backend
-depends on the platform.
+=== Prerequisites
 
-On MacOS, Elements draws with *Quartz2D*, which is part of the operating
-system. There are no libraries to install and no package manager to set
-up: a C{pp} compiler and CMake are enough.
+The Xcode Command Line Tools provide the compiler, the system SDK and
+Git. If you do not have them:
 
-Elsewhere, Elements draws with *Cairo*, and needs it and its companions:
-
-. https://www.freedesktop.org/wiki/Software/pkg-config/[pkg-config]
-. https://cairographics.org/[Cairo]
-. https://www.freedesktop.org/wiki/Software/fontconfig/[fontconfig]
-. https://www.freetype.org/[freetype2]
-. https://harfbuzz.github.io/[harfbuzz]
-
-On Linux, the GTK host additionally needs GTK3.
-
-Specific instructions are provided below for specific environments.
-
-Additionally, the following libraries are dragged as submodules:
-
-. The https://github.com/cycfi/infra/[Cycfi infra library]
-
-Infra provides some basic groundwork common to Cycfi libraries, including Elements.
-
-== MacOS
-
-=== Install required libraries
-
-There are none. Elements draws with Quartz2D on MacOS, which comes with
-the system, so nothing needs to be installed and pkg-config is not
-required.
-
-You do need the command line developer tools, for the compiler and the
-system headers. If `git` or `clang` is missing, this installs them:
-
+[,sh]
 ----
 xcode-select --install
 ----
 
-=== Install CMake
+CMake, and Ninja if you build from the command line, from
+https://brew.sh/[Homebrew]:
 
-Using https://brew.sh/[Homebrew]:
-
+[,sh]
 ----
-brew install cmake
-----
-
-=== Generating the Project using CMake
-
-There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for the MacOS:
-
-=== Using XCode
-
-. CD to the elements library.
-. Make a build directory inside the elements directory.
-. CD to the build directory.
-. invoke cmake.
-
-----
-cd elements
-mkdir build
-cd build
-cmake -GXcode ../
+brew install cmake ninja
 ----
 
-If you are having issues with code signing, disable it by setting the `CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED` variable to `NO`:
+That is all. The default backend is Quartz 2D, which is part of the
+system.
 
+=== Build
+
+[,sh]
 ----
-cmake -GXcode -DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO ../
-----
-
-If successful, CMake will generate an https://developer.apple.com/xcode/[XCode] project in the build directory. Open the project file `elements.xcodeproj` and build all. You should see a couple of example applications.
-
-If you are having problems with code signing, do this:
-
-Build Settings->Code Signing Identity for ALL_BUILD and elements, click, then choose "Other", then clear the text (empty). Do this for both ALL_BUILD and elements.
-
-== Windows
-
-=== Install required libraries
-
-The Windows port requires a package manager that supports the dependencies listed above. One popular package manager is https://vcpkg.io/en/[vcpkg]. We will use vcpkg in the setup instructions below.
-
-Clone and bootstrap the vcpkg dependency manager. I suggest placing it in `c:\` or `c:\Program Files`, but it does not really matter where.
-
-----
-git clone https://github.com/microsoft/vcpkg
-.\vcpkg\bootstrap-vcpkg.bat
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ----
 
-Install the dependencies:
+The examples are in `build/examples/`, each an application bundle: for
+example, `build/examples/hello_universe/HelloUniverse.app`.
 
+To work in Xcode instead, generate an Xcode project and open
+`build/elements.xcodeproj`:
+
+[,sh]
 ----
-vcpkg install pkgconf
-vcpkg install cairo
-vcpkg install libwebp
-----
-
-NOTE: Installing Cairo already brings in the other dependencies.
-
-=== Install CMake
-
-Follow the https://cmake.org/install/[installation procedure].
-
-=== Generating the Project using CMake
-
-If you have https://visualstudio.microsoft.com/vs/[Visual Studio 2022]:
-
-* Use the Visual Studio GUI for a graphical development environment.
-* Use NMake for make-style command-line builds.
-
-==== Visual Studio 2022 GUI
-
-. CD to the elements library.
-. Make a build directory inside the elements directory.
-. CD to the build directory.
-. invoke cmake.
-
-----
-cd elements
-mkdir build
-cd build
+cmake -B build -G Xcode
 ----
 
-You will need to tell cmake the location of the vcpkg toolchain file. That way, `find_package` will know where to find the installed libraries. If you installed vcpkg in `c:\` as suggested, you invoke cmake like this:
+If Xcode stops at code signing, configure with
+`-DCMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_ALLOWED=NO`.
 
+== Building on Windows
+
+=== Prerequisites
+
+Visual Studio 2022, version 17.14 or later, with the _Desktop development
+with {cpp}_ workload. It includes CMake. Ninja, if you build from the
+command line, ships with Visual Studio too, or `choco install ninja`.
+
+The default backend is Direct2D, which uses system libraries only. Its one
+other need, a WebP decoder, is fetched and built by CMake. There is nothing
+to install.
+
+=== Build
+
+From an _x64 Native Tools Command Prompt for VS 2022_, in the Start menu
+under Visual Studio 2022, which has the 64-bit compiler on its path:
+
+[,sh]
 ----
-cmake -G"Visual Studio 17 2022" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake ../
-----
-
-If successful, cmake will generate a Visual Studio solution in the build directory. Open the project file `elements.sln` and build all. You should see a couple of example applications.
-
-==== NMake
-
-. Open a _Command Prompt for VS 2022_
-({x64/x86-64} {Native/Cross} Tools Command Prompt for VS 2019) in your start menu.
-. CD to the elements library.
-. Make a build directory inside the elements directory.
-. CD to the build directory.
-. invoke cmake.
-
-----
-cd elements
-mkdir build
-cd build
-----
-
-Again, you will need to tell cmake the location of the vcpkg toolchain file. If you installed vcpkg in `c:\` as suggested, you invoke cmake like this:
-
-----
-cmake -G"NMake Makefiles" -D CMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake ../
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ----
 
-If successful, cmake will generate NMake Make files in the build directory. Invoke `nmake` to build the binary.
+The examples are in `build\examples\`: for example,
+`build\examples\hello_universe\HelloUniverse.exe`.
 
-== Windows (MinGW + Gtk)
+To work in Visual Studio instead, generate a solution and open
+`build\elements.sln`:
 
-=== Install MSYS2 toolchain and required libraries
-
-____
-MSYS2 is a software distro and building platform for Windows
-____
-
-Download https://www.msys2.org/[MSYS2] from its official website and install it. Its installation guide is on the home page.
-
-Open `MSYS2 MinGW 64-bit` or `MSYS2 MinGW 32-bit` from your start menu. Install tools and libraries:
-
+[,sh]
 ----
-pacman -S ${MINGW_PACKAGE_PREFIX}-toolchain
-pacman -S ${MINGW_PACKAGE_PREFIX}-cairo
-pacman -S ${MINGW_PACKAGE_PREFIX}-gtk3
-pacman -S ${MINGW_PACKAGE_PREFIX}-libwebp
-pacman -S make
+cmake -B build -G "Visual Studio 17 2022"
 ----
 
-=== Install CMake
+== Building on Linux
 
+=== Prerequisites
+
+GCC or Clang with {cpp}20, CMake, and the development packages for the
+host and the drawing backend. On Linux, the default host is GTK 3 and the
+default backend is Cairo, from the system. On Ubuntu or Debian:
+
+[,sh]
 ----
-pacman -S ${MINGW_PACKAGE_PREFIX}-cmake
-----
-
-=== Generating the Project using CMake
-
-There are multiple ways to generate a project file using CMake depending on your platform and desired IDE, but here is an example for MSYS2:
-
-=== Using UNIX makefiles
-
-. CD to the elements library.
-. Make a build directory inside the elements directory.
-. CD to the build directory.
-. invoke cmake. `-DELEMENTS_HOST_UI_LIBRARY=gtk` tells cmake to build with Gtk.
-
-----
-cd elements
-mkdir build
-cd build
-cmake ../ -G "Unix Makefiles" -DELEMENTS_HOST_UI_LIBRARY=gtk
+sudo apt-get update
+sudo apt-get install cmake ninja-build pkg-config \
+   libgtk-3-dev libcairo2-dev libfontconfig1-dev libfreetype6-dev \
+   libharfbuzz-dev libwebp-dev
 ----
 
-If successful, cmake will generate Unix Make files in the build directory.
+Elements also has native X11 and Wayland hosts, with packages of their
+own; xref:advanced_builds.adoc#_host_ui_libraries[Advanced Builds] lists
+them.
 
-== Linux
+=== Build
 
-=== Install required libraries
-
-In addition to the requirements listed in the <<requirements,requirements>> section, the https://www.gtk.org/[GTK3 library] is also required by the Linux port of Elements.
-
-On Debian and derived distributions using https://linux.die.net/man/8/apt-get[apt-get] (requires `sudo`):
-
+[,sh]
 ----
-sudo apt-get install libcairo2-dev
-sudo apt-get install libgtk-3-dev
-sudo apt-get install libwebp-dev
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build
 ----
 
-=== Install CMake
+The examples are in `build/examples/`: for example,
+`build/examples/hello_universe/HelloUniverse`.
 
-----
-sudo apt-get -y install cmake
-----
+== The Examples
 
-=== Generating the Project using CMake
+`examples/` has more than thirty programs, each a single `main.cpp`. The
+build makes all of them. Start with `hello_universe` and the
+xref:tutorials.adoc[Tutorials], which take five of the examples in order;
+the Tutorials page also lists what each of the others shows.
 
-There are multiple ways to generate a project file using CMake depending on
-your platform and desired IDE, but here is an example for Linux:
+To start a program of your own, copy `empty`: a window with a background
+and nothing else. xref:outside_project.adoc[Building Outside the Project]
+shows how to build the copy in a folder of its own.
 
-=== Using UNIX makefiles
+== Going Further
 
-. CD to the elements library.
-. Make a build directory inside the elements directory.
-. CD to the build directory.
-. invoke cmake.
-
-----
-cd elements
-mkdir build
-cd build
-cmake -G "Unix Makefiles" ../
-----
-
-If successful, cmake will generate Unix Make files in the build directory.
-
-== Building and Running the examples
-
-If successful, cmake will generate a project file or makefiles in the build directory. Build the library and example programs using the generated makefiles or open the project file using your IDE and build all.
-
-You should see a couple of example applications in there that you can run. These examples are provided as starting points to get you up to speed in learning how to use the library. For simplicity, each example is contained in a single `main.cpp` source file.
-
-Feel free to inspect and mess with the examples. Each example demonstrates different aspects of the Elements library, from layout to control. You'd probably want to start with the "`hello_universe`" example, which is the Element's hello-world counterpart. You can copy the "`empty`" example and use it as a boilerplate for your own project. See next section on how to copy an example and build outside the Elements project directory.
-
-Tips:
-
-. Resize the window and see the elements fluidly resize
-. Use two-finger swipe to move the sliders and knobs
-
-== Building Outside the Project
-
-The Elements project is set up so that you can easily copy and paste any of the examples outside the project, set -DELEMENTS_ROOT="path/to/elements", and the example should immediately build without any hassle.
-
-Here's an example for XCode assuming the elements lib is in the same directory alongside the "hello_universe" example directory you copied to:
-
-. Copy the hello_universe example project directory.
-. Make a build directory inside the hello_universe directory.
-. CD to the build directory.
-. `cmake -GXcode -DELEMENTS_ROOT="../elements" ../`
+Each platform has more than one backend and, on Linux, more than one
+host. xref:advanced_builds.adoc[Advanced Builds] covers choosing them,
+along with the build options, sanitizers and link-time optimization.
+xref:testing.adoc[Testing Elements] covers the test suite.
 
 '''
 
-_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
 _Distributed under the {mit_license}_

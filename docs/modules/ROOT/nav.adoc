@@ -1,5 +1,8 @@
 * xref:gallery.adoc[Gallery]
 * xref:setup.adoc[Setup and Installation]
+** xref:outside_project.adoc[Building Outside the Project]
+** xref:testing.adoc[Testing Elements]
+** xref:advanced_builds.adoc[Advanced Builds]
 * xref:tutorials.adoc[Tutorials]
 ** xref:tutorials/hello_universe.adoc[Hello Universe]
 ** xref:tutorials/layout.adoc[Laying Out a Window]

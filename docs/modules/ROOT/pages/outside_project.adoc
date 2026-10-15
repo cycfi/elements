@@ -4,9 +4,113 @@ include::common.adoc[]
 
 == Overview
 
-Using Elements from a project of your own: fetching or adding it, and the CMake an application needs.
+Every example is also a project of its own, so a program can be written
+and built outside the Elements checkout. Copy an example's folder
+anywhere, and configure it with `ELEMENTS_ROOT` set to your Elements
+checkout. `empty` is the one to start from: a window with a background
+and nothing else. With `ELEMENTS` set to your checkout:
 
-// To be written.
+[,sh]
+----
+cp -R "$ELEMENTS/examples/empty" ~/my_app
+cd ~/my_app
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DELEMENTS_ROOT="$ELEMENTS"
+cmake --build build
+----
+
+The prerequisites are those in xref:setup.adoc[Setup and Installation].
+Configured this way, the build adds Elements from `ELEMENTS_ROOT`, builds
+it with your program, and leaves its examples out. The program is in
+`build/`: on macOS an application bundle, `build/EmptyStarter.app`.
+
+== The Example's Build
+
+Here is `empty/CMakeLists.txt`:
+
+[,cmake]
+----
+cmake_minimum_required(VERSION 3.16.0)
+project(EmptyStarter LANGUAGES C CXX)
+
+if (NOT ELEMENTS_ROOT)
+   message(FATAL_ERROR "ELEMENTS_ROOT is not set")
+endif()
+
+# Make sure ELEMENTS_ROOT is an absolute path to add to the CMake module path
+get_filename_component(ELEMENTS_ROOT "${ELEMENTS_ROOT}" ABSOLUTE)
+set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${ELEMENTS_ROOT}/cmake")
+
+# If we are building outside the project, you need to set ELEMENTS_ROOT:
+if (NOT ELEMENTS_BUILD_EXAMPLES)
+   include(ElementsConfigCommon)
+   set(ELEMENTS_BUILD_EXAMPLES OFF)
+   add_subdirectory(${ELEMENTS_ROOT} elements)
+endif()
+
+set(ELEMENTS_APP_PROJECT "EmptyStarter")
+set(ELEMENTS_APP_TITLE "Empty Starter")
+set(ELEMENTS_APP_COPYRIGHT "Copyright (c) 2016-2023 Joel de Guzman")
+set(ELEMENTS_APP_ID "com.cycfi.empty-starter")
+set(ELEMENTS_APP_VERSION "1.0")
+
+set(ELEMENTS_APP_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+
+# For your custom application icon on macOS or Windows see cmake/AppIcon.cmake module
+include(AppIcon)
+include(ElementsConfigApp)
+----
+
+The first half finds Elements and adds it to the build. The second half
+describes your program, and `ElementsConfigApp` turns the description
+into an executable: an application bundle on macOS, with the fonts and
+resources it needs copied beside it. To make the copy your own, change
+the `ELEMENTS_APP_` settings:
+
+[cols="1,2", options="header"]
+|===
+| Setting | What it is
+
+| `ELEMENTS_APP_PROJECT`  | The target, and the executable's name.
+| `ELEMENTS_APP_TITLE`    | On macOS, the bundle's name, shown in the menu bar.
+                            The project name if not set.
+| `ELEMENTS_APP_COPYRIGHT`| On macOS, the bundle's copyright line.
+| `ELEMENTS_APP_ID`       | On macOS, the bundle identifier: a unique
+                            reverse-domain name, such as `com.example.my-app`.
+| `ELEMENTS_APP_VERSION`  | On macOS, the bundle's version.
+| `ELEMENTS_APP_SOURCES`  | Your source files.
+| `ELEMENTS_APP_RESOURCES`| Files the program loads at run time, such as
+                            images. They are copied to its `resources`
+                            directory, where Elements looks for them.
+|===
+
+`ELEMENTS_FONTS` lists the fonts copied with the program. By default it
+has the two the theme uses. To draw with another, append it before
+`include(ElementsConfigApp)`:
+
+[,cmake]
+----
+list(APPEND ELEMENTS_FONTS ${ELEMENTS_ROOT}/resources/fonts/OpenSans-Bold.ttf)
+----
+
+The options in xref:advanced_builds.adoc[Advanced Builds] work the same
+way here: `-DELEMENTS_SKIA=ON` on your program's configure line draws it
+with Skia.
+
+== In an IDE
+
+The same command, with an IDE's generator, makes a project for it, with
+your program as the top-level project. In the copied folder:
+
+[cols="1,2", options="header"]
+|===
+| IDE | Command
+
+| Xcode (macOS)            | `cmake -B build -G Xcode -DELEMENTS_ROOT="$ELEMENTS"`
+| Visual Studio (Windows)  | `cmake -B build -G "Visual Studio 17 2022" -DELEMENTS_ROOT="%ELEMENTS%"`
+|===
+
+CLion opens the folder directly; set `ELEMENTS_ROOT` in the CMake
+profile's options.
 
 '''
 

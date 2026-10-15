@@ -1,0 +1,23 @@
+= Controls
+
+include::../common.adoc[]
+
+== Overview
+
+A control is an element the user operates to set a value or trigger an
+action. Each one splits behavior from looks: the control holds the state
+and handles the mouse and keyboard, and a styler, any element, draws it
+(see xref:styles.adoc[Styles]).
+
+* xref:elements/buttons.adoc[Buttons]: momentary, toggle and latching
+  buttons, and the radio buttons of a group.
+* xref:elements/sliders.adoc[Sliders]: a thumb moved along a track,
+  horizontal or vertical, and the range slider with two thumbs.
+* xref:elements/dials.adoc[Dials]: a value set by turning, as a knob.
+* xref:elements/thumbwheels.adoc[Thumbwheels]: a point, x and y, moved
+  with the mouse.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

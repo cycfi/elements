@@ -25,6 +25,9 @@
 
 :core_elements: xref:elements.adoc[Elements]
 :element: xref:elements/element.adoc[element]
+:artist: https://cycfi.github.io/artist/artist/v1.0-dev/index.html[Artist]
+:artist_canvas: https://cycfi.github.io/artist/artist/v1.0-dev/canvas.html[Artist's Canvas]
+:canvas: xref:support/canvas.adoc[canvas]
 :context: xref:support/context.adoc[context]
 :basic_context: xref:support/context.adoc[basic_context]
 :theme: xref:support/theme.adoc[theme]

@@ -207,9 +207,10 @@ the label with one more layer, which holds the setting and its setter:
 `f`:: A `font_descr`.
 `z`:: A `float`, a font size in points or a factor.
 `c`:: A `color`.
-`a`:: An `int`: a horizontal alignment, `canvas::left`, `canvas::center`
-or `canvas::right`, optionally or'ed with a vertical one,
-`canvas::top`, `canvas::middle`, `canvas::bottom` or `canvas::baseline`.
+`a`:: An `int`, one of the {canvas}'s text alignments: a horizontal
+one, `canvas::left`, `canvas::center` or `canvas::right`, optionally
+or'ed with a vertical one, `canvas::top`, `canvas::middle`,
+`canvas::bottom` or `canvas::baseline`.
 `v`:: A value of type `T`.
 `conv`:: A function from `T` to `std::string`.
 

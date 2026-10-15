@@ -7,7 +7,7 @@ include::../common.adoc[]
 An element has no position of its own. Whoever lays it out, draws it, or
 sends it an event hands it a context for that one call, and the context
 says where the element is and what it is being drawn into: the `view`, the
-`canvas`, the element's `bounds`, and the context of the element that
+xref:support/canvas.adoc[`canvas`], the element's `bounds`, and the context of the element that
 contains it.
 
 Contexts come in two kinds:

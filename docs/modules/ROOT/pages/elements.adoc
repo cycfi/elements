@@ -9,11 +9,21 @@ element. This section documents the vocabulary the rest of the
 documentation is written in: the base class and its protocol, and the
 building blocks every control and container is made from.
 
-* xref:elements/element.adoc[Element] covers the `element` base class: how
-  an element sizes, draws and refreshes itself, and how the mouse,
-  keyboard, focus and drag and drop events reach it.
+* xref:elements/core.adoc[Core]: the element protocol, proxies,
+  indirection, traversal, composites, selection and trackers: what
+  every other element is built from.
+* xref:layout.adoc[Layout]: sizing, alignment, margins, tiles, grids,
+  layers, decks and flow: how elements are arranged in the view.
+* xref:elements/controls.adoc[Controls]: buttons, sliders, dials and
+  thumbwheels: elements the user operates.
+* xref:elements/text_and_images.adoc[Text and Images]: labels, text,
+  images and status bars: elements that show content.
+* xref:elements/containers.adoc[Containers]: ports and scrollers:
+  elements that decide how much of their content is shown, and where.
+* xref:styles.adoc[Styles]: the stylers that draw the controls, and how
+  a control and its styler work together.
 
 '''
 
-_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
 _Distributed under the {mit_license}_

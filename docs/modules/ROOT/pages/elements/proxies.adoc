@@ -30,7 +30,7 @@ own, with the subject as the element and, to begin with, the same bounds.
 Two hooks let a proxy adjust that context before the subject sees it and
 undo the adjustment after: `prepare_subject` and `restore_subject`. A
 margin shrinks the bounds in `prepare_subject`; an alignment moves them;
-a port offsets them by the scroll position; `scale` scales the canvas
+a port offsets them by the scroll position; `scale` scales the {canvas}
 in `prepare_subject`, maps the bounds and the point into the scaled
 space, and puts the canvas back in `restore_subject`.
 

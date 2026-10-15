@@ -630,11 +630,80 @@ def port_area():
     return f.write(os.path.join(OUT, 'elements', 'port_area.svg'))
 
 
+def view_structure():
+    # The host calls base_view's virtual functions, which view overrides;
+    # view refreshes through base_view, which invalidates the area on the
+    # host. Below the view, its main element: a scale over the layers,
+    # the first of which is on top.
+    f = Figure()
+    tall = Block('\n\n').h                 # three lines high
+    host = Block('host\nwindow or plug-in', 'input', height=tall)
+    base = Block('base_view', width=120, height=tall)
+    view = Block('view', width=120, height=tall)
+    f.row([host, base, view], y=f.margin + 10, gap=130)
+    scale = f.place(Block('scale'), 0, 0)
+    scale.x = view.cx - scale.w / 2
+    scale.y = view.bottom + 50
+    layers = f.stack('layers', ['popup (top)', 'content'], member='yours')
+    layers.move(view.cx - layers.cx, scale.bottom + 50 - layers.y)
+
+    # Two lanes between each pair: calls in above, refreshes out below.
+    def pair(a, b, top, bottom):
+        hi, lo = a.cy - 12, a.cy + 12
+        f.path([(a.right, hi), (b.left, hi)], 'signal')
+        f.path([(b.left, lo), (a.right, lo)], 'control')
+        mid = (a.right + b.left) / 2
+        f.label(top, mid, hi - 8, anchor='middle')
+        f.label(bottom, mid, lo + 20, anchor='middle')
+    pair(host, base, 'events, draw', 'platform calls')
+    pair(base, view, 'virtual calls', 'requests')
+
+    f.arrow(view, scale)
+    f.arrow(scale, layers)
+    f.label('context', view.cx + 10, (scale.bottom + layers.top) / 2 + 5)
+    return f.write(os.path.join(OUT, 'view_structure.svg'))
+
+
+def view_drawing():
+    # A refresh from any thread, the poll, the host's repaint, then the
+    # draw down the tree, clipped to the area.
+    seq = Sequence([('your code', 'yours'), ('view', 'component'),
+                    ('host', 'input'), ('elements', 'component')])
+    seq.call(0, 1, 'refresh(e)')
+    seq.call(2, 1, 'poll()')
+    seq.call(1, 2, 'invalidate the area')
+    seq.call(2, 1, 'draw(canvas), clipped')
+    seq.call(1, 1, 'layout, if resized')
+    seq.call(1, 3, 'draw(ctx), if in the clip')
+    return seq.write(os.path.join(OUT, 'view_drawing.svg'))
+
+
+def view_polling():
+    # Work posted from any thread waits in the view's io_context until the
+    # host polls the view, idle, on the UI thread; then it runs, in order.
+    # A timed post waits for a poll after its time is up.
+    seq = Sequence([('any thread', 'yours'), ('view', 'component'),
+                    ('io_context', 'component'), ('host', 'input')])
+    seq.call(0, 1, 'post(f)')
+    seq.call(1, 2, 'queue f')
+    seq.call(0, 1, 'post(10ms, g)')
+    seq.call(1, 2, 'start a timer for g')
+    seq.call(3, 1, 'poll(), when idle')
+    seq.call(1, 2, 'poll()')
+    seq.call(2, 2, 'f(), on the UI thread')
+    seq.call(3, 1, 'poll(), 10ms later')
+    seq.call(1, 2, 'poll()')
+    seq.call(2, 2, 'g(), on the UI thread')
+    return seq.write(os.path.join(OUT, 'view_polling.svg'))
+
+
 FIGURES = [context_chain, receiver_gui, receiver_button, receiver_code,
            receiver_button_code, proxy_draw, proxy_classes, indirect_classes,
            traversal_down, traversal_up, composite_classes, composite_click,
            selection, tracker_classes, tracker_drag, styler_classes,
-           styler_pull, styler_place, styler_push, port_area]
+           styler_pull, styler_place, styler_push, port_area,
+           view_structure, view_drawing,
+           view_polling]
 
 if __name__ == '__main__':
     for make in FIGURES:

@@ -1,0 +1,91 @@
+= Canvas
+
+include::../common.adoc[]
+
+== Overview
+
+Elements draws with {artist}, Cycfi's 2D graphics library. Everything on
+screen, from a label's text to a knob's dial, is drawn on an Artist
+`canvas`: a drawing surface with paths, fills, strokes, gradients,
+images, text, transforms and clipping, modeled on the HTML canvas. This
+page covers how Elements uses it; {artist_canvas} documents its
+interface.
+
+The canvas runs on a graphics backend chosen when Elements is built.
+Elements code is the same on all of them:
+
+* Quartz 2D: macOS only; default
+* Direct2D: Windows only; default
+* Cairo: Linux, macOS and Windows; Linux, default
+* Skia: macOS, Windows and Linux
+
+=== Where the Canvas Comes From
+
+The host makes a canvas for each repaint and passes it to the view's
+`draw` (see xref:view.adoc[View]). The view puts it in the top
+{context}, and every context below shares it. An element draws on
+`ctx.canvas`, within `ctx.bounds`.
+
+```c++
+void draw(context const& ctx) override
+{
+   auto& cnv = ctx.canvas;
+   cnv.add_round_rect(ctx.bounds, 4);
+   cnv.fill_style(colors::gold);
+   cnv.fill();
+}
+```
+
+`canvas` is `artist::canvas`, hoisted into the `cycfi::elements`
+namespace along with other Artist names Elements code uses, including
+`point`, `rect`, `extent`, `color`, `rgba` and `colors`.
+
+=== Coordinates
+
+An element draws in view coordinates: `ctx.bounds` is its place in the
+view, and the canvas maps those coordinates there.
+*Coordinates are device independent*: the host scales the canvas to the
+display's pixel density, so the same drawing code gives the same size
+on any display, and sharper results on a high density one. A proxy that
+scales or moves its subject, such as `scale` or a port, transforms the
+canvas before the subject draws.
+
+=== Saving and Restoring State
+
+Every element in a repaint shares the canvas. An element that changes
+its state, such as a transform, a clip or a line width, must restore it
+before returning, so the next element finds the canvas as expected.
+`canvas::state` does this: it saves the state when created and restores
+it when destroyed.
+
+```c++
+void draw(context const& ctx) override
+{
+   auto state = ctx.canvas.new_state();
+   ctx.canvas.add_rect(ctx.bounds);
+   ctx.canvas.clip();
+   // ... draw, clipped to the bounds ...
+}  // the clip is gone
+```
+
+Fill and stroke styles, font and text alignment are part of the state
+too. An element sets each one it uses, and does not rely on what an
+earlier element left.
+
+=== Partial Repaints
+
+When an element is refreshed, the host repaints only its area and
+clips the canvas to it. Drawing outside the clip has no effect, so an
+element can always draw itself whole. An element that is costly to
+draw, such as a long list or a large plot, can skip what falls
+outside: `ctx.visible_bounds()` is the part of the view being repainted
+(see {context}).
+
+For further details, see the
+https://cycfi.github.io/artist/artist/v1.0-dev/canvas.html[Artist
+documentation].
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

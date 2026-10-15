@@ -1,0 +1,15 @@
+= Containers
+
+include::../common.adoc[]
+
+== Overview
+
+A container holds content and decides how much of it is shown, and where.
+
+* xref:elements/ports.adoc[Ports and Scrollers]: a view of part of an
+  element larger than its space, moved by its alignment or by the user.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

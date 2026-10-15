@@ -110,6 +110,8 @@ TEST_CASE("scroller: scrolling into view keeps clear of the bar's own edge", "[s
    CHECK(!sv.sc->scroll_into_view(c, rect{92, 10, 98, 20}));
 }
 
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+// The repainted areas are reported by the headless host only.
 TEST_CASE("scroller: the pointer redraws only around the bars", "[scroller]")
 {
    scroller_view sv{{80, 400}};                  // a vertical bar, at x 90 to 100
@@ -135,6 +137,7 @@ TEST_CASE("scroller: the pointer redraws only around the bars", "[scroller]")
    sv.view_.poll();
    CHECK(headless::take_invalidated(sv.view_).empty());
 }
+#endif
 
 TEST_CASE("scroller: content that fits does not scroll", "[scroller]")
 {

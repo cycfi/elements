@@ -73,7 +73,7 @@ namespace cycfi::elements
 
 === Notation
 
-`cnv`:: An `artist::canvas`.
+`cnv`:: A {canvas}.
 `b`:: An `artist::rect`.
 `code`:: An icon code point, from xref:support/icons.adoc[`icons`].
 `f`:: An `artist::font_descr`.

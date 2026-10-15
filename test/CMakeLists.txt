@@ -32,8 +32,11 @@ set(elements_test_sources
    lib/image_test.cpp
    lib/status_bar_test.cpp
    lib/scroller_test.cpp
+   lib/view_layers_test.cpp
 
    # The documentation's page tests, one per page, by section
+   pages/view_test.cpp
+   pages/support/canvas_test.cpp
    pages/support/context_test.cpp
    pages/support/theme_test.cpp
    pages/support/receivers_test.cpp

@@ -143,6 +143,7 @@ namespace cycfi::elements
    void view::scale(float val)
    {
       _main_element.scale(val);
+      set_limits();
       refresh();
    }
 

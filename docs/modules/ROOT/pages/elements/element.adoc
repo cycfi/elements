@@ -12,7 +12,7 @@ page in this documentation builds on.
 An element has no position. It does not know where it is or how big it is.
 Whoever draws it or sends it an event hands it a {context}, and the context
 carries the element's `bounds` for that call, along with the `view` and the
-`canvas`. A container works out each child's bounds when it needs them and
+xref:support/canvas.adoc[`canvas`]. A container works out each child's bounds when it needs them and
 passes them down, so one element can appear in more than one place, or in
 more than one view. See xref:support/context.adoc[Context].
 

@@ -6,7 +6,7 @@ include::../common.adoc[]
 
 The drawing utilities are the primitives the default stylers draw with: a
 panel, a button face, a slider's track and thumb, a dial's knob, marks
-and labels. Each is a free function taking a `canvas` and drawing one
+and labels. Each is a free function taking a xref:support/canvas.adoc[`canvas`] and drawing one
 thing at a given place; the stylers compose them. A custom styler can
 draw with them too, so it looks like the stock controls, or use one of
 them as a starting point.
@@ -94,7 +94,7 @@ at once, for drawing an inset outline that keeps its corners concentric.
 
 === Notation
 
-`cnv`:: An `artist::canvas`.
+`cnv`:: A {canvas}.
 `b`:: An `artist::rect`.
 `cp`:: An `artist::circle`: a center and a radius.
 `c`, `ic`:: An `artist::color`: a body color and an indicator color.

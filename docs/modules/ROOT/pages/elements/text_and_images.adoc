@@ -1,0 +1,22 @@
+= Text and Images
+
+include::../common.adoc[]
+
+== Overview
+
+These elements show content: text, editable or not, pictures, and the
+state of a task.
+
+* xref:elements/labels.adoc[Labels]: a line of text in the theme's label
+  font, and headings in five sizes.
+* xref:elements/text.adoc[Text]: static text, the multi-line text box, and
+  the single-line input box.
+* xref:elements/images.adoc[Images]: pictures, and sprites cut from a
+  grid of frames.
+* xref:elements/status_bars.adoc[Status Bars]: the progress bar and the
+  busy bar.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

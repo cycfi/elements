@@ -276,13 +276,14 @@ namespace cycfi::elements
       // initiated this call (e.g. button on_click) a chance to return.
       if (e)
       {
-         // Return early if the element is already in the view's content list.
-         if (std::find(_content.begin(), _content.end(), e) != _content.end())
-            return;
-
          asio::post(io(),
             [e, this, focus_top]
             {
+               // Already one of the layers, even if added since this was
+               // posted: leave it.
+               if (std::find(_content.begin(), _content.end(), e) != _content.end())
+                  return;
+
                auto wants_focus = focus_top && e->wants_focus();
                // End the current focus if the new element wants to be the focus.
                if (wants_focus)
@@ -353,7 +354,7 @@ namespace cycfi::elements
 
    inline void view::move_to_front(element_ptr e)
    {
-      if (e && _content.back() != e)
+      if (e && !_content.empty() && _content.back() != e)
       {
          asio::post(io(),
             [e, this]
@@ -374,7 +375,7 @@ namespace cycfi::elements
 
    inline void view::move_to_back(element_ptr e)
    {
-      if (e && _content.front() != e)
+      if (e && !_content.empty() && _content.front() != e)
       {
          asio::post(io(),
             [e, this]

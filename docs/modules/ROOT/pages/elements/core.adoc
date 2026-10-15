@@ -1,0 +1,30 @@
+= Core
+
+include::../common.adoc[]
+
+== Overview
+
+The core is what every other element is built from: the element protocol,
+the ways one element wraps or holds another, and the composites that hold
+many.
+
+* xref:elements/element.adoc[Element]: the base class and its protocol:
+  sizing, layout, drawing, and the mouse, keyboard and focus events.
+* xref:elements/proxies.adoc[Proxies]: an element that wraps one subject,
+  delegating the protocol to it and changing what it needs to.
+* xref:elements/indirection.adoc[Indirection]: holding an element by
+  reference, so it can appear in two places, or be reached by the
+  application after it is in the view.
+* xref:elements/traversal.adoc[Traversal]: finding an element down
+  through an element's subjects, or up through a context's parents.
+* xref:elements/composites.adoc[Composites]: elements that hold a
+  sequence of children and route the events among them.
+* xref:elements/selection.adoc[Selection]: selecting the children of a
+  composite with the mouse and the keyboard.
+* xref:elements/trackers.adoc[Trackers]: the base of an element that
+  follows a press, a drag and a release as one gesture.
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

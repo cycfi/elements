@@ -518,3 +518,135 @@ TEST_CASE("submenu: random keys keep the menus consistent", "[submenu]")
       CHECK(f.open() == 0);
    }
 }
+
+namespace
+{
+   // A bar with File (Open) above a text box and a button with a menu of
+   // its own (Paste).
+   struct focus_fixture
+   {
+      focus_fixture()
+       : tv{extent{400, 300}}
+      {
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+         headless::open(tv.view_);
+#endif
+         file = share(menu_item("File"));
+         open_ = share(menu_item("Open"));
+         paste = share(menu_item("Paste"));
+         text = share(basic_input_box("Name"));
+         button = share(button_menu("Actions"));
+
+         open_->on_click = [this]{ ++opened; };
+         file->menu(hsize(150, layer(vtile(hold(open_)), panel{})));
+         button->menu(hsize(150, layer(vtile(hold(paste)), panel{})));
+
+         tv.view_.content(
+            align_left_top(
+               vtile(
+                  htile(hmin(hold(file)), element{}),
+                  hsize(200, hold(text)),
+                  hsize(200, hold(button))
+               )
+            ),
+            box(colors::black)
+         );
+         tv.view_.layout();
+         tv.draw();
+      }
+
+      std::size_t layers() { return tv.view_.layers().size(); }
+
+      void press(key_code k)
+      {
+         tv.view_.key(key_info{k, key_action::press, 0});
+         wait(tv.view_);
+      }
+
+      void type(char32_t ch)
+      {
+         tv.view_.text(text_info{ch, 0});
+         wait(tv.view_);
+      }
+
+      std::u32string typed() { return std::u32string{text->get_text()}; }
+
+      test_view tv;
+      item_ptr file, open_, paste;
+      std::shared_ptr<basic_input_box> text;
+      std::shared_ptr<basic_button_menu> button;
+      int opened = 0;
+   };
+}
+
+TEST_CASE("submenu: the focus goes back when a bar's menu closes", "[submenu]")
+{
+   focus_fixture f;
+   auto& v = f.tv.view_;
+   auto const base = f.layers();
+
+   click(v, center(bounds_of(v, *f.text)));
+   f.type('a');
+   REQUIRE(f.typed() == U"a");
+
+   // Escape closes the menu: typing goes to the text box again.
+   click(v, center(bounds_of(v, *f.file)));
+   REQUIRE(f.layers() == base + 1);
+   f.press(key_code::escape);
+   REQUIRE(f.layers() == base);
+   f.type('b');
+   CHECK(f.typed() == U"ab");
+
+   // So does choosing an item.
+   click(v, center(bounds_of(v, *f.file)));
+   REQUIRE(f.layers() == base + 1);
+   f.press(key_code::down);
+   f.press(key_code::enter);
+   CHECK(f.opened == 1);
+   REQUIRE(f.layers() == base);
+   f.type('c');
+   CHECK(f.typed() == U"abc");
+}
+
+TEST_CASE("submenu: the focus goes back when a button's menu closes", "[submenu]")
+{
+   focus_fixture f;
+   auto& v = f.tv.view_;
+   auto const base = f.layers();
+
+   click(v, center(bounds_of(v, *f.text)));
+   f.type('a');
+
+   click(v, center(bounds_of(v, *f.button)));
+   REQUIRE(f.layers() == base + 1);
+   f.press(key_code::escape);
+   REQUIRE(f.layers() == base);
+   f.type('b');
+   CHECK(f.typed() == U"ab");
+}
+
+TEST_CASE("submenu: with nothing focused, nothing is after a menu closes", "[submenu]")
+{
+   focus_fixture f;
+   auto& v = f.tv.view_;
+   auto const base = f.layers();
+
+   click(v, center(bounds_of(v, *f.file)));
+   REQUIRE(f.layers() == base + 1);
+   f.press(key_code::escape);
+   REQUIRE(f.layers() == base);
+
+   // The title did not keep the focus: the bar's row has no focused
+   // child, and typing reaches nothing.
+   int bar_focus = 0;
+   v.in_context_do(*f.file,
+      [&](context const& ctx)
+      {
+         if (auto [c, cctx] = find_composite(ctx); c)
+            bar_focus = c->focus_index();
+      }
+   );
+   CHECK(bar_focus == -1);
+   f.type('x');
+   CHECK(f.typed().empty());
+}

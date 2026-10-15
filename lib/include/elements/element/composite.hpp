@@ -118,6 +118,8 @@ namespace cycfi::elements
 
    private:
 
+      friend class view;
+
       bool                    new_focus(context const& ctx, int index, focus_request req);
 
       int                     _focus = -1;

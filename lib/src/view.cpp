@@ -8,12 +8,34 @@
 #include <elements/support/context.hpp>
 #include <elements/support/log.hpp>
 #include <elements/support/trace.hpp>
+#include <elements/element/traversal.hpp>
 #include <algorithm>
 
 namespace cycfi::elements
 {
    using artist::image;
    using artist::offscreen_image;
+
+   namespace
+   {
+      // The next composite down a focus path from e: e itself, or the
+      // subject of the proxies and links that wrap it.
+      composite_base* next_composite(element* e)
+      {
+         while (e)
+         {
+            if (auto* i = dynamic_cast<indirect_base*>(e))
+               e = &i->get();
+            else if (auto* c = dynamic_cast<composite_base*>(e))
+               return c;
+            else if (auto* p = dynamic_cast<proxy_base*>(e))
+               e = &p->subject();
+            else
+               return nullptr;
+         }
+         return nullptr;
+      }
+   }
 
    view::view(extent size_)
     : base_view(size_)
@@ -308,6 +330,9 @@ namespace cycfi::elements
          return;
 
       trace_new_gesture("click");
+      if (btn.down)
+         _click_focus = current_focus_path();
+
       bool handled = false;
       with_context_do(
          [btn, this, &handled](auto const& ctx, auto& _main_element)
@@ -321,9 +346,60 @@ namespace cycfi::elements
          },
          *this, _current_bounds
       );
+
+      // A layer this click opens is added after it returns (see add), so
+      // the focus it held is kept until then.
+      if (!btn.down)
+         asio::post(_io, [this]{ _click_focus.reset(); });
       LOG_DEBUG(logger(log_cat::input),
          "click {},{} btn={} down={} clicks={} handled={}",
          btn.pos.x, btn.pos.y, int(btn.state), btn.down, btn.num_clicks, handled);
+   }
+
+   view::focus_path view::current_focus_path()
+   {
+      focus_path path;
+      composite_base* c = &_content;
+      while (c && c->_focus != -1 && c->_focus < int(c->size()))
+      {
+         path.emplace_back(c, c->_focus);
+         c = next_composite(&c->at(c->_focus));
+      }
+      return path;
+   }
+
+   // Called by add once the focus has ended: the composites on the path
+   // held when the button went down remember it, so the focus goes back
+   // there when the new layer closes. Every link is checked against the
+   // tree as it is now; if one has gone, the focus is left as it ended.
+   void view::save_click_focus()
+   {
+      if (!_click_focus)
+         return;
+      auto path = std::move(*_click_focus);
+      _click_focus.reset();
+
+      composite_base* c = &_content;
+      for (auto [pc, ix] : path)
+      {
+         if (pc != c || ix >= int(c->size()))
+            return;
+         c = next_composite(&c->at(ix));
+      }
+
+      if (path.empty())
+      {
+         // Nothing had the focus: forget what the click gave it to.
+         for (c = &_content; c && c->_saved_focus != -1;)
+         {
+            auto ix = std::exchange(c->_saved_focus, -1);
+            c = ix < int(c->size())? next_composite(&c->at(ix)) : nullptr;
+         }
+         return;
+      }
+
+      for (auto [pc, ix] : path)
+         pc->_saved_focus = ix;
    }
 
    void view::drag(mouse_button btn)

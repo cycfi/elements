@@ -159,6 +159,16 @@ namespace cycfi::elements
       void                    update_hotkeys();
       void                    refresh_pending();
 
+      // The focus held when a mouse button went down: each composite on
+      // the path and its focused child. A layer opened by that click
+      // gives the focus back to it when it closes, not to whatever the
+      // click moved the focus to (a menu bar's title, for instance).
+      using focus_path = std::vector<std::pair<composite_base*, int>>;
+      focus_path              current_focus_path();
+      void                    save_click_focus();
+
+      std::optional<focus_path> _click_focus;
+
       // Elements to refresh, gathered until the next poll, so that a
       // burst of them (every control of a preset, loaded at once) costs
       // one refresh rather than a search of the tree for each. See
@@ -297,7 +307,10 @@ namespace cycfi::elements
                auto wants_focus = focus_top && e->wants_focus();
                // End the current focus if the new element wants to be the focus.
                if (wants_focus)
+               {
                   end_focus();
+                  save_click_focus();
+               }
 
                // Add the new element to the top and lay it out
                _content.push_back(e);

@@ -1,12 +1,195 @@
-= Popups, Modals and Tooltips
+= Popups and Modals
 
 include::../common.adoc[]
 
 == Overview
 
-Covers `element/popup.hpp`, `element/modal.hpp`, `element/tooltip.hpp`.
+These are the elements that open over the view's content, as layers of
+the view (see xref:view.adoc[View]):
 
-// To be written.
+* A popup is content that opens at a place in the view, over everything
+  else, until it is closed.
+* A modal takes all the input that reaches it: the content under it gets
+  none until it closes. `ui_block` dims the view behind a modal dialog.
+
+A tooltip's tip is a popup too; see xref:elements/tooltips.adoc[Tooltips].
+
+=== Popups
+
+`basic_popup(e, bounds)` makes a popup of `e`: a
+xref:layout/floating.adoc[floating element] at `bounds`, in view
+coordinates, sized to the limits of `e`. `open(view)` adds it on top of
+the view's layers, giving it the focus if it wants it, and
+`close(view)` removes it; both take effect at the next `poll` (see
+xref:view.adoc#_posting_and_polling[Posting and Polling]).
+`is_open(view)` says whether it is open.
+
+image::elements/popups_popup.png[alt="A Size button, and below it a popup list of Small, Medium and Large, Medium highlighted", width=300px, link={imagesdir}/elements/popups_popup.png]
+
+A popup takes the mouse anywhere in its bounds: a click on its body does
+not reach the content under it. As the pointer moves over a control in
+it, or leaves it, the popup is redrawn, and its `on_cursor` callback is
+called with the pointer's position and its tracking status.
+
+`basic_popup_menu(e, bounds)` is a popup for menus. It takes the mouse
+anywhere in the view while it is open: a press outside the menu closes
+it.
+
+=== Modals
+
+`modal(e)` takes every click that reaches it, passing each to `e`
+first; nothing gets past it to the layers below. It wants the focus,
+and while it has it, every key and text event goes to it the same way.
+In a layer over the content, it blocks the content while it is open.
+
+`ui_block(color)` is a modal of a plain box, half transparent black by
+default. Add it to the view under a dialog, and the content is dimmed
+and takes no input until both are removed:
+
+```c++
+auto block = share(ui_block());
+view_.add(block);          // over the content
+view_.add(dialog);         // over the block
+```
+
+image::elements/popups_example.png[alt="A message box reading Delete the file? with an OK button, over a dimmed UI of buttons, check boxes and radio buttons", width=480px, link={imagesdir}/elements/popups_example.png]
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class basic_popup_element : public floating_element
+   {
+   public:
+
+      using cursor_function = std::function<void(point p, cursor_tracking status)>;
+
+                              basic_popup_element(rect bounds = {})
+                               : floating_element(bounds)
+                              {}
+
+      bool                    wants_control() const override { return true; }
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+
+      bool                    is_open(view& view_) const;
+      virtual void            open(view& view_);
+      virtual  void           close(view& view_);
+      std::string             class_name() const override;
+
+      cursor_function         on_cursor = [](auto, auto){};
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_popup_element>
+   basic_popup(Subject&& subject, rect bounds = {});
+
+   class basic_popup_menu_element : public basic_popup_element
+   {
+   public:
+
+      using basic_popup_element::basic_popup_element;
+
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                    click(context const& ctx, mouse_button btn) override;
+      void                    close(view& view_) override;
+
+      basic_button_menu*      menu_button();
+      void                    menu_button(basic_button_menu* p);
+      std::string             class_name() const override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_popup_menu_element>
+   basic_popup_menu(Subject&& subject, rect bounds = {});
+
+   template <concepts::Element Subject>
+   class modal_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                     modal_element(Subject subject);
+      element*       hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool           click(context const& ctx, mouse_button btn) override;
+      bool           key(context const& ctx, key_info k) override;
+      bool           text(context const& ctx, text_info info) override;
+
+      bool           wants_focus() const override { return true; }
+      bool           wants_control() const override { return true; }
+      std::string    class_name() const override { return "modal"; }
+   };
+
+   template <concepts::Element Subject>
+   inline modal_element<remove_cvref_t<Subject>>
+   modal(Subject&& subject);
+
+   inline auto ui_block(color color_ = {0.0, 0.0, 0.0, 0.5});
+}
+```
+
+== Expressions
+
+=== Notation
+
+`e`:: An element.
+`r`:: A `rect`, in view coordinates.
+`p`:: A popup.
+`view_`:: A `view`.
+`c`:: A `color`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `basic_popup(e, r)`
+| A popup of `e` at `r`.
+
+| `p.open(view_)`, `p.close(view_)`
+| Open `p` on top of the view's layers; close it.
+
+| `p.is_open(view_)`
+| Whether `p` is open.
+
+| `p.on_cursor`
+| Called with the pointer's position and its tracking status as it
+  moves over `p`.
+
+| `basic_popup_menu(e, r)`
+| A popup menu of `e` at `r`, closed by a press outside it.
+
+| `modal(e)`
+| `e`, taking every click that reaches it, and, while it has the focus,
+  every key and text event.
+
+| `ui_block(c)`
+| A modal box of color `c`, half transparent black by default.
+|===
+
+== Example
+
+A message box over a busy UI, dimmed and blocked until the box is
+closed:
+
+```c++
+auto block = share(ui_block());
+auto box = message_box1(
+   view_, "Delete the file?", icons::attention,
+   [&view_, block]() { view_.remove(block); }
+);
+view_.add(block);
+view_.add(box);
+```
 
 '''
 

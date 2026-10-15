@@ -15,6 +15,15 @@
 
 namespace cycfi::elements
 {
+   // The key a container sends an element to ask whether it takes
+   // hotkeys; see element::hotkey.
+   inline constexpr key_info hotkey_test{key_code::unknown, key_action::unknown, 0};
+
+   inline bool is_hotkey_test(key_info k)
+   {
+      return k.key == key_code::unknown && k.action == key_action::unknown;
+   }
+
    struct basic_context;
    class context;
    class view;
@@ -80,6 +89,7 @@ namespace cycfi::elements
       virtual bool            click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
+      virtual bool            hotkey(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual bool            scroll(context const& ctx, point dir, point p);

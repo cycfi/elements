@@ -43,8 +43,13 @@
 **** xref:elements/child_windows.adoc[Child Windows]
 **** xref:elements/splits.adoc[Splits]
 **** xref:elements/docking.adoc[Docking]
+**** xref:elements/popups.adoc[Popups and Modals]
+**** xref:elements/tooltips.adoc[Tooltips]
+**** xref:elements/menus.adoc[Menus]
 *** xref:styles.adoc[Styles]
 **** xref:styles/marks.adoc[Marks and Scales]
+**** xref:styles/dialogs.adoc[Child Windows and Dialogs]
+**** xref:styles/menus.adoc[Menus]
 ** Support
 *** xref:support/canvas.adoc[Canvas]
 *** xref:support/context.adoc[Context]

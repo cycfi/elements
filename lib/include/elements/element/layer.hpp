@@ -92,6 +92,7 @@ namespace cycfi::elements
       void                 in_context_do(context const& ctx, element& e, context_function f) override;
       hit_info             hit_element(context const& ctx, point p, bool control) const override;
       void                 begin_focus(focus_request req) override;
+      bool                 hotkey(context const& ctx, key_info k) override;
 
       using element::refresh;
       using composite_base::focus;

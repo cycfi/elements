@@ -37,6 +37,7 @@ set(elements_test_sources
    lib/split_test.cpp
    lib/dock_test.cpp
    lib/clipboard_test.cpp
+   lib/popup_test.cpp
 
    # The documentation's page tests, one per page, by section
    pages/aspects_test.cpp
@@ -70,9 +71,14 @@ set(elements_test_sources
    pages/elements/child_windows_test.cpp
    pages/elements/splits_test.cpp
    pages/elements/docking_test.cpp
+   pages/elements/popups_test.cpp
+   pages/elements/tooltips_test.cpp
+   pages/elements/menus_test.cpp
    pages/layout/collapsible_test.cpp
    pages/styles/styles_test.cpp
    pages/styles/marks_test.cpp
+   pages/styles/dialogs_test.cpp
+   pages/styles/menus_test.cpp
 )
 
 add_executable(elements_test ${elements_test_sources})

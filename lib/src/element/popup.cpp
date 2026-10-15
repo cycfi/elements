@@ -15,9 +15,11 @@ namespace cycfi::elements
 
    bool basic_popup_element::cursor(context const& ctx, point p, cursor_tracking status)
    {
+      // The popup alone: what it draws changes as the cursor moves over a
+      // control in it, or leaves.
       bool hit = proxy_base::hit_test(ctx, p, false, true);
       if (status == cursor_tracking::leaving || hit)
-         ctx.view.refresh();
+         ctx.view.refresh(ctx, bounds());
       bool r = proxy_base::cursor(ctx, p, status);
       on_cursor(p, status);
       return r;

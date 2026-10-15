@@ -50,12 +50,26 @@ namespace cycfi::elements
    // Menu Items
    ////////////////////////////////////////////////////////////////////////////
    std::pair<std::string, std::string>
-   diplay_shortcut(key_code k, int mod);
+   display_shortcut(key_code k, int mod);
 
+   inline std::pair<std::string, std::string>
+   display_shortcut(key_info k)
+   {
+      return display_shortcut(k.key, k.modifiers);
+   }
+
+   [[deprecated("Use display_shortcut instead.")]]
+   inline std::pair<std::string, std::string>
+   diplay_shortcut(key_code k, int mod)
+   {
+      return display_shortcut(k, mod);
+   }
+
+   [[deprecated("Use display_shortcut instead.")]]
    inline std::pair<std::string, std::string>
    diplay_shortcut(key_info k)
    {
-      return diplay_shortcut(k.key, k.modifiers);
+      return display_shortcut(k);
    }
 
    inline auto menu_item_text(std::string text, float text_align = 0.0f /*align left*/)
@@ -65,7 +79,7 @@ namespace cycfi::elements
 
    inline auto menu_item_text(std::string text, shortcut_key shortcut)
    {
-      auto [mod, key] = diplay_shortcut(shortcut.key, shortcut.modifiers);
+      auto [mod, key] = display_shortcut(shortcut.key, shortcut.modifiers);
 #if defined(__APPLE__)
       auto sk_font = get_theme().system_font;
 #else

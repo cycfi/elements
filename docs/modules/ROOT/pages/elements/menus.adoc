@@ -4,9 +4,283 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/menu.hpp`.
+A menu is a xref:elements/popups.adoc[popup menu] that a button opens.
+The button is a `basic_button_menu`; the menu is any element, usually a
+column of menu items on a panel. The stock menu buttons and items are on
+the xref:styles/menus.adoc[Styles: Menus] page.
 
-// To be written.
+image::elements/menus_example.png[alt="A Dropdown Menu button with its menu open below it: items with shortcuts at the right, two of them dimmed, a separator line, and the third item highlighted", width=340px, link={imagesdir}/elements/menus_example.png]
+
+=== Menu Buttons
+
+`menu(m)` gives the button its menu, `m`. A press on the button opens
+the menu beside it, where `position` says:
+
+[cols="1,2"]
+|===
+| `menu_position` | The menu
+
+| `bottom_right`
+| Below the button, from its left edge to the right. The default.
+
+| `bottom_left`
+| Below the button, from its right edge to the left.
+
+| `top_right`
+| Above the button, from its left edge to the right.
+
+| `top_left`
+| Above the button, from its right edge to the left.
+|===
+
+If the menu does not fit above or below the button and fits on the other
+side, it goes there; then it is moved along until it is inside the view.
+
+The user picks an item with a click, or presses on the button, drags to
+the item and releases. A press outside the menu closes it. As the menu
+closes, the button's value goes back to `false`.
+
+`on_open_menu` is called with the button each time the menu opens,
+before it opens. A menu that changes can be built there, and given to
+the button with `menu`.
+
+=== Menu Items
+
+`basic_menu_item(e)` makes `e` an item of a menu. The item under the
+pointer is highlighted in the theme's `indicator_color`. A click on an
+item calls its `on_click`, then closes the menu.
+
+`is_enabled` is a function the item calls each time it needs to know
+whether it is enabled. A disabled item is not highlighted, is skipped by
+the arrow keys, and takes no click or shortcut; its look is up to `e`,
+drawn in a context with `enabled` false.
+
+While the menu is open, the Up and Down keys move the highlight to the
+item above or below, Enter picks the highlighted item, and Escape closes
+the menu.
+
+=== Shortcuts
+
+An item's `shortcut` is a `shortcut_key`: a key code and its modifiers.
+`mod_action` is the platform's command modifier: Command on macOS,
+Control on the others.
+
+```c++
+auto save = menu_item("Save", shortcut_key{key_code::s, mod_action});
+save.on_click = [&]{ doc.save(); };
+```
+
+The shortcut calls `on_click` whether the menu is open or not. With the
+menu closed, it works as a hotkey (see xref:elements/element.adoc[Element]):
+it is taken only if the focus does not take the key itself, so a text
+box being edited keeps its own ⌘C. If two menus have the same shortcut,
+the first takes it: the one in the top layer, and in a layer's content
+the first in order. While a modal, such as a dialog, is open, no
+shortcut works: the modal has the focus and takes every key.
+
+A menu built in `on_open_menu` has no items until it opens, and so no
+shortcuts before then.
+
+The minus and equal keys match with or without Shift, so a shortcut on
+`key_code::equal` is also the plus key.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   enum class menu_position
+   {
+      top_left,
+      top_right,
+      bottom_left,
+      bottom_right
+   };
+
+   class basic_button_menu : public basic_button
+   {
+   public:
+
+      using on_open_menu_function = std::function<void(basic_button_menu& menu)>;
+
+                              basic_button_menu(
+                                 menu_position pos = menu_position::bottom_right
+                              );
+
+      menu_position           position() const;
+      void                    position(menu_position pos);
+
+                              template <typename Menu>
+      void                    menu(Menu&& menu_);
+
+      on_open_menu_function   on_open_menu;
+   };
+
+   struct shortcut_key
+   {
+                  shortcut_key(key_code key_, int modifiers_);
+                  shortcut_key() = default;
+
+      key_code    key = key_code::unknown;
+      int         modifiers = 0;
+   };
+
+   class basic_menu_item_element
+    : public basic_menu_item_element_base<basic_menu_item_element>
+    , public selectable
+   {
+   public:
+
+      using menu_item_function = std::function<void()>;
+      using menu_enabled_function = std::function<bool()>;
+
+      menu_enabled_function   is_enabled = []{ return true; };
+      menu_item_function      on_click;
+      shortcut_key            shortcut;
+
+      bool                    is_selected() const override;
+      void                    select(bool state) override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, basic_menu_item_element>
+   basic_menu_item(Subject&& subject);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`b`:: A `basic_button_menu`.
+`m`, `e`:: Elements.
+`pos`:: A `menu_position`.
+`i`:: A menu item.
+`k`:: A `key_code`.
+`mods`:: Modifiers, as in `key_info`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `basic_button_menu(pos)`
+| A button that opens a menu at `pos`; `bottom_right` by default.
+
+| `b.menu(m)`
+| Make `m` the menu `b` opens.
+
+| `b.position()`, `b.position(pos)`
+| Where `b` opens its menu.
+
+| `b.on_open_menu`
+| Called with `b` before its menu opens.
+
+| `basic_menu_item(e)`
+| `e`, as an item of a menu.
+
+| `i.on_click`
+| Called when `i` is picked, by click, key or shortcut.
+
+| `i.is_enabled`
+| Called for whether `i` is enabled; `true` by default.
+
+| `i.shortcut`
+| The shortcut of `i`.
+
+| `shortcut_key{k, mods}`
+| `k` with `mods`; `mod_action` adds the platform's command modifier.
+|===
+
+== Example
+
+The Dropdown Menu of `examples/menus`, in the figure. Each item says it
+was picked in a message box; Quantum Feedback Loop and Psionic Wave
+Oscillator also enable and disable two others.
+
+```c++
+// Show which item was chosen, by click or by its shortcut
+void alert(view& view_, std::string text)
+{
+   open_popup(message_box1(view_, std::move(text), icons::info, []{}), view_);
+}
+
+auto make_popup_menu(char const* title, menu_position pos, view& view_)
+{
+   auto popup  = button_menu(title, pos);
+
+   auto skf = shortcut_key{key_code::f, mod_action};
+   auto skp = shortcut_key{key_code::p, mod_action};
+
+   auto quantum_feedback_loop = menu_item("Quantum Feedback Loop", skf);
+   auto psionic_wave_oscillator = menu_item("Psionic Wave Oscillator", skp);
+   auto photonic_mesh = menu_item("Photonic Mesh");
+   auto antimatter_soup = menu_item("Antimatter Soup");
+
+   // Here's how you dynamically enable or disable menu items:
+   // Just give it a function that returns the enabled state.
+   static bool enable = false; // just for demo; avoid statics!
+   photonic_mesh.is_enabled   = []{ return enable; };
+   antimatter_soup.is_enabled = []{ return enable; };
+
+   // Here's how you attach functions that will be called when a
+   // menu item is selected:
+   quantum_feedback_loop.on_click =
+      [&view_]()
+      {
+         enable = true;
+         alert(view_, "Quantum Feedback Loop: Photonic Mesh and Antimatter Soup enabled");
+      };
+   psionic_wave_oscillator.on_click =
+      [&view_]()
+      {
+         enable = false;
+         alert(view_, "Psionic Wave Oscillator: Photonic Mesh and Antimatter Soup disabled");
+      };
+
+   auto sk1 = shortcut_key{key_code::g, mod_action};
+   auto sk2 = shortcut_key{key_code::c, mod_action+mod_shift};
+   auto sk3 = shortcut_key{key_code::b, mod_action+mod_alt};
+
+   // The rest just say they were chosen
+   auto alerting =
+      [&view_](auto item, std::string text)
+      {
+         item.on_click = [&view_, text]() { alert(view_, text); };
+         return item;
+      };
+   photonic_mesh.on_click = [&view_]() { alert(view_, "Photonic Mesh"); };
+   antimatter_soup.on_click = [&view_]() { alert(view_, "Antimatter Soup"); };
+
+   auto menu =
+      layer(
+         vtile(
+            photonic_mesh,
+            quantum_feedback_loop,
+            psionic_wave_oscillator,
+            alerting(menu_item("Gaia Abiogenesis", sk1), "Gaia Abiogenesis"),
+            menu_item_spacer(),
+            alerting(menu_item("Chaotic Synchronicity", sk2), "Chaotic Synchronicity"),
+            alerting(menu_item("Omega Quadrant"), "Omega Quadrant"),
+            antimatter_soup,
+            alerting(menu_item("Dark Beta Quarks", sk3), "Dark Beta Quarks"),
+            alerting(menu_item("Cosmic Infrared Shift"), "Cosmic Infrared Shift")
+         ),
+         panel{}
+      );
+
+   popup.menu(hsize(300, menu));
+
+   return popup;
+}
+```
 
 '''
 

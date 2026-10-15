@@ -47,6 +47,9 @@ or, for this header alone:
 == Declaration
 
 ```c++
+   inline constexpr key_info hotkey_test{key_code::unknown, key_action::unknown, 0};
+   inline bool is_hotkey_test(key_info k);
+
    class element : public std::enable_shared_from_this<element>
    {
    public:
@@ -73,6 +76,7 @@ or, for this header alone:
       virtual bool            click(context const& ctx, mouse_button btn);
       virtual void            drag(context const& ctx, mouse_button btn);
       virtual bool            key(context const& ctx, key_info k);
+      virtual bool            hotkey(context const& ctx, key_info k);
       virtual bool            text(context const& ctx, text_info info);
       virtual bool            cursor(context const& ctx, point p, cursor_tracking status);
       virtual bool            scroll(context const& ctx, point dir, point p);
@@ -272,6 +276,15 @@ and hands `f` the context `target` would be drawn with.
                                       Return `true` if
                                       handled. The default
                                       returns `false`.          | `bool`
+| `e.hotkey(ctx, k)`                | A key was pressed or
+                                      repeated, and the focus
+                                      did not take it. Return
+                                      `true` if it is one of
+                                      `e`'s hotkeys. Given
+                                      `hotkey_test`, return
+                                      whether `e` takes
+                                      hotkeys. The default
+                                      returns `false`.          | `bool`
 | `e.text(ctx, info)`               | A character was typed
                                       while `e` has the focus:
                                       the text the keys made,
@@ -302,6 +315,18 @@ pointer has moved by then. A child that returns `false` for the press
 receives neither.
 
 `key` and `text` do not go by position. They go to the focus.
+
+A key press that the focus does not take goes to `hotkey`, and only to
+the elements that take hotkeys. When its content is set or laid out,
+the view sends `hotkey_test` down the tree: a container asks each of its
+elements, keeps those that answer `true`, and answers `true` if it kept
+any; `is_hotkey_test(k)` tells the test from a key. A key then goes
+down only through the containers that kept an element, to each kept
+element in turn, from the top for a layer, until one takes it. A
+disabled container passes it to none, a deck to its selected element
+only, and a hidden element takes none. A list, whose elements come and
+go as it scrolls, offers the key to the elements it holds at the time.
+The menu shortcuts work this way (see xref:elements/menus.adoc[Menus]).
 
 === Enabling
 

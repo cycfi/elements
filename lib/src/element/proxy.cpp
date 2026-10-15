@@ -167,6 +167,15 @@ namespace cycfi::elements
       return r;
    }
 
+   bool proxy_base::hotkey(context const& ctx, key_info k)
+   {
+      context sctx {ctx, &subject(), ctx.bounds};
+      prepare_subject(sctx);
+      auto r = subject().hotkey(sctx, k);
+      restore_subject(sctx);
+      return r;
+   }
+
    bool proxy_base::text(context const& ctx, text_info info)
    {
       context sctx {ctx, &subject(), ctx.bounds};

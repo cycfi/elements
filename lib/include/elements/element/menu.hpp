@@ -52,6 +52,7 @@ namespace cycfi::elements
 
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    hotkey(context const& ctx, key_info k) override;
       std::string             class_name() const override;
 
       menu_position           position() const;
@@ -239,6 +240,7 @@ namespace cycfi::elements
       element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
       bool                    click(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
+      bool                    hotkey(context const& ctx, key_info k) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    wants_control() const override;
       bool                    wants_focus() const override { return true; }

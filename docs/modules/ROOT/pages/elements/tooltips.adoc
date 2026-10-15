@@ -1,0 +1,152 @@
+= Tooltips
+
+include::../common.adoc[]
+
+== Overview
+
+`tooltip(e, tip)` shows `tip` beside `e` when the pointer rests on `e`
+for `delay`, 500 ms by default, and hides it when the pointer leaves
+both. The tip is a popup of `tip` (see
+xref:elements/popups.adoc[Popups and Modals]), at its minimum size, on
+the side of `e` that `position` names: `top` by default, or `left`,
+`right` or `bottom`.
+
+The tip stays in the view. If it does not fit on its side and fits on
+the opposite one, it goes there; then it is moved along its side until
+it is inside the view.
+
+The Escape key closes a tip, if `e` does not take the key itself.
+`on_hover` is called with `true` when the tip opens and `false` when it
+closes.
+
+image::elements/tooltips_example.png[alt="Four buttons, Option 1 to Option 4; above Option 2, a light bubble pointing down at it reads Take a stand against delusion, and the label at the top shows the same text", width=480px, link={imagesdir}/elements/tooltips_example.png]
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   enum class tooltip_position
+   {
+      left,
+      top,
+      right,
+      bottom
+   };
+
+   class tooltip_element : public proxy_base
+   {
+   public:
+
+      using base_type = proxy_base;
+      using on_hover_function = std::function<void(bool visible)>;
+
+                              template <typename Tip>
+                              tooltip_element(Tip&& tip, duration delay, tooltip_position pos);
+
+                              tooltip_element(tooltip_element const& rhs);
+                              tooltip_element(tooltip_element&& rhs) = default;
+                              ~tooltip_element();
+
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      bool                    key(context const& ctx, key_info k) override;
+      std::string             class_name() const override;
+
+      on_hover_function       on_hover = [](bool){};
+   };
+
+   template <concepts::Element Subject, typename Tip>
+   inline proxy<remove_cvref_t<Subject>, tooltip_element>
+   tooltip(
+      Subject&& subject
+    , Tip&& tip
+    , duration delay = milliseconds{500}
+    , tooltip_position pos = tooltip_position::top);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`e`, `tip`:: Elements.
+`d`:: A `duration`.
+`pos`:: A `tooltip_position`.
+`t`:: A tooltip.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `tooltip(e, tip, d, pos)`
+| `e`, showing `tip` at `pos` after the pointer rests on it for `d`.
+
+| `t.on_hover`
+| Called with `true` when the tip opens, `false` when it closes.
+|===
+
+== Example
+
+`examples/tooltip`: four buttons, each with a tip. As a tip opens and
+closes, `on_hover` shows its text in a label above the buttons, and puts
+the label's text back.
+
+```c++
+constexpr auto bred     = colors::red.opacity(0.4);
+constexpr auto bgreen   = colors::green.level(0.7).opacity(0.4);
+constexpr auto bblue    = colors::blue.opacity(0.4);
+constexpr auto pgold    = colors::gold.opacity(0.8);
+
+auto make_tip(std::string text)
+{
+   return tooltip_bubble(std::move(text));
+}
+
+template <typename Label>
+auto make_button(std::string text, color c, Label label, view& view_)
+{
+   static int i = 1;
+   std::string orig{label->get_text().data(), label->get_text().size()};
+   auto tt = tooltip(toggle_button("Option " + std::to_string(i++), 1.0f, c), make_tip(text));
+   tt.on_hover =
+      [label, text, &view_, orig](bool visible)
+      {
+         label->set_text(visible? text : orig);
+         view_.refresh(*label.get(), 3);
+      };
+   return tt;
+}
+
+auto make_buttons(view& view_)
+{
+   auto status = share(label("Have you found your vision quest?"));
+   auto button1 = make_button("Eons from now", bred, status, view_);
+   auto button2 = make_button("Take a stand against delusion", bgreen, status, view_);
+   auto button3 = make_button("Totality is calling", bblue, status, view_);
+   auto button4 = make_button("Four-dimensional superstructures", pgold, status, view_);
+
+   return
+      margin({50, 20, 50, 40},
+         vtile(
+            align_center(margin_top(20, hold(status))),
+            margin_top(20, button1),
+            margin_top(20, button2),
+            margin_top(20, button3),
+            margin_top(20, button4)
+         )
+      );
+}
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

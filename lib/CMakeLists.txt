@@ -177,6 +177,7 @@ set(ELEMENTS_HEADERS
    include/elements/element/style/tab.hpp
    include/elements/element/style/text_entry.hpp
    include/elements/element/style/thumbwheel.hpp
+   include/elements/element/style/tooltip.hpp
    include/elements/element/text.hpp
    include/elements/element/thumbwheel.hpp
    include/elements/element/dock.hpp

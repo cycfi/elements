@@ -4,9 +4,212 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/menu.hpp`.
+The stock menu buttons, menu items and selection menus, built on the
+parts on the xref:elements/menus.adoc[Menus] page.
 
-// To be written.
+=== Menu Buttons
+
+`button_menu(text, pos)` is a xref:styles/buttons.adoc[button] of
+`text` and an arrow, down for a menu below it and up for one above,
+that opens a menu at `pos`. Give it its menu with `menu`:
+
+```c++
+auto file = button_menu("File");
+file.menu(
+   layer(
+      vtile(
+         menu_item("Open", shortcut_key{key_code::o, mod_action}),
+         menu_item("Save", shortcut_key{key_code::s, mod_action}),
+         menu_item_spacer(),
+         menu_item("Close")
+      ),
+      menu_background{}
+   )
+);
+```
+
+`menu_background` is the xref:styles/groups.adoc[panel] a menu is
+drawn on.
+
+=== Menu Items
+
+`menu_item(text)` is a menu item of a label, aligned left by default,
+with a margin of 20 on each side. `menu_item(text, shortcut)` sets the
+item's shortcut and shows it at the right of the label. A disabled item's
+text is dimmed.
+
+`menu_item_spacer()` is a line across the menu between groups of items.
+
+`display_shortcut(k, mods)` returns the text the item shows for a
+shortcut, as a pair: the modifiers, and the key. On macOS the modifiers
+are symbols, as ⇧⌘ for Shift and Command; on the others they are words,
+as `Ctrl+Shift+`. A shifted punctuation or digit key shows the character
+it makes: Shift with `key_code::equal` shows `+`.
+
+=== Selection Menus
+
+A selection menu is a button that shows the item last picked from its
+menu, with a frame and a down arrow:
+
+image::styles/menus_selection.png[alt="A selection menu showing Quantum Feedback Loop, with its menu of nine items open below it and Omega Quadrant highlighted", width=340px, link={imagesdir}/styles/menus_selection.png]
+
+`selection_menu(on_select, items)` makes one of `items`, which shows the
+first of them. Picking an item puts it on the button and calls
+`on_select` with it. `items` is a sequence of strings, such as a
+`std::vector<std::string>`, an initializer list, or a `menu_selector` of
+your own: its `size()` and `operator[]` give the items. The sequence is
+read only while the menu is made.
+
+It returns a pair: the button, and a shared pointer to the label on it,
+for setting the text later. `on_item`, if given, is called with each item
+as it is made, and with its text: to disable some, for instance.
+
+`selection_menu(init)` is the button alone, showing `init`, with no menu,
+for a menu of your own.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   inline auto button_menu(
+      std::string text
+    , menu_position pos = menu_position::bottom_right
+    , color body_color = get_theme().default_button_color
+   );
+
+   using menu_background = panel;
+
+   std::pair<std::string, std::string>
+   display_shortcut(key_code k, int mod);
+
+   inline std::pair<std::string, std::string>
+   display_shortcut(key_info k);
+
+   inline auto menu_item_text(std::string text, float text_align = 0.0f);
+   inline auto menu_item_text(std::string text, shortcut_key shortcut);
+
+   inline auto menu_item(std::string text, float text_align = 0.0f);
+   inline auto menu_item(std::string text, shortcut_key shortcut);
+
+   inline auto menu_item_spacer();
+
+   struct menu_selector
+   {
+      virtual ~menu_selector() = default;
+
+      virtual std::size_t        size() const = 0;
+      virtual string_view        operator[](std::size_t index) const = 0;
+   };
+
+   using on_menu_item_function =
+      std::function<void(basic_menu_item_element&, string_view item)>;
+
+   inline auto selection_menu(std::string init);
+
+   inline auto selection_menu(
+      std::function<void(string_view item)> on_select
+    , menu_selector const& items
+    , float text_align = 0.0f
+    , on_menu_item_function on_item = [](auto&, auto) {}
+   );
+
+   template <typename Sequence>
+   inline auto selection_menu(
+      std::function<void(string_view item)> on_select
+    , Sequence const& seq
+    , float text_align = 0.0f
+    , on_menu_item_function on_item = [](auto&, auto) {}
+   );
+
+   template <typename T>
+   inline auto selection_menu(
+      std::function<void(string_view item)> on_select
+    , std::initializer_list<T> list
+    , float text_align = 0.0f
+    , on_menu_item_function on_item = [](auto&, auto) {}
+   );
+}
+```
+
+`diplay_shortcut`, the old name of `display_shortcut`, remains,
+deprecated.
+
+== Expressions
+
+=== Notation
+
+`t`:: A `std::string`.
+`pos`:: A `menu_position`.
+`sk`:: A `shortcut_key`.
+`k`:: A `key_code`.
+`mods`:: Modifiers, as in `key_info`.
+`f`:: A function taking the picked item, a `string_view`.
+`items`:: A sequence of strings, an initializer list, or a `menu_selector`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `button_menu(t, pos)`
+| A button of `t` and an arrow, opening its menu at `pos`.
+
+| `menu_item(t)`
+| A menu item of `t`.
+
+| `menu_item(t, sk)`
+| A menu item of `t`, with the shortcut `sk`, shown at its right.
+
+| `menu_item_spacer()`
+| A line between groups of items.
+
+| `display_shortcut(k, mods)`
+| The text of a shortcut: the modifiers, and the key.
+
+| `selection_menu(f, items)`
+| A selection menu of `items`, calling `f` with the item picked;
+  a pair of the button and its label.
+
+| `selection_menu(t)`
+| A selection menu's button alone, showing `t`; a pair of the button
+  and its label.
+|===
+
+== Example
+
+The selection menu of `examples/menus`, in the figure:
+
+```c++
+auto make_selection_menu()
+{
+   return selection_menu(
+      [](std::string_view select)
+      {
+         // This will be called when an item is selected
+      },
+      {
+         "Quantum Feedback Loop",
+         "Psionic Wave Oscillator",
+         "Gaia Abiogenesis",
+         "Chaotic Synchronicity",
+         "Omega Quadrant",
+         "Photonic Mesh",
+         "Antimatter Soup",
+         "Dark Beta Quarks",
+         "Cosmic Infrared Shift"
+      }
+
+   ).first; // We return only the first, the menu. the second is a shared pointer to the label.
+}
+```
 
 '''
 

@@ -30,5 +30,6 @@
 #include <elements/element/style/tab.hpp>
 #include <elements/element/style/text_entry.hpp>
 #include <elements/element/style/thumbwheel.hpp>
+#include <elements/element/style/tooltip.hpp>
 
 #endif

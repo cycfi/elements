@@ -160,6 +160,19 @@ namespace cycfi::elements
       composite_base::begin_focus(req);
    }
 
+   bool deck_element::hotkey(context const& ctx, key_info k)
+   {
+      // Every page is asked, for when it is selected; the selected page
+      // alone takes the key.
+      if (is_hotkey_test(k))
+         return layer_element::hotkey(ctx, k);
+      if (!ctx.enabled || _selected_index >= size())
+         return false;
+      auto& e = at(_selected_index);
+      context ectx{ctx, &e, bounds_of(ctx, _selected_index)};
+      return e.hotkey(ectx, k);
+   }
+
    void deck_element::select(std::size_t index)
    {
       if (index < size())

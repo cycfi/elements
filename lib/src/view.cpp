@@ -90,6 +90,7 @@ namespace cycfi::elements
          _current_bounds = subj_bounds;
          _main_element.layout(ctx);
          update_drop_types();
+         update_hotkeys();
       }
 
       // draw the subject
@@ -123,9 +124,23 @@ namespace cycfi::elements
       }
    }
 
+   // Ask the content which of its elements take hotkeys, when the content
+   // is set or laid out: each container keeps its own.
+   void view::update_hotkeys()
+   {
+      with_context_do(
+         [](auto const& ctx, auto& _main_element)
+         {
+            _main_element.hotkey(ctx, hotkey_test);
+         },
+         *this, _current_bounds
+      );
+   }
+
    void view::layout()
    {
       update_drop_types();
+      update_hotkeys();
       if (_current_bounds.is_empty())
          return;
 
@@ -140,6 +155,7 @@ namespace cycfi::elements
    void view::layout(element& element)
    {
       update_drop_types();
+      update_hotkeys();
       if (_current_bounds.is_empty())
          return;
 
@@ -367,6 +383,11 @@ namespace cycfi::elements
          [k, &handled](auto const& ctx, auto& _main_element)
          {
             handled = _main_element.key(ctx, k);
+
+            // A press the focus did not take may be a hotkey.
+            if (!handled
+               && (k.action == key_action::press || k.action == key_action::repeat))
+               handled = _main_element.hotkey(ctx, k);
          },
          *this, _current_bounds
       );

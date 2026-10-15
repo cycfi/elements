@@ -36,7 +36,13 @@ auto make_selection_menu()
    ).first; // We return only the first, the menu. the second is a shared pointer to the label.
 }
 
-auto make_popup_menu(char const* title, menu_position pos)
+// Show which item was chosen, by click or by its shortcut
+void alert(view& view_, std::string text)
+{
+   open_popup(message_box1(view_, std::move(text), icons::info, []{}), view_);
+}
+
+auto make_popup_menu(char const* title, menu_position pos, view& view_)
 {
    auto popup  = button_menu(title, pos);
 
@@ -56,12 +62,32 @@ auto make_popup_menu(char const* title, menu_position pos)
 
    // Here's how you attach functions that will be called when a
    // menu item is selected:
-   quantum_feedback_loop.on_click   = [](){ enable = true; };
-   psionic_wave_oscillator.on_click = [](){ enable = false; };
+   quantum_feedback_loop.on_click =
+      [&view_]()
+      {
+         enable = true;
+         alert(view_, "Quantum Feedback Loop: Photonic Mesh and Antimatter Soup enabled");
+      };
+   psionic_wave_oscillator.on_click =
+      [&view_]()
+      {
+         enable = false;
+         alert(view_, "Psionic Wave Oscillator: Photonic Mesh and Antimatter Soup disabled");
+      };
 
    auto sk1 = shortcut_key{key_code::g, mod_action};
    auto sk2 = shortcut_key{key_code::c, mod_action+mod_shift};
    auto sk3 = shortcut_key{key_code::b, mod_action+mod_alt};
+
+   // The rest just say they were chosen
+   auto alerting =
+      [&view_](auto item, std::string text)
+      {
+         item.on_click = [&view_, text]() { alert(view_, text); };
+         return item;
+      };
+   photonic_mesh.on_click = [&view_]() { alert(view_, "Photonic Mesh"); };
+   antimatter_soup.on_click = [&view_]() { alert(view_, "Antimatter Soup"); };
 
    auto menu =
       layer(
@@ -69,13 +95,13 @@ auto make_popup_menu(char const* title, menu_position pos)
             photonic_mesh,
             quantum_feedback_loop,
             psionic_wave_oscillator,
-            menu_item("Gaia Abiogenesis", sk1),
+            alerting(menu_item("Gaia Abiogenesis", sk1), "Gaia Abiogenesis"),
             menu_item_spacer(),
-            menu_item("Chaotic Synchronicity", sk2),
-            menu_item("Omega Quadrant"),
+            alerting(menu_item("Chaotic Synchronicity", sk2), "Chaotic Synchronicity"),
+            alerting(menu_item("Omega Quadrant"), "Omega Quadrant"),
             antimatter_soup,
-            menu_item("Dark Beta Quarks", sk3),
-            menu_item("Cosmic Infrared Shift")
+            alerting(menu_item("Dark Beta Quarks", sk3), "Dark Beta Quarks"),
+            alerting(menu_item("Cosmic Infrared Shift"), "Cosmic Infrared Shift")
          ),
          panel{}
       );
@@ -148,10 +174,10 @@ auto make_menus(view& view_)
       margin({20, 0, 20, 20},
          vtile(
             hmin_size(300, make_selection_menu()),
-            margin_top(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right)),
+            margin_top(20, make_popup_menu("Dropdown Menu", menu_position::bottom_right, view_)),
             margin_top(20, make_dynamic_menu("Dynamic Menu", menu_position::bottom_right)),
             margin_top(20, scroller(image{"deep_space.jpg"})),
-            margin_top(20, make_popup_menu("Dropup Menu", menu_position::top_right))
+            margin_top(20, make_popup_menu("Dropup Menu", menu_position::top_right, view_))
          )
       );
 }

@@ -25,6 +25,7 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       bool                    wants_control() const override;
       bool                    wants_focus() const override;
+      bool                    hotkey(context const& ctx, key_info k) override;
       std::string             class_name() const override { return "hidable"; }
       bool                    is_hidden = false;
    };
@@ -55,6 +56,15 @@ namespace cycfi::elements
       if (is_hidden)
          return false;
       return this->subject().wants_focus();
+   }
+
+   template <concepts::Element Subject>
+   inline bool hidable_element<Subject>::hotkey(context const& ctx, key_info k)
+   {
+      // Asked while hidden, for when it is shown.
+      if (is_hidden && !is_hotkey_test(k))
+         return false;
+      return base_type::hotkey(ctx, k);
    }
 
    template <concepts::Element Subject>

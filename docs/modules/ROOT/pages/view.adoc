@@ -178,7 +178,9 @@ The view passes each event to its content with a context of the
 content's bounds; each element passes it on to its children (see
 xref:elements/element.adoc[Element]). A click that no element takes,
 on the background for instance, removes the keyboard focus from
-whatever had it, such as a text box being edited. Where no element sets
+whatever had it, such as a text box being edited. A key press that
+the focus does not take goes to the content again, as a hotkey, which
+any element may take: a menu, for its items' shortcuts. Where no element sets
 the cursor, the view sets it to the arrow. `current_button()` returns the last mouse
 button event.
 

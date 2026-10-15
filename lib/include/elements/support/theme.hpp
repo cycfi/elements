@@ -95,6 +95,10 @@ namespace cycfi::elements
 
       float                child_window_title_size;
       float                child_window_opacity;
+
+      color                tooltip_color;
+      color                tooltip_text_color;
+      color                tooltip_shadow_color;
    };
 
    // Access to the global theme

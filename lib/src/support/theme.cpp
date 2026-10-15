@@ -91,6 +91,10 @@ namespace cycfi::elements
 
     , child_window_title_size    {1.0}
     , child_window_opacity       {0.95}
+
+    , tooltip_color              {rgba(250, 244, 222, 255)}
+    , tooltip_text_color         {rgba(40, 40, 40, 255)}
+    , tooltip_shadow_color       {rgba(0, 0, 0, 200)}
    {
    }
 

@@ -28,7 +28,7 @@ namespace cycfi::elements
    }
 
    std::pair<std::string, std::string>
-   diplay_shortcut(key_code k, int mod)
+   display_shortcut(key_code k, int mod)
    {
       std::string mod_, key_;
       char shifted = 0;

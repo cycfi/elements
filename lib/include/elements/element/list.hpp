@@ -470,6 +470,7 @@ namespace cycfi::elements
 
       std::size_t                size() const override;
       element&                   at(std::size_t ix) const override;
+      bool                       hotkey(context const& ctx, key_info k) override;
       mime_types                 drop_types() const override;
 
       void                       for_each_visible(

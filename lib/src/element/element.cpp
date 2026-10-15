@@ -349,6 +349,24 @@ namespace cycfi::elements
 
    /**
     * \brief
+    *    Handles a key that the focus did not take, as a hotkey.
+    *
+    *    Given `hotkey_test`, an element returns whether it takes hotkeys.
+    *    A container asks its elements so, keeps those that do, and answers
+    *    whether it kept any. The view asks when its content is set or laid
+    *    out. Given a key press that the focus did not take, a container
+    *    passes it to the elements it kept until one takes it.
+    *
+    * \return
+    *    false by default: the element takes no hotkeys.
+    */
+   bool element::hotkey(context const& /* ctx */, key_info /* k */)
+   {
+      return false;
+   }
+
+   /**
+    * \brief
     *    Handles a text event on the element.
     *
     *    While key handles raw key events, text handles processed text entry,

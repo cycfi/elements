@@ -107,6 +107,26 @@ namespace cycfi::elements
       return *(_cells[ix].elem_ptr =_composer->compose(ix)).get();
    }
 
+   // The cells come and go as the list scrolls: the list takes hotkeys,
+   // and offers them to the cells it holds now. at() would make the others.
+   bool list::hotkey(context const& ctx, key_info k)
+   {
+      if (is_hotkey_test(k))
+         return true;
+      if (!ctx.enabled)
+         return false;
+      for (std::size_t i = 0; i != _cells.size(); ++i)
+      {
+         auto& e = _cells[i].elem_ptr;
+         if (!e)
+            continue;
+         context ectx{ctx, e.get(), bounds_of(ctx, i)};
+         if (e->hotkey(ectx, hotkey_test) && e->hotkey(ectx, k))
+            return true;
+      }
+      return false;
+   }
+
    // Only the cells the list holds now: at() would make the others.
    mime_types list::drop_types() const
    {

@@ -153,6 +153,7 @@ namespace cycfi::elements
 
       void                    set_limits();
       void                    update_drop_types();
+      void                    update_hotkeys();
       void                    refresh_pending();
 
       // Elements to refresh, gathered until the next poll, so that a
@@ -247,6 +248,7 @@ namespace cycfi::elements
       std::reverse(_content.begin(), _content.end());
       set_limits();
       update_drop_types();
+      update_hotkeys();
    }
 
    namespace detail
@@ -272,6 +274,7 @@ namespace cycfi::elements
       std::reverse(_content.begin(), _content.end());
       set_limits();
       update_drop_types();
+      update_hotkeys();
    }
 
    inline void view::add(element_ptr e, bool focus_top)

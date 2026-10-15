@@ -393,6 +393,39 @@ namespace cycfi::elements
       return false;
    }
 
+   bool composite_base::hotkey(context const& ctx, key_info k)
+   {
+      auto&& try_hotkey = [&](std::size_t ix) -> bool
+      {
+         auto& e = at(ix);
+         context ectx{ctx, &e, bounds_of(ctx, ix)};
+         return e.hotkey(ectx, k);
+      };
+
+      // Keep the elements that take hotkeys, from the top for a layer.
+      if (is_hotkey_test(k))
+      {
+         _hotkeys.clear();
+         auto const n = size();
+         for (std::size_t i = 0; i != n; ++i)
+         {
+            auto ix = reverse_index()? n-1-i : i;
+            if (try_hotkey(ix))
+               _hotkeys.push_back(ix);
+         }
+         return !_hotkeys.empty();
+      }
+
+      if (!ctx.enabled)
+         return false;
+      for (auto ix : _hotkeys)
+      {
+         if (ix < size() && try_hotkey(ix))
+            return true;
+      }
+      return false;
+   }
+
    bool composite_base::text(context const& ctx, text_info info)
    {
       if (_focus != -1 && _focus < int(size()))

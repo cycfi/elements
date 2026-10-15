@@ -175,6 +175,10 @@ TEST_CASE("element page: the defaults", "[element_page]")
    CHECK_FALSE(e.wants_control());
    CHECK_FALSE(e.click(ctx, left_button({5, 5}, true)));
    CHECK_FALSE(e.key(ctx, tab_press()));
+   CHECK_FALSE(e.hotkey(ctx, tab_press()));
+   CHECK_FALSE(e.hotkey(ctx, hotkey_test));
+   CHECK(is_hotkey_test(hotkey_test));
+   CHECK_FALSE(is_hotkey_test(tab_press()));
    CHECK_FALSE(e.text(ctx, {'a', 0}));
    CHECK_FALSE(e.cursor(ctx, {5, 5}, cursor_tracking::hovering));
    CHECK_FALSE(e.scroll(ctx, {0, 1}, {5, 5}));

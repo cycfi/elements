@@ -11,6 +11,27 @@
 
 namespace cycfi::elements
 {
+   namespace
+   {
+      bool matches(key_info k, shortcut_key const& shortcut)
+      {
+         int mask = 0xF;
+         switch (shortcut.key)
+         {
+            case key_code::minus:
+            case key_code::equal:
+               mask &= ~mod_shift;
+               break;
+            default:
+               break;
+         }
+         return shortcut.key != key_code::unknown
+            && k.key == shortcut.key
+            && (k.modifiers & mask) == (shortcut.modifiers & mask)
+            ;
+      }
+   }
+
    void basic_button_menu::layout_menu(context const& ctx)
    {
       auto pu_limits = _popup->limits(ctx);
@@ -54,6 +75,29 @@ namespace cycfi::elements
             };
             break;
       }
+
+      // On the side asked for, or the other if it does not fit there and
+      // does on the other; then moved into the view.
+      auto const view = ctx.view_bounds();
+      auto const h = bounds.height();
+      bool const below = bounds.top >= ctx.bounds.bottom;
+      if (below && bounds.bottom > view.bottom
+         && ctx.bounds.top - h >= view.top)
+         bounds = bounds.move_to(bounds.left, ctx.bounds.top - h);
+      else if (!below && bounds.top < view.top
+         && ctx.bounds.bottom + h <= view.bottom)
+         bounds = bounds.move_to(bounds.left, ctx.bounds.bottom);
+
+      float dx = 0, dy = 0;
+      if (bounds.right > view.right)
+         dx = view.right - bounds.right;
+      if (bounds.left + dx < view.left)
+         dx = view.left - bounds.left;
+      if (bounds.bottom > view.bottom)
+         dy = view.bottom - bounds.bottom;
+      if (bounds.top + dy < view.top)
+         dy = view.top - bounds.top;
+      bounds = bounds.move(dx, dy);
 
       context new_ctx{ctx.view, ctx.canvas, _popup.get(), bounds};
       _popup->bounds(bounds);
@@ -117,6 +161,20 @@ namespace cycfi::elements
       }
    }
 
+   bool basic_button_menu::hotkey(context const& ctx, key_info k)
+   {
+      // The menu's items, while it is closed; while it is open, they have
+      // the keys themselves.
+      if (!_popup)
+         return false;
+      context pctx{ctx.view, ctx.canvas, _popup.get(), _popup->bounds()};
+      if (is_hotkey_test(k))
+         return _popup->hotkey(pctx, k);
+      if (!ctx.enabled || !is_enabled() || _popup->is_open(ctx.view))
+         return false;
+      return _popup->hotkey(pctx, k);
+   }
+
    void basic_menu_item_element::draw(context const& ctx)
    {
       if (ctx.enabled && is_selected() && is_enabled())
@@ -160,24 +218,6 @@ namespace cycfi::elements
    {
       if (k.action == key_action::press || k.action == key_action::repeat)
       {
-         auto&& equal =
-            [](auto k, auto shortcut)
-            {
-               int mask = 0xF;
-               switch (shortcut.key)
-               {
-                  case key_code::minus:
-                  case key_code::equal:
-                     mask &= ~mod_shift;
-                     break;
-                  default:
-                     break;
-               }
-               return (k.key == shortcut.key) &&
-                  ((k.modifiers & mask) == (shortcut.modifiers & mask))
-                  ;
-            };
-
          switch (k.key)
          {
             case key_code::enter:
@@ -277,7 +317,7 @@ namespace cycfi::elements
                   for (std::size_t i = 0; i != c->size(); ++i)
                   {
                      auto e = find_element<basic_menu_item_element*>(&c->at(i));
-                     if (e && e->is_enabled() && equal(k, e->shortcut))
+                     if (e && e->is_enabled() && matches(k, e->shortcut))
                      {
                         if (e->on_click)
                            e->on_click();
@@ -303,6 +343,17 @@ namespace cycfi::elements
          }
       }
       return false;
+   }
+
+   bool basic_menu_item_element::hotkey(context const& ctx, key_info k)
+   {
+      if (is_hotkey_test(k))
+         return shortcut.key != key_code::unknown;
+      if (!ctx.enabled || !is_enabled() || !matches(k, shortcut))
+         return false;
+      if (on_click)
+         on_click();
+      return true;
    }
 
    bool basic_menu_item_element::cursor(context const& ctx, point p, cursor_tracking status)

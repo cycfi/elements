@@ -81,6 +81,7 @@ namespace cycfi::elements
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
+      bool                    hotkey(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;
@@ -282,6 +283,13 @@ namespace cycfi::elements
    indirect<Base>::key(context const& ctx, key_info k)
    {
       return this->get().key(ctx, k);
+   }
+
+   template <concepts::Element Base>
+   inline bool
+   indirect<Base>::hotkey(context const& ctx, key_info k)
+   {
+      return this->get().hotkey(ctx, k);
    }
 
    template <concepts::Element Base>

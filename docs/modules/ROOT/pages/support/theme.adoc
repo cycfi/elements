@@ -223,6 +223,17 @@ See {marks_and_scales} for where the ticks and grids are drawn.
 | `child_window_opacity` | `0.95` | child window
 |===
 
+=== Tooltips
+
+[cols="1,1,2"]
+|===
+| Member | Default | Read by
+
+| `tooltip_color` | `rgba(250, 244, 222, 255)` | tooltip bubble
+| `tooltip_text_color` | `rgba(40, 40, 40, 255)` | tooltip bubble
+| `tooltip_shadow_color` | `rgba(0, 0, 0, 200)` | tooltip bubble
+|===
+
 == Example
 
 Set a theme once, before the view is made, to style the whole

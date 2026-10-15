@@ -66,6 +66,7 @@ namespace cycfi::elements
       bool                    click(context const& ctx, mouse_button btn) override;
       void                    drag(context const& ctx, mouse_button btn) override;
       bool                    key(context const& ctx, key_info k) override;
+      bool                    hotkey(context const& ctx, key_info k) override;
       bool                    text(context const& ctx, text_info info) override;
       bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
       bool                    scroll(context const& ctx, point dir, point p) override;

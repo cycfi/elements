@@ -4,9 +4,319 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/child_window.hpp`, `element/style/dialog.hpp`, `element/style/message_box.hpp`.
+The stock child windows, dialogs and message boxes. Each is built from
+the parts on the xref:elements/child_windows.adoc[Child Windows] and
+xref:elements/popups.adoc[Popups and Modals] pages.
 
-// To be written.
+=== Child Windows
+
+`basic_child_window(title, bounds, content)` is a
+xref:elements/child_windows.adoc[child window] with a title bar that
+moves it and edges that resize it, around `content`.
+`closable_child_window` adds a close button at the right of the title
+bar. With a point `pos` in place of `bounds`, the window takes its
+content's minimum size at `pos`.
+
+image::styles/dialogs_child_windows.png[alt="Two child windows: Basic, with a title bar only, and Closable, with a close button at the right of its title bar", width=480px, link={imagesdir}/styles/dialogs_child_windows.png]
+
+The title's size and the window's opacity are the theme's
+`child_window_title_size` and `child_window_opacity` (see
+xref:support/theme.adoc[Theme]).
+
+=== Dialogs
+
+A dialog is a xref:elements/popups.adoc[modal] of its content and its
+buttons on a panel, centered in the view. Each dialog function returns
+it as an `element_ptr`. `open_popup(dialog, view)` opens it, 10 ms
+later, so that the click that asked for it can end first;
+`view.add(dialog)` opens it at the next `poll`.
+
+The number in the name is the number of buttons:
+
+[cols="1,1,1,1"]
+|===
+| Function | Buttons | Enter | Escape
+
+| `dialog0`
+| none
+| --
+| --
+
+| `dialog1`
+| OK
+| OK
+| --
+
+| `dialog2`
+| Cancel, OK
+| OK
+| Cancel
+
+| `dialog2r`
+| Cancel, OK
+| Cancel
+| Cancel
+|===
+
+A click on a button, or the key that maps to it, calls the button's
+function and closes the dialog. The default button, OK or with
+`dialog2r` Cancel, is drawn in the theme's `indicator_color`. `dialog2r`
+is for a choice that cannot be undone: neither key makes it. A dialog
+takes every key while it has the focus, so a key it does not map
+leaves it open. `dialog0` has no buttons and maps no keys; remove it
+with `view.remove(dialog)`.
+
+image::styles/dialogs_example.png[alt="A dialog titled The Thraxian Legacy, with three checked check boxes and Cancel and OK buttons, OK in blue", width=420px, link={imagesdir}/styles/dialogs_example.png]
+
+Each button is the theme's `dialog_button_size` wide. The buttons'
+text and the default button's color are arguments, after the
+functions. In place of the functions, `dialog1`, `dialog2` and
+`dialog2r` also take buttons of your own, as shared pointers. Set each
+button's `on_click` before the call: the dialog wraps it to close the
+dialog after it.
+
+=== Message Boxes
+
+`message_box0` to `message_box2r` are the dialogs of the same names,
+with an icon and a message for content. The message is wrapped in a
+text box of the theme's `message_textbox_size`, 300 by 120 by
+default.
+
+image::styles/dialogs_message_box.png[alt="A message box with a warning icon reading Delete the selected files? This cannot be undone., with Cancel in blue and Delete", width=420px, link={imagesdir}/styles/dialogs_message_box.png]
+
+```c++
+auto box = message_box2r(
+   view_, "Delete the selected files? This cannot be undone.",
+   icons::attention, on_delete, on_cancel, "Delete"
+);
+open_popup(box, view_);
+```
+
+A dialog blocks the content under it, but does not dim it; put a
+`ui_block` under it for that (see
+xref:elements/popups.adoc#_modals[Modals]).
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   // Child windows
+   template <typename Content>
+   auto basic_child_window(std::string title, rect bounds, Content&& content);
+
+   template <typename Content>
+   auto basic_child_window(std::string title, point pos, Content&& content);
+
+   template <typename Content>
+   auto closable_child_window(std::string title, rect bounds, Content&& content);
+
+   template <typename Content>
+   auto closable_child_window(std::string title, point pos, Content&& content);
+
+   // Dialogs
+   template <concepts::Element Content>
+   inline auto dialog0(Content&& content);
+
+   template <concepts::Element Content, concepts::NullaryFunction F>
+   inline auto dialog1(
+      view& view_
+    , Content&& content
+    , F&& on_ok
+    , std::string ok_text = "OK"
+    , color ok_color = get_theme().indicator_color
+   );
+
+   template <
+      concepts::Element Content
+    , concepts::NullaryFunction F1
+    , concepts::NullaryFunction F2
+   >
+   inline auto dialog2(
+      view& view_
+    , Content&& content
+    , F1&& on_ok
+    , F2&& on_cancel
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
+    , color ok_color = get_theme().indicator_color
+   );
+
+   template <
+      concepts::Element Content
+    , concepts::NullaryFunction F1
+    , concepts::NullaryFunction F2
+   >
+   inline auto dialog2r(
+      view& view_
+    , Content&& content
+    , F1&& on_ok
+    , F2&& on_cancel
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
+    , color cancel_color = get_theme().indicator_color
+   );
+
+   // With buttons of your own
+   template <concepts::Element Content, concepts::ElementPtr BtnPtr>
+   inline auto dialog1(view& view_, Content&& content, BtnPtr ok_button);
+
+   template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
+   inline auto dialog2(
+      view& view_, Content&& content
+    , ButtonPtr ok_button, ButtonPtr cancel_button);
+
+   template <concepts::Element Content, concepts::ElementPtr ButtonPtr>
+   inline auto dialog2r(
+      view& view_, Content&& content
+    , ButtonPtr ok_button, ButtonPtr cancel_button);
+
+   inline void open_popup(element_ptr popup, view& view_);
+
+   // Message boxes
+   inline auto message_box0(
+      std::string message
+    , std::uint32_t icon_id
+    , extent text_box_size = get_theme().message_textbox_size
+   );
+
+   template <typename F>
+   inline auto message_box1(
+      view& view_
+    , std::string message
+    , std::uint32_t icon_id
+    , F&& on_ok
+    , std::string ok_text = "OK"
+    , extent text_box_size = get_theme().message_textbox_size
+    , color ok_color = get_theme().indicator_color
+   );
+
+   template <typename F1, typename F2>
+   inline auto message_box2(
+      view& view_
+    , std::string message
+    , std::uint32_t icon_id
+    , F1&& on_ok
+    , F2&& on_cancel
+    , std::string ok_text = "OK"
+    , std::string cancel_text = "Cancel"
+    , extent text_box_size = get_theme().message_textbox_size
+    , color ok_color = get_theme().indicator_color
+   );
+
+   // message_box2r: as message_box2, Cancel the default.
+}
+```
+
+The headers are `element/style/child_window.hpp`,
+`element/style/dialog.hpp` and `element/style/message_box.hpp`.
+
+== Expressions
+
+=== Notation
+
+`t`, `msg`:: `std::string`s.
+`r`:: A `rect`, in view coordinates.
+`pos`:: A `point`, in view coordinates.
+`e`:: An element.
+`ok`, `cancel`:: Functions taking no arguments.
+`i`:: An icon's id (see xref:support/icons.adoc[Icons]).
+`d`:: A dialog.
+`view_`:: A `view`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `basic_child_window(t, r, e)`
+| A child window of `e` at `r`, titled `t`, moved by its title bar and
+  resized by its edges.
+
+| `basic_child_window(t, pos, e)`
+| The same at `pos`, at the minimum size of `e`.
+
+| `closable_child_window(t, r, e)`, `closable_child_window(t, pos, e)`
+| The same, with a close button.
+
+| `dialog0(e)`
+| A dialog of `e`, with no buttons.
+
+| `dialog1(view_, e, ok)`
+| A dialog of `e` with an OK button, which calls `ok`.
+
+| `dialog2(view_, e, ok, cancel)`
+| A dialog of `e` with Cancel and OK buttons; OK is the default.
+
+| `dialog2r(view_, e, ok, cancel)`
+| The same, with Cancel the default.
+
+| `message_box0(msg, i)`, `message_box1(view_, msg, i, ok)`, ...
+| The dialog of the same number, of the icon `i` and the message `msg`.
+
+| `open_popup(d, view_)`
+| Open `d` in `view_`, 10 ms later.
+|===
+
+== Example
+
+`examples/dialogs`: a dialog of three check boxes under a heading, with
+Cancel and OK.
+
+```c++
+auto dialog_content()
+{
+   auto  check_box1 = check_box("Alpha Stone");
+   auto  check_box2 = check_box("The Zorane Gambit");
+   auto  check_box3 = check_box("Cael Vosburgh's Exploration");
+
+   check_box1.value(true);
+   check_box2.value(true);
+   check_box3.value(true);
+
+   return
+      hsize(300, simple_heading(
+         margin({10, 10, 10, 10},
+            vtile(
+               margin_top(10, align_left(check_box1)),
+               margin_top(10, align_left(check_box2)),
+               margin_top(10, align_left(check_box3))
+            )
+         ),
+         "The Thraxian Legacy",
+         1.1
+      ));
+}
+
+auto make_dialog(view& _view, app& _app)
+{
+   auto&& on_ok =
+      [&_app]()
+      {
+         _app.stop(); // On OK, stop the app
+      };
+
+   auto&& on_cancel =
+      []()
+      {
+         // Do something on cancel
+      };
+
+   auto dialog = dialog2(_view, dialog_content(), on_ok, on_cancel);
+
+   return dialog;
+}
+
+// In main, once the view is made:
+open_popup(make_dialog(_view, _app), _view);
+```
 
 '''
 

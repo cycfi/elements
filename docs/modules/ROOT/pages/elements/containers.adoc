@@ -15,6 +15,12 @@ A container holds content and decides how much of it is shown, and where.
   drags.
 * xref:elements/docking.adoc[Docking]: child windows the user docks
   along the edges of the view, and floats again.
+* xref:elements/popups.adoc[Popups and Modals]: content that opens over
+  the view, and modals that block what is under them.
+* xref:elements/tooltips.adoc[Tooltips]: tips beside an element, when
+  the pointer rests on it.
+* xref:elements/menus.adoc[Menus]: menus that buttons open, and the
+  shortcuts of their items.
 
 '''
 

@@ -325,6 +325,13 @@ namespace cycfi::elements::transfer
       }
       return bytes;
    }
+
+   // An entry the host set itself, as a round trip through the system
+   // clipboard would return it: text types as a string, the rest as bytes.
+   inline payload_data as_received(std::string_view mime, payload_data const& data)
+   {
+      return from_wire(mime, mime, to_wire(mime, mime, data));
+   }
 }
 
 #endif

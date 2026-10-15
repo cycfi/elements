@@ -13,6 +13,7 @@
 #include <artist/resources.hpp>
 #include <infra/filesystem.hpp>
 #include "headless_host.hpp"
+#include "../common/transfer.hpp"
 #include <string>
 #include <utility>
 #include <vector>
@@ -126,7 +127,7 @@ namespace cycfi::elements
       for (auto const& type : types)
       {
          if (auto i = the_clipboard.find(type); i != the_clipboard.end())
-            result.insert(*i);
+            result[type] = transfer::as_received(type, i->second);
       }
       return result;
    }

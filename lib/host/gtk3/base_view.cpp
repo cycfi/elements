@@ -1139,7 +1139,7 @@ namespace cycfi::elements
          for (auto const& type : types)
          {
             if (auto i = the_clip_data.find(type); i != the_clip_data.end())
-               result.insert(*i);
+               result[type] = transfer::as_received(type, i->second);
          }
          return result;
       }

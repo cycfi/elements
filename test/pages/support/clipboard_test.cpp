@@ -58,10 +58,8 @@ TEST_CASE("clipboard page: copy and paste", "[clipboard_page]")
    set_clipboard({{"application/x-elements-page", std::string{"raw"}}});
    auto raw = get_clipboard({"application/x-elements-page"});
    REQUIRE(raw.size() == 1);
-#if !defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
    CHECK(std::holds_alternative<std::vector<std::byte>>(
       raw["application/x-elements-page"]));
-#endif
    set_clipboard({
       {"text/plain", std::string{"hello"}},
       {"text/html", std::string{"<b>hello</b>"}}

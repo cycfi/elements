@@ -342,27 +342,67 @@ TEST_CASE("menus page: hotkeys", "[menus_page]")
    }
 }
 
+TEST_CASE("menus page: the menu bar snippet", "[menus_page]")
+{
+   auto edit = menu_item("Edit");
+   auto help = menu_item("Help");
+
+   // The page's snippet, verbatim.
+   auto recent = menu_item("Open Recent");
+   recent.menu(
+      layer(vtile(menu_item("Nebula.elm"), menu_item("Pulsar.elm")), panel{})
+   );
+
+   auto file = menu_item("File");
+   file.menu(
+      layer(vtile(menu_item("New"), menu_item("Open..."), recent), panel{})
+   );
+
+   auto bar = layer(
+      htile(hmin(file), hmin(edit), hmin(help), element{}),
+      menu_background{}
+   );
+
+   // File, the first title, opens its menu.
+   test_view tv{extent{300, 200}};
+   open(tv);
+   tv.view_.content(vtile(bar, box(bkd_color)), box(bkd_color));
+   tv.view_.layout();
+   tv.draw();
+   auto const base = tv.view_.layers().size();
+   click(tv.view_, {20, 10});
+   wait(tv.view_); wait(tv.view_);
+   CHECK(tv.view_.layers().size() == base + 1);
+}
+
 #if !defined(ARTIST_RECORDING)
 namespace
 {
-   // The page's example: examples/menus, verbatim.
+   // The page's examples: examples/menus, verbatim.
    // Show which item was chosen, by click or by its shortcut
    void alert(view& view_, std::string text)
    {
-      open_popup(message_box1(view_, std::move(text), icons::info, []{}), view_);
+      auto msg = message_box1(view_, std::move(text), icons::info, []{});
+      open_popup(msg, view_);
+   }
+
+   // A menu item that just says it was chosen. The shortcut is optional.
+   template <typename... Shortcut>
+   auto chosen_item(view& view_, char const* text, Shortcut... shortcut)
+   {
+      auto item = menu_item(text, shortcut...);
+      item.on_click = [&view_, text]() { alert(view_, text); };
+      return item;
    }
 
    auto make_popup_menu(char const* title, menu_position pos, view& view_)
    {
-      auto popup  = button_menu(title, pos);
-
       auto skf = shortcut_key{key_code::f, mod_action};
       auto skp = shortcut_key{key_code::p, mod_action};
-
-      auto quantum_feedback_loop = menu_item("Quantum Feedback Loop", skf);
-      auto psionic_wave_oscillator = menu_item("Psionic Wave Oscillator", skp);
-      auto photonic_mesh = menu_item("Photonic Mesh");
-      auto antimatter_soup = menu_item("Antimatter Soup");
+      auto quantum_feedback = menu_item("Quantum Feedback Loop", skf);
+      auto psionic_wave = menu_item("Psionic Wave Oscillator", skp);
+      auto photonic_mesh = chosen_item(view_, "Photonic Mesh");
+      auto antimatter_soup = chosen_item(view_, "Antimatter Soup");
 
       // Here's how you dynamically enable or disable menu items:
       // Just give it a function that returns the enabled state.
@@ -372,17 +412,19 @@ namespace
 
       // Here's how you attach functions that will be called when a
       // menu item is selected:
-      quantum_feedback_loop.on_click =
+      quantum_feedback.on_click =
          [&view_]()
          {
             enable = true;
-            alert(view_, "Quantum Feedback Loop: Photonic Mesh and Antimatter Soup enabled");
+            alert(view_, "Quantum Feedback Loop: "
+               "Photonic Mesh and Antimatter Soup enabled");
          };
-      psionic_wave_oscillator.on_click =
+      psionic_wave.on_click =
          [&view_]()
          {
             enable = false;
-            alert(view_, "Psionic Wave Oscillator: Photonic Mesh and Antimatter Soup disabled");
+            alert(view_, "Psionic Wave Oscillator: "
+               "Photonic Mesh and Antimatter Soup disabled");
          };
 
       auto sk1 = shortcut_key{key_code::g, mod_action};
@@ -390,35 +432,89 @@ namespace
       auto sk3 = shortcut_key{key_code::b, mod_action+mod_alt};
 
       // The rest just say they were chosen
-      auto alerting =
-         [&view_](auto item, std::string text)
-         {
-            item.on_click = [&view_, text]() { alert(view_, text); };
-            return item;
-         };
-      photonic_mesh.on_click = [&view_]() { alert(view_, "Photonic Mesh"); };
-      antimatter_soup.on_click = [&view_]() { alert(view_, "Antimatter Soup"); };
-
       auto menu =
          layer(
             vtile(
                photonic_mesh,
-               quantum_feedback_loop,
-               psionic_wave_oscillator,
-               alerting(menu_item("Gaia Abiogenesis", sk1), "Gaia Abiogenesis"),
+               quantum_feedback,
+               psionic_wave,
+               chosen_item(view_, "Gaia Abiogenesis", sk1),
                menu_item_spacer(),
-               alerting(menu_item("Chaotic Synchronicity", sk2), "Chaotic Synchronicity"),
-               alerting(menu_item("Omega Quadrant"), "Omega Quadrant"),
+               chosen_item(view_, "Chaotic Synchronicity", sk2),
+               chosen_item(view_, "Omega Quadrant"),
                antimatter_soup,
-               alerting(menu_item("Dark Beta Quarks", sk3), "Dark Beta Quarks"),
-               alerting(menu_item("Cosmic Infrared Shift"), "Cosmic Infrared Shift")
+               chosen_item(view_, "Dark Beta Quarks", sk3),
+               chosen_item(view_, "Cosmic Infrared Shift")
             ),
             panel{}
          );
 
+      auto popup = button_menu(title, pos);
       popup.menu(hsize(300, menu));
-
       return popup;
+   }
+
+   // A menu bar: menu items in a row, each with a menu of its own. In
+   // File, Open Recent has one too: a submenu, opened to its right.
+   auto make_menu_bar(view& view_)
+   {
+      auto recent = menu_item("Open Recent");
+      recent.menu(
+         layer(
+            vtile(
+               chosen_item(view_, "Nebula.elm"),
+               chosen_item(view_, "Pulsar.elm"),
+               chosen_item(view_, "Quasar.elm")
+            ),
+            panel{}
+         )
+      );
+
+      auto file = menu_item("File");
+      file.menu(
+         hsize(220,
+            layer(
+               vtile(
+                  chosen_item(view_, "New",
+                     shortcut_key{key_code::n, mod_action}),
+                  chosen_item(view_, "Open...",
+                     shortcut_key{key_code::o, mod_action}),
+                  recent,
+                  menu_item_spacer(),
+                  chosen_item(view_, "Save",
+                     shortcut_key{key_code::s, mod_action})
+               ),
+               panel{}
+            )
+         )
+      );
+
+      auto edit = menu_item("Edit");
+      edit.menu(
+         hsize(220,
+            layer(
+               vtile(
+                  chosen_item(view_, "Cut",
+                     shortcut_key{key_code::x, mod_action}),
+                  chosen_item(view_, "Copy",
+                     shortcut_key{key_code::c, mod_action}),
+                  chosen_item(view_, "Paste",
+                     shortcut_key{key_code::v, mod_action})
+               ),
+               panel{}
+            )
+         )
+      );
+
+      auto help = menu_item("Help");
+      help.menu(layer(chosen_item(view_, "About Menus"), panel{}));
+
+      // The titles keep their own widths; the empty element takes the
+      // rest of the bar.
+      return layer(
+         htile(hmin(file), hmin(edit), hmin(help), element{}),
+         menu_background{}
+      );
    }
 }
 
@@ -427,9 +523,10 @@ TEST_CASE("menus page: example", "[menus_page]")
    test_view tv{extent{340, 250}, 2};
    open(tv);
    auto& view_ = tv.view_;
+   auto const down = menu_position::bottom_right;
+   auto dropdown = make_popup_menu("Dropdown Menu", down, view_);
    view_.content(
-      margin({20, 20, 20, 20},
-         align_left_top(hsize(200, make_popup_menu("Dropdown Menu", menu_position::bottom_right, view_)))),
+      margin({20, 20, 20, 20}, align_left_top(hsize(200, dropdown))),
       box(bkd_color)
    );
    view_.layout();
@@ -447,5 +544,47 @@ TEST_CASE("menus page: example", "[menus_page]")
    wait(view_);
    tv.draw();
    tv.img.save_png(std::string{RESULTS_PATH} + "menus_example.png");
+}
+TEST_CASE("menus page: submenus and a menu bar", "[menus_page]")
+{
+   test_view tv{extent{420, 220}, 2};
+   open(tv);
+   auto& view_ = tv.view_;
+   view_.content(vtile(make_menu_bar(view_), box(bkd_color)), box(bkd_color));
+   view_.layout();
+   tv.draw();
+
+   // File opens its menu below it.
+   auto const base = view_.layers().size();
+   click(view_, {25, 12});
+   wait(view_); wait(view_);
+   auto file_menu = menu_of(view_);
+   REQUIRE(file_menu);
+   CHECK(view_.layers().size() == base + 1);
+   auto const fb = file_menu->bounds();
+   CHECK(fb.left == 0);
+   CHECK(fb.top > 0);
+
+   // Down the menu: New and Open open nothing; Open Recent opens its
+   // submenu to its right.
+   view_.layout();
+   tv.draw();
+   float y = fb.top + 2;
+   for (; y < fb.bottom; y += 4)
+   {
+      view_.cursor({fb.left + 40, y}, cursor_tracking::hovering);
+      wait(view_); wait(view_);
+      if (view_.layers().size() != base + 1)
+         break;
+   }
+   CHECK(y > fb.top + fb.height() / 3);
+   CHECK(view_.layers().size() == base + 2);
+   auto sub = menu_of(view_);
+   REQUIRE(sub);
+   CHECK(sub->bounds().left == fb.right);
+
+   view_.layout();
+   tv.draw();
+   tv.img.save_png(std::string{RESULTS_PATH} + "menus_bar.png");
 }
 #endif

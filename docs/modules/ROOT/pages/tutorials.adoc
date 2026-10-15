@@ -90,7 +90,8 @@ each. Read the program alongside its reference page.
 | Pages behind tabs. See xref:styles/notebooks.adoc[Notebooks].
 
 | `menus`
-| Menus, menu items and shortcuts. See xref:elements/menus.adoc[Menus].
+| Menus, menu items, shortcuts, submenus and a menu bar. See
+  xref:elements/menus.adoc[Menus].
 
 | `popups`, `tooltip`
 | Popups and tooltips. See xref:elements/popups.adoc[Popups] and

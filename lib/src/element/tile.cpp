@@ -17,32 +17,24 @@ namespace cycfi::elements
    {
       struct layout_info
       {
-         float min, max, stretch, alloc;
+         float min, max, stretch, alloc, density;
          std::size_t index;
       };
-
-      bool is_almost_zero(float val, int ulp = 1)
-      {
-         // unless the result is subnormal
-         return val < std::numeric_limits<float>::min() ||
-         // the machine epsilon has to be scaled to the magnitude of the values used
-         // and multiplied by the desired precision in ULPs (units in the last place)
-         val <= std::numeric_limits<float>::epsilon() * val * ulp;
-      }
 
       auto range(layout_info info)
       {
          return info.max - info.min;
       }
 
-      auto density(layout_info info)
+      // Stretch per unit of growable range. A fixed element (no range) has
+      // infinite density, so it sorts first and is settled before any space is
+      // handed out.
+      float compute_density(layout_info const& info)
       {
-         auto r = range(info);
-
-         if (r <= 0.0f || is_almost_zero(r))
+         auto const r = info.max - info.min;
+         if (r <= 0.0f)
             return std::numeric_limits<float>::max();
-         else
-            return info.stretch / r;
+         return info.stretch / r;
       }
 
       // Distribute space proportionally to each element stretchiness.
@@ -56,20 +48,22 @@ namespace cycfi::elements
          if (sum_min >= space)
             return;
 
-         // Sort elements by "density". If any elements would reach their max size,
-         // then they will be first. This simplifies the algorithm from O(n * n)
-         // to O(n log n) because any remaining free space can be redistributed
-         // according to the new sum of stretch proportions without having to redo
-         // space allocations for previous elements.
+         // Sort elements by precomputed density, densest first. Any element that
+         // would reach its max size sorts ahead of every one that would not, so a
+         // single pass settles the layout: once an element saturates we drop its
+         // stretch and consumed range from the pools and move on, never having to
+         // revisit an earlier element. That makes this O(n log n), not O(n * n).
+         // The caller scatters each alloc back to its index, so no re-sort to the
+         // original order is needed.
          std::sort(elements.begin(), elements.end(),
-            [](layout_info lhs, layout_info rhs){ return density(lhs) > density(rhs); });
+            [](layout_info const& lhs, layout_info const& rhs){ return lhs.density > rhs.density; });
          auto sum_stretch = std::accumulate(elements.begin(), elements.end(), 0.0f,
-            [](double sum, layout_info elem){ return sum + elem.stretch; });
+            [](float sum, layout_info const& elem){ return sum + elem.stretch; });
          auto free_space = space - sum_min;
 
          for (auto& e : elements)
          {
-            if (sum_stretch <= 0.0f || is_almost_zero(sum_stretch))
+            if (sum_stretch <= 0.0f)
                break;
 
             auto const alloc = e.stretch / sum_stretch * free_space;
@@ -85,10 +79,6 @@ namespace cycfi::elements
                e.alloc += alloc;
             }
          }
-
-         // retain initial order needed for further calculations
-         std::sort(elements.begin(), elements.end(),
-            [](layout_info lhs, layout_info rhs){ return lhs.index < rhs.index; });
       }
 
       template <axis Axis, class TileElement, axis OtherAxis = other(Axis)>
@@ -129,6 +119,7 @@ namespace cycfi::elements
             info[i].max = limits.max[Axis];
             info[i].alloc = limits.min[Axis];
             info[i].index = i;
+            info[i].density = compute_density(info[i]);
          }
 
          auto const other_axis_min = axis_min(ctx.bounds, OtherAxis);
@@ -138,15 +129,20 @@ namespace cycfi::elements
          // Compute the best fit for all elements
          allocate(my_axis_extent, info);
 
-         // Now we have the final layout. We can now layout the individual
-         // elements.
+         // allocate left info sorted by density. Scatter each element's size
+         // back to its own slot (O(n)), reusing tile_offsets as the buffer.
          tile_offsets.resize(sz);
+         for (auto const& e : info)
+            tile_offsets[e.index] = e.alloc;
+
+         // Now we have the final layout. We can now layout the individual
+         // elements, turning the per-tile sizes into cumulative end offsets.
          auto curr = 0.0f;
          for (std::size_t i = 0; i != sz; ++i)
          {
-            tile_offsets[i] = curr + info[i].alloc;
             auto const prev = curr;
-            curr += info[i].alloc;
+            curr += tile_offsets[i];
+            tile_offsets[i] = curr;
 
             auto& elem = tile.at(i);
             auto ebounds = make_rect(Axis, prev+my_axis_min, other_axis_min, curr+my_axis_min, other_axis_max);

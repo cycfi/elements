@@ -424,11 +424,11 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A menu is a <a href="popups.html" class="xref page">popup menu</a> that a button opens.
-The button is a <code>basic_button_menu</code>; the menu is any element, usually a
-column of menu items on a panel. A menu item can open a menu of its own:
-a submenu in a menu, and in a row of items, a menu bar. The stock menu
-buttons and items are on the <a href="../styles/menus.html" class="xref page">Styles: Menus</a> page.</p>
+<p>A menu is a <a href="popups.html" class="xref page">popup menu</a>: usually a column of
+menu items on a panel. A menu button opens one. A menu item can open one
+too: a submenu, in a menu, or a menu bar&#8217;s menu, in a row of items. The
+stock buttons and items are on the <a href="../styles/menus.html" class="xref page">Styles: Menus</a>
+page.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -438,98 +438,59 @@ buttons and items are on the <a href="../styles/menus.html" class="xref page">St
 <div class="sect2">
 <h3 id="_menu_buttons"><a class="anchor" href="#_menu_buttons"></a>Menu Buttons</h3>
 <div class="paragraph">
-<p><code>menu(m)</code> gives the button its menu, <code>m</code>. A press on the button opens
-the menu beside it, where <code>position</code> says:</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top"><code>menu_position</code></th>
-<th class="tableblock halign-left valign-top">The menu</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bottom_right</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Below the button, from its left edge to the right. The default.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bottom_left</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Below the button, from its right edge to the left.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>top_right</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Above the button, from its left edge to the right.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>top_left</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Above the button, from its right edge to the left.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>If the menu does not fit above or below the button and fits on the other
-side, it goes there; then it is moved along until it is inside the view.</p>
+<p>A <code>basic_button_menu</code> is a button with a menu, given with <code>menu(m)</code>. A
+press on the button opens it, above or below the button (<code>top_</code> or
+<code>bottom_</code> in <code>menu_position</code>), running right from the button&#8217;s left edge
+or left from its right edge (<code>_right</code> or <code>_left</code>): <code>bottom_right</code> by
+default. A menu that does not fit on its side but fits on the other goes
+there, and is then moved into the view.</p>
 </div>
 <div class="paragraph">
 <p>The user picks an item with a click, or presses on the button, drags to
-the item and releases. A press outside the menu closes it. As the menu
-closes, the button&#8217;s value goes back to <code>false</code>.</p>
+the item and releases. A press outside the menu closes it, and the
+button&#8217;s value goes back to <code>false</code>.</p>
 </div>
 <div class="paragraph">
-<p><code>on_open_menu</code> is called with the button each time the menu opens,
-before it opens. A menu that changes can be built there, and given to
-the button with <code>menu</code>.</p>
+<p><code>on_open_menu</code> is called with the button before the menu opens, each
+time. A menu that changes is built there and given with <code>menu</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_menu_items"><a class="anchor" href="#_menu_items"></a>Menu Items</h3>
 <div class="paragraph">
 <p><code>basic_menu_item(e)</code> makes <code>e</code> an item of a menu. The item under the
-pointer is highlighted in the theme&#8217;s <code>indicator_color</code>. A press on an
-item calls its <code>on_click</code>, then closes the menu, along with any menus it
-was reached through.</p>
+pointer is highlighted in the theme&#8217;s <code>indicator_color</code>. A press on it
+calls its <code>on_click</code> and closes the menu, with any menus it was reached
+through.</p>
 </div>
 <div class="paragraph">
-<p><code>is_enabled</code> is a function the item calls each time it needs to know
-whether it is enabled. A disabled item is not highlighted, is skipped by
-the arrow keys, and takes no click or shortcut; its look is up to <code>e</code>,
-drawn in a context with <code>enabled</code> false.</p>
-</div>
-<div class="paragraph">
-<p>While the menu is open, the Up and Down keys move the highlight to the
-item above or below, Enter picks the highlighted item, and Escape closes
-the menu.</p>
+<p><code>is_enabled</code> says whether the item is enabled, and is called each time
+that is needed. A disabled item is never highlighted, takes no press,
+key or shortcut, and is drawn in a context with <code>enabled</code> false; how it
+looks is up to <code>e</code>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_submenus_and_menu_bars"><a class="anchor" href="#_submenus_and_menu_bars"></a>Submenus and Menu Bars</h3>
 <div class="paragraph">
-<p><code>menu(m)</code> gives an item a menu of its own, <code>m</code>, as <code>menu(m)</code> does a
-menu button. A press on the item opens <code>m</code>:</p>
+<p><code>menu(m)</code> gives an item a menu of its own, as it does a menu button. A
+press on the item opens it:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>From an item in a menu, to the item&#8217;s right, or to its left if it fits
-only there. The item shows an arrow at its right. Pointing at the item
-opens its menu too.</p>
+<p>In a menu: to the item&#8217;s right, or its left if only that fits. The
+item shows an arrow, and pointing at it opens the submenu too.</p>
 </li>
 <li>
-<p>From an item that is not in a menu, below the item, or above it if it
-fits only there.</p>
+<p>Outside a menu: below the item, or above if only that fits.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>A row of items with menus, outside any menu, is a menu bar. While one of
-its menus is open, pointing at another item in the row opens that item&#8217;s
-menu in its place. In a menu, pointing at another item closes the submenu
-that is open.</p>
+<p>A row of such items is a menu bar. While one of its menus is open,
+pointing at another title opens that title&#8217;s menu in its place. In a
+menu, pointing at another item closes the open submenu.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -567,14 +528,55 @@ the rest of the row.</td>
 <a class="image" href="../_images/elements/menus_bar.png"><img src="../_images/elements/menus_bar.png" alt="A menu bar of File, Edit and Help. File is highlighted and its menu is open below it, with Open Recent highlighted and its submenu of three files open to its right" width="420px"></a>
 </div>
 </div>
-<div class="paragraph">
-<p>Right opens the highlighted item&#8217;s submenu, with its first item
-highlighted, and Left closes the submenu the highlight is in. In a menu opened from a bar, Left, and Right on an
-item with no submenu, move to the bar&#8217;s previous or next menu, wrapping
-around. Escape closes one menu.</p>
 </div>
+<div class="sect2">
+<h3 id="_keys"><a class="anchor" href="#_keys"></a>Keys</h3>
 <div class="paragraph">
-<p>The items of a closed submenu keep their shortcuts.</p>
+<p>While a menu is open, it takes these keys:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Key</th>
+<th class="tableblock halign-left valign-top">Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Up, Down</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move the highlight to the enabled item above or below. A menu opened
+  by a click starts with no item highlighted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On an item with a submenu, opens it on its first item. On any other
+  item, picks it and closes every menu it was reached through.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Escape</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closes the menu the highlight is in. In a submenu, the item that opened
+  it stays highlighted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Right</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Opens the highlighted item&#8217;s submenu, on its first item. In a menu
+  opened from a bar, on an item with no submenu, opens the bar&#8217;s next
+  menu, with nothing highlighted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Left</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closes the submenu the highlight is in. In a menu opened from a bar,
+  opens the bar&#8217;s previous menu, with nothing highlighted.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Moving across a bar wraps around at either end. When a submenu closes,
+the keys go back to the menu it was opened from.</p>
 </div>
 </div>
 <div class="sect2">
@@ -591,20 +593,17 @@ save.on_click = [&amp;]{ doc.save(); };</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The shortcut calls <code>on_click</code> whether the menu is open or not. With the
-menu closed, it works as a hotkey (see <a href="element.html" class="xref page">Element</a>):
-it is taken only if the focus does not take the key itself, so a text
-box being edited keeps its own ⌘C. If two menus have the same shortcut,
-the first takes it: the one in the top layer, and in a layer&#8217;s content
-the first in order. While a modal, such as a dialog, is open, no
-shortcut works: the modal has the focus and takes every key.</p>
+<p>A shortcut calls <code>on_click</code> whether its menu is open or not, a closed
+submenu&#8217;s included. With the menu closed, it is a hotkey (see
+<a href="element.html" class="xref page">Element</a>): the menu gets the key only if the
+focus does not take it, so a text box being edited keeps its own ⌘C.
+When two menus have the same shortcut, the first takes it: the one in
+the top layer, and within a layer, the first in order. While a modal
+such as a dialog is open, no shortcut works.</p>
 </div>
 <div class="paragraph">
-<p>A menu built in <code>on_open_menu</code> has no items until it opens, and so no
-shortcuts before then.</p>
-</div>
-<div class="paragraph">
-<p>The minus and equal keys match with or without Shift, so a shortcut on
+<p>A menu built in <code>on_open_menu</code> has no shortcuts until it first opens.
+The minus and equal keys match with or without Shift, so a shortcut on
 <code>key_code::equal</code> is also the plus key.</p>
 </div>
 </div>

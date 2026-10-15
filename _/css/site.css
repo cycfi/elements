@@ -2062,3 +2062,98 @@ audio {
     margin-bottom: 5px;
 }
 
+
+/* The Elements icon font, for the Icons reference page's table. */
+@font-face{
+    font-family:elements_basic;
+    font-style:normal;
+    font-weight:400;
+    src:url(../font/elements_basic.ttf?v=267) format("truetype");
+}
+.ei{
+    font-family:elements_basic;
+    font-size:1.3em;
+    line-height:1;
+}
+table.icons,table.icons thead,table.icons tbody,table.icons tr,
+table.icons thead th,table.icons td{
+    background:#1e1e20;
+    color:#e8e8e8;
+    border-color:#3a3a3e;
+}
+table.icons thead th,table.icons thead tr{
+    background:#1e1e20 !important;
+    color:#e8e8e8 !important;
+    font-weight:500;
+}
+table.icons .ei{
+    color:#ffffff;
+}
+table.icons code{
+    background:transparent;
+    border:0;
+    padding:0;
+    color:#9ecbff;
+}
+
+/* Sprites turning through their frames: each a strip of frames one under
+   the other, its background stepped a frame at a time. */
+.sprite-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  width: fit-content;
+  margin: 0.5rem auto;
+  padding: 16px 32px;
+  border-radius: 6px;
+  background: #232325;
+}
+
+.sprite-knob, .sprite-knob-hifi {
+  background-repeat: no-repeat;
+  animation: 3s steps(100) infinite alternate;
+}
+
+/* 100 frames of 128 by 128, shown at 64 */
+.sprite-knob {
+  width: 64px;
+  height: 64px;
+  background-size: 64px 6400px;
+  animation-name: sprite-knob;
+}
+
+@keyframes sprite-knob {
+  from { background-position: 0 0; }
+  to   { background-position: 0 -6400px; }
+}
+
+/* 101 frames of 150 by 150, shown at 120: drawn for a large, hi-fi knob */
+.sprite-knob-hifi {
+  width: 120px;
+  height: 120px;
+  background-size: 120px 12120px;
+  animation-name: sprite-knob-hifi;
+}
+
+@keyframes sprite-knob-hifi {
+  from { background-position: 0 0; }
+  to   { background-position: 0 -12000px; }
+}
+
+/* Status bars running: 60 frames of 260 by 120, one under the other,
+   stepped a frame at a time and looped. */
+.status-anim {
+  width: 260px;
+  height: 120px;
+  margin: 0.5rem auto;
+  border-radius: 6px;
+  background-repeat: no-repeat;
+  background-size: 260px 7200px;
+  animation: status-anim 3s steps(60) infinite;
+}
+
+@keyframes status-anim {
+  from { background-position: 0 0; }
+  to   { background-position: 0 -7200px; }
+}

@@ -198,6 +198,12 @@ namespace cycfi::elements
 
    bool basic_menu_item_element::click(context const& ctx, mouse_button btn)
    {
+      // An item acts on the press alone. Its menu closes at the view's next
+      // poll, so the release may land on the item too. A press, drag and
+      // release from a button_menu reaches it as a press.
+      if (!btn.down)
+         return ctx.enabled && is_enabled() && ctx.bounds.includes(btn.pos);
+
       bool result = false;
       if (ctx.enabled && is_enabled() && ctx.bounds.includes(btn.pos))
       {

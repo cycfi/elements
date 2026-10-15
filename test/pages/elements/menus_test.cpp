@@ -170,6 +170,20 @@ TEST_CASE("menus page: probe", "[menus_page]")
       CHECK(f.clicked_b == 1);
       CHECK(!menu_of(f.tv.view_));
    }
+   SECTION("a quick click on an item acts once")
+   {
+      // The press and the release reach the view before it polls, as on
+      // a host that dispatches every pending event first.
+      fixture f;
+      f.open_menu();
+      auto m = menu_of(f.tv.view_);
+      REQUIRE(m);
+      auto b = m->bounds();
+      click(f.tv.view_, {b.left + 30, b.top + b.height() / 2});
+      wait(f.tv.view_); wait(f.tv.view_);
+      CHECK(f.clicked_b == 1);
+      CHECK(!menu_of(f.tv.view_));
+   }
    SECTION("escape closes")
    {
       fixture f;

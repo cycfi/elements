@@ -16,11 +16,15 @@
 
 :layout: xref:layout.adoc[Layout]
 :limits: xref:layout/limits.adoc[limits]
-:view_limits: xref:layout/limits.adoc#_view_limits[view_limits]
+:view_limits: xref:layout/limits.adoc[view_limits]
+:htile: xref:layout/tiles.adoc#_htile[htile]
+:vtile: xref:layout/tiles.adoc#_vtile[vtile]
+:horizontal_grids: xref:layout/grids.adoc#_hgrid[Horizontal Grids]
+:vertical_grids: xref:layout/grids.adoc#_vgrid[Vertical Grids]
 
 :Stretch-Elements: xref:layout/stretch.adoc[Stretch]
 :Layers: xref:layout/layers.adoc[Layers]
-:Layers_Semantics: xref:layout/layers.adoc#_semantics[Layer Semantics]
+:Layers_Layout_Rules: xref:layout/layers.adoc#_layout_rules[Layer Layout Rules]
 :decks: xref:layout/decks.adoc[Decks]
 
 :core_elements: xref:elements.adoc[Elements]

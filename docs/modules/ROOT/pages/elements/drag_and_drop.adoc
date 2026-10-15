@@ -48,26 +48,10 @@ the items will go, and the list scrolls to keep the pointer in view.
 Releasing the mouse more than 10 pixels from the press moves the
 selected items there; Escape ends the drag with no move.
 
-The inserter calls:
-
-[cols="1,2"]
-|===
-| Function | When
-
-| `on_move(pos, indices)`
-| The items at `indices` were dragged to before item `pos`.
-
-| `on_erase(indices)`
-| The items at `indices` were erased, by Delete or Backspace.
-
-| `on_drop(info, pos)`
-| Data of one of its types was dropped before item `pos`. Returns
-  whether it took the drop.
-
-| `on_select(indices, latest)`
-| The selection changed, by click or key; `latest` is the item last
-  selected.
-|===
+The inserter calls its `on_move` when items are dragged within the
+list, `on_erase` when they are erased with Delete or Backspace,
+`on_drop` when data of one of its types is dropped on it, and
+`on_select` when the selection changes.
 
 The inserter moves and erases the list's cells itself; `on_move` and
 `on_erase` make the same change to the items, with `move_indices` and
@@ -161,6 +145,9 @@ namespace cycfi::elements
 `r`:: A drop receiver.
 `d`:: A drop inserter.
 `ix`:: A `std::vector<std::size_t>` of indices.
+`pos`, `latest`:: Indices, `std::size_t`.
+`info`:: A `drop_info`.
+`f`:: A function.
 
 === Semantics
 
@@ -181,13 +168,31 @@ namespace cycfi::elements
 | A selection list of `e`, a list of draggable items, that the items are
   dragged within, and that takes drops of `types`.
 
+| `d.on_move = f`
+| `f(pos, ix)` is called when the items at `ix` are dragged to before
+  item `pos`.
+
+| `d.on_erase = f`
+| `f(ix)` is called when the items at `ix` are erased, by Delete or
+  Backspace.
+
+| `d.on_drop = f`
+| `f(info, pos)` is called when data of one of its types is dropped
+  before item `pos`; it returns whether it took the drop.
+
+| `d.on_select = f`
+| `f(ix, latest)` is called when the selection changes, by click or
+  key; `latest` is the item last selected.
+
 | `d.insertion_pos()`
 | Where the items being dragged would go, while a drag is over the
   list; -1 otherwise.
 
-| `d.move(ix)`, `d.erase(ix)`
-| Move the items at `ix` to the insertion position, or erase them, as
-  a drag or Delete does.
+| `d.move(ix)`
+| Move the items at `ix` to the insertion position, as a drag does.
+
+| `d.erase(ix)`
+| Erase the items at `ix`, as Delete does.
 
 | `draggable(e)`
 | `e`, as an item that can be selected and dragged.

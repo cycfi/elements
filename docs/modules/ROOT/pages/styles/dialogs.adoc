@@ -243,8 +243,11 @@ The headers are `element/style/child_window.hpp`,
 | `basic_child_window(t, pos, e)`
 | The same at `pos`, at the minimum size of `e`.
 
-| `closable_child_window(t, r, e)`, `closable_child_window(t, pos, e)`
-| The same, with a close button.
+| `closable_child_window(t, r, e)`
+| `basic_child_window(t, r, e)`, with a close button.
+
+| `closable_child_window(t, pos, e)`
+| `basic_child_window(t, pos, e)`, with a close button.
 
 | `dialog0(e)`
 | A dialog of `e`, with no buttons.
@@ -258,8 +261,17 @@ The headers are `element/style/child_window.hpp`,
 | `dialog2r(view_, e, ok, cancel)`
 | The same, with Cancel the default.
 
-| `message_box0(msg, i)`, `message_box1(view_, msg, i, ok)`, ...
-| The dialog of the same number, of the icon `i` and the message `msg`.
+| `message_box0(msg, i)`
+| `dialog0` of the icon `i` and the message `msg`.
+
+| `message_box1(view_, msg, i, ok)`
+| `dialog1` of the icon `i` and the message `msg`.
+
+| `message_box2(view_, msg, i, ok, cancel)`
+| `dialog2` of the icon `i` and the message `msg`.
+
+| `message_box2r(view_, msg, i, ok, cancel)`
+| `dialog2r` of the icon `i` and the message `msg`.
 
 | `open_popup(d, view_)`
 | Open `d` in `view_`, 10 ms later.

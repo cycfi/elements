@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 99.26">
+  <defs>
+    <style>
+      .d { stroke: #414042; }
+      .dd { stroke: #414042; stroke-dasharray: 0 0 6 6; }
+      .d, .dd, .e, .f, .g, .h, .hd, .ed { fill: none; stroke-miterlimit: 10; }
+      .e, .f, .ed { stroke: #be1e2d; }
+      .f { stroke-dasharray: 0 0 7 7; }
+      .ed { stroke-dasharray: 0 0 6 6; }
+      .h, .hd { stroke: #a7a9ac; }
+      .hd { stroke-dasharray: 0 0 6 6; }
+      .g { stroke: #1c75bc; }
+      .i, .j, .l { stroke-width: 0px; }
+      .i { fill: #a7a9ac; }
+      .j { fill: #be1e2d; }
+      .l { fill: #1c75bc; }
+      .k { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; fill: #be1e2d; }
+    </style>
+  </defs>
+  <g>
+    <line class="dd" x1="0.5" y1="0.5" x2="144.5" y2="0.5"/>
+    <line class="dd" x1="144.5" y1="0.5" x2="144.5" y2="72.5"/>
+    <line class="dd" x1="144.5" y1="72.5" x2="0.5" y2="72.5"/>
+    <line class="dd" x1="0.5" y1="72.5" x2="0.5" y2="0.5"/>
+    <line class="h" x1="72.5" y1="8.5" x2="72.5" y2="64.5"/>
+    <polygon class="i" points="72.50 72.50 69.59 61.66 75.41 61.66"/>
+    <polygon class="i" points="72.50 0.50 75.41 11.34 69.59 11.34"/>
+    <line class="e" x1="0.5" y1="72.26" x2="0.5" y2="75.26"/>
+    <line class="f" x1="0.5" y1="81.26" x2="0.5" y2="93.26"/>
+    <line class="e" x1="0.5" y1="96.26" x2="0.5" y2="99.26"/>
+    <line class="e" x1="144.5" y1="72.26" x2="144.5" y2="75.26"/>
+    <line class="f" x1="144.5" y1="81.26" x2="144.5" y2="93.26"/>
+    <line class="e" x1="144.5" y1="96.26" x2="144.5" y2="99.26"/>
+    <text class="k" x="57.98" y="93.02">width</text>
+    <line class="e" x1="53.98" y1="90.5" x2="8.5" y2="90.5"/>
+    <polygon class="j" points="0.50 90.50 11.34 87.59 11.34 93.41"/>
+    <line class="e" x1="91.02" y1="90.5" x2="136.5" y2="90.5"/>
+    <polygon class="j" points="144.50 90.50 133.66 93.41 133.66 87.59"/>
+  </g>
+</svg>

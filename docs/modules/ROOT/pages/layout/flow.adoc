@@ -4,13 +4,14 @@ include::../common.adoc[]
 
 == Overview
 
-The flow element, is a composite that lays out its children much like the way
-text is laid out: lay out each element from left to right, fitting as much
-elements as possible following each child's _maximum horizontal limit_. Once
+The flow element is a composite that lays out its children much like the way
+text is laid out: lay out each element from left to right, fitting as many
+elements as possible following each child's _minimum horizontal limit_. Once
 a row is full, move to the next row and do the same until the end of the row
 is filled. Repeat the procedure until all the elements are laid out. The
-height of each row is determined by the _maximum vertical limit_ of all the
-elements to be laid out in that row.
+height of each row is determined by the largest _minimum vertical limit_ of all
+the elements to be laid out in that row; given extra height, a row grows up to
+the smallest _maximum vertical limit_ in it.
 
 The following graphic depicts a simplified layout scenario for child elements
 `a` to `r`.
@@ -20,14 +21,54 @@ image::/layout/flow.svg[alt="flow", width=380px, role=center]
 The child elements arranged in a `flow` composite are automatically re-flowed
 when the view size changes.
 
+`flow` returns a `Composite`.
+
+== Include
+
+```c++
+#include <elements/element/flow.hpp>
+```
+
 == flow_composite
 
-Create a `flow_composite` with an indeterminate (dynamic) number of elements
-to have elements laid out using `flow`.
+=== Declaration
 
-=== Notation
+```c++
+class flowable_container : public storage
+{
+public:
+
+   void                    reflow();
+   bool                    needs_reflow() const;
+   void                    reflow_done();
+
+   ...
+};
+
+using flow_composite = vector_composite<flowable_container>;
+```
+
+`flow_composite` is a `vector_composite` with `flowable_container` as its
+base. `flowable_container` is a `storage`, not an `element`: a
+`flow_composite` holds the elements, and a `flow` lays them out (see
+xref:elements/composites.adoc[Composites]).
+
+=== Expressions
+
+==== Notation
 
 `c`:: Instance of type `flow_composite`
+
+==== Constructors
+
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `flow_composite c`
+| Create a `flow_composite` with an indeterminate (dynamic) number of
+  elements to have elements laid out using `flow`.
+|===
 
 The `flow_composite` is essentially a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The client is responsible for
@@ -35,15 +76,7 @@ the lifetime of the container, `c`. You use `flow_composite` just as you
 would a `std::vector`, such as using `push_back` to add a child element.
 Remember that the items are `element_ptr` instances.
 
-=== Expression
-
-[,c++]
-----
-flow_composite c;
-----
-
-=== Example
-
+.Example
 [,c++]
 ----
 c.push_back(share(child));
@@ -52,25 +85,108 @@ c.push_back(share(child));
 NOTE: `share` turns an element object into an `element_ptr` held by
 the `std::vector<element_ptr>` in `flow_composite`.
 
+==== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `c.reflow()`
+| Mark `c` for reflow. Until the next layout, a `flow` of `c` has open
+  limits: zero minimum, `full_extent` maximum. That layout clears the mark
+  and posts a second layout of the view, which sizes the `flow` to its new
+  rows. A `flow` does the same by itself when the number of elements of `c`
+  changed since its last layout, and has no rows until then. Call `reflow()`
+  after other changes, such as replacing an element or changing its limits,
+  then lay out the view.
+| `void`
+
+| `c.reflow_done()`
+| Clear the reflow mark. A `flow` of `c` clears it at its layout.
+| `void`
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `c.needs_reflow()`
+| Get the reflow mark; `true` for a new `flow_composite`.
+| `bool`
+|===
+
 == flow
 
-Once we have a `flow_composite`, we can place its contents in a `flow`
-element.
+=== Declaration
 
-=== Notation
+```c++
+class flow_element : public vector_composite<vtile_element>
+{
+public:
+                           flow_element(flowable_container& flowable_);
+
+   ...
+};
+
+flow_element               flow(flowable_container& flowable_);
+```
+
+The rows of a `flow_element` are its own elements, rebuilt at each layout.
+The rest of `flow_element` is the `Composite` interface (see
+xref:elements/composites.adoc[Composites]).
+
+=== Expressions
+
+==== Notation
 
 `c`:: Instance of `flow_composite`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-flow(c)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Semantics
+| `flow(c)`
+| Once we have a `flow_composite`, we can place its contents in a `flow`
+  element.
+|===
 
-. Returns instance of `Composite`.
+== Example
+
+Color swatches that fill each row before moving to the next, and one more
+swatch added at run time:
+
+```c++
+#include <elements/element/flow.hpp>
+#include <elements/element/size.hpp>        // For fixed_size
+#include <elements/element/margin.hpp>      // For margin
+#include <elements/element/style/misc.hpp>  // For box
+#include <elements/view.hpp>                // For view
+...
+using namespace cycfi::elements;
+...
+flow_composite swatches;                                       <1>
+for (auto c : {colors::red, colors::gold, colors::green, colors::blue})
+   swatches.push_back(share(
+      margin({0, 0, 10, 10}, fixed_size({60, 40}, box(c)))     <2>
+   ));
+
+auto content = margin({10, 10, 10, 10}, flow(swatches));       <3>
+...
+swatches.push_back(share(
+   margin({0, 0, 10, 10}, fixed_size({60, 40}, box(colors::slate_gray)))
+));
+view_.layout();                                                <4>
+```
+
+<1> The elements, held by the client.
+<2> Each swatch takes 70 by 50 with its margin: a row takes as many as fit.
+<3> The swatches are re-flowed when the view size changes.
+<4> After adding an element, lay out the view: the `flow` notices the new
+element and reflows by itself.
 
 '''
 

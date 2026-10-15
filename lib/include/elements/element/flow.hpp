@@ -72,9 +72,18 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       std::string             class_name() const override;
 
+      // The rows; none while the container's size differs from the size
+      // the rows were built from.
+      std::size_t             size() const override;
+
    private:
 
+      // The rows are stale when the container is marked for reflow, or when
+      // its size changed since the rows were built.
+      bool                    stale() const;
+
       flowable_container&     _flowable;
+      std::size_t             _flowable_size = 0;
    };
 
    /**

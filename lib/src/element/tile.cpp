@@ -114,7 +114,7 @@ namespace cycfi::elements
          {
             auto& elem = tile.at(i);
             auto limits = elem.limits(ctx);
-            info[i].stretch = elem.stretch()[Axis];
+            info[i].stretch = std::max(elem.stretch()[Axis], 0.0f);
             info[i].min = limits.min[Axis];
             info[i].max = limits.max[Axis];
             info[i].alloc = limits.min[Axis];

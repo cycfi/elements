@@ -15,7 +15,7 @@ is not drawn, takes no mouse events, is not given the focus, and takes
 no hotkeys. Refresh the view after changing `is_hidden`.
 
 To remove an element from the layout instead, so that the others take
-its space, see xref:layout/collapsible.adoc[Collapsible].
+its space, see xref:layout/sizing.adoc#_vcollapsible[vcollapsible and hcollapsible].
 
 === Intercepting Keys, Text and Clicks
 

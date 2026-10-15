@@ -104,9 +104,12 @@ namespace cycfi::elements
 | `vsplit(a, b, ...)`
 | A split of `a`, `b`, ..., top to bottom.
 
-| `hsplit_composite`, `vsplit_composite`
-| A split whose children are added and removed at run time, as a
-  `std::vector<element_ptr>`.
+| `hsplit_composite`
+| A split, left to right, whose children are added and removed at run
+  time, as a `std::vector<element_ptr>`.
+
+| `vsplit_composite`
+| The same, top to bottom.
 
 | `s.grip`
 | The width of the area around a boundary that grabs it.

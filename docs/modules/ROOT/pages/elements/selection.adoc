@@ -104,14 +104,20 @@ namespace cycfi::elements
 | `l.set_selection(indices)`
 | Select exactly those items. Does not call `on_select`.
 
-| `l.get_select_start()`, `l.get_select_end()`
-| The anchor and the end of the last selection made, as indices; `-1`
-  when nothing is selected. A Shift-click or a Shift-arrow extends from
-  the anchor.
+| `l.get_select_start()`
+| The anchor of the last selection made, as an index; `-1` when nothing
+  is selected. A Shift-click or a Shift-arrow extends from the anchor.
 
-| `l.select_all()`, `l.select_none()`
-| Select every item, or none, and call `on_select`. `select_all` does
-  nothing in single selection.
+| `l.get_select_end()`
+| The end of the last selection made, as an index; `-1` when nothing is
+  selected.
+
+| `l.select_all()`
+| Select every item, and call `on_select`. It does nothing in single
+  selection.
+
+| `l.select_none()`
+| Select no item, and call `on_select`.
 
 | `l.update_selection(start, end)`
 | Set the anchor and the end without touching the items, for code that

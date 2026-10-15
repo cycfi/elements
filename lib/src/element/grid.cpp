@@ -8,14 +8,23 @@
 
 namespace cycfi::elements
 {
+   namespace
+   {
+      std::size_t count_spans(composite_base const& c)
+      {
+         std::size_t n = 0;
+         for (std::size_t i = 0; i != c.size(); ++i)
+            n += c.at(i).span();
+         return n;
+      }
+   }
+
    ////////////////////////////////////////////////////////////////////////////
    // Vertical Grids
    ////////////////////////////////////////////////////////////////////////////
    view_limits vgrid_element::limits(basic_context const& ctx) const
    {
-      _num_spans = 0;
-      for (std::size_t i = 0; i != size(); ++i)
-         _num_spans += at(i).span();
+      _num_spans = count_spans(*this);
 
       view_limits limits{{0.0, 0.0}, {full_extent, 0.0}};
       std::size_t gi = 0;
@@ -44,14 +53,17 @@ namespace cycfi::elements
       limits.min.y = desired_total_min;
       clamp_min(limits.max.x, limits.min.x);
       clamp_max(limits.max.y, full_extent);
+      clamp_min(limits.max.y, limits.min.y);   // The minimum wins.
       return limits;
    }
 
    void vgrid_element::layout(context const& ctx)
    {
+      _num_spans = count_spans(*this);
       _positions.resize(size()+1);
 
       auto left = ctx.bounds.left;
+      auto top = ctx.bounds.top;
       auto right = ctx.bounds.right;
       auto total_height = ctx.bounds.height();
       std::size_t gi = 0;
@@ -63,7 +75,7 @@ namespace cycfi::elements
          gi += elem.span()-1;
          auto y = grid_coord(gi++) * total_height;
          auto height = y - prev;
-         rect ebounds = {left, prev, right, prev+height};
+         rect ebounds = {left, top+prev, right, top+prev+height};
          elem.layout(context{ctx, &elem, ebounds});
          _positions[i] = prev;
          prev = y;
@@ -86,9 +98,7 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    view_limits hgrid_element::limits(basic_context const& ctx) const
    {
-      _num_spans = 0;
-      for (std::size_t i = 0; i != size(); ++i)
-         _num_spans += at(i).span();
+      _num_spans = count_spans(*this);
 
       view_limits limits{{ 0.0, 0.0}, {0.0, full_extent}};
       std::size_t gi = 0;
@@ -117,13 +127,16 @@ namespace cycfi::elements
       limits.min.x = desired_total_min;
       clamp_min(limits.max.y, limits.min.y);
       clamp_max(limits.max.x, full_extent);
+      clamp_min(limits.max.x, limits.min.x);   // The minimum wins.
       return limits;
    }
 
    void hgrid_element::layout(context const& ctx)
    {
+      _num_spans = count_spans(*this);
       _positions.resize(size()+1);
 
+      auto left = ctx.bounds.left;
       auto top = ctx.bounds.top;
       auto bottom = ctx.bounds.bottom;
       auto total_width = ctx.bounds.width();
@@ -136,7 +149,7 @@ namespace cycfi::elements
          gi += elem.span()-1;
          auto x = grid_coord(gi++) * total_width;
          auto width = x - prev;
-         rect ebounds = {prev, top, prev+width, bottom};
+         rect ebounds = {left+prev, top, left+prev+width, bottom};
          elem.layout(context{ctx, &elem, ebounds});
          _positions[i] = prev;
          prev = x;

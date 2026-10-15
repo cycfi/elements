@@ -6,9 +6,9 @@ include::../common.adoc[]
 
 Resizable elements are elements with _minimum limits_ that are less than the
 _maximum limits_ in either x or y dimensions or both. Resizable elements can
-therefore stretch if there is extra available space allocated to it beyond
-its minimum limit. When two or more resizable elements are placed side by
-side in an <<htile,htile>> or <<vtile,vtile>>, the element's "stretchiness"
+therefore stretch if there is extra available space allocated to them beyond
+their minimum limit. When two or more resizable elements are placed side by
+side in an {htile} or {vtile}, the element's "stretchiness"
 determines how much extra space is given to it. The element's "stretchiness"
 is determined by the element's `stretch` member function:
 
@@ -17,46 +17,87 @@ is determined by the element's `stretch` member function:
 virtual view_stretch stretch() const;
 ----
 
-where `view_stretch` is a struct declared as:
-
-[,c++]
-----
-struct view_stretch
-{
-   float    x = 1.0;
-   float    y = 1.0;
-};
-----
+where `view_stretch` is the struct shown under <<view_stretch_declaration,Declaration>>.
 
 The `view_stretch` `x` and `y` members determine how much an element can
 stretch in the x or y dimensions. The default is 1.0. A stretchiness value of
 2.0 means that the element is able to stretch twice as much compared to its
-siblings in an <<htile,htile>> or <<vtile,vtile>>, assuming they have the
+siblings in an {htile} or {vtile}, assuming they have the
 default 1.0 stretchiness.
 
-== hstretch
+Each factory returns a `Proxy`.
+
+== Include
+
+```c++
+#include <elements/base_view.hpp>
+#include <elements/element/size.hpp>
+```
+
+== view_stretch
+
+[#view_stretch_declaration]
+=== Declaration
+
+```c++
+struct view_stretch
+{
+   float                                     x = 1.0;
+   float                                     y = 1.0;
+
+   constexpr float&                          operator[](axis a);
+   constexpr float                           operator[](axis a) const;
+};
+```
+
+=== Expressions
+
+==== Notation
+
+`s`, `a`, `b`:: Objects of type `view_stretch`.
+
+`sx`, `sy`:: `float` stretch values for the x and y dimensions.
+
+`ax`:: `axis::x` or `axis::y`.
+
+==== Constructors and Assignment
+
+[cols="1,1"]
+|===
+| Expression                  | Semantics
+
+| `view_stretch{}`            | Construct a `view_stretch` with the
+                                default 1.0 stretchiness on both axes.
+| `view_stretch{sx, sy}`      | Construct a `view_stretch` given `sx`
+                                (x stretch) and `sy` (y stretch).
+| `view_stretch(s)`           | Copy construct from `view_stretch s`.
+| `a = b`                     | Assign `b` to `a`.
+|===
+
+NOTE: `view_stretch` is an aggregate, so it is built with braces.
+
+==== Access
+
+[cols="1,1,1"]
+|===
+| Expression        | Semantics                               | Return Type
+
+| `s.x`             | Access the stretchiness in the x
+                      dimension.                              | `float`
+| `s.y`             | Access the stretchiness in the y
+                      dimension.                              | `float`
+| `s[ax]`           | Access `s.x` if `ax` is `axis::x`, or
+                      `s.y` if `ax` is `axis::y`.             | `float&`
+                                                                (`float` if
+                                                                `s` is
+                                                                `const`)
+|===
+
+== hstretch and no_hstretch
 
 image::/layout/hstretch.svg[alt="hstretch", width=232px, role=center]
 
-Overrides the horizontal stretchiness of an an enclosed element (`subject`).
-
-=== Notation
-
-`stretch`:: A scalar value
-`subject`:: Instance of `Element`
-
-=== Expression
-
-[,c++]
-----
-hstretch(stretch, subject)
-----
-
-=== Semantics
-
-. The `subject` will assume the given `stretch` value.
-. The stretch value has no effect to elements with fixed horizontal size.
-. Returns instance of `Proxy`.
+Overrides the horizontal stretchiness of an enclosed element (`subject`).
 
 For example, the image below shows how three elements are laid out in an
 `htile`, with stretch values of `1.0`, `1.0` and `2.0`, respectively:
@@ -66,39 +107,201 @@ image::/layout/htile-stretch.svg[alt="htile-stretch", width=232px, role=center]
 The element with the `2.0` stretch value stretches twice as much compared to
 its siblings.
 
-'''
+image::/layout/no_hstretch.svg[alt="no_hstretch", width=232px, role=center]
 
-== vstretch
+Turns off the horizontal stretchiness of an enclosed element (`subject`).
+
+=== Declaration
+
+```c++
+template <concepts::Element Subject>
+class hstretch_element : public proxy<Subject>
+{
+public:
+                           hstretch_element(float stretch, Subject subject);
+
+   void                    hstretch(float stretch);
+   float                   hstretch() const;
+
+   ...
+};
+
+template <concepts::Element Subject>
+hstretch_element<remove_cvref_t<Subject>>
+hstretch(float stretch, Subject&& subject);
+
+template <concepts::Element Subject>
+hstretch_element<remove_cvref_t<Subject>>
+no_hstretch(Subject&& subject);
+```
+
+The rest of `hstretch_element` is the `Proxy` interface (see
+xref:elements/proxies.adoc[Proxies]).
+
+=== Expressions
+
+==== Notation
+
+`stretch`:: A scalar value
+
+`subject`:: Instance of `Element`
+
+`e`:: The element `hstretch` or `no_hstretch` returns
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `hstretch(stretch, subject)`
+| The `subject` will assume the given `stretch` value. The stretch value
+  has no effect on elements with fixed horizontal size. A negative
+  `stretch` is taken as 0.
+| `no_hstretch(subject)`
+| The same as `hstretch(0, subject)`. In an {htile}, `subject` will be
+  laid out at its natural _minimum horizontal limit_.
+|===
+
+==== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.hstretch(stretch)`
+| Set the horizontal `stretch` value. A negative `stretch` is taken
+  as 0.
+| `void`
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.hstretch()`
+| Get the horizontal `stretch` value.
+| `float`
+|===
+
+== vstretch and no_vstretch
 
 image::/layout/vstretch.svg[alt="vstretch", width=316px, role=center]
 
-Overrides the vertical stretchiness of an an enclosed element (`subject`).
+Overrides the vertical stretchiness of an enclosed element (`subject`).
 
-=== Notation
-
-`stretch`:: A scalar value
-`subject`:: Instance of `Element`
-
-=== Expression
-
-[,c++]
-----
-vstretch(stretch, subject)
-----
-
-=== Semantics
-
-. The `subject` will assume the given `stretch` value.
-. The stretch value has no effect to elements with fixed _vertical limits_.
-. Returns instance of `Proxy`.
-
-For example, the image below shows how three elements are laid out in an
-`htile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
+For example, the image below shows how three elements are laid out in a
+`vtile`, with stretch values of `0.5`, `1.0` and `1.5`, respectively:
 
 image::/layout/vtile-stretch.svg[alt="vtile-stretch", width=232px, role=center]
 
 The element with the `0.5` stretch value stretches half less, while the
 element with the `1.5` stretches half more than the default.
+
+image::/layout/no_vstretch.svg[alt="no_vstretch", width=316px, role=center]
+
+Turns off the vertical stretchiness of an enclosed element (`subject`).
+
+=== Declaration
+
+```c++
+template <concepts::Element Subject>
+class vstretch_element : public proxy<Subject>
+{
+public:
+                           vstretch_element(float stretch, Subject subject);
+
+   void                    vstretch(float stretch);
+   float                   vstretch() const;
+
+   ...
+};
+
+template <concepts::Element Subject>
+vstretch_element<remove_cvref_t<Subject>>
+vstretch(float stretch, Subject&& subject);
+
+template <concepts::Element Subject>
+vstretch_element<remove_cvref_t<Subject>>
+no_vstretch(Subject&& subject);
+```
+
+The rest of `vstretch_element` is the `Proxy` interface (see
+xref:elements/proxies.adoc[Proxies]).
+
+=== Expressions
+
+==== Notation
+
+`stretch`:: A scalar value
+
+`subject`:: Instance of `Element`
+
+`e`:: The element `vstretch` or `no_vstretch` returns
+
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `vstretch(stretch, subject)`
+| The `subject` will assume the given `stretch` value. The stretch value
+  has no effect on elements with fixed _vertical limits_. A negative
+  `stretch` is taken as 0.
+| `no_vstretch(subject)`
+| The same as `vstretch(0, subject)`. In a {vtile}, `subject` will be
+  laid out at its natural _minimum vertical limit_.
+|===
+
+==== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.vstretch(stretch)`
+| Set the vertical `stretch` value. A negative `stretch` is taken
+  as 0.
+| `void`
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.vstretch()`
+| Get the vertical `stretch` value.
+| `float`
+|===
+
+== Example
+
+A row of three boxes sharing the extra width: one with the default
+stretchiness, one that stretches twice as much, and one that does not
+stretch:
+
+```c++
+#include <elements/element/size.hpp>
+#include <elements/element/tile.hpp>        // For htile
+#include <elements/element/style/misc.hpp>  // For box
+...
+using namespace cycfi::elements;
+...
+auto row = htile(
+   box(colors::red),                                  <1>
+   hstretch(2, box(colors::green)),                   <2>
+   no_hstretch(hmin_size(40, box(colors::blue)))      <3>
+);
+```
+
+<1> A box with the default 1.0 stretchiness.
+<2> A box that takes twice as much of the extra width as the red box.
+<3> A box at least 40 wide that takes none of the extra width.
 
 '''
 

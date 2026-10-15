@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 361 118">
+  <defs>
+    <style>
+      .d { stroke: #414042; }
+      .d, .e, .f, .g, .ef { fill: none; stroke-miterlimit: 10; }
+      .g { stroke: #414042; fill: #e6e7e8; stroke-miterlimit: 10; }
+      .e, .f { stroke: #1c75bc; }
+      .f { stroke-dasharray: 0 0 5.71 5.71; }
+      .ef { stroke: #be1e2d; }
+      .efd { fill: none; stroke: #be1e2d; stroke-miterlimit: 10; stroke-dasharray: 0 0 7 7; }
+      .i, .j { stroke-width: 0px; }
+      .i { fill: #1c75bc; }
+      .j { fill: #be1e2d; }
+      .h { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; fill: #1c75bc; }
+      .k { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; fill: #be1e2d; }
+    </style>
+  </defs>
+  <g>
+    <rect class="d" x=".5" y=".5" width="360" height="90"/>
+    <rect class="g" x="0.5" y=".5" width="72" height="90"/>
+    <text class="h" x="33.5" y="49">a</text>
+    <line class="e" x1="54.5" y1=".5" x2="54.5" y2="3.5"/>
+    <line class="f" x1="54.5" y1="9.21" x2="54.5" y2="84.64"/>
+    <line class="e" x1="54.5" y1="87.5" x2="54.5" y2="90.5"/>
+    <line class="e" x1="54.5" y1="45.5" x2="63.64" y2="45.5"/>
+    <polygon class="i" points="61.66 48.41 72.5 45.5 61.66 42.59"/>
+    <rect class="g" x="135.5" y=".5" width="90" height="90"/>
+    <text class="h" x="177.5" y="49">b</text>
+    <line class="e" x1="207.5" y1=".5" x2="207.5" y2="3.5"/>
+    <line class="f" x1="207.5" y1="9.21" x2="207.5" y2="84.64"/>
+    <line class="e" x1="207.5" y1="87.5" x2="207.5" y2="90.5"/>
+    <line class="e" x1="207.5" y1="45.5" x2="216.64" y2="45.5"/>
+    <polygon class="i" points="214.66 48.41 225.5 45.5 214.66 42.59"/>
+    <rect class="g" x="288.5" y=".5" width="72" height="90"/>
+    <text class="h" x="321.5" y="49">c</text>
+    <line class="e" x1="342.5" y1=".5" x2="342.5" y2="3.5"/>
+    <line class="f" x1="342.5" y1="9.21" x2="342.5" y2="84.64"/>
+    <line class="e" x1="342.5" y1="87.5" x2="342.5" y2="90.5"/>
+    <line class="e" x1="342.5" y1="45.5" x2="351.64" y2="45.5"/>
+    <polygon class="i" points="349.66 48.41 360.5 45.5 349.66 42.59"/>
+    <line class="ef" x1="72.5" y1="90.26" x2="72.5" y2="93.26"/>
+    <line class="efd" x1="72.5" y1="99.26" x2="72.5" y2="111.26"/>
+    <line class="ef" x1="72.5" y1="114.26" x2="72.5" y2="117.26"/>
+    <line class="ef" x1="135.5" y1="90.26" x2="135.5" y2="93.26"/>
+    <line class="efd" x1="135.5" y1="99.26" x2="135.5" y2="111.26"/>
+    <line class="ef" x1="135.5" y1="114.26" x2="135.5" y2="117.26"/>
+    <text class="k" x="90" y="111.02">space</text>
+    <polygon class="j" points="72.5 108.5 83.34 105.59 83.34 111.41"/>
+    <polygon class="j" points="135.5 108.5 124.66 111.41 124.66 105.59"/>
+    <line class="ef" x1="225.5" y1="90.26" x2="225.5" y2="93.26"/>
+    <line class="efd" x1="225.5" y1="99.26" x2="225.5" y2="111.26"/>
+    <line class="ef" x1="225.5" y1="114.26" x2="225.5" y2="117.26"/>
+    <line class="ef" x1="288.5" y1="90.26" x2="288.5" y2="93.26"/>
+    <line class="efd" x1="288.5" y1="99.26" x2="288.5" y2="111.26"/>
+    <line class="ef" x1="288.5" y1="114.26" x2="288.5" y2="117.26"/>
+    <text class="k" x="243" y="111.02">space</text>
+    <polygon class="j" points="225.5 108.5 236.34 105.59 236.34 111.41"/>
+    <polygon class="j" points="288.5 108.5 277.66 111.41 277.66 105.59"/>
+  </g>
+</svg>

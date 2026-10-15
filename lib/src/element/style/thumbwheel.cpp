@@ -28,7 +28,11 @@ namespace cycfi::elements
    {
       if (_quantize > 0)
       {
-         auto bounds = device_to_user(ctx.bounds, ctx.canvas);
+         // The view refreshes in device coordinates, as view::refresh
+         // converts a context's bounds.
+         auto tl = ctx.canvas.user_to_device(ctx.bounds.top_left());
+         auto br = ctx.canvas.user_to_device(ctx.bounds.bottom_right());
+         auto bounds = rect{tl.x, tl.y, br.x, br.y};
          _aligner =
             [this, &view = ctx.view, bounds](double val)
             {

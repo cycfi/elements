@@ -192,18 +192,34 @@ axis, `extent` the subject's length on it, and `bounds` the bar's track.
 |===
 | Expression | Semantics
 
-| `port(e)`, `vport(e)`, `hport(e)`
-| A port moving `e` on both axes, vertically, or horizontally.
+| `port(e)`
+| A port moving `e` on both axes.
 
-| `p.halign(a)`, `p.valign(a)`
-| Move the subject: at 0.0 its left or top edge is at the port's, at 1.0
-  its right or bottom edge.
+| `vport(e)`
+| A port moving `e` vertically.
+
+| `hport(e)`
+| A port moving `e` horizontally.
+
+| `p.halign(a)`
+| Move the subject across: at 0.0 its left edge is at the port's, at
+  1.0 its right edge.
+
+| `p.valign(a)`
+| Move the subject up or down: at 0.0 its top edge is at the port's, at
+  1.0 its bottom edge.
 
 | `get_port_bounds(ctx)`
 | The bounds of the innermost port around `ctx`'s element, or the view's.
 
-| `scroller(e, t)`, `vscroller(e, t)`, `hscroller(e, t)`
-| A scroller over `e`, on both axes, vertically, or horizontally.
+| `scroller(e, t)`
+| A scroller over `e`, on both axes.
+
+| `vscroller(e, t)`
+| A scroller over `e`, vertically.
+
+| `hscroller(e, t)`
+| A scroller over `e`, horizontally.
 
 | `s.on_scroll = f`
 | `f(pt)` is called after each scroll the user makes.

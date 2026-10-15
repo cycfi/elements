@@ -248,16 +248,22 @@ or'ed with a vertical one, `canvas::top`, `canvas::middle`,
   the theme's `label_text_align` for a label, `heading_text_align` for
   a heading.
 
-| `l.get_text()`, `l.set_text(s)`
-| Read and replace the text.
+| `l.get_text()`
+| The text.
+
+| `l.set_text(s)`
+| Replace the text with `s`.
 
 | `l.set_font(f)`
 | Change the font of `l` in place. `l` was built with `font`.
 
-| `l.set_font_size(z)`, `l.set_relative_font_size(z)`
-| Change the size of `l` in place, in points or as a factor of the
-  style's default. `l` was built with `font_size` or
-  `relative_font_size`.
+| `l.set_font_size(z)`
+| Change the size of `l` in place, to `z` points. `l` was built with
+  `font_size`.
+
+| `l.set_relative_font_size(z)`
+| Change the size of `l` in place, to `z` times the style's default.
+  `l` was built with `relative_font_size`.
 
 | `l.set_font_color(c)`
 | Change the colour of `l` in place. `l` was built with `font_color`.

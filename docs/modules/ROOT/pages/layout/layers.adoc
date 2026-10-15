@@ -1,4 +1,4 @@
-= Layout
+= Layers
 
 include::../common.adoc[]
 
@@ -10,87 +10,108 @@ higher-level elements obscure or hide lower-level elements.
 
 image::/layout/layer.svg[alt="layer", width=353px, role=center]
 
-=== Semantics
+`layer` returns a `Composite`.
+
+== Include
+
+```c++
+#include <elements/element/layer.hpp>
+```
+
+== layer
+
+=== Layout Rules
 
 . The elements are laid out in the z-axis, top to bottom.
 . Rendering is done bottom-up; the bottom-most elements are drawn first.
 . UI control (such as mouse clicks) proceeds from top to bottom.
 Higher-level elements are given control priority. If a higher-level
-element does not process the event, lower-level elements are given a
-chance.
+element does not take control at the point (it does not want control, or
+nothing in it is under the point), lower-level elements are given a chance.
+Once an element is hit, the event goes to it alone.
 . The layer's _minimum limit_ is computed as the maximum of the children
 elements' __minimum limit__s.
 . The layer's _maximum limit_ is computed as the minimum of the children
 elements' __maximum limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
-than the computed maximum limit. Likewise the computed maximum limit is
-clamped to ensure it is not less than the computed minimum limit.
+. The final computed maximum limit is clamped to ensure it is not less
+than the computed minimum limit: the minimum wins.
 . The computed (vertical) and (horizontal) coordinates may violate the
 limits of its children elements.
  .. If the allocated size of a child element is lower than the element's
-_minimum limits_ in either dimension, the element will be cropped.
+_minimum limits_ in either dimension, the element keeps its minimum and
+overflows past the layer's right and bottom edges, without clipping.
  .. If a child element's _maximum limits_ in either dimension is exceeded,
 the element will be aligned to the top-left.
 
-== layer
+=== Declaration
 
-Create a layer composite with a fixed number of elements.
+```c++
+class layer_element : public composite_base
+{
+   ...
+};
 
-=== Notation
+using layer_composite = vector_composite<layer_element>;
+
+template <concepts::Element... E>
+array_composite<sizeof...(E), layer_element>
+layer(E&&... elements);
+```
+
+`layer` returns an `array_composite` and `layer_composite` is a
+`vector_composite`, each with `layer_element` as its base. All of
+`layer_element` is the `Composite` interface (see
+xref:elements/composites.adoc[Composites]).
+
+=== Expressions
+
+==== Notation
 
 `N`:: The number of items
 
 `+e1,...eN+`:: One or more child elements, instances of `Element` (more below)
 
-Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by
-the layer element.
+`c`:: Instance of type `layer_composite`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-layer(e1,...eN)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Example
+| `+layer(e1,...eN)+`
+| Create a layer composite with a fixed number of elements. Elements
+  `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
+  layer element.
+|===
 
+.Example
 [,c++]
 ----
 layer(item1, item2, item3, item4)
 ----
 
-NOTE: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use a
 `layer_composite` (see below).
 
-=== Semantics
+==== Constructors
 
-. In addition to the semantics of Layers, returns instance of `Composite`.
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-'''
-
-== layer_composite
-
-Create a layer with an indeterminate (dynamic) number of elements:
-
-=== Notation
-
-`c`:: Instance of type `layer_composite`
+| `layer_composite c`
+| Create a layer with an indeterminate (dynamic) number of elements.
+|===
 
 The `layer_composite` is essentially a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The client is responsible for
 the lifetime of the container, `c`. You can use `layer_composite` in the same
 way as a `std::vector`, such as using `push_back` to add a child element.
-Remember that the items are `element_ptr` instances.
+Remember that the items are `element_ptr` instances. The last element of `c`
+is the top-most.
 
-=== Expression
-
-[,c++]
-----
-layer_composite c;
-----
-
-==== Example
-
+.Example
 [,c++]
 ----
 c.push_back(share(child));
@@ -102,6 +123,35 @@ the `std::vector<element_ptr>` in `layer_composite`.
 `layer_composite` is itself also an `element` and while it has
 ``std::vector``'s interface, it can also be ``share``d like any element, which
 allows you to build complex hierarchical structures.
+
+== Example
+
+A card: a gold box in the middle over a slate gray background, under a layer
+of badges added at run time, here one red badge at the top-right corner:
+
+```c++
+#include <elements/element/layer.hpp>
+#include <elements/element/align.hpp>       // For align_right_top and align_center_middle
+#include <elements/element/size.hpp>        // For fixed_size
+#include <elements/element/style/misc.hpp>  // For box
+...
+using namespace cycfi::elements;
+...
+layer_composite badges;                                        <1>
+badges.push_back(share(
+   align_right_top(fixed_size({20, 20}, box(colors::red)))
+));
+
+auto card = layer(
+   badges,                                                     <2>
+   align_center_middle(fixed_size({100, 60}, box(colors::gold))),
+   box(colors::slate_gray)                                     <3>
+);
+```
+
+<1> A layer whose badges are added at run time.
+<2> The top-most element: the badges obscure the elements below.
+<3> The bottom-most element, drawn first: the background fills the card.
 
 '''
 

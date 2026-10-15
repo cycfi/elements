@@ -27,7 +27,6 @@
 **** xref:layout/layers.adoc[Layers]
 **** xref:layout/decks.adoc[Decks]
 **** xref:layout/flow.adoc[Flow]
-**** xref:layout/collapsible.adoc[Collapsible]
 *** xref:elements/controls.adoc[Controls]
 **** xref:elements/buttons.adoc[Buttons]
 **** xref:elements/sliders.adoc[Sliders]

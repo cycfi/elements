@@ -396,8 +396,11 @@ the parent window, for a view inside a window another program owns.
 | `v.remove(p)`
 | Remove `p` at the next poll.
 
-| `v.move_to_front(p)`, `v.move_to_back(p)`
-| Move `p` to the top or the bottom at the next poll.
+| `v.move_to_front(p)`
+| Move `p` to the top at the next poll.
+
+| `v.move_to_back(p)`
+| Move `p` to the bottom at the next poll.
 
 | `v.is_open(p)`
 | Whether `p` is one of the layers.
@@ -415,8 +418,11 @@ the parent window, for a view inside a window another program owns.
 | `v.on_change_limits = f`
 | Called with the new limits when they change.
 
-| `v.scale()`, `v.scale(s)`
-| The content's scale; set it.
+| `v.scale()`
+| The content's scale.
+
+| `v.scale(s)`
+| Set the content's scale to `s`.
 
 | `v.layout()`
 | Lay the content out again and refresh the view.
@@ -468,11 +474,17 @@ the parent window, for a view inside a window another program owns.
 | `v.add_undo(t)`
 | Record `t`; forget what was undone.
 
-| `v.undo()`, `v.redo()`
-| Undo or redo the latest; return whether there was one.
+| `v.undo()`
+| Undo the latest; return whether there was one.
 
-| `v.has_undo()`, `v.has_redo()`
-| Whether there is one to undo or redo.
+| `v.redo()`
+| Redo the latest undone; return whether there was one.
+
+| `v.has_undo()`
+| Whether there is one to undo.
+
+| `v.has_redo()`
+| Whether there is one to redo.
 |===
 
 == Example

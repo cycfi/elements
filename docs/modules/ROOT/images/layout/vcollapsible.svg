@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 425 127">
+  <defs>
+    <style>
+      .d, .g { stroke: #414042; }
+      .d, .e, .f, .g { stroke-miterlimit: 10; }
+      .d, .e, .f { fill: none; }
+      .g { fill: #e6e7e8; }
+      .e, .f { stroke: #be1e2d; }
+      .f { stroke-dasharray: 0 0 6 6; }
+      .j { fill: #be1e2d; stroke-width: 0px; }
+      .h, .k { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; }
+      .h { fill: #1c75bc; }
+      .k { fill: #be1e2d; }
+    </style>
+  </defs>
+  <g>
+    <rect class="g" x=".5" y=".5" width="144" height="36"/>
+    <text class="h" x="69.5" y="22.5">a</text>
+    <rect class="d" x=".5" y="36.5" width="144" height="54"/>
+    <text class="h" x="69.5" y="67.5">b</text>
+    <rect class="g" x=".5" y="90.5" width="144" height="36"/>
+    <text class="h" x="69.5" y="112.5">c</text>
+    <line class="e" x1="144.5" y1="36.5" x2="147.5" y2="36.5"/>
+    <line class="f" x1="153.5" y1="36.5" x2="174.5" y2="36.5"/>
+    <line class="e" x1="177.5" y1="36.5" x2="180.5" y2="36.5"/>
+    <line class="e" x1="144.5" y1="90.5" x2="147.5" y2="90.5"/>
+    <line class="f" x1="153.5" y1="90.5" x2="174.5" y2="90.5"/>
+    <line class="e" x1="177.5" y1="90.5" x2="180.5" y2="90.5"/>
+    <text class="k" x="155.1" y="67.77">height</text>
+    <line class="e" x1="171.5" y1="55" x2="171.5" y2="47.34"/>
+    <polygon class="j" points="171.50 36.50 174.41 47.34 168.59 47.34"/>
+    <line class="e" x1="171.5" y1="72" x2="171.5" y2="79.66"/>
+    <polygon class="j" points="171.50 90.50 168.59 79.66 174.41 79.66"/>
+  </g>
+  <g>
+    <rect class="g" x="200.5" y=".5" width="144" height="36"/>
+    <text class="h" x="269.5" y="22.5">a</text>
+    <rect class="g" x="200.5" y="36.5" width="144" height="36"/>
+    <text class="h" x="269.5" y="58.5">c</text>
+    <line class="e" x1="344.5" y1="36.5" x2="347.5" y2="36.5"/>
+    <line class="f" x1="353.5" y1="36.5" x2="368.5" y2="36.5"/>
+    <line class="e" x1="371.5" y1="36.5" x2="374.5" y2="36.5"/>
+    <line class="e" x1="365.5" y1="14.5" x2="365.5" y2="25.66"/>
+    <polygon class="j" points="365.50 36.50 362.59 25.66 368.41 25.66"/>
+    <line class="e" x1="365.5" y1="58.5" x2="365.5" y2="47.34"/>
+    <polygon class="j" points="365.50 36.50 368.41 47.34 362.59 47.34"/>
+    <text class="k" x="379" y="40.77">height 0</text>
+  </g>
+</svg>

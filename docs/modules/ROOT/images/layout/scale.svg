@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 108">
+  <defs>
+    <style>
+      .d { stroke: #414042; }
+      .dd { stroke: #414042; stroke-dasharray: 0 0 6 6; }
+      .d, .dd, .e, .f { fill: none; stroke-miterlimit: 10; }
+      .e, .f { stroke: #be1e2d; }
+      .f { stroke-dasharray: 0 0 7 7; }
+      .j { fill: #be1e2d; stroke-width: 0px; }
+      .k { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; fill: #be1e2d; }
+    </style>
+  </defs>
+  <g>
+    <rect class="d" x=".5" y=".5" width="160" height="80"/>
+    <rect class="dd" x=".5" y=".5" width="80" height="40"/>
+    <text class="k" x="26.5" y="24.5">width</text>
+    <line class="e" x1="24" y1="20.5" x2="9.34" y2="20.5"/>
+    <polygon class="j" points="0.50 20.50 11.34 17.59 11.34 23.41"/>
+    <line class="e" x1="57" y1="20.5" x2="71.66" y2="20.5"/>
+    <polygon class="j" points="80.50 20.50 69.66 23.41 69.66 17.59"/>
+    <line class="e" x1=".5" y1="80.5" x2=".5" y2="83.5"/>
+    <line class="f" x1=".5" y1="90.5" x2=".5" y2="101"/>
+    <line class="e" x1=".5" y1="104.5" x2=".5" y2="107.5"/>
+    <line class="e" x1="160.5" y1="80.5" x2="160.5" y2="83.5"/>
+    <line class="f" x1="160.5" y1="90.5" x2="160.5" y2="101"/>
+    <line class="e" x1="160.5" y1="104.5" x2="160.5" y2="107.5"/>
+    <text class="k" x="43" y="102.5">width &#215; scale_</text>
+    <line class="e" x1="38" y1="98.5" x2="9.34" y2="98.5"/>
+    <polygon class="j" points="0.50 98.50 11.34 95.59 11.34 101.41"/>
+    <line class="e" x1="123" y1="98.5" x2="151.66" y2="98.5"/>
+    <polygon class="j" points="160.50 98.50 149.66 101.41 149.66 95.59"/>
+    <line class="e" x1="160.5" y1=".5" x2="163.5" y2=".5"/>
+    <line class="f" x1="169.5" y1=".5" x2="190.5" y2=".5"/>
+    <line class="e" x1="193.5" y1=".5" x2="196.5" y2=".5"/>
+    <line class="e" x1="160.5" y1="80.5" x2="163.5" y2="80.5"/>
+    <line class="f" x1="169.5" y1="80.5" x2="190.5" y2="80.5"/>
+    <line class="e" x1="193.5" y1="80.5" x2="196.5" y2="80.5"/>
+    <text class="k" x="171" y="38">height</text>
+    <text class="k" x="165.5" y="51">&#215; scale_</text>
+    <line class="e" x1="187.5" y1="26" x2="187.5" y2="9.34"/>
+    <polygon class="j" points="187.50 0.50 190.41 11.34 184.59 11.34"/>
+    <line class="e" x1="187.5" y1="56" x2="187.5" y2="71.66"/>
+    <polygon class="j" points="187.50 80.50 184.59 69.66 190.41 69.66"/>
+  </g>
+</svg>

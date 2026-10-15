@@ -3,10 +3,10 @@
 
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 
-   Asserts the claims of docs/modules/ROOT/pages/layout/collapsible.adoc
-   and draws its figure. The figure lands in the build's results
-   directory; copy it to docs/modules/ROOT/images/layout/ to update the
-   page.
+   Asserts the claims of the vcollapsible and hcollapsible sections of
+   docs/modules/ROOT/pages/layout/sizing.adoc and draws their example's
+   figure. The figure lands in the build's results directory; copy it to
+   docs/modules/ROOT/images/layout/ to update the page.
 =============================================================================*/
 #include "test_support.hpp"
 #include <string>
@@ -36,6 +36,31 @@ namespace
 
       rect last_bounds = {};
    };
+
+   // An element that takes the mouse and the keyboard, and records its
+   // focus and the keys, other than Tab, and the text it is given.
+   struct focusable : element
+   {
+      bool wants_control() const override { return true; }
+      bool wants_focus() const override { return true; }
+      void begin_focus(focus_request) override { focused = true; }
+      bool end_focus() override { focused = false; return true; }
+      bool key(context const&, key_info k) override
+      {
+         if (k.key == key_code::tab)                 // Tab moves on.
+            return false;
+         ++keys;
+         return true;
+      }
+      bool text(context const&, text_info) override { ++texts; return true; }
+
+      bool focused = false;
+      int keys = 0;
+      int texts = 0;
+   };
+
+   key_info const tab_key = {key_code::tab, key_action::press, 0};
+   key_info const a_key = {key_code::a, key_action::press, 0};
 
    // The page's example: a header over a body that folds away.
    struct section
@@ -135,6 +160,114 @@ TEST_CASE("collapsible page: the limits", "[collapsible_page]")
    CHECK(!c.wants_focus());
 }
 
+TEST_CASE("collapsible page: hcollapsible collapses the width", "[collapsible_page]")
+{
+   bool collapsed = false;
+   auto left = share(block{});
+   auto middle = share(block{});
+   auto right = share(block{});
+   auto folding = hcollapsible(hold(middle));
+   folding.is_collapsed = [&collapsed]{ return collapsed; };
+
+   test_view tv{extent{180, 200}, 1};
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+   headless::open(tv.view_);
+#endif
+   tv.view_.content(align_top(htile(hold(left), std::move(folding), hold(right))));
+   tv.view_.layout();
+   tv.draw();
+
+   // Open: three blocks of 60.
+   CHECK(left->last_bounds == rect{0, 0, 60, 30});
+   CHECK(middle->last_bounds == rect{60, 0, 120, 30});
+   CHECK(right->last_bounds == rect{120, 0, 180, 30});
+
+   // Collapsed: the middle one takes no width, is not drawn, and what
+   // follows moves over into the room it gave up.
+   collapsed = true;
+   middle->last_bounds = {};
+   tv.view_.layout();
+   tv.draw();
+   CHECK(left->last_bounds == rect{0, 0, 90, 30});
+   CHECK(middle->last_bounds == rect{});           // draw was not called
+   CHECK(right->last_bounds == rect{90, 0, 180, 30});
+
+   // And back, at its own size.
+   collapsed = false;
+   tv.view_.layout();
+   tv.draw();
+   CHECK(middle->last_bounds == rect{60, 0, 120, 30});
+}
+
+TEST_CASE("collapsible page: is_collapsed, the mouse and the keyboard", "[collapsible_page]")
+{
+   auto pred = []{ return true; };
+
+   auto v = vcollapsible(focusable{});
+   CHECK(!v.is_collapsed());                       // The default returns false.
+   CHECK(v.wants_control());
+   CHECK(v.wants_focus());
+   auto& held = (v.is_collapsed = pred);           // Returns the member.
+   CHECK(&held == &v.is_collapsed);
+   CHECK(v.is_collapsed());
+   CHECK(!v.wants_control());
+   CHECK(!v.wants_focus());
+
+   auto h = hcollapsible(focusable{});
+   CHECK(!h.is_collapsed());
+   CHECK(h.wants_control());
+   CHECK(h.wants_focus());
+   h.is_collapsed = pred;
+   CHECK(!h.wants_control());
+   CHECK(!h.wants_focus());
+}
+
+TEST_CASE("collapsible page: a collapsed subject gives up the focus", "[collapsible_page]")
+{
+   test_view tv{extent{200, 200}, 1};
+   bool collapsed = false;
+   focusable f;
+   auto c = vcollapsible(link(f));
+   c.is_collapsed = [&collapsed]{ return collapsed; };
+
+   // Wrapped in a margin, as in the page's example.
+   auto t = vtile(focusable{}, margin_top(6, std::move(c)), focusable{});
+   context ctx{tv.view_, tv.cnv, &t, rect{0, 0, 200, 90}};
+   t.layout(ctx);
+
+   CHECK(t.key(ctx, tab_key));                     // The first element.
+   CHECK(t.key(ctx, tab_key));                     // The collapsible one.
+   CHECK(t.focus_index() == 1);
+   CHECK(f.focused);
+   CHECK(t.key(ctx, a_key));
+   CHECK(t.text(ctx, text_info{'x', 0}));
+   CHECK(f.keys == 1);
+   CHECK(f.texts == 1);
+
+   // Collapsed, before the next layout: no keys and no text.
+   collapsed = true;
+   CHECK(!t.key(ctx, a_key));
+   CHECK(!t.text(ctx, text_info{'x', 0}));
+   CHECK(f.keys == 1);
+   CHECK(f.texts == 1);
+
+   // At the next layout, the focus is given up.
+   t.layout(ctx);
+   CHECK(!f.focused);
+   CHECK(t.focus_index() == -1);
+   t.key(ctx, a_key);
+   CHECK(f.keys == 1);
+
+   // Open again, it takes the focus on Tab as before.
+   collapsed = false;
+   t.layout(ctx);
+   CHECK(t.key(ctx, tab_key));                     // The first element.
+   CHECK(t.key(ctx, tab_key));                     // The collapsible one.
+   CHECK(f.focused);
+   CHECK(t.key(ctx, a_key));
+   CHECK(f.keys == 2);
+}
+
 TEST_CASE("collapsible page: figure", "[collapsible_page]")
 {
    // The example, open and collapsed, side by side.
@@ -156,3 +289,4 @@ TEST_CASE("collapsible page: figure", "[collapsible_page]")
    tv.draw();
    tv.img.save_png(std::string{RESULTS_PATH} + "layout_collapsible.png");
 }
+

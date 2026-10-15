@@ -7,27 +7,108 @@ include::../common.adoc[]
 The Elements Library is resolution independent and elements can be scaled up
 or down to suit. The default scale is 1.0 (no scale).
 
+`scale` returns a `Proxy`.
+
+== Include
+
+```c++
+#include <elements/element/size.hpp>
+```
+
 == scale
+
+image::/layout/scale.svg[alt="scale", width=339px, role=center]
 
 The `scale` element changes the scale of its enclosed element (`subject`).
 
-=== Notation
+=== Declaration
+
+```c++
+template <concepts::Element Subject>
+class scale_element : public proxy<Subject>
+{
+public:
+                           scale_element(float scale_, Subject subject);
+
+   void                    scale(float scale_);
+   float                   scale() const;
+
+   ...
+};
+
+template <concepts::Element Subject>
+scale_element<remove_cvref_t<Subject>>
+scale(float scale_, Subject&& subject);
+```
+
+The rest of `scale_element` is the `Proxy` interface (see
+xref:elements/proxies.adoc[Proxies]).
+
+=== Expressions
+
+==== Notation
 
 `scale_`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+`e`:: The element `scale` returns
 
-[,c++]
-----
-scale(scale_, subject)
-----
+==== Factory
 
-=== Semantics
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-. The `subject` will scaled given the `scale_` value. A value > 1.0 scales
-the element up (zoom in), while a value < 1.0 scales down (zoom out).
-. Returns instance of `Proxy`.
+| `scale(scale_, subject)`
+| The `subject` will be scaled given the `scale_` value. A value > 1.0
+  scales the element up (zoom in), while a value < 1.0 scales down (zoom
+  out). A `scale_` of 0 or less is taken as
+  `std::numeric_limits<float>::epsilon()`.
+|===
+
+==== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.scale(scale_)`
+| Set the scale to `scale_`. A `scale_` of 0 or less is taken as
+  `std::numeric_limits<float>::epsilon()`.
+| `void`
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.scale()`
+| Get the scale.
+| `float`
+|===
+
+== Example
+
+A column of two labels, the second drawn twice as big:
+
+```c++
+#include <elements/element/size.hpp>
+#include <elements/element/tile.hpp>   // For vtile
+#include <elements/element/label.hpp>  // For label
+...
+using namespace cycfi::elements;
+...
+auto column = vtile(
+   label("Normal"),                    <1>
+   scale(2, label("Twice as big"))     <2>
+);
+```
+
+<1> A label at the default scale.
+<2> A label at twice the scale: its text, and the space it takes, double.
 
 '''
 

@@ -8,6 +8,8 @@
 
 #include <elements/view.hpp>
 #include <elements/element/composite.hpp>
+#include <algorithm>
+#include <array>
 
 namespace cycfi::elements
 {
@@ -80,6 +82,36 @@ namespace cycfi::elements
       std::size_t             _size;
    };
 
+   /**
+    * \class array_grid
+    *
+    * \brief
+    *    A specialized grid that lays out cells based on its own copy of an
+    *    array of `N` coordinates.
+    *
+    * \tparam N
+    *    The number of coordinates.
+    *
+    * \tparam Base
+    *    The base class on which `array_grid` derived from.
+    */
+   template <std::size_t N, typename Base>
+   class array_grid : public Base
+   {
+   public:
+                              array_grid(std::array<float, N> const& coords)
+                               : _coords(coords)
+                              {}
+
+      std::size_t             grid_size() const override    { return N; }
+      float                   grid_coord(std::size_t i) const override
+                              { return (i < N)? _coords[i] : 1.0f; }
+
+   private:
+
+      std::array<float, N>    _coords;
+   };
+
    namespace concepts
    {
       template <typename T>
@@ -147,7 +179,7 @@ namespace cycfi::elements
    private:
 
       std::vector<float>      _positions;
-      mutable std::size_t     _num_spans;
+      mutable std::size_t     _num_spans = 0;
    };
 
    using vgrid_composite = vector_composite<
@@ -177,7 +209,7 @@ namespace cycfi::elements
     *    `array_composite` that is derived from `range_grid<vgrid_element>`.
     *    The row coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto vgrid(float const(&coords)[N], E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
@@ -207,14 +239,31 @@ namespace cycfi::elements
     *
     * \returns
     *    A vertical grid element represented as an instance of
-    *    `array_composite` that is derived from `range_grid<vgrid_element>`.
-    *    The row coordinates are provided by the `coords` parameter.
+    *    `array_composite` that is derived from `array_grid<N, vgrid_element>`.
+    *    The grid keeps a copy of the row coordinates in `coords`.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto vgrid(std::array<float, N> const& coords, E&&... elements)
    {
-      using plain_array = float const (&)[N];
-      return vgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
+      using composite = array_composite<sizeof...(elements), array_grid<N, vgrid_element>>;
+      using container = typename composite::container_type;
+      composite r{coords};
+      r = container{{share(std::forward<E>(elements))...}};
+      return r;
+   }
+
+   /**
+    * \brief
+    *    Create a vertical grid layout, given coordinates as a temporary
+    *    C-style array, such as a braced list. The grid keeps a copy of the
+    *    coordinates.
+    */
+   template <std::size_t N, concepts::Element... E>
+   inline auto vgrid(float const(&&coords)[N], E&&... elements)
+   {
+      std::array<float, N> copy;
+      std::copy(coords, coords+N, copy.begin());
+      return vgrid(copy, std::forward<E>(elements)...);
    }
 
    /**
@@ -234,7 +283,7 @@ namespace cycfi::elements
     *    `array_composite` that is derived from `equal_grid<vgrid_element>.
     *    The rows are equally spaced.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto vgrid(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), equal_grid<vgrid_element>>;
@@ -264,7 +313,7 @@ namespace cycfi::elements
    private:
 
       std::vector<float>      _positions;
-      mutable std::size_t     _num_spans;
+      mutable std::size_t     _num_spans = 0;
    };
 
    using hgrid_composite = vector_composite<
@@ -294,7 +343,7 @@ namespace cycfi::elements
     *    `array_composite` that is derived from `range_grid<hgrid_element>`.
     *    The column coordinates are provided by the `coords` parameter.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto hgrid(float const(&coords)[N], E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
@@ -324,14 +373,31 @@ namespace cycfi::elements
     *
     * \returns
     *    A horizontal grid element represented as an instance of
-    *    `array_composite` that is derived from `range_grid<hgrid_element>`.
-    *    The column coordinates are provided by the `coords` parameter.
+    *    `array_composite` that is derived from `array_grid<N, hgrid_element>`.
+    *    The grid keeps a copy of the column coordinates in `coords`.
     */
-   template <std::size_t N, typename... E>
+   template <std::size_t N, concepts::Element... E>
    inline auto hgrid(std::array<float, N> const& coords, E&&... elements)
    {
-      using plain_array = float const (&)[N];
-      return hgrid(plain_array(*coords.data()), std::forward<E>(elements)...);
+      using composite = array_composite<sizeof...(elements), array_grid<N, hgrid_element>>;
+      using container = typename composite::container_type;
+      composite r{coords};
+      r = container{{share(std::forward<E>(elements))...}};
+      return r;
+   }
+
+   /**
+    * \brief
+    *    Create a horizontal grid layout, given coordinates as a temporary
+    *    C-style array, such as a braced list. The grid keeps a copy of the
+    *    coordinates.
+    */
+   template <std::size_t N, concepts::Element... E>
+   inline auto hgrid(float const(&&coords)[N], E&&... elements)
+   {
+      std::array<float, N> copy;
+      std::copy(coords, coords+N, copy.begin());
+      return hgrid(copy, std::forward<E>(elements)...);
    }
 
    /**
@@ -351,7 +417,7 @@ namespace cycfi::elements
     *    `array_composite` that is derived from `equal_grid<hgrid_element>.
     *    The columns are equally spaced.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto hgrid(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), equal_grid<hgrid_element>>;

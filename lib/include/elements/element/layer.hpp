@@ -61,7 +61,7 @@ namespace cycfi::elements
     *    A reverse layer composite of the provided elements (top-most element
     *    last).
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto layer(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), layer_element>;
@@ -91,6 +91,9 @@ namespace cycfi::elements
       void                 refresh(context const& ctx, element& element, int outward = 0) override;
       void                 in_context_do(context const& ctx, element& e, context_function f) override;
       hit_info             hit_element(context const& ctx, point p, bool control) const override;
+      bool                 key(context const& ctx, key_info k) override;
+      bool                 text(context const& ctx, text_info info) override;
+      bool                 wants_focus() const override;
       void                 begin_focus(focus_request req) override;
       bool                 hotkey(context const& ctx, key_info k) override;
 
@@ -128,7 +131,7 @@ namespace cycfi::elements
     * @return
     *    A deck composite of the provided elements.
     */
-   template <typename... E>
+   template <concepts::Element... E>
    inline auto deck(E&&... elements)
    {
       using composite = array_composite<sizeof...(elements), deck_element>;

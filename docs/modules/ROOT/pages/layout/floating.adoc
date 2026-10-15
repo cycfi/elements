@@ -7,31 +7,111 @@ include::../common.adoc[]
 A floating element allows arbitrary placement of an enclosed element
 (`subject`) in the main view.
 
-image::/layout/floating.svg[alt="floating", width=432px, role=center]
+`floating` returns a `Proxy`. The floating element does not violate the
+natural {limits} of the subject.
+
+== Include
+
+```c++
+#include <elements/element/floating.hpp>
+```
 
 == floating
+
+image::/layout/floating.svg[alt="floating", width=432px, role=center]
 
 Positions the enclosed element (`subject`) at specified coordinates, allowing
 it to float within the layout.
 
-=== Notation
+=== Declaration
+
+```c++
+class floating_element : public proxy_base
+{
+public:
+                           floating_element(rect bounds);
+
+   void                    bounds(rect bounds_);
+   rect                    bounds() const;
+
+   ...
+};
+
+template <concepts::Element Subject>
+proxy<remove_cvref_t<Subject>, floating_element>
+floating(rect bounds, Subject&& subject);
+```
+
+`rect` is the {artist} rectangle. `floating` returns a `proxy` that holds
+the subject, with `floating_element` as its base. The rest of
+`floating_element` is the `Proxy` interface (see
+xref:elements/proxies.adoc[Proxies]).
+
+=== Expressions
+
+==== Notation
 
 `left`, `top`, `right`, `bottom`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+`e`:: The element `floating` returns
 
-[,c++]
-----
-floating({left, top, right, bottom}, subject)
-----
+==== Factory
 
-=== Semantics
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-. The element will be placed exactly to the specified position in the main
-view, constrained to the subject's natural {limits}.
-. The floating element does not violate the natural {limits} of the subject.
-. Returns instance of `Proxy`.
+| `floating({left, top, right, bottom}, subject)`
+| The element will be placed exactly to the specified position in the main
+  view, constrained to the subject's natural {limits}.
+|===
+
+==== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.bounds({left, top, right, bottom})`
+| Set the bounds. The element is placed there, constrained to the
+  subject's natural {limits}, the next time it is laid out or drawn.
+| `void`
+|===
+
+==== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                    | Semantics                         | Return Type
+
+| `e.bounds()`
+| Get the bounds. Once the element is laid out or drawn, their size is
+  the one constrained to the subject's natural {limits}.
+| `rect`
+|===
+
+== Example
+
+A gold box floating over a background, 200 by 100, its top left at 50, 50
+in the main view:
+
+```c++
+#include <elements/element/floating.hpp>
+#include <elements/element/style/misc.hpp>  // For box
+#include <elements/view.hpp>                // For view
+...
+using namespace cycfi::elements;
+...
+view_.content(
+   floating({50, 50, 250, 150}, box(colors::gold)),     <1>
+   box(colors::dark_slate_gray)                         <2>
+);
+```
+
+<1> The floating box, placed at its bounds whatever the size of the view.
+<2> The background, filling the view.
 
 '''
 

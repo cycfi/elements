@@ -180,12 +180,18 @@ subclass with more behavior as its `Base`.
 | `b.tracking()`
 | Whether the mouse is down on the button.
 
-| `b.enable(v)`, `b.is_enabled()`
+| `b.enable(v)`
 | Enable or disable the button. Disabled, it ignores the mouse and does
   not highlight; `ctx.enabled` is `false` for its styler.
 
-| `c.select(v)`, `c.is_selected()`
-| For a `basic_choice` `c`: its value, under the `selectable` names.
+| `b.is_enabled()`
+| Whether the button is enabled.
+
+| `c.select(v)`
+| For a `basic_choice` `c`: set its value, under the `selectable` name.
+
+| `c.is_selected()`
+| For a `basic_choice` `c`: its value, under the `selectable` name.
 |===
 
 == Example

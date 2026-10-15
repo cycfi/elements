@@ -155,8 +155,11 @@ namespace cycfi::elements
 | `basic_popup(e, r)`
 | A popup of `e` at `r`.
 
-| `p.open(view_)`, `p.close(view_)`
-| Open `p` on top of the view's layers; close it.
+| `p.open(view_)`
+| Open `p` on top of the view's layers.
+
+| `p.close(view_)`
+| Close `p`.
 
 | `p.is_open(view_)`
 | Whether `p` is open.

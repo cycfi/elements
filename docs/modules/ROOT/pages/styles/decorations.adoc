@@ -163,11 +163,17 @@ The headers are `element/style/misc.hpp` and `element/style/border.hpp`.
 |===
 | Expression | Semantics
 
-| `box(c)`, `rbox(c, r)`
-| A fill of `c`; with rounded corners of radius `r`, 4 by default.
+| `box(c)`
+| A fill of `c`.
 
-| `panel{}`, `panel(o)`
-| A group's background, in the theme's panel color; at opacity `o`.
+| `rbox(c, r)`
+| A fill of `c` with rounded corners of radius `r`, 4 if not given.
+
+| `panel{}`
+| A group's background, in the theme's panel color.
+
+| `panel(o)`
+| The same, at the opacity `o`.
 
 | `frame{}`
 | An outline in the theme's frame color, width and corner radius.
@@ -188,8 +194,26 @@ The headers are `element/style/misc.hpp` and `element/style/border.hpp`.
 | `draw_value<T>(f)`
 | A receiver of a `T` that draws with `f(ctx, v)`.
 
-| `border{}`, `border_left{}`, ...
-| Lines along the edges of the bounds.
+| `border{}`
+| Lines along the four edges of the bounds.
+
+| `border_left{}`
+| A line along the left edge.
+
+| `border_right{}`
+| A line along the right edge.
+
+| `border_top{}`
+| A line along the top edge.
+
+| `border_bottom{}`
+| A line along the bottom edge.
+
+| `border_top_bottom{}`
+| Lines along the top and bottom edges.
+
+| `border_left_right{}`
+| Lines along the left and right edges.
 |===
 
 '''

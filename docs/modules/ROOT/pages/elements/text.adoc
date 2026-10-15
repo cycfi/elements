@@ -246,11 +246,17 @@ namespace cycfi::elements
 | A static text box of `s` in font `f` and colour `c`, by default the
   theme's.
 
-| `st.get_text()`, `st.get_utf8()`
-| The text, in UTF-32 or UTF-8.
+| `st.get_text()`
+| The text, in UTF-32.
 
-| `st.set_text(s)`, `st.set_utf8(s)`
-| Replace the text.
+| `st.get_utf8()`
+| The text, in UTF-8.
+
+| `st.set_text(s)`
+| Replace the text with `s`, in UTF-32.
+
+| `st.set_utf8(s)`
+| Replace the text with `s`, in UTF-8.
 
 | `st.insert(pos, s)`
 | Insert `s` before `pos`. Returns the number of code points inserted.
@@ -265,21 +271,34 @@ namespace cycfi::elements
 | `st.current_size()`
 | The size the text took at the last layout.
 
-| `st.set_color(c)`, `st.set_font(f)`
-| Change the colour or the font.
+| `st.set_color(c)`
+| Change the color.
+
+| `st.set_font(f)`
+| Change the font.
 
 | `basic_text_box(s, f)`
 | An editable text box of `s` in font `f`.
 
-| `tb.select_start(i)`, `tb.select_end(i)`
-| Set either end of the selection; a position past the text is ignored.
+| `tb.select_start(i)`
+| Set the start of the selection; a position past the text is ignored.
 
-| `tb.select_all()`, `tb.select_none()`
-| Select the whole text, or remove the selection and the caret.
+| `tb.select_end(i)`
+| Set the end of the selection; a position past the text is ignored.
 
-| `tb.home(shift)`, `tb.end(shift)`
-| Move the caret to the start or the end of the text; with `shift`,
-  extend the selection.
+| `tb.select_all()`
+| Select the whole text.
+
+| `tb.select_none()`
+| Remove the selection and the caret.
+
+| `tb.home(shift)`
+| Move the caret to the start of the text; with `shift`, extend the
+  selection.
+
+| `tb.end(shift)`
+| Move the caret to the end of the text; with `shift`, extend the
+  selection.
 
 | `tb.read_only()`
 | Make the box read only, as a modifier on construction:

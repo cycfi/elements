@@ -77,6 +77,18 @@ set(elements_test_sources
    pages/elements/lists_test.cpp
    pages/elements/drag_and_drop_test.cpp
    pages/elements/visibility_test.cpp
+   pages/layout/sizing_test.cpp
+   pages/layout/stretch_test.cpp
+   pages/layout/span_test.cpp
+   pages/layout/alignment_test.cpp
+   pages/layout/margins_test.cpp
+   pages/layout/scale_test.cpp
+   pages/layout/floating_test.cpp
+   pages/layout/tiles_test.cpp
+   pages/layout/grids_test.cpp
+   pages/layout/layers_test.cpp
+   pages/layout/decks_test.cpp
+   pages/layout/flow_test.cpp
    pages/layout/collapsible_test.cpp
    pages/styles/styles_test.cpp
    pages/styles/marks_test.cpp

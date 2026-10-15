@@ -8,7 +8,10 @@
 
 #include <elements/element/element.hpp>
 #include <elements/element/proxy.hpp>
+#include <elements/support/context.hpp>
 #include <infra/support.hpp>
+#include <algorithm>
+#include <limits>
 #include <memory>
 #include <optional>
 
@@ -191,7 +194,7 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Minumum sizing elements
+   // Minimum sizing elements
    ////////////////////////////////////////////////////////////////////////////
    template <concepts::Element Subject>
    class min_size_element : public proxy<Subject>
@@ -205,6 +208,7 @@ namespace cycfi::elements
       std::string             class_name() const override { return "min_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
       void                    prepare_subject(context& ctx) override;
 
       void                    min_size(point size) { _size = size; }
@@ -213,12 +217,14 @@ namespace cycfi::elements
    private:
 
       point                   _size;
+      point                   _floor;  // _size, but never above the subject's maximum
    };
 
    template <concepts::Element Subject>
    inline min_size_element<Subject>::min_size_element(point size, Subject subject)
     : base_type(std::move(subject))
     , _size(size)
+    , _floor(size)
    {}
 
    template <concepts::Element Subject>
@@ -240,12 +246,19 @@ namespace cycfi::elements
    }
 
    template <concepts::Element Subject>
+   inline void min_size_element<Subject>::layout(context const& ctx)
+   {
+      _floor = limits(ctx).min;
+      base_type::layout(ctx);
+   }
+
+   template <concepts::Element Subject>
    inline void min_size_element<Subject>::prepare_subject(context& ctx)
    {
-      if (ctx.bounds.width() < _size.x)
-         ctx.bounds.width(_size.x);
-      if (ctx.bounds.height() < _size.y)
-         ctx.bounds.height(_size.x);
+      if (ctx.bounds.width() < _floor.x)
+         ctx.bounds.width(_floor.x);
+      if (ctx.bounds.height() < _floor.y)
+         ctx.bounds.height(_floor.y);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -261,20 +274,26 @@ namespace cycfi::elements
       std::string             class_name() const override { return "hmin_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
       void                    prepare_subject(context& ctx) override;
 
       void                    hmin_size(float width) { _size = width; }
       float                   hmin_size() const { return _size; }
+      void                    pad(float pad) { _pad = pad; }
+      float                   pad() const { return _pad; }
 
    private:
 
       float                   _size;
+      float                   _pad = 0;
+      float                   _floor;  // the minimum width, within the subject's limits
    };
 
    template <concepts::Element Subject>
    inline hmin_size_element<Subject>::hmin_size_element(float size, Subject subject)
     : base_type(std::move(subject))
     , _size(size)
+    , _floor(size)
    {}
 
    template <concepts::Element Subject>
@@ -288,23 +307,33 @@ namespace cycfi::elements
    inline hmin_size_element<remove_cvref_t<Subject>>
    hmin_pad(float pad, Subject&& subject)
    {
-      return {-pad, std::forward<Subject>(subject)};
+      hmin_size_element<remove_cvref_t<Subject>> r{0, std::forward<Subject>(subject)};
+      r.pad(pad);
+      return r;
    }
 
    template <concepts::Element Subject>
    inline view_limits hmin_size_element<Subject>::limits(basic_context const& ctx) const
    {
+      // The larger of the width and the subject's minimum plus the pad.
       auto e_limits = this->subject().limits(ctx);
-      float width = _size > 0? _size : e_limits.min.x + -_size;
+      float width = std::max(_size, e_limits.min.x + _pad);
       clamp(width, e_limits.min.x, e_limits.max.x);
       return {{width, e_limits.min.y}, e_limits.max};
    }
 
    template <concepts::Element Subject>
+   inline void hmin_size_element<Subject>::layout(context const& ctx)
+   {
+      _floor = limits(ctx).min.x;
+      base_type::layout(ctx);
+   }
+
+   template <concepts::Element Subject>
    inline void hmin_size_element<Subject>::prepare_subject(context& ctx)
    {
-      if (ctx.bounds.width() < _size)
-         ctx.bounds.width(_size);
+      if (ctx.bounds.width() < _floor)
+         ctx.bounds.width(_floor);
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -353,20 +382,26 @@ namespace cycfi::elements
       std::string             class_name() const override { return "vmin_size"; }
 
       view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
       void                    prepare_subject(context& ctx) override;
 
       void                    vmin_size(float height) { _height = height; }
       float                   vmin_size() const { return _height; }
+      void                    pad(float pad) { _pad = pad; }
+      float                   pad() const { return _pad; }
 
    private:
 
       float                   _height;
+      float                   _pad = 0;
+      float                   _floor;  // _height, but never above the subject's maximum
    };
 
    template <concepts::Element Subject>
    inline vmin_size_element<Subject>::vmin_size_element(float height, Subject subject)
     : base_type(std::move(subject))
     , _height(height)
+    , _floor(height)
    {}
 
    template <concepts::Element Subject>
@@ -377,19 +412,69 @@ namespace cycfi::elements
    }
 
    template <concepts::Element Subject>
+   inline vmin_size_element<remove_cvref_t<Subject>>
+   vmin_pad(float pad, Subject&& subject)
+   {
+      vmin_size_element<remove_cvref_t<Subject>> r{0, std::forward<Subject>(subject)};
+      r.pad(pad);
+      return r;
+   }
+
+   template <concepts::Element Subject>
    inline view_limits vmin_size_element<Subject>::limits(basic_context const& ctx) const
    {
+      // The larger of the height and the subject's minimum plus the pad.
       auto  e_limits = this->subject().limits(ctx);
-      float height = _height;
+      float height = std::max(_height, e_limits.min.y + _pad);
       clamp(height, e_limits.min.y, e_limits.max.y);
       return {{e_limits.min.x, height}, e_limits.max};
    }
 
    template <concepts::Element Subject>
+   inline void vmin_size_element<Subject>::layout(context const& ctx)
+   {
+      _floor = limits(ctx).min.y;
+      base_type::layout(ctx);
+   }
+
+   template <concepts::Element Subject>
    inline void vmin_size_element<Subject>::prepare_subject(context& ctx)
    {
-      if (ctx.bounds.height() < _height)
-         ctx.bounds.height(_height);
+      if (ctx.bounds.height() < _floor)
+         ctx.bounds.height(_floor);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   template <concepts::Element Subject>
+   class vmin_element : public proxy<Subject>
+   {
+   public:
+
+      using base_type = proxy<Subject>;
+
+                              vmin_element(Subject subject);
+
+      std::string             class_name() const override { return "vmin"; }
+      view_limits             limits(basic_context const& ctx) const override;
+   };
+
+   template <concepts::Element Subject>
+   inline vmin_element<Subject>::vmin_element(Subject subject)
+    : base_type(std::move(subject))
+   {}
+
+   template <concepts::Element Subject>
+   inline vmin_element<remove_cvref_t<Subject>>
+   vmin(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   template <concepts::Element Subject>
+   inline view_limits vmin_element<Subject>::limits(basic_context const& ctx) const
+   {
+      auto  e_limits = this->subject().limits(ctx);
+      return {e_limits.min, {e_limits.max.x, e_limits.min.y}};
    }
 
    ////////////////////////////////////////////////////////////////////////////
@@ -410,7 +495,7 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    prepare_subject(context& ctx) override;
 
-      void                    max_size(point size) { _size = _cap = size; }
+      void                    max_size(point size) { _size = size; }
       point                   max_size() const { return _size; }
 
    private:
@@ -476,7 +561,7 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    prepare_subject(context& ctx) override;
 
-      void                    hmax_size(float size) { _size = _cap = size; }
+      void                    hmax_size(float size) { _size = size; }
       float                   hmax_size() const { return _size; }
 
    private:
@@ -538,7 +623,7 @@ namespace cycfi::elements
       void                    layout(context const& ctx) override;
       void                    prepare_subject(context& ctx) override;
 
-      void                    vmax_size(float size) { _size = _cap = size; }
+      void                    vmax_size(float size) { _size = size; }
       float                   vmax_size() const { return _size; }
 
    private:
@@ -600,7 +685,7 @@ namespace cycfi::elements
 
       view_stretch            stretch() const override;
 
-      void                    hstretch(float stretch) { _stretch = stretch; }
+      void                    hstretch(float stretch) { _stretch = std::max(stretch, 0.0f); }
       float                   hstretch() const { return _stretch; }
 
    private:
@@ -611,7 +696,7 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline hstretch_element<Subject>::hstretch_element(float stretch, Subject subject)
     : base_type(std::move(subject))
-    , _stretch(stretch)
+    , _stretch(std::max(stretch, 0.0f))
    {}
 
    template <concepts::Element Subject>
@@ -648,7 +733,7 @@ namespace cycfi::elements
 
       view_stretch            stretch() const override;
 
-      void                    vstretch(float stretch) { _stretch = stretch; }
+      void                    vstretch(float stretch) { _stretch = std::max(stretch, 0.0f); }
       float                   vstretch() const { return _stretch; }
 
    private:
@@ -659,7 +744,7 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline vstretch_element<Subject>::vstretch_element(float stretch, Subject subject)
     : base_type(std::move(subject))
-    , _stretch(stretch)
+    , _stretch(std::max(stretch, 0.0f))
    {}
 
    template <concepts::Element Subject>
@@ -695,7 +780,7 @@ namespace cycfi::elements
                               span_element(unsigned span, Subject subject);
 
       unsigned                span() const override   { return _span; }
-      void                    span(float span)        { _span = span; }
+      void                    span(unsigned span)     { _span = std::max(span, 1u); }
       std::string             class_name() const override { return "span"; }
 
    private:
@@ -706,7 +791,7 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline span_element<Subject>::span_element(unsigned span, Subject subject)
     : base_type(std::move(subject))
-    , _span(span)
+    , _span(std::max(span, 1u))
    {}
 
    template <concepts::Element Subject>
@@ -753,11 +838,17 @@ namespace cycfi::elements
    inline view_limits
    limit_element<Subject>::limits(basic_context const& ctx) const
    {
-      auto l = this->subject().limits(ctx);
+      // Narrowed to the given limits, within the subject's own.
+      auto const e = this->subject().limits(ctx);
+      auto l = e;
       clamp_min(l.min.x, _limits.min.x);
       clamp_min(l.min.y, _limits.min.y);
       clamp_max(l.max.x, _limits.max.x);
       clamp_max(l.max.y, _limits.max.y);
+      clamp_max(l.min.x, e.max.x);
+      clamp_max(l.min.y, e.max.y);
+      clamp_min(l.max.x, e.min.x);
+      clamp_min(l.max.y, e.min.y);
       return l;
    }
 
@@ -773,7 +864,7 @@ namespace cycfi::elements
 
                               scale_element(float scale_, Subject subject)
                                : base_type(std::move(subject))
-                               , _scale(scale_)
+                               , _scale(clamp_scale(scale_))
                               {}
 
       view_limits             limits(basic_context const& ctx) const override;
@@ -782,11 +873,13 @@ namespace cycfi::elements
       void                    prepare_subject(context& ctx, point& p) override;
       void                    restore_subject(context& ctx) override;
 
-      void                    scale(float scale_) { _scale = scale_; }
+      void                    scale(float scale_);
       float                   scale() const { return _scale; }
       std::string             class_name() const override { return "scale"; }
 
    private:
+
+      static float            clamp_scale(float scale_);
 
       // The canvas state is pushed in prepare_subject and popped in
       // restore_subject, so the scope spans the two calls and the element
@@ -802,6 +895,19 @@ namespace cycfi::elements
    scale(float scale_, Subject&& subject)
    {
       return {scale_, std::forward<Subject>(subject)};
+   }
+
+   template <concepts::Element Subject>
+   inline float scale_element<Subject>::clamp_scale(float scale_)
+   {
+      // A scale of 0 or less is taken as epsilon.
+      return std::max(scale_, std::numeric_limits<float>::epsilon());
+   }
+
+   template <concepts::Element Subject>
+   inline void scale_element<Subject>::scale(float scale_)
+   {
+      _scale = clamp_scale(scale_);
    }
 
    template <concepts::Element Subject>
@@ -832,14 +938,21 @@ namespace cycfi::elements
       auto& canvas_ = ctx.canvas;
       _state.emplace(canvas_);
       canvas_.scale({_scale, _scale});
-      ctx.bounds = device_to_user(ctx.bounds, ctx.canvas);
+
+      // The bounds are in the current user space: map them by this
+      // element's own scale only, whatever transform the canvas already has.
+      auto& b = ctx.bounds;
+      b = {
+         b.left / _scale, b.top / _scale
+       , b.right / _scale, b.bottom / _scale
+      };
    }
 
    template <concepts::Element Subject>
    void scale_element<Subject>::prepare_subject(context& ctx, point& p)
    {
       prepare_subject(ctx);
-      p = ctx.canvas.device_to_user(p);
+      p = {p.x / _scale, p.y / _scale};
    }
 
    template <concepts::Element Subject>
@@ -866,7 +979,16 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       bool                    wants_control() const override;
       bool                    wants_focus() const override;
+      void                    layout(context const& ctx) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+      void                    begin_focus(element::focus_request req) override;
+      bool                    end_focus() override;
       is_collapsed_function   is_collapsed = []{ return false; };
+
+   private:
+
+      bool                    _has_focus = false;
    };
 
    template <concepts::Element Subject>
@@ -905,6 +1027,44 @@ namespace cycfi::elements
       return !is_collapsed() && base_type::wants_focus();
    }
 
+   // Collapsed, a subject that holds the focus gives it up at the next
+   // layout, and takes no keys or text meanwhile.
+   template <concepts::Element Subject>
+   inline void hcollapsible_element<Subject>::layout(context const& ctx)
+   {
+      if (_has_focus && is_collapsed())
+         relinquish_focus(ctx);
+      base_type::layout(ctx);
+   }
+
+   template <concepts::Element Subject>
+   inline bool hcollapsible_element<Subject>::key(context const& ctx, key_info k)
+   {
+      return !is_collapsed() && base_type::key(ctx, k);
+   }
+
+   template <concepts::Element Subject>
+   inline bool hcollapsible_element<Subject>::text(context const& ctx, text_info info)
+   {
+      return !is_collapsed() && base_type::text(ctx, info);
+   }
+
+   template <concepts::Element Subject>
+   inline void hcollapsible_element<Subject>::begin_focus(element::focus_request req)
+   {
+      _has_focus = true;
+      base_type::begin_focus(req);
+   }
+
+   template <concepts::Element Subject>
+   inline bool hcollapsible_element<Subject>::end_focus()
+   {
+      auto const ended = base_type::end_focus();
+      if (ended)
+         _has_focus = false;
+      return ended;
+   }
+
    template <concepts::Element Subject>
    inline hcollapsible_element<remove_cvref_t<Subject>>
    hcollapsible(Subject&& subject)
@@ -928,7 +1088,16 @@ namespace cycfi::elements
       void                    draw(context const& ctx) override;
       bool                    wants_control() const override;
       bool                    wants_focus() const override;
+      void                    layout(context const& ctx) override;
+      bool                    key(context const& ctx, key_info k) override;
+      bool                    text(context const& ctx, text_info info) override;
+      void                    begin_focus(element::focus_request req) override;
+      bool                    end_focus() override;
       is_collapsed_function   is_collapsed = []{ return false; };
+
+   private:
+
+      bool                    _has_focus = false;
    };
 
    template <concepts::Element Subject>
@@ -965,6 +1134,44 @@ namespace cycfi::elements
    inline bool vcollapsible_element<Subject>::wants_focus() const
    {
       return !is_collapsed() && base_type::wants_focus();
+   }
+
+   // Collapsed, a subject that holds the focus gives it up at the next
+   // layout, and takes no keys or text meanwhile.
+   template <concepts::Element Subject>
+   inline void vcollapsible_element<Subject>::layout(context const& ctx)
+   {
+      if (_has_focus && is_collapsed())
+         relinquish_focus(ctx);
+      base_type::layout(ctx);
+   }
+
+   template <concepts::Element Subject>
+   inline bool vcollapsible_element<Subject>::key(context const& ctx, key_info k)
+   {
+      return !is_collapsed() && base_type::key(ctx, k);
+   }
+
+   template <concepts::Element Subject>
+   inline bool vcollapsible_element<Subject>::text(context const& ctx, text_info info)
+   {
+      return !is_collapsed() && base_type::text(ctx, info);
+   }
+
+   template <concepts::Element Subject>
+   inline void vcollapsible_element<Subject>::begin_focus(element::focus_request req)
+   {
+      _has_focus = true;
+      base_type::begin_focus(req);
+   }
+
+   template <concepts::Element Subject>
+   inline bool vcollapsible_element<Subject>::end_focus()
+   {
+      auto const ended = base_type::end_focus();
+      if (ended)
+         _has_focus = false;
+      return ended;
    }
 
    template <concepts::Element Subject>

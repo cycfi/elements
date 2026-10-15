@@ -424,12 +424,214 @@ namespace cycfi::elements
       return {margin_, std::forward<Subject>(subject)};
    }
 
+   /**
+    * \brief
+    *    Same as margin_left_top({left, top}, subject), with
+    *    the left and top margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
+   margin_left_top(float left, float top, Subject&& subject)
+   {
+      return {{left, top}, std::forward<Subject>(subject)};
+   }
+
    template <concepts::Element Subject>
    [[deprecated("Use margin_left_top(...) instead.")]]
    inline margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
    left_top_margin(margin_left_top_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \struct margin_left_bottom_rect
+    *
+    * \brief
+    *    A struct derived from static_empty_rect, designed to represent left
+    *    and bottom margins.
+    *
+    *    This struct specializes static_empty_rect by providing non-zero left
+    *    and bottom margins. It is useful for cases where only left and bottom
+    *    margins are needed, leaving the other sides (right and top) as
+    *    zero, inheriting from static_empty_rect.
+    *
+    * \param left
+    *    The left margin.
+    *
+    * \param bottom
+    *    The bottom margin.
+    */
+   struct margin_left_bottom_rect : static_empty_rect
+   {
+      margin_left_bottom_rect(float left, float bottom)
+       : left(left), bottom(bottom)
+      {}
+      float left;
+      float bottom;
+   };
+
+   /**
+    * \brief
+    *    Creates a margin_element with left and bottom margins and a subject.
+    *
+    * \param margin_
+    *    The left and bottom margins to apply around the subject. This is a
+    *    margin_left_bottom_rect structure.
+    *
+    * \param subject
+    *    The subject to be wrapped with the specified left and bottom margins.
+    *
+    * \return
+    *    A margin_element object that wraps the given subject with the
+    *    specified left and bottom margins.
+    *
+    * \tparam Subject
+    *    The type of the subject being wrapped.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_left_bottom_rect, remove_cvref_t<Subject>>
+   margin_left_bottom(margin_left_bottom_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
+    *    Same as margin_left_bottom({left, bottom}, subject), with
+    *    the left and bottom margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_left_bottom_rect, remove_cvref_t<Subject>>
+   margin_left_bottom(float left, float bottom, Subject&& subject)
+   {
+      return {{left, bottom}, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \struct margin_right_top_rect
+    *
+    * \brief
+    *    A struct derived from static_empty_rect, designed to represent right
+    *    and top margins.
+    *
+    *    This struct specializes static_empty_rect by providing non-zero right
+    *    and top margins. It is useful for cases where only right and top
+    *    margins are needed, leaving the other sides (left and bottom) as
+    *    zero, inheriting from static_empty_rect.
+    *
+    * \param right
+    *    The right margin.
+    *
+    * \param top
+    *    The top margin.
+    */
+   struct margin_right_top_rect : static_empty_rect
+   {
+      margin_right_top_rect(float right, float top) : right(right), top(top) {}
+      float right;
+      float top;
+   };
+
+   /**
+    * \brief
+    *    Creates a margin_element with right and top margins and a subject.
+    *
+    * \param margin_
+    *    The right and top margins to apply around the subject. This is a
+    *    margin_right_top_rect structure.
+    *
+    * \param subject
+    *    The subject to be wrapped with the specified right and top margins.
+    *
+    * \return
+    *    A margin_element object that wraps the given subject with the
+    *    specified right and top margins.
+    *
+    * \tparam Subject
+    *    The type of the subject being wrapped.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_right_top_rect, remove_cvref_t<Subject>>
+   margin_right_top(margin_right_top_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
+    *    Same as margin_right_top({right, top}, subject), with
+    *    the right and top margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_right_top_rect, remove_cvref_t<Subject>>
+   margin_right_top(float right, float top, Subject&& subject)
+   {
+      return {{right, top}, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \struct margin_right_bottom_rect
+    *
+    * \brief
+    *    A struct derived from static_empty_rect, designed to represent right
+    *    and bottom margins.
+    *
+    *    This struct specializes static_empty_rect by providing non-zero right
+    *    and bottom margins. It is useful for cases where only right and bottom
+    *    margins are needed, leaving the other sides (left and top) as
+    *    zero, inheriting from static_empty_rect.
+    *
+    * \param right
+    *    The right margin.
+    *
+    * \param bottom
+    *    The bottom margin.
+    */
+   struct margin_right_bottom_rect : static_empty_rect
+   {
+      margin_right_bottom_rect(float right, float bottom)
+       : right(right), bottom(bottom)
+      {}
+      float right;
+      float bottom;
+   };
+
+   /**
+    * \brief
+    *    Creates a margin_element with right and bottom margins and a subject.
+    *
+    * \param margin_
+    *    The right and bottom margins to apply around the subject. This is a
+    *    margin_right_bottom_rect structure.
+    *
+    * \param subject
+    *    The subject to be wrapped with the specified right and bottom margins.
+    *
+    * \return
+    *    A margin_element object that wraps the given subject with the
+    *    specified right and bottom margins.
+    *
+    * \tparam Subject
+    *    The type of the subject being wrapped.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_right_bottom_rect, remove_cvref_t<Subject>>
+   margin_right_bottom(margin_right_bottom_rect margin_, Subject&& subject)
+   {
+      return {margin_, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
+    *    Same as margin_right_bottom({right, bottom}, subject), with
+    *    the right and bottom margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<margin_right_bottom_rect, remove_cvref_t<Subject>>
+   margin_right_bottom(float right, float bottom, Subject&& subject)
+   {
+      return {{right, bottom}, std::forward<Subject>(subject)};
    }
 
    /**
@@ -493,6 +695,18 @@ namespace cycfi::elements
 
    /**
     * \brief
+    *    Same as hmargin({left, right}, subject), with
+    *    the left and right margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
+   hmargin(float left, float right, Subject&& subject)
+   {
+      return {{left, right}, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
     *    Creates a margin_element with horizontal margins and a subject. Same
     *    as hmargin.
     *
@@ -516,6 +730,18 @@ namespace cycfi::elements
    margin_left_right(hmargin_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
+    *    Same as margin_left_right({left, right}, subject), with
+    *    the left and right margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<hmargin_rect, remove_cvref_t<Subject>>
+   margin_left_right(float left, float right, Subject&& subject)
+   {
+      return {{left, right}, std::forward<Subject>(subject)};
    }
 
    template <concepts::Element Subject>
@@ -594,6 +820,18 @@ namespace cycfi::elements
 
    /**
     * \brief
+    *    Same as vmargin({top, bottom}, subject), with
+    *    the top and bottom margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
+   vmargin(float top, float bottom, Subject&& subject)
+   {
+      return {{top, bottom}, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
     *    Creates a margin_element with vertical margins and a subject.
     *
     * \param margin_
@@ -616,6 +854,18 @@ namespace cycfi::elements
    margin_top_bottom(vmargin_rect margin_, Subject&& subject)
    {
       return {margin_, std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \brief
+    *    Same as margin_top_bottom({top, bottom}, subject), with
+    *    the top and bottom margins given as separate values.
+    */
+   template <concepts::Element Subject>
+   inline margin_element<vmargin_rect, remove_cvref_t<Subject>>
+   margin_top_bottom(float top, float bottom, Subject&& subject)
+   {
+      return {{top, bottom}, std::forward<Subject>(subject)};
    }
 
    template <concepts::Element Subject>

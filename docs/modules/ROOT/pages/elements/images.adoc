@@ -222,8 +222,11 @@ namespace cycfi::elements
 | `s.index(i)`
 | Draw frame `i`; an index past the last is ignored.
 
-| `g.value()`, `g.value(i)`
-| The current cell; set it from code, clamped, without a callback.
+| `g.value()`
+| The current cell.
+
+| `g.value(i)`
+| Make cell `i` the current one, clamped, without a callback.
 
 | `g.on_change = f`
 | `f(i)` is called when the user picks a different cell.

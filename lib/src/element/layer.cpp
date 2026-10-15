@@ -94,6 +94,8 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    void deck_element::draw(context const& ctx)
    {
+      if (_selected_index >= size())
+         return;
       rect bounds = bounds_of(ctx, _selected_index);
       if (intersects(bounds, ctx.visible_bounds()))
       {
@@ -109,7 +111,7 @@ namespace cycfi::elements
       {
          ctx.view.refresh(ctx, outward);
       }
-      else
+      else if (_selected_index < size())
       {
          rect bounds = bounds_of(ctx, _selected_index);
          auto& elem = at(_selected_index);
@@ -124,7 +126,7 @@ namespace cycfi::elements
       {
          f(ctx);
       }
-      else
+      else if (_selected_index < size())
       {
          rect bounds = bounds_of(ctx, _selected_index);
          auto& elem = at(_selected_index);
@@ -135,6 +137,8 @@ namespace cycfi::elements
 
    layer_element::hit_info deck_element::hit_element(context const& ctx, point p, bool control) const
    {
+      if (_selected_index >= size())
+         return hit_info{{}, {}, rect{}, -1};
       auto& e = at(_selected_index);
       if (!control || e.wants_control())
       {
@@ -149,15 +153,57 @@ namespace cycfi::elements
       return hit_info{{}, {}, rect{}, -1};
    }
 
+   bool deck_element::key(context const& ctx, key_info k)
+   {
+      // Only the selected page takes keys, and Tab moves the focus into the
+      // selected page alone: the hidden pages are never focused.
+      if (_selected_index >= size())
+         return false;
+      auto& e = at(_selected_index);
+      rect bounds = bounds_of(ctx, _selected_index);
+      if (!intersects(bounds, ctx.view_bounds()))
+         return false;
+
+      context ectx{ctx, &e, bounds};
+      if (focus_index() == int(_selected_index))
+         return e.key(ectx, k);
+
+      if ((k.action == key_action::press || k.action == key_action::repeat)
+         && k.key == key_code::tab && e.wants_focus())
+      {
+         bool backward = k.modifiers & mod_shift;
+         focus(_selected_index);
+         e.begin_focus(backward? from_bottom : from_top);
+         ctx.view.refresh(ctx);
+         return true;
+      }
+      return false;
+   }
+
+   bool deck_element::text(context const& ctx, text_info info)
+   {
+      if (_selected_index >= size() || focus_index() != int(_selected_index))
+         return false;
+      auto& e = at(_selected_index);
+      context ectx{ctx, &e, bounds_of(ctx, _selected_index)};
+      return e.text(ectx, info);
+   }
+
+   bool deck_element::wants_focus() const
+   {
+      return _selected_index < size() && at(_selected_index).wants_focus();
+   }
+
    void deck_element::begin_focus(focus_request req)
    {
-      if (!composite_base::focus())
+      if (_selected_index >= size())
+         return;
+      auto& e = at(_selected_index);
+      if (e.wants_focus())
       {
-         auto& e = at(_selected_index);
-         if (e.wants_control() && e.wants_focus())
-            composite_base::focus(_selected_index);
+         focus(_selected_index);
+         e.begin_focus(req);
       }
-      composite_base::begin_focus(req);
    }
 
    bool deck_element::hotkey(context const& ctx, key_info k)
@@ -175,8 +221,17 @@ namespace cycfi::elements
 
    void deck_element::select(std::size_t index)
    {
-      if (index < size())
-         _selected_index = index;
+      if (index >= size() || index == _selected_index)
+         return;
+
+      // The page losing the selection gives up the focus; if the deck had
+      // the focus, the newly selected page takes it.
+      bool had_focus = focus_index() != -1;
+      if (had_focus)
+         composite_base::end_focus();
+      _selected_index = index;
+      if (had_focus)
+         begin_focus(from_top);
    }
 
    std::string layer_element::class_name() const

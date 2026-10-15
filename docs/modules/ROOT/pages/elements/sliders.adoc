@@ -182,22 +182,34 @@ not linear.
 | `f(v)` is called on each change the user makes. On a selector, `f(i)`
   with the position's index.
 
-| `s.thumb_bounds(ctx)`, `s.track_bounds(ctx)`
-| Where the thumb and the track are, within `ctx.bounds`, for a styler
-  or a subclass drawing around them.
+| `s.thumb_bounds(ctx)`
+| Where the thumb is, within `ctx.bounds`, for a styler or a subclass
+  drawing around it.
+
+| `s.track_bounds(ctx)`
+| Where the track is, within `ctx.bounds`.
 
 | `s.value_from_point(ctx, p)`
 | The value for the pointer at `p`: the position of the thumb's centre
   along its travel, clamped. Virtual, for a non-linear travel.
 
-| `r.value()`, `r.value(range)`
-| Both values, as a `double_range`; set them, each clamped.
+| `r.value()`
+| Both values, as a `double_range`.
 
-| `r.value_first()`, `r.value_second()`, and their setters
-| One thumb's value.
+| `r.value(range)`
+| Set both values, each clamped.
 
-| `r.on_change.first = f`, `r.on_change.second = f`
-| `f(v)` is called when the respective thumb moves.
+| `r.value_first()`
+| The first thumb's value; `value_first(v)` sets it.
+
+| `r.value_second()`
+| The second thumb's value; `value_second(v)` sets it.
+
+| `r.on_change.first = f`
+| `f(v)` is called when the first thumb moves.
+
+| `r.on_change.second = f`
+| `f(v)` is called when the second thumb moves.
 |===
 
 == Example

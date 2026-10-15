@@ -18,33 +18,7 @@ A cell composer gives the number of items, the element of each item,
 and the size of each cell. It derives from the abstract class
 `cell_composer`. Along the list's main axis, the vertical for a `list`,
 each cell has a size of its own; across it, every cell has the same
-limits:
-
-[cols="2,3,1"]
-|===
-| Member | Semantics | Return Type
-
-| `size()`
-| The number of items.
-| `std::size_t`
-
-| `resize(n)`
-| Make it `n` items.
-| `void`
-
-| `compose(i)`
-| The element of item `i`.
-| `element_ptr`
-
-| `main_axis_size(i, ctx)`
-| The size of cell `i` along the main axis: its height, in a `list`.
-| `float`
-
-| `secondary_axis_limits(ctx)`
-| The `min` and `max` of the cells across the list: their width, in a
-  `list`.
-| `cell_composer::limits`
-|===
+limits.
 
 `basic_cell_composer(size, f)`, also named `basic_vcell_composer`, makes
 a composer of `size` items for a `list`, whose element for item `i` is
@@ -81,31 +55,8 @@ To retain that state:
 
 === Changing the Items
 
-Change the items first, then tell the list:
-
-[cols="1,2"]
-|===
-| Call | When
-
-| `l.insert(pos, n)`
-| `n` items were inserted before item `pos`.
-
-| `l.erase(indices)`
-| The items at `indices` were erased.
-
-| `l.move(pos, indices)`
-| The items at `indices` were moved, in their order, to before item
-  `pos`.
-
-| `l.resize(n)`
-| There are `n` items now; the cells are made again.
-
-| `l.clear()`
-| There are no items.
-
-| `l.update()`
-| The items changed: the cells are made again, and measured.
-|===
+Change the items first, then tell the list, with `insert`, `erase`,
+`move`, `resize`, `clear` or `update`.
 
 `insert` and `erase` also resize the composer. The changes are made at
 the next draw, in the order they were asked for; then refresh the view.
@@ -219,6 +170,8 @@ The stock composer class templates are declared in the header.
 `cp`:: A `std::shared_ptr` to a cell composer.
 `f`:: A function taking an index and returning an `element_ptr`.
 `l`:: A `list` or `hlist`.
+`c`:: A cell composer.
+`ctx`:: A `basic_context`.
 `n`, `pos`, `i`:: Indices or counts, `std::size_t`.
 `ix`:: A `std::vector<std::size_t>` of indices.
 `v`:: A `std::vector`.
@@ -229,8 +182,28 @@ The stock composer class templates are declared in the header.
 |===
 | Expression | Semantics
 
-| `basic_cell_composer(n, f)`, `basic_vcell_composer(n, f)`
+| `c.size()`
+| The number of items, a `std::size_t`.
+
+| `c.resize(n)`
+| Make it `n` items.
+
+| `c.compose(i)`
+| The element of item `i`, an `element_ptr`.
+
+| `c.main_axis_size(i, ctx)`
+| The size of cell `i` along the main axis, a `float`: its height, in a
+  `list`.
+
+| `c.secondary_axis_limits(ctx)`
+| The `min` and `max` of the cells across the list, a
+  `cell_composer::limits`: their width, in a `list`.
+
+| `basic_cell_composer(n, f)`
 | A composer of `n` items for a `list`, sized by item 0.
+
+| `basic_vcell_composer(n, f)`
+| The same as `basic_cell_composer(n, f)`.
 
 | `basic_hcell_composer(n, f)`
 | A composer of `n` items for an `hlist`, sized by item 0.
@@ -241,20 +214,41 @@ The stock composer class templates are declared in the header.
 | `basic_cell_composer(min, max, main, n, f)`
 | The same, at most `max` across.
 
-| `list(cp)`, `vlist(cp)`, `hlist(cp)`
-| A list of the items of `cp`, top to bottom or left to right.
+| `list(cp)`
+| A list of the items of `cp`, top to bottom.
+
+| `vlist(cp)`
+| The same as `list(cp)`.
+
+| `hlist(cp)`
+| A list of the items of `cp`, left to right.
 
 | `list(cp, false)`
 | A list that keeps every element it made.
 
-| `l.insert(pos, n)`, `l.erase(ix)`, `l.move(pos, ix)`
-| Items were inserted, erased or moved.
+| `l.insert(pos, n)`
+| `n` items were inserted before item `pos`.
 
-| `l.resize(n)`, `l.clear()`, `l.update()`
-| The items changed; the cells are made again.
+| `l.erase(ix)`
+| The items at `ix` were erased.
 
-| `move_indices(v, pos, ix)`, `erase_indices(v, ix)`
-| Move or erase the items of `v` at `ix`.
+| `l.move(pos, ix)`
+| The items at `ix` were moved to before item `pos`.
+
+| `l.resize(n)`
+| There are `n` items now; the cells are made again.
+
+| `l.clear()`
+| There are no items.
+
+| `l.update()`
+| The items changed; the cells are made again, and measured.
+
+| `move_indices(v, pos, ix)`
+| Move the items of `v` at `ix` to before item `pos`.
+
+| `erase_indices(v, ix)`
+| Erase the items of `v` at `ix`.
 |===
 
 == Example

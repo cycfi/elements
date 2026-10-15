@@ -136,8 +136,11 @@ derived from `status_bar_base`.
 | `busy_bar(bg, fg)`
 | A busy bar of `bg` and `fg`, stopped.
 
-| `b.value()`, `b.value(v)`
-| The value; set it, clamped. Refresh the bar after.
+| `b.value()`
+| The value.
+
+| `b.value(v)`
+| Set the value to `v`, clamped. Refresh the bar after.
 
 | `y.start(view_, dt)`
 | Start the sweep, a step every `dt`.

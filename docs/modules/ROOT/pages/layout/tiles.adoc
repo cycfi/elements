@@ -10,14 +10,27 @@ Tiles allow elements to fluidly adjust depending on available space. Tiles
 compute the layout of its elements using the children elements' size
 {limits}.
 
-== Horizontal Tiles
+Each factory returns a `Composite`.
+
+== Include
+
+```c++
+#include <elements/element/tile.hpp>
+```
+
+== htile
 
 image::/layout/htile.svg[alt="htile", width=462px, role=center]
 
 Horizontal Tiles allow elements to fluidly adjust horizontally depending on
 available space.
 
-=== Semantics
+image::/layout/htile_spaced.svg[alt="htile_spaced", width=578px, role=center]
+
+Lays out the elements of a horizontal tile with a fixed space between each
+element and the next.
+
+=== Layout Rules
 
 . The elements are laid out in a single row, left to right, immediately next
 to each other with no intervening space.
@@ -37,39 +50,72 @@ Horizontally fixed-sized elements will not be stretched (element d in
 the diagram). (Also see {Stretch-Elements}).
 . The tile's _minimum vertical limit_ is computed as the maximum of the
 children elements' __minimum vertical limit__s.
-. The grid's _maximum vertical limit_ is computed as the minimum of the
+. The tile's _maximum vertical limit_ is computed as the minimum of the
 children elements' __maximum vertical limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
-than the computed maximum limit. Likewise the computed maximum limit is
-clamped to ensure it is not less than the computed minimum limit.
+. The final computed maximum limit is clamped to ensure it is not less
+than the computed minimum limit: the minimum wins.
 . The supplied (horizontal) and computed (vertical) coordinates may violate
 the limits of its children elements.
- .. If the allocated size of a child element is lower than the element's
-_minimum limits_ in either dimension, the element will be cropped.
- .. If a child element's _maximum limits_ in either dimension is exceeded,
-the element will be aligned to the top-left.
+ .. If the available size for a child element is lower than the element's
+_minimum horizontal limit_, the element keeps its minimum and overflows past the
+tile's end, without clipping.
+ .. Along the tile, a child element stops at its _maximum horizontal limit_
+and the leftover space stays at the end. Across the tile, a child element is
+given the tile's full height.
 
-== htile
+=== Declaration
 
-Build a horizontal tile with a fixed number of elements.
+```c++
+class htile_element : public composite_base
+{
+   ...
+};
 
-=== Notation
+using htile_composite = vector_composite<htile_element>;
+
+template <concepts::Element... E>
+array_composite<sizeof...(E), htile_element>
+htile(E&&... elements);
+
+template <concepts::Element FE, concepts::Element... E>
+array_composite<1+sizeof...(E), htile_element>
+htile_spaced(float space, FE&& first, E&&... rest);
+```
+
+`htile` and `htile_spaced` return an `array_composite` and `htile_composite`
+is a `vector_composite`, each with `htile_element` as its base. All of
+`htile_element` is the `Composite` interface (see
+xref:elements/composites.adoc[Composites]).
+
+=== Expressions
+
+==== Notation
 
 `N`:: The number of items
+
 `+e1,...eN+`:: One or more child elements, instances of `Element` (more below)
 
-Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
-horizontal tile element.
+`space`:: `float`
 
-=== Expression
+`c`:: Instance of type `htile_composite`
 
-[,c++]
-----
-htile(e1,...eN)
-----
+==== Factory
 
-=== Example:
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
+| `+htile(e1,...eN)+`
+| Build a horizontal tile with a fixed number of elements. Elements
+  `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
+  horizontal tile element.
+| `+htile_spaced(space, e1,...eN)+`
+| The same as `+htile(e1, margin_left(space, e2),... margin_left(space, eN))+`
+  (see xref:layout/margins.adoc#_margin_left[margin_left]): `space`
+  between each element and the next.
+|===
+
+.Example
 [,c++]
 ----
 htile(item1, item2, item3, item4)
@@ -78,18 +124,16 @@ htile(item1, item2, item3, item4)
 NOTE: If the number of elements is not fixed, you can use an
 `htile_composite` (see below).
 
-=== Semantics
+==== Constructors
 
-. In addition to the semantics of Horizontal Tiles, returns instance of
-`Composite`.
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-== htile_composite
-
-Create a horizontal tile with an indeterminate (dynamic) number of elements.
-
-=== Notation
-
-`c`:: Instance of type `htile_composite`
+| `htile_composite c`
+| Create a horizontal tile with an indeterminate (dynamic) number of
+  elements.
+|===
 
 The `htile_composite` is essentially a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The client is responsible for
@@ -97,15 +141,7 @@ the lifetime of the container, `c`. You use `htile_composite` just as you
 would a `std::vector`, such as using `push_back` to add a child element. Just
 remember that the items are `element_ptr` instances.
 
-=== Expression
-
-[,c++]
-----
-htile_composite c;
-----
-
-=== Example
-
+.Example
 [,c++]
 ----
 c.push_back(share(child));
@@ -118,14 +154,19 @@ the `std::vector<element_ptr>` in `htile_composite`.
 interface, it can also be ``share``d like any element, which allows you to
 build complex hierarchical structures.
 
-== Vertical Tiles
+== vtile
 
 image::/layout/vtile.svg[alt="vtile", width=347px, role=center]
 
 Vertical Tiles allow elements to fluidly adjust vertically depending on
 available space.
 
-=== Semantics
+image::/layout/vtile_spaced.svg[alt="vtile_spaced", width=448px, role=center]
+
+Lays out the elements of a vertical tile with a fixed space between each
+element and the next.
+
+=== Layout Rules
 
 . The elements are laid out in a single column, top to bottom, immediately
 next to each other with no intervening space.
@@ -145,61 +186,90 @@ Vertically fixed-sized elements will not be stretched (element b in the
 diagram). (Also see {Stretch-Elements}).
 . The tile's _minimum horizontal limit_ is computed as the maximum of the
 children elements' __minimum horizontal limit__s.
-. The grid's _maximum horizontal limit_ is computed as the minumum of the
+. The tile's _maximum horizontal limit_ is computed as the minimum of the
 children elements' __maximum horizontal limit__s.
-. The final computed minimum limit is clamped to ensure it is not greater
-than the computed maximum limit. Likewise the computed maximum limit is
-clamped to ensure it is not less than the computed minimum limit.
+. The final computed maximum limit is clamped to ensure it is not less
+than the computed minimum limit: the minimum wins.
 . The supplied (vertical) and computed (horizontal) coordinates may violate
 the limits of its children elements.
- .. If the allocated size of a child element is lower than the element's
-_minimum limits_ in either dimension, the element will be cropped.
- .. If a child element's _maximum limits_ in either dimension is exceeded,
-the element will be aligned to the top-left.
+ .. If the available size for a child element is lower than the element's
+_minimum vertical limit_, the element keeps its minimum and overflows past the
+tile's end, without clipping.
+ .. Along the tile, a child element stops at its _maximum vertical limit_
+and the leftover space stays at the end. Across the tile, a child element is
+given the tile's full width.
 
-== vtile
+=== Declaration
 
-Build a vertical tile with a fixed number of elements.
+```c++
+class vtile_element : public composite_base
+{
+   ...
+};
 
-=== Notation
+using vtile_composite = vector_composite<vtile_element>;
+
+template <concepts::Element... E>
+array_composite<sizeof...(E), vtile_element>
+vtile(E&&... elements);
+
+template <concepts::Element FE, concepts::Element... E>
+array_composite<1+sizeof...(E), vtile_element>
+vtile_spaced(float space, FE&& first, E&&... rest);
+```
+
+`vtile` and `vtile_spaced` return an `array_composite` and `vtile_composite`
+is a `vector_composite`, each with `vtile_element` as its base. All of
+`vtile_element` is the `Composite` interface (see
+xref:elements/composites.adoc[Composites]).
+
+=== Expressions
+
+==== Notation
 
 `N`:: The number of items
+
 `+e1,...eN+`:: One or more child elements, instances of `Element`
 
-Elements `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
-vertical tile element.
+`space`:: `float`
 
-=== Expression
+`c`:: Instance of type `vtile_composite`
 
-[,c++]
-----
-vtile(e1,...eN)
-----
+==== Factory
 
-=== Example
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
+| `+vtile(e1,...eN)+`
+| Build a vertical tile with a fixed number of elements. Elements
+  `+e1,...eN+` are held in a `std::array<element_ptr, N>` managed by the
+  vertical tile element.
+| `+vtile_spaced(space, e1,...eN)+`
+| The same as `+vtile(e1, margin_top(space, e2),... margin_top(space, eN))+`
+  (see xref:layout/margins.adoc#_margin_top[margin_top]): `space`
+  between each element and the next.
+|===
+
+.Example
 [,c++]
 ----
 vtile(item1, item2, item3, item4)
 ----
 
-NOTE: If the number of elements is not fixed, you can use an
+NOTE: If the number of elements is not fixed, you can use a
 `vtile_composite` (see below).
 
-=== Semantics
+==== Constructors
 
-. In addition to the semantics of Vertical Tiles, returns instance of
-`Composite`.
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-'''
-
-== vtile_composite
-
-Create a vertical tile with an indeterminate (dynamic) number of elements.
-
-=== Notation
-
-`c`:: Instance of type `vtile_composite`
+| `vtile_composite c`
+| Create a vertical tile with an indeterminate (dynamic) number of
+  elements.
+|===
 
 The `vtile_composite` is essentially a `std::vector<element_ptr>` that the
 client uses to manage the composite's elements. The client is responsible for
@@ -207,15 +277,7 @@ the lifetime of the container, `c`. You can use `vtile_composite` in the same
 way as a `std::vector`, such as using `push_back` to add a child element.
 Just remember that the items are `element_ptr` instances.
 
-=== Expression
-
-[,c++]
-----
-vtile_composite c;
-----
-
-=== Example
-
+.Example
 [,c++]
 ----
 c.push_back(share(child));
@@ -227,6 +289,39 @@ the `std::vector<element_ptr>` in `vtile_composite`.
 `vtile_composite` is itself also an `element` and while it has
 ``std::vector``'s interface, it can also be ``share``d like any element, which
 allows you to build complex hierarchical structures.
+
+== Example
+
+A column with a strip 30 high over two rows: one of two boxes 10 apart, the
+second taking twice the extra width, and one of three boxes added at run
+time:
+
+```c++
+#include <elements/element/tile.hpp>
+#include <elements/element/size.hpp>        // For vsize and hstretch
+#include <elements/element/style/misc.hpp>  // For box
+...
+using namespace cycfi::elements;
+...
+htile_composite swatches;                                <1>
+for (auto fill : {colors::red, colors::green, colors::blue})
+   swatches.push_back(share(box(fill)));
+
+auto column = vtile(
+   vsize(30, box(colors::slate_gray)),                   <2>
+   htile_spaced(10,                                      <3>
+      box(colors::gold),
+      hstretch(2, box(colors::steel_blue))
+   ),
+   swatches                                              <4>
+);
+```
+
+<1> A row whose boxes are added at run time.
+<2> A strip 30 high.
+<3> Two boxes 10 apart, the steel blue one taking twice the extra width.
+<4> The row of three boxes, sharing the rest of the height equally with the
+    row above.
 
 '''
 

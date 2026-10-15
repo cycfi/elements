@@ -8,34 +8,84 @@ Margins add some space around elements. There is a comprehensive list of
 margin elements in the Elements Library that can be used for various
 purposes. This section catalogues all the available margin elements.
 
+Each returns a `Proxy`. The element's {limits} is overridden to account for
+the additional space. A margin element does not violate the natural {limits}
+of the subject. It will respect the subject's min-max constraints and
+resizability.
+
+== Include
+
+```c++
+#include <elements/element/margin.hpp>
+```
+
 == margin
 
 image::/layout/margin.svg[alt="margin", width=302px, role=center]
 
 Adds a margin all around an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
+
+```c++
+namespace concepts
+{
+   template <typename T>
+   concept Rect = requires(T r)
+   {
+      { r.left } -> std::convertible_to<float>;       // left margin
+      { r.right } -> std::convertible_to<float>;      // right margin
+      { r.top } -> std::convertible_to<float>;        // top margin
+      { r.bottom } -> std::convertible_to<float>;     // bottom margin
+   };
+}
+
+template <concepts::Rect Rect, concepts::Element Subject>
+class margin_element : public proxy<Subject>
+{
+public:
+                           margin_element(Rect margin_, Subject subject);
+
+   ...
+};
+
+struct static_empty_rect
+{
+   static constexpr int    left = 0;
+   static constexpr int    right = 0;
+   static constexpr int    top = 0;
+   static constexpr int    bottom = 0;
+};
+
+template <concepts::Element Subject>
+margin_element<rect, remove_cvref_t<Subject>>
+margin(rect margin_, Subject&& subject);
+```
+
+`rect` is the {artist} rectangle. Every factory on this page returns a
+`margin_element`. The other factories give it a struct derived from
+`static_empty_rect`: the struct sets the sides the factory names, and the
+other sides are zero. The rest of `margin_element` is the `Proxy` interface
+(see xref:elements/proxies.adoc[Proxies]).
+
+=== Expressions
+
+==== Notation
 
 `left`, `top`, `right`, `bottom`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-margin({left, top, right, bottom}, subject)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Semantics
-
-. Space is added to the left, top, right, and bottom of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin` does not violate the natural {limits} of the subject.
-`margin` will respect the subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
-
-'''
+| `margin({left, top, right, bottom}, subject)`
+| Space is added to the left, top, right, and bottom of the subject with
+  the given parameters.
+|===
 
 == margin_left
 
@@ -43,28 +93,38 @@ image::/layout/margin_left.svg[alt="margin_left", width=230px, role=center]
 
 Adds a margin to the left of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
+
+```c++
+struct margin_left_rect : static_empty_rect
+{
+                           margin_left_rect(float left);
+
+   float                   left;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_left_rect, remove_cvref_t<Subject>>
+margin_left(margin_left_rect margin_, Subject&& subject);
+```
+
+=== Expressions
+
+==== Notation
 
 `left`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-margin_left(left, subject)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Semantics
-
-. Space is added to the left of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_left` does not violate the natural {limits} of the subject.
-`margin_left` will respect the subject's min-max constraints and
-resizability.
-. Returns instance of `Proxy`.
-
-'''
+| `margin_left(left, subject)`
+| Space is added to the left of the subject with the given parameter.
+|===
 
 == margin_right
 
@@ -72,57 +132,77 @@ image::/layout/margin_right.svg[alt="margin_right", width=230px, role=center]
 
 Adds a margin to the right of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
+
+```c++
+struct margin_right_rect : static_empty_rect
+{
+                           margin_right_rect(float right);
+
+   float                   right;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_right_rect, remove_cvref_t<Subject>>
+margin_right(margin_right_rect margin_, Subject&& subject);
+```
+
+=== Expressions
+
+==== Notation
 
 `right`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-margin_right(right, subject)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Semantics
-
-. Space is added to the right of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_right` does not violate the natural {limits} of the subject.
-`margin_right` will respect the subject's min-max constraints and
-resizability.
-. Returns instance of `Proxy`.
-
-'''
+| `margin_right(right, subject)`
+| Space is added to the right of the subject with the given parameter.
+|===
 
 == margin_top
 
-image::/layout/margin_top.svg[alt="margin_right", width=218px, role=center]
+image::/layout/margin_top.svg[alt="margin_top", width=218px, role=center]
 
 Adds a margin to the top of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
+
+```c++
+struct margin_top_rect : static_empty_rect
+{
+                           margin_top_rect(float top);
+
+   float                   top;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_top_rect, remove_cvref_t<Subject>>
+margin_top(margin_top_rect margin_, Subject&& subject);
+```
+
+=== Expressions
+
+==== Notation
 
 `top`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-margin_top(top, subject)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Semantics
-
-. Space is added to the top of the subject with the given parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_top` does not violate the natural {limits} of the subject.
-`margin_top` will respect the subject's min-max constraints and
-resizability.
-. Returns instance of `Proxy`.
-
-'''
+| `margin_top(top, subject)`
+| Space is added to the top of the subject with the given parameter.
+|===
 
 == margin_bottom
 
@@ -130,29 +210,38 @@ image::/layout/margin_bottom.svg[alt="margin_bottom", width=218px, role=center]
 
 Adds a margin to the bottom of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
+
+```c++
+struct margin_bottom_rect : static_empty_rect
+{
+                           margin_bottom_rect(float bottom);
+
+   float                   bottom;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_bottom_rect, remove_cvref_t<Subject>>
+margin_bottom(margin_bottom_rect margin_, Subject&& subject);
+```
+
+=== Expressions
+
+==== Notation
 
 `bottom`:: `float`
+
 `subject`:: Instance of `Element`
 
-=== Expression
+==== Factory
 
-[,c++]
-----
-margin_bottom(bottom, subject)
-----
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-=== Semantics
-
-. Space is added to the to the bottom of the subject with the given
-parameter.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_bottom` does not violate the natural {limits} of the subject.
-`margin_bottom` will respect the subject's min-max constraints and
-resizability.
-. Returns instance of `Proxy`.
-
-'''
+| `margin_bottom(bottom, subject)`
+| Space is added to the bottom of the subject with the given parameter.
+|===
 
 == hmargin
 
@@ -162,37 +251,66 @@ image::/layout/hmargin.svg[alt="hmargin", width=302px, role=center]
 
 Adds a margin to the left and right sides of an enclosed element (`subject`).
 
-`left`, `right`:: `float`
-`subject`:: Instance of `Element`
+=== Declaration
+
+```c++
+struct hmargin_rect : static_empty_rect
+{
+                           hmargin_rect(float left, float right);
+                           hmargin_rect(float left_right);
+
+   float                   left;
+   float                   right;
+};
+
+template <concepts::Element Subject>
+margin_element<hmargin_rect, remove_cvref_t<Subject>>
+hmargin(hmargin_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<hmargin_rect, remove_cvref_t<Subject>>
+hmargin(float left, float right, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<hmargin_rect, remove_cvref_t<Subject>>
+margin_left_right(hmargin_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<hmargin_rect, remove_cvref_t<Subject>>
+margin_left_right(float left, float right, Subject&& subject);
+```
 
 === Expressions
 
-[,c++]
-----
-// variant 1
-hmargin({left, right}, subject)
+==== Notation
 
-// variant 2
-hmargin(left, right, subject)
+`left`, `right`:: `float`
 
-// variant 3
-margin_left_right({left, right}, subject)
+`left_right`:: `float`
 
-// variant 4
-margin_left_right(left, right, subject)
-----
+`subject`:: Instance of `Element`
 
-=== Semantics
+==== Factory
 
-. Space is added to the to the left and right sides of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `hmargin` (and variants) does not violate the natural {limits} of the
-subject. `hmargin` (and variants) will respect the subject's min-max
-constraints and resizability.
-. Returns instance of `Proxy`.
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-'''
+| `hmargin({left, right}, subject)`
+| Space is added to the left and right sides of the subject with the
+  given parameters.
+| `hmargin(left, right, subject)`
+| Same as `hmargin({left, right}, subject)`.
+| `hmargin(left_right, subject)`
+| Space is added to the left and right sides of the subject, `left_right`
+  on each.
+| `margin_left_right({left, right}, subject)`
+| Same as `hmargin({left, right}, subject)`.
+| `margin_left_right(left, right, subject)`
+| Same as `hmargin({left, right}, subject)`.
+| `margin_left_right(left_right, subject)`
+| Same as `hmargin(left_right, subject)`.
+|===
 
 == vmargin
 
@@ -202,39 +320,66 @@ image::/layout/vmargin.svg[alt="vmargin", width=218px, role=center]
 
 Adds a margin to the top and bottom sides of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
 
-`top`, `bottom`:: `float`
-`subject`:: Instance of `Element`
+```c++
+struct vmargin_rect : static_empty_rect
+{
+                           vmargin_rect(float top, float bottom);
+                           vmargin_rect(float top_bottom);
+
+   float                   top;
+   float                   bottom;
+};
+
+template <concepts::Element Subject>
+margin_element<vmargin_rect, remove_cvref_t<Subject>>
+vmargin(vmargin_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<vmargin_rect, remove_cvref_t<Subject>>
+vmargin(float top, float bottom, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<vmargin_rect, remove_cvref_t<Subject>>
+margin_top_bottom(vmargin_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<vmargin_rect, remove_cvref_t<Subject>>
+margin_top_bottom(float top, float bottom, Subject&& subject);
+```
 
 === Expressions
 
-[,c++]
-----
-// variant 1
-vmargin({top, bottom}, subject)
+==== Notation
 
-// variant 2
-vmargin(top, bottom, subject)
+`top`, `bottom`:: `float`
 
-// variant 3
-margin_top_bottom({top, bottom}, subject)
+`top_bottom`:: `float`
 
-// variant 4
-margin_top_bottom(top, bottom, subject)
-----
+`subject`:: Instance of `Element`
 
-=== Semantics
+==== Factory
 
-. Space is added to the to the top and bottom sides of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `vmargin` (and variants) does not violate the natural {limits} of the
-subject. `vmargin` (and variants) will respect the subject's min-max
-constraints and resizability.
-. Returns instance of `Proxy`.
+[cols="1,1"]
+|===
+| Expression                    | Semantics
 
-'''
+| `vmargin({top, bottom}, subject)`
+| Space is added to the top and bottom sides of the subject with the
+  given parameters.
+| `vmargin(top, bottom, subject)`
+| Same as `vmargin({top, bottom}, subject)`.
+| `vmargin(top_bottom, subject)`
+| Space is added to the top and bottom sides of the subject, `top_bottom`
+  on each.
+| `margin_top_bottom({top, bottom}, subject)`
+| Same as `vmargin({top, bottom}, subject)`.
+| `margin_top_bottom(top, bottom, subject)`
+| Same as `vmargin({top, bottom}, subject)`.
+| `margin_top_bottom(top_bottom, subject)`
+| Same as `vmargin(top_bottom, subject)`.
+|===
 
 == margin_left_top
 
@@ -242,33 +387,46 @@ image::/layout/margin_left_top.svg[alt="margin_left_top", width=232px, role=cent
 
 Adds a margin to the left and top sides of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
 
-`left`, `top`:: `float`
-`subject`:: Instance of `Element`
+```c++
+struct margin_left_top_rect : static_empty_rect
+{
+                           margin_left_top_rect(float left, float top);
+
+   float                   left;
+   float                   top;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
+margin_left_top(margin_left_top_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<margin_left_top_rect, remove_cvref_t<Subject>>
+margin_left_top(float left, float top, Subject&& subject);
+```
 
 === Expressions
 
-[,c++]
-----
-// variant 1
-margin_left_top({left, top}, subject)
+==== Notation
 
-// variant 2
-margin_left_top(left, top, subject)
-----
+`left`, `top`:: `float`
 
-=== Semantics
+`subject`:: Instance of `Element`
 
-. Space is added to the to the left and top sides of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_left_top` (and variant) does not violate the natural {limits}
-of the subject. `margin_left_top` (and variant) will respect the subject's
-min-max constraints and resizability.
-. Returns instance of `Proxy`.
+==== Factory
 
-'''
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `margin_left_top({left, top}, subject)`
+| Space is added to the left and top sides of the subject with the given
+  parameters.
+| `margin_left_top(left, top, subject)`
+| Same as `margin_left_top({left, top}, subject)`.
+|===
 
 == margin_left_bottom
 
@@ -276,33 +434,46 @@ image::/layout/margin_left_bottom.svg[alt="margin_left_bottom", width=232px, rol
 
 Adds a margin to the left and bottom sides of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
 
-`left`, `bottom`:: `float`
-`subject`:: Instance of `Element`
+```c++
+struct margin_left_bottom_rect : static_empty_rect
+{
+                           margin_left_bottom_rect(float left, float bottom);
+
+   float                   left;
+   float                   bottom;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_left_bottom_rect, remove_cvref_t<Subject>>
+margin_left_bottom(margin_left_bottom_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<margin_left_bottom_rect, remove_cvref_t<Subject>>
+margin_left_bottom(float left, float bottom, Subject&& subject);
+```
 
 === Expressions
 
-[,c++]
-----
-// variant 1
-margin_left_bottom({left, bottom}, subject)
+==== Notation
 
-// variant 2
-margin_left_bottom(left, bottom, subject)
-----
+`left`, `bottom`:: `float`
 
-=== Semantics
+`subject`:: Instance of `Element`
 
-. Space is added to the to the left and bottom sides of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_left_bottom` (and variant) does not violate the natural
-{limits} of the subject. `margin_left_bottom` (and variant) will respect
-the subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
+==== Factory
 
-'''
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `margin_left_bottom({left, bottom}, subject)`
+| Space is added to the left and bottom sides of the subject with the
+  given parameters.
+| `margin_left_bottom(left, bottom, subject)`
+| Same as `margin_left_bottom({left, bottom}, subject)`.
+|===
 
 == margin_right_top
 
@@ -310,33 +481,46 @@ image::/layout/margin_right_top.svg[alt="margin_right_top", width=232px, role=ce
 
 Adds a margin to the right and top sides of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
 
-`right`, `top`:: `float`
-`subject`:: Instance of `Element`
+```c++
+struct margin_right_top_rect : static_empty_rect
+{
+                           margin_right_top_rect(float right, float top);
+
+   float                   right;
+   float                   top;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_right_top_rect, remove_cvref_t<Subject>>
+margin_right_top(margin_right_top_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<margin_right_top_rect, remove_cvref_t<Subject>>
+margin_right_top(float right, float top, Subject&& subject);
+```
 
 === Expressions
 
-[,c++]
-----
-// variant 1
-margin_right_top({right, top}, subject)
+==== Notation
 
-// variant 2
-margin_right_top(right, top, subject)
-----
+`right`, `top`:: `float`
 
-=== Semantics
+`subject`:: Instance of `Element`
 
-. Space is added to the to the right and top sides of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_right_top` (and variant) does not violate the natural {limits}
-of the subject. `margin_right_top` (and variant) will respect the
-subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
+==== Factory
 
-'''
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `margin_right_top({right, top}, subject)`
+| Space is added to the right and top sides of the subject with the given
+  parameters.
+| `margin_right_top(right, top, subject)`
+| Same as `margin_right_top({right, top}, subject)`.
+|===
 
 == margin_right_bottom
 
@@ -344,31 +528,69 @@ image::/layout/margin_right_bottom.svg[alt="margin_right_bottom", width=232px, r
 
 Adds a margin to the right and bottom sides of an enclosed element (`subject`).
 
-=== Notation
+=== Declaration
 
-`right`, `bottom`:: `float`
-`subject`:: Instance of `Element`
+```c++
+struct margin_right_bottom_rect : static_empty_rect
+{
+                           margin_right_bottom_rect(float right, float bottom);
+
+   float                   right;
+   float                   bottom;
+};
+
+template <concepts::Element Subject>
+margin_element<margin_right_bottom_rect, remove_cvref_t<Subject>>
+margin_right_bottom(margin_right_bottom_rect margin_, Subject&& subject);
+
+template <concepts::Element Subject>
+margin_element<margin_right_bottom_rect, remove_cvref_t<Subject>>
+margin_right_bottom(float right, float bottom, Subject&& subject);
+```
 
 === Expressions
 
-[,c++]
-----
-// variant 1
-margin_right_bottom({right, bottom}, subject)
+==== Notation
 
-// variant 2
-margin_right_bottom(right, bottom, subject)
-----
+`right`, `bottom`:: `float`
 
-=== Semantics
+`subject`:: Instance of `Element`
 
-. Space is added to the to the right and bottom sides of the subject with the
-given parameters.
-. The element's {limits} is overridden to account for the additional space.
-. The `margin_right_bottom` (and variant) does not violate the natural
-limits of the subject. `margin_right_bottom` (and variant) will respect
-the subject's min-max constraints and resizability.
-. Returns instance of `Proxy`.
+==== Factory
+
+[cols="1,1"]
+|===
+| Expression                    | Semantics
+
+| `margin_right_bottom({right, bottom}, subject)`
+| Space is added to the right and bottom sides of the subject with the
+  given parameters.
+| `margin_right_bottom(right, bottom, subject)`
+| Same as `margin_right_bottom({right, bottom}, subject)`.
+|===
+
+== Example
+
+A row of three boxes: one with a margin of 10 all around, one with 20 on its
+left and right, and one 30 down from the top:
+
+```c++
+#include <elements/element/margin.hpp>
+#include <elements/element/tile.hpp>        // For htile
+#include <elements/element/style/misc.hpp>  // For box
+...
+using namespace cycfi::elements;
+...
+auto row = htile(
+   margin({10, 10, 10, 10}, box(colors::red)),      <1>
+   hmargin({20, 20}, box(colors::green)),           <2>
+   margin_top(30, box(colors::blue))                <3>
+);
+```
+
+<1> A box with a margin of 10 on each side.
+<2> A box with a margin of 20 on its left and right.
+<3> A box with a margin of 30 on its top.
 
 '''
 

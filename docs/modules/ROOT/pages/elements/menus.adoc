@@ -177,8 +177,11 @@ namespace cycfi::elements
 | `b.menu(m)`
 | Make `m` the menu `b` opens.
 
-| `b.position()`, `b.position(pos)`
+| `b.position()`
 | Where `b` opens its menu.
+
+| `b.position(pos)`
+| Make `b` open its menu at `pos`.
 
 | `b.on_open_menu`
 | Called with `b` before its menu opens.

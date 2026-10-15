@@ -68,6 +68,27 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -361,6 +382,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../tutorials.html">Tutorials</a></li>
     <li><a href="hello_universe.html">Hello Universe</a></li>
   </ul>
 </nav>
@@ -382,8 +404,228 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Covers <code>examples/hello_universe</code>.</p>
+<p>This is the first program to build: <code>examples/hello_universe</code>. It opens
+a window with a picture of space in it. The picture is bigger than the
+window, so you can scroll around it.</p>
 </div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/gallery/hello-universe.png"><img src="../_images/gallery/hello-universe.png" alt="A window titled Hello Universe showing a nebula, with scroll bars at the right and bottom" width="500px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The program fits on one screen, and every Elements program you write
+will have the same shape: an <em>app</em>, a <em>window</em>, a <em>view</em> in the window,
+and the <em>content</em> you give the view. Once you can see those four parts
+here, you can see them in every other example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_program"><a class="anchor" href="#_the_program"></a>The Program</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the whole of <code>main.cpp</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;
+
+using namespace cycfi::elements;
+
+int main(int argc, char* argv[])
+{
+   app _app("Hello Universe");                                     <i class="conum" data-value="1"></i><b>(1)</b>
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();                                               <i class="conum" data-value="2"></i><b>(2)</b>
+   window _win(_app.name());                                       <i class="conum" data-value="3"></i><b>(3)</b>
+   _win.on_close = [&amp;_app]() { _app.stop(); };                     <i class="conum" data-value="4"></i><b>(4)</b>
+
+   view view_(_win);                                               <i class="conum" data-value="5"></i><b>(5)</b>
+
+   view_.content(                                                  <i class="conum" data-value="6"></i><b>(6)</b>
+      scroller(image{"space.jpg"})
+   );
+
+   _app.run();                                                     <i class="conum" data-value="7"></i><b>(7)</b>
+   return 0;
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <a href="../application/app.html" class="xref page">app</a> is the program as the
+operating system sees it. It has a name, and it runs until it is
+stopped. You make one.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>init_resources</code> loads the fonts and sets where image files are
+looked for. The first view does this if you have not, so this
+line moves the cost to startup, before any window is on screen.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>A <a href="../application/window.html" class="xref page">window</a> on the screen, titled with
+the app&#8217;s name.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>When the user closes the window, stop the app. Without this line
+the window would close and the program would keep running, with
+nothing to show.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The <a href="../view.html" class="xref page">view</a> lives in the window and holds the
+elements. It draws them and passes them the user&#8217;s input.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>The content: an image, inside a scroller.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>Run the app. <code>run</code> returns when the app is stopped, at &lt;4&gt;.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>elements.hpp</code> includes the whole library. Everything in it is in the
+namespace <code>cycfi::elements</code>, and the examples bring that namespace in
+with <code>using namespace</code> to keep the code short.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_window_and_the_view"><a class="anchor" href="#_the_window_and_the_view"></a>The Window and the View</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The window is the frame that the operating system provides: the title
+bar, the border, the buttons that close and resize it. The view fills
+the inside of the window. The elements live in the view, and the view
+draws them, lays them out again when the window is resized, and passes
+them each click and key press.</p>
+</div>
+<div class="paragraph">
+<p>You give the view its content once, with <code>content</code>. From then on the
+view takes care of it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_content"><a class="anchor" href="#_the_content"></a>The Content</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The content is two elements, one inside the other.
+<code>image{"space.jpg"}</code> is the picture. Its size is the picture&#8217;s size.
+<code>scroller(&#8230;&#8203;)</code> wraps the image in a scrolling port: it shows as much
+of the image as fits in the window and adds scroll bars for the rest.</p>
+</div>
+<div class="paragraph">
+<p>This is how everything in Elements is composed. An element is a value,
+and you make an interface by nesting elements inside one another:
+<code>scroller(image{&#8230;&#8203;})</code> makes a scroller that holds an image, and
+<code>content(&#8230;&#8203;)</code> gives the result to the view. The next tutorial nests
+several levels deep; the idea is the same.</p>
+</div>
+<div class="paragraph">
+<p>The file name <code>space.jpg</code> is a relative path, looked for in the
+search path that <code>init_resources</code> set, which includes the
+<code>resources</code> directory next to the program. The example&#8217;s <code>CMakeLists.txt</code>
+lists the picture as a resource, and the build copies it there.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running"><a class="anchor" href="#_running"></a>Running</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The example is built with the rest of the library (see
+<a href="../setup.html" class="xref page">Setup and Installation</a>). From the top of the Elements
+directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build
+cmake --build build --target HelloUniverse</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The program is in <code>build/examples/hello_universe</code>. Run it, make the
+window smaller than the picture, and scroll.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_try_it"><a class="anchor" href="#_try_it"></a>Try It</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each of these is a one-line change. Rebuild and run after each.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Change the name given to <code>app</code>. The window&#8217;s title changes with it,
+because the window is titled with <code>_app.name()</code>.</p>
+</li>
+<li>
+<p>Take the <code>scroller</code> away, leaving <code>view_.content(image{"space.jpg"})</code>.
+Now the window cannot be made smaller than the picture. Every
+element has <em>limits</em>, the smallest and largest it can be; the view
+passes its content&#8217;s limits on to the window; and an image&#8217;s limits
+are its own size. The scroller is what made the window resizable: a
+scroller can be as small as its scroll bars.</p>
+</li>
+<li>
+<p>Delete the <code>on_close</code> line. Close the window; the program is still
+running. Stop it from the terminal.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_components_used"><a class="anchor" href="#_components_used"></a>Components Used</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../application/app.html" class="xref page"><code>app</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The program. Runs until it is stopped.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../application/window.html" class="xref page"><code>window</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The window on the screen.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../view.html" class="xref page"><code>view</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Holds the elements, draws them, and passes them the user&#8217;s input.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/images.html" class="xref page"><code>image</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The picture.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/ports.html" class="xref page"><code>scroller</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scrolls the picture within the window.</p></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>

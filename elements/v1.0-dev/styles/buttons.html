@@ -68,6 +68,27 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -470,7 +491,9 @@ it.</p>
 <p><code>icon_button(code, size, body_color)</code> is a momentary button of an icon
 on a square body, and <code>toggle_icon_button(code, size, body_color)</code> a
 toggle. <code>toggle_icon_button(code1, code2, size, body_color)</code> shows
-<code>code1</code> while off and <code>code2</code> while on. <code>plain_icon_button(code, size)</code>
+<code>code1</code> while off and <code>code2</code> while on.
+<code>toggle_icon_button(code1, code2, size, off_color, on_color)</code> also
+gives each state its own body color. <code>plain_icon_button(code, size)</code>
 has no body: the icon alone.</p>
 </div>
 </div>
@@ -622,6 +645,13 @@ is off and the other while it is on.</p>
     , uint32_t code2
     , float size
     , color body_color = get_theme().default_button_color);
+
+   inline auto toggle_icon_button(
+      uint32_t code1
+    , uint32_t code2
+    , float size
+    , color off_color
+    , color on_color);
 
    inline auto plain_icon_button(uint32_t code, float size = 1.0f);
 
@@ -849,6 +879,11 @@ bottom.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>toggle_icon_button(i, i2, s, c)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A toggle button showing <code>i</code> while off and <code>i2</code> while on.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toggle_icon_button(i, i2, s, c, c2)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A toggle button showing <code>i</code> on a body of color <code>c</code> while off, and
+  <code>i2</code> on a body of color <code>c2</code> while on.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>plain_icon_button(i, s)</code></p></td>

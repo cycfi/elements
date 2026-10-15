@@ -68,6 +68,27 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -361,6 +382,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../tutorials.html">Tutorials</a></li>
     <li><a href="model.html">The Model</a></li>
   </ul>
 </nav>
@@ -382,8 +404,320 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Covers <code>examples/model</code>.</p>
+<p>In the last tutorial, each control&#8217;s handler set the other two
+controls by hand. That works for three. With a dozen controls showing
+the same value, or a value that the program also changes on its own,
+every handler has to know about every control, and a control added
+later has to be added to all of them.</p>
 </div>
+<div class="paragraph">
+<p><code>examples/model</code> shows the way out. It has one value shown three ways:
+a knob, a text box with the value as a number, and a menu of presets.
+Turn the knob and the number follows; type a number and the knob
+turns; choose a preset and both move to it. No handler names another
+control. Each control is linked to a <em>model</em> of the value, and the
+handlers set the model:</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="../_images/tutorials/model_links.svg" alt="The application sets and reads the model; the model updates the dial, text box and preset menu, and the user&#8217;s edits come back to the model. The application and the user interface are not connected." width="750px">
+</div>
+</div>
+<div class="paragraph">
+<p>A model holds a value and a list of elements to update when the value
+changes. Your program reads and sets the model as it would a plain
+variable, and every element linked to it shows the change. The
+elements are linked once, when the window is built, and nothing else
+in the program names them. <a href="../model.html" class="xref page">Model</a> is the reference.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_model"><a class="anchor" href="#_the_model"></a>The Model</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// This is our simple model, comprising of a preset (an enum)
+// and a value normalized to 0.0 to 1.0.
+struct my_model
+{
+   enum preset
+   {
+      preset_none,
+      preset_100_percent,
+      preset_75_percent,
+      preset_50_percent,
+      preset_25_percent,
+      preset_0_percent,
+   };
+
+   value_model&lt;float&gt;   _value = 1.0;                           <i class="conum" data-value="1"></i><b>(1)</b>
+   value_model&lt;preset&gt;  _preset = preset_100_percent;
+};</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>value_model&lt;float&gt;</code> behaves like a <code>float</code>: assign to it, read
+it, compare it. Assigning to it also updates every element linked
+to it.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The model is a plain struct, with nothing in it about the user
+interface. The program could use it with no window at all.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_linking_the_knob"><a class="anchor" href="#_linking_the_knob"></a>Linking the Knob</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   // Make a dial
+   auto dial_ptr = share(dial(radial_marks&lt;20&gt;(basic_knob&lt;80&gt;())));
+
+   // The dial follows the value, and gets the value the model holds right
+   // now. What the user does to the dial comes here instead of straight
+   // to the model, because there is more to do than assign: the value is
+   // no longer one of the presets, so the preset is taken off as well.
+   view_.bindings().follow(model._value, dial_ptr,                           <i class="conum" data-value="1"></i><b>(1)</b>
+      [&amp;model](double val)
+      {
+         if (model._value != val)
+         {
+            model._value = val;                                              <i class="conum" data-value="2"></i><b>(2)</b>
+            model._preset = my_model::preset_none;
+         }
+      }
+   );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>From here on, the dial shows <code>model._value</code>: it takes the value
+now, and again each time the value changes.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>When the user turns the dial, the handler sets the model, and the
+model updates the dial and the text box. The preset is cleared,
+because the value is no longer one of them.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The link is made through the view&#8217;s bindings, and the view takes the
+link off the model when the view is destroyed. <code>bind</code> is the simpler
+form, for a control whose changes go straight into the model with
+nothing else to do; <code>follow</code> is for when there is, as here.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_linking_the_text_box_and_the_menu"><a class="anchor" href="#_linking_the_text_box_and_the_menu"></a>Linking the Text Box and the Menu</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A text box shows text, not a number, so it cannot be linked with
+<code>bind</code>. <code>attach</code> takes a function that puts the value into the
+element, in whatever form the element shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   view_.bindings().attach(model._value, tbox.second,
+      [](auto&amp; input, double val)
+      {
+         std::ostringstream stream;
+         stream &lt;&lt; std::fixed &lt;&lt; std::setprecision(2) &lt;&lt; val;
+         input.set_text(stream.str());
+         input.select_all();
+      }
+   );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The dial and the text box are now both linked to <code>_value</code>. A model
+updates every element linked to it, in the order they were linked.</p>
+</div>
+<div class="paragraph">
+<p>The preset menu&#8217;s label is attached to <code>_preset</code> the same way. When
+the user chooses a preset, the menu&#8217;s handler sets both parts of the
+model and nothing else:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">            // Set the model's preset
+            model._preset = select;
+
+            // Set the value of the model accordingly.
+            switch (select)
+            {
+               case my_model::preset_100_percent:
+                  model._value = 1.0;
+                  break;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rejecting_a_value"><a class="anchor" href="#_rejecting_a_value"></a>Rejecting a Value</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The text box takes a number when the user presses Enter. Text that is
+not a number, or a number outside 0 to 1, is refused with a message
+box, and the text box goes back to showing the model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">         if (error != "")
+         {
+            auto on_ok =
+               [&amp;model]()
+               {
+                  // When errors are encountered, reset the model's value to
+                  // its previous state.
+                  model._value.update();                                        <i class="conum" data-value="1"></i><b>(1)</b>
+               };
+
+            // Bring up a message box.
+            auto popup = message_box1(view_, error, icons::attention, on_ok);
+            open_popup(popup, view_);
+            return false;
+         }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>update()</code> sends the model&#8217;s current value to every linked
+element again. The text box shows it in place of what was typed.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_program"><a class="anchor" href="#_the_program"></a>The Program</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   // Our simple model, declared before the view so that it is destroyed
+   // after it. The view's bindings leave the model on their way out, and
+   // the model has to still be there for that.
+   my_model model;
+
+   view view_(_win);
+
+   view_.content(
+      make_content(model, view_),
+      background
+   );
+
+   model._value = 1.0;                                                      <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The program sets the model. The dial turns and the text box shows
+<code>1.00</code>, and the program named neither of them.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The order of the two declarations matters: the model is declared
+first, so it outlives the view, and the view can remove its links
+from the model on the way out.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running"><a class="anchor" href="#_running"></a>Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build
+cmake --build build --target Model</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The program is in <code>build/examples/model</code>. Turn the knob, type a value
+between 0 and 1 and press Enter, or choose a preset.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_try_it"><a class="anchor" href="#_try_it"></a>Try It</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Add a second dial, linked to <code>_value</code> with the same <code>follow</code> call.
+Both dials and the text box now move together, and no handler
+changed.</p>
+</li>
+<li>
+<p>Change <code>model._value = 1.0;</code> at the end of <code>main</code> to <code>0.5</code>. The
+window opens with the knob at the middle and the text box showing
+<code>0.50</code>.</p>
+</li>
+<li>
+<p>In the dial&#8217;s handler, delete the line that sets <code>_preset</code>. Turn
+the knob: the menu keeps showing the last preset, although the value
+no longer matches it.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_components_used"><a class="anchor" href="#_components_used"></a>Components Used</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../model.html" class="xref page"><code>value_model</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Holds a value and updates the elements linked to it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../model.html#_the_views_bindings" class="xref page"><code>bindings().follow</code>, <code>bindings().attach</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Link an element to a model, for as long as the view lasts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/dials.html" class="xref page"><code>dial</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shows and sets the value.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../styles/text_entry.html" class="xref page"><code>input_box</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shows the value as a number, and takes one typed in.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../styles/menus.html" class="xref page"><code>selection_menu</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chooses a preset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../styles/dialogs.html" class="xref page"><code>message_box1</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reports a value that was refused.</p></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <div class="paragraph">
 <p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>

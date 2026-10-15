@@ -69,6 +69,27 @@
   </li>
   <li class="nav-item" data-depth="1">
     <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <span class="nav-text">Reference</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
@@ -492,12 +513,8 @@ using hgrid_composite = vector_composite&lt;
 &gt;;
 
 template &lt;std::size_t N, concepts::Element... E&gt;
-array_composite&lt;sizeof...(E), range_grid&lt;hgrid_element&gt;&gt;
-hgrid(float const(&amp;coords)[N], E&amp;&amp;... elements);
-
-template &lt;std::size_t N, concepts::Element... E&gt;
 array_composite&lt;sizeof...(E), array_grid&lt;N, hgrid_element&gt;&gt;
-hgrid(float const(&amp;&amp;coords)[N], E&amp;&amp;... elements);
+hgrid(float const(&amp;coords)[N], E&amp;&amp;... elements);
 
 template &lt;std::size_t N, concepts::Element... E&gt;
 array_composite&lt;sizeof...(E), array_grid&lt;N, hgrid_element&gt;&gt;
@@ -511,9 +528,8 @@ hgrid(E&amp;&amp;... elements);</code></pre>
 <div class="paragraph">
 <p><code>hgrid</code> returns an <code>array_composite</code> and <code>hgrid_composite</code> is a
 <code>vector_composite</code>, each with <code>hgrid_element</code> as its base, under a class that
-supplies the positions: <code>range_grid</code> refers to a plain array, <code>array_grid</code>
-holds a copy, <code>equal_grid</code> divides the grid equally, and <code>container_grid</code>
-refers to a container. All of <code>hgrid_element</code> is the <code>Composite</code> interface (see
+supplies the positions: <code>array_grid</code> holds a copy of them, <code>equal_grid</code>
+divides the grid equally, and <code>container_grid</code> refers to a container. All of <code>hgrid_element</code> is the <code>Composite</code> interface (see
 <a href="../elements/composites.html" class="xref page">Composites</a>).</p>
 </div>
 </div>
@@ -579,9 +595,8 @@ hgrid(positions, item1, item2, item3, item4)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A named plain array of positions is not copied: it must outlive the grid, as
-a <code>static</code> array does. A <code>std::array</code> or a braced list of positions, such as
-<code>hgrid({0.25f, 1.0f}, item1, item2)</code>, is copied into the grid.</p>
+<p>The positions are copied into the grid, whether given as a plain array, a
+<code>std::array</code>, or a braced list such as <code>hgrid({0.25f, 1.0f}, item1, item2)</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -782,12 +797,8 @@ using vgrid_composite = vector_composite&lt;
 &gt;;
 
 template &lt;std::size_t N, concepts::Element... E&gt;
-array_composite&lt;sizeof...(E), range_grid&lt;vgrid_element&gt;&gt;
-vgrid(float const(&amp;coords)[N], E&amp;&amp;... elements);
-
-template &lt;std::size_t N, concepts::Element... E&gt;
 array_composite&lt;sizeof...(E), array_grid&lt;N, vgrid_element&gt;&gt;
-vgrid(float const(&amp;&amp;coords)[N], E&amp;&amp;... elements);
+vgrid(float const(&amp;coords)[N], E&amp;&amp;... elements);
 
 template &lt;std::size_t N, concepts::Element... E&gt;
 array_composite&lt;sizeof...(E), array_grid&lt;N, vgrid_element&gt;&gt;
@@ -801,9 +812,8 @@ vgrid(E&amp;&amp;... elements);</code></pre>
 <div class="paragraph">
 <p><code>vgrid</code> returns an <code>array_composite</code> and <code>vgrid_composite</code> is a
 <code>vector_composite</code>, each with <code>vgrid_element</code> as its base, under a class that
-supplies the positions: <code>range_grid</code> refers to a plain array, <code>array_grid</code>
-holds a copy, <code>equal_grid</code> divides the grid equally, and <code>container_grid</code>
-refers to a container. All of <code>vgrid_element</code> is the <code>Composite</code> interface (see
+supplies the positions: <code>array_grid</code> holds a copy of them, <code>equal_grid</code>
+divides the grid equally, and <code>container_grid</code> refers to a container. All of <code>vgrid_element</code> is the <code>Composite</code> interface (see
 <a href="../elements/composites.html" class="xref page">Composites</a>).</p>
 </div>
 </div>
@@ -869,9 +879,8 @@ vgrid(positions, item1, item2, item3, item4)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A named plain array of positions is not copied: it must outlive the grid, as
-a <code>static</code> array does. A <code>std::array</code> or a braced list of positions, such as
-<code>vgrid({0.25f, 1.0f}, item1, item2)</code>, is copied into the grid.</p>
+<p>The positions are copied into the grid, whether given as a plain array, a
+<code>std::array</code>, or a braced list such as <code>vgrid({0.25f, 1.0f}, item1, item2)</code>.</p>
 </div>
 <div class="admonitionblock note">
 <table>

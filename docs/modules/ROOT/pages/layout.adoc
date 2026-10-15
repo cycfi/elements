@@ -4,31 +4,57 @@ include::common.adoc[]
 
 == Overview
 
-The Elements Library provides a comprehensive set of elements for laying out
-elements in the view, including tiles, grids, flow layouts, floating
-elements, layers, alignment elements, scale elements, and span elements.
+Elements has no coordinates to set and no layout pass to write. Every
+element has {limits}: the smallest and the largest it can be. A layout
+is a nesting of elements, and each element that holds others divides its
+space among them by their limits. When the window is resized, the view
+lays the nesting out again with the new space.
 
-* Tiles arrange elements in rows or columns, positioning them one after the
-other based on the child element's sizing limits.
-* Grids offer a structured layout with rows and columns, using normalized
-coordinate placements.
-* The flow element arranges its children left to right, fitting as many as
-possible within each row, and moves to the next row once full.
-* Floating elements allow for arbitrary positioning within containers.
-* Layers enable elements to be stacked on top of each other.
+The layout elements are of two kinds. Those that hold one element change
+its limits or its place within the space it is given: they size it,
+stretch it, align it, or put space around it. Those that hold several
+divide the space among them: in a row or a column, in a grid, one over
+another, or in rows that wrap.
 
-The document also details the use of margins and sizing elements to provide
-proper spacing and ensure elements fit within the layout.
+== Limits and Size
 
-* Alignment elements ensure correct positioning.
-* Scale elements adjust size proportionally.
-* Span elements extend across multiple grid cells.
+* xref:layout/limits.adoc[Limits]: the smallest and largest an element
+  can be, and how the limits of nested elements combine.
+* xref:layout/sizing.adoc[Sizing]: fixing an element's size, or setting
+  a smallest or largest one, and the collapsible elements, which can
+  shrink to nothing along one axis and come back.
+* xref:layout/stretch.adoc[Stretch]: how much of the extra space an
+  element takes when there is more than its siblings need.
+* xref:layout/span.adoc[Span]: how many columns or rows of a grid an
+  element takes.
+* xref:layout/scale.adoc[Scale]: drawing an element and everything in it
+  larger or smaller.
 
-By combining these various layout elements, developers can create versatile,
-responsive, and visually consistent user interfaces that adapt seamlessly
-across different devices and screen sizes.
+== Placement
+
+* xref:layout/alignment.adoc[Alignment]: placing an element within a
+  space larger than it is.
+* xref:layout/margins.adoc[Margins]: leaving space around an element.
+* xref:layout/floating.adoc[Floating]: placing an element at a position
+  of its own, apart from the layout around it.
+
+== Arranging Several Elements
+
+* xref:layout/tiles.adoc[Tiles]: elements in a row or a column, each
+  given room by its limits. The layout element used most.
+* xref:layout/grids.adoc[Grids]: elements in a row or a column of cells
+  whose boundaries are given as fractions of the space.
+* xref:layout/layers.adoc[Layers]: elements over one another, each given
+  the whole space.
+* xref:layout/decks.adoc[Decks]: elements over one another, one of them
+  shown and active at a time.
+* xref:layout/flow.adoc[Flow]: elements left to right in rows, starting
+  a new row when the next element does not fit.
+
+xref:tutorials/layout.adoc[Laying Out a Window] uses most of these in one
+program.
 
 '''
 
-_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
 _Distributed under the {mit_license}_

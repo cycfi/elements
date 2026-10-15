@@ -1446,7 +1446,10 @@ namespace cycfi::elements
                else
                   len = XLookupString(&ev.xkey, buf, sizeof(buf), &keysym, nullptr);
 
-               if (auto key = translate_key(keysym); key != key_code::unknown)
+               // The key is the one without Shift, as on the other hosts: the
+               // keysym looked up above is the shifted one, for the text.
+               KeySym const unshifted = XLookupKeysym(&ev.xkey, 0);
+               if (auto key = translate_key(unshifted); key != key_code::unknown)
                   handle_key(view, h->keys, {key, key_action::press, h->modifiers});
 
                if (len > 0 && (status == XLookupChars || status == XLookupBoth || !h->xic))
@@ -1508,6 +1511,11 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    void dispatch_event(XEvent& ev)
    {
+      // The input method takes the events it needs, a dead key's for
+      // instance, and gives back the composed text later.
+      if (XFilterEvent(&ev, None))
+         return;
+
       // Clipboard selection traffic (targets the hidden clip window).
       if (ev.type == SelectionRequest)
       {

@@ -15,12 +15,15 @@
 
 #include <chrono>
 #include <thread>
+#include <vector>
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_X11)
 # include <X11/Xlib.h>
+# include <X11/keysym.h>
 namespace cycfi::elements
 {
    Display* get_display();
+   ::Window get_window(host_window& h);
    void     dispatch_event(XEvent& ev);
    void     poll_views();
 }
@@ -49,6 +52,12 @@ namespace
    {
       using view::view;
 
+      bool key(key_info const& k) override
+      {
+         keys.push_back(k);
+         return true;
+      }
+
       void on_open(extent size_, float scale_) override
       {
          opened = size_;
@@ -63,6 +72,7 @@ namespace
       extent                  opened = {0, 0};
       float                   open_scale = 0;
       extent                  resized = {0, 0};
+      std::vector<key_info>   keys;
    };
 
    // One turn of the event loop, as app::run takes it.
@@ -113,6 +123,37 @@ TEST_CASE("host: a view is told when it opens and when it is resized", "[host_ev
 }
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_X11)
+TEST_CASE("x11: a key with Shift is the key, with the shift modifier", "[host_events]")
+{
+   window win{"", window::standard, rect{20, 20, 220, 220}};
+   told_view view_(win);
+   view_.content(std::make_shared<counter>());
+   turn_until([&] { return view_.opened.x > 0; });
+
+   Display* d = get_display();
+   ::Window w = get_window(*win.host());
+   for (int type : {KeyPress, KeyRelease})
+   {
+      XEvent ev{};
+      ev.xkey.type = type;
+      ev.xkey.display = d;
+      ev.xkey.window = w;
+      ev.xkey.root = DefaultRootWindow(d);
+      ev.xkey.state = ShiftMask;
+      ev.xkey.keycode = XKeysymToKeycode(d, XK_a);
+      ev.xkey.same_screen = True;
+      XSendEvent(d, w, False, NoEventMask, &ev);
+   }
+   turn_until([&] { return view_.keys.size() >= 2; });
+
+   REQUIRE(view_.keys.size() == 2);
+   CHECK(view_.keys[0].key == key_code::a);
+   CHECK(view_.keys[0].action == key_action::press);
+   CHECK((view_.keys[0].modifiers & mod_shift) != 0);
+   CHECK(view_.keys[1].key == key_code::a);
+   CHECK(view_.keys[1].action == key_action::release);
+}
+
 TEST_CASE("x11: refreshes in one turn of the loop draw once", "[x11_repaint]")
 {
    window win{"", window::standard, rect{20, 20, 220, 220}};

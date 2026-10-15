@@ -15,6 +15,7 @@
 #include <wayland-client.h>
 #include <libdecor.h>
 #include <xkbcommon/xkbcommon.h>
+#include <xkbcommon/xkbcommon-compose.h>
 #include <linux/input-event-codes.h>
 
 #if defined(ARTIST_SKIA)
@@ -198,6 +199,7 @@ namespace cycfi::elements
          xkb_context*   xkb_ctx = nullptr;
          xkb_keymap*    xkb_map = nullptr;
          xkb_state*     xkb_st = nullptr;
+         xkb_compose_state* compose = nullptr;  // dead keys and compose sequences
          base_view*     pointer_focus = nullptr;
          base_view*     keyboard_focus = nullptr;
          point          pointer_pos;
@@ -399,6 +401,24 @@ namespace cycfi::elements
             p.xkb_st = p.xkb_map ? xkb_state_new(p.xkb_map) : nullptr;
          }
          close(fd);
+
+         // The compose table is the locale's, not the keymap's: made once.
+         if (!p.compose)
+         {
+            char const* locale = std::getenv("LC_ALL");
+            if (!locale || !*locale)
+               locale = std::getenv("LC_CTYPE");
+            if (!locale || !*locale)
+               locale = std::getenv("LANG");
+            if (!locale || !*locale)
+               locale = "C";
+            if (auto* table = xkb_compose_table_new_from_locale(
+                  p.xkb_ctx, locale, XKB_COMPOSE_COMPILE_NO_FLAGS))
+            {
+               p.compose = xkb_compose_state_new(table, XKB_COMPOSE_STATE_NO_FLAGS);
+               xkb_compose_table_unref(table);
+            }
+         }
       }
       void kb_enter(void*, wl_keyboard*, uint32_t serial, wl_surface* surf, wl_array*)
       {
@@ -423,7 +443,16 @@ namespace cycfi::elements
          if (!p.keyboard_focus || !p.xkb_st)
             return;
          uint32_t keycode = key + 8;   // evdev → xkb
-         xkb_keysym_t sym = xkb_state_key_get_one_sym(p.xkb_st, keycode);
+
+         // The key is the one without Shift, as on the other hosts: the
+         // first level of the key in the active layout. The text below is
+         // the shifted one.
+         xkb_keysym_t sym = XKB_KEY_NoSymbol;
+         xkb_layout_index_t const layout = xkb_state_key_get_layout(p.xkb_st, keycode);
+         xkb_keysym_t const* syms = nullptr;
+         if (layout != XKB_LAYOUT_INVALID
+            && xkb_keymap_key_get_syms_by_level(p.xkb_map, keycode, layout, 0, &syms) > 0)
+            sym = syms[0];
          bool pressed = (state == WL_KEYBOARD_KEY_STATE_PRESSED);
          int mods = get_mods();
 
@@ -432,7 +461,29 @@ namespace cycfi::elements
 
          if (pressed)
          {
+            // A dead key or a compose sequence holds the text back until
+            // the sequence is done, then sends what it composed.
             uint32_t cp = xkb_state_key_get_utf32(p.xkb_st, keycode);
+            if (p.compose)
+            {
+               xkb_compose_state_feed(p.compose, xkb_state_key_get_one_sym(p.xkb_st, keycode));
+               switch (xkb_compose_state_get_status(p.compose))
+               {
+                  case XKB_COMPOSE_COMPOSING:
+                     cp = 0;
+                     break;
+                  case XKB_COMPOSE_COMPOSED:
+                     cp = xkb_keysym_to_utf32(xkb_compose_state_get_one_sym(p.compose));
+                     xkb_compose_state_reset(p.compose);
+                     break;
+                  case XKB_COMPOSE_CANCELLED:
+                     cp = 0;
+                     xkb_compose_state_reset(p.compose);
+                     break;
+                  default:
+                     break;
+               }
+            }
             if (cp >= 0x20 && cp != 0x7F)
                p.keyboard_focus->text({cp, mods});
          }

@@ -33,7 +33,7 @@ git clone --recurse-submodules  https://github.com/cycfi/elements.git
 
 === CMake
 
-Make sure you have https://cmake.org/[CMake] 3.15 or higher. Follow the https://cmake.org/install/[installation procedure] for your platform, or follow the instructions below for specific environments.
+Make sure you have https://cmake.org/[CMake] 3.16 or higher. Follow the https://cmake.org/install/[installation procedure] for your platform, or follow the instructions below for specific environments.
 
 === Required Libraries
 

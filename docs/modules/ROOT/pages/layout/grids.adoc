@@ -410,9 +410,9 @@ quarter and a half of the width, and one row of two equal columns:
 ...
 using namespace cycfi::elements;
 ...
-static float const columns[] = {0.25, 0.5, 1.0};               <1>
+static float const columns[] = {0.25, 0.5, 1.0};        <1>
 
-auto table = vgrid(                                             <2>
+auto table = vgrid(                                     <2>
    hgrid(columns,
       box(colors::red),
       box(colors::green),
@@ -420,9 +420,9 @@ auto table = vgrid(                                             <2>
    ),
    hgrid(columns,
       box(colors::gold),
-      span(2, box(colors::steel_blue))                          <3>
+      span(2, box(colors::steel_blue))                  <3>
    ),
-   hgrid(box(colors::slate_gray), box(colors::white))           <4>
+   hgrid(box(colors::slate_gray), box(colors::white))   <4>
 );
 ```
 

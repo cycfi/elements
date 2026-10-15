@@ -4,9 +4,111 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/caption.hpp`.
+A caption is a label attached to an element: below it, above it, or at
+its left. A heading is a caption in the theme's heading font, above its
+element. Each returns a tile of the label and the element (see
+xref:layout/tiles.adoc[Tiles]), with the label centered on the element's
+side: 5 between them above or below, 10 at the left.
 
-// To be written.
+image::styles/captions.png[alt="Three knobs captioned Low, Mid and High below them, under the heading EQ; a knob captioned Drive above it; and a slider captioned Level at its left", width=460px, link={imagesdir}/styles/captions.png]
+
+A tile gives its elements its whole width, or height: an element of a
+fixed size, such as a knob, under a caption wider than it, is aligned to
+keep its size (see xref:layout/alignment.adoc[Alignment]).
+
+== Include
+
+```c++
+#include <elements/element/style/caption.hpp>
+```
+
+== Declaration
+
+```c++
+template <typename Content>
+auto
+caption(Content&& content, std::string text, float size = 1.0);
+
+template <typename Content>
+auto
+top_caption(Content&& content, std::string text);
+
+template <typename Content>
+auto
+top_caption(Content&& content, std::string text, float size);
+
+template <typename Content>
+auto
+left_caption(Content&& content, std::string text);
+
+template <typename Content>
+auto
+left_caption(Content&& content, std::string text, float size);
+
+template <typename Content>
+auto
+simple_heading(Content&& content, std::string text);
+
+template <typename Content>
+auto
+simple_heading(Content&& content, std::string text, float size);
+```
+
+== Expressions
+
+=== Notation
+
+`e`               :: An element, the content.
+`text`            :: A `std::string`, the caption.
+`s`               :: Floating point value for the size of the caption,
+                     relative to the theme's label font size, or, for a
+                     heading, its heading font size.
+
+=== Factory
+
+Each returns an element.
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `caption(e, text [, s])`         | Make `e` with `text` below it.
+| `top_caption(e, text [, s])`     | Make `e` with `text` above it.
+| `left_caption(e, text [, s])`    | Make `e` with `text` at its left.
+| `simple_heading(e, text [, s])`  | Make `e` with `text` above it, as a
+                                     heading.
+|===
+
+The caption is a `label`, and the heading a `heading` (see
+xref:elements/labels.adoc[Labels]).
+
+== Example
+
+The knobs of the figure, under a heading:
+
+```c++
+#include <elements/element/style/caption.hpp>
+#include <elements/element/style/dial.hpp>     // For basic_knob
+...
+using namespace cycfi::elements;
+...
+auto knob = []{ return dial(basic_knob<50>(), 0.5); };
+
+auto eq = simple_heading(                                  <1>
+   htile_spaced(20,
+      caption(knob(), "Low"),                              <2>
+      caption(knob(), "Mid"),
+      caption(knob(), "High")
+   ),
+   "EQ"
+);
+
+auto drive = top_caption(align_center(knob()), "Drive");   <3>
+```
+
+<1> A heading above the three knobs.
+<2> Each knob with its caption below it.
+<3> The knob centered, to keep its size in a column wider than it.
 
 '''
 

@@ -4,9 +4,129 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/style/text_entry.hpp`.
+An input box is the stock entry for a line of text: a `basic_input_box`
+(see xref:elements/text.adoc[Text]) in a frame. The box is in a
+horizontal `scroller` with no scroll bars, which shows the part of the
+text at the caret, padded inside the frame.
 
-// To be written.
+image::styles/text_entry.png[alt="Four input boxes: one showing its placeholder, one with larger text, and two with a long text, the first showing its start and the second its end", width=380px, link={imagesdir}/styles/text_entry.png]
+
+Given a placeholder, `input_box` makes the `basic_input_box` and returns
+a pair: the framed box, to place in a layout, and a `std::shared_ptr` to
+the `basic_input_box`, for its text and its callbacks. Its font is the
+theme's `text_box_font` unless given, at its size times `size`, and the
+padding is 0.3 of that size on each side. Given an element, `input_box`
+frames it, with a padding of 5 on each side unless given.
+
+== Include
+
+```c++
+#include <elements/element/style/text_entry.hpp>
+```
+
+== Declaration
+
+```c++
+using input_clip_action = basic_input_box::clip_action;
+
+auto
+input_box(
+   std::string placeholder
+ , font_descr font_
+ , float size
+ , input_clip_action clip_action = input_clip_action::clip_right
+);
+
+auto
+input_box(
+   std::string placeholder
+ , float size
+ , input_clip_action clip_action = input_clip_action::clip_right
+);
+
+auto
+input_box(
+   std::string placeholder
+ , input_clip_action clip_action = input_clip_action::clip_right
+);
+
+auto
+input_box(
+   float size = 1.0
+ , input_clip_action clip_action = input_clip_action::clip_right
+);
+
+template <typename InputBox>
+auto
+input_box(InputBox&& text_input, rect pad = {5, 5, 5, 5});
+```
+
+== Expressions
+
+=== Notation
+
+`text`            :: A `std::string`, the placeholder.
+`f`               :: A `font_descr`.
+`s`               :: Floating point value for the size of the font,
+                     relative to the size of `f`, or of the theme's
+                     `text_box_font`.
+`a`               :: An `input_clip_action`: `clip_right`, `clip_left` or
+                     `clip_none`.
+`e`               :: An element, a `basic_input_box` or one held.
+`pad`             :: A `rect`, the padding on each side.
+
+=== Factory
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `input_box(text, f, s [, a])`    | Make an input box with the
+                                     placeholder `text`, in `f` at its size
+                                     times `s`.
+| `input_box(text, s [, a])`       | Make an input box with the
+                                     placeholder `text`, in the theme's
+                                     `text_box_font` at its size times `s`.
+| `input_box(text [, a])`          | Make an input box with the
+                                     placeholder `text`, in the theme's
+                                     `text_box_font`.
+| `input_box([s, a])`              | Make an input box with no
+                                     placeholder.
+| `input_box(e [, pad])`           | Make an input box of `e`.
+|===
+
+`input_box(e [, pad])` returns the input box. The others return a
+`std::pair`: the input box, and a `std::shared_ptr` to the
+`basic_input_box` in it.
+
+The clip action `a` applies to a text too long for the box, while the
+box is neither focused nor under the pointer: `clip_right`, the default,
+shows the start of the text; `clip_left` shows its end; `clip_none`
+leaves it where it was.
+
+== Example
+
+A name, captioned at its left:
+
+```c++
+#include <elements/element/style/text_entry.hpp>
+#include <elements/element/style/caption.hpp>   // For left_caption
+...
+using namespace cycfi::elements;
+...
+auto [name_box, name] = input_box("Your name");   <1>
+name->on_text =                                   <2>
+   [](std::string_view text)
+   {
+      update_title(text);
+   };
+
+auto entry = left_caption(name_box, "Name");      <3>
+```
+
+<1> The framed box, and the `basic_input_box` in it.
+<2> Called on each edit.
+<3> The framed box, in a layout.
 
 '''
 

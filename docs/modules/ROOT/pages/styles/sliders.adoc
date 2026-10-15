@@ -100,8 +100,8 @@ thumb:
 ...
 using namespace cycfi::elements;
 ...
-auto hslider = slider(basic_thumb<20>(), basic_track<5>(), 0.3);               <1>
-auto vslider = slider(basic_rect_thumb<24, 12>(), basic_track<5, true>(), 0.5); <2>
+auto hslider = slider(basic_thumb<20>(), basic_track<5>(), 0.3);                  <1>
+auto vslider = slider(basic_rect_thumb<24, 12>(), basic_track<5, true>(), 0.5);   <2>
 ```
 
 <1> A round thumb, 20 across, on a horizontal track 5 thick, at 0.3.

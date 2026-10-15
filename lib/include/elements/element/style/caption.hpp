@@ -9,6 +9,8 @@
 #include <elements/element/tile.hpp>
 #include <elements/element/align.hpp>
 #include <elements/element/margin.hpp>
+#include <elements/element/label.hpp>
+#include <string>
 
 namespace cycfi::elements
 {
@@ -20,7 +22,7 @@ namespace cycfi::elements
    {
       return
          vtile(
-            align_center(margin_top(5.0, heading(std::move(text)))),
+            align_center(margin_bottom(5.0, heading(std::move(text)))),
             std::forward<Content>(content)
          );
    }
@@ -30,21 +32,10 @@ namespace cycfi::elements
    {
       return
          vtile(
-            align_center(margin_top(5.0, heading(std::move(text)).relative_font_size(size))),
+            align_center(margin_bottom(5.0, heading(std::move(text)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }
-
-   template <typename Content>
-   inline auto caption(Content&& content, std::string text)
-   {
-      return
-         vtile(
-            std::forward<Content>(content),
-            align_center(margin_top(5.0, label(std::move(text))))
-         );
-   }
-
 
    template <typename Content>
    inline auto caption(Content&& content, std::string text, float size = 1.0)
@@ -81,7 +72,7 @@ namespace cycfi::elements
    {
       return
          vtile(
-            align_center(margin_top(5.0, label(std::move(text)))),
+            align_center(margin_bottom(5.0, label(std::move(text)))),
             std::forward<Content>(content)
          );
    }
@@ -91,7 +82,7 @@ namespace cycfi::elements
    {
       return
          vtile(
-            align_center(margin_top(5.0, label(std::move(text)).relative_font_size(size))),
+            align_center(margin_bottom(5.0, label(std::move(text)).relative_font_size(size))),
             std::forward<Content>(content)
          );
    }

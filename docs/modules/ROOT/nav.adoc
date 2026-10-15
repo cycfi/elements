@@ -54,6 +54,8 @@
 **** xref:styles/sliders.adoc[Sliders, Dials and Thumbwheels]
 **** xref:styles/tracks.adoc[Tracks]
 **** xref:styles/marks.adoc[Marks and Scales]
+**** xref:styles/captions.adoc[Captions]
+**** xref:styles/text_entry.adoc[Text Entry]
 **** xref:styles/decorations.adoc[Borders and Decorations]
 **** xref:styles/groups.adoc[Groups and Panes]
 **** xref:styles/notebooks.adoc[Notebooks]

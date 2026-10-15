@@ -6,11 +6,13 @@
 #if !defined(ELEMENTS_STYLE_TEXT_ENTRY_JUNE_5_2016)
 #define ELEMENTS_STYLE_TEXT_ENTRY_JUNE_5_2016
 
+#include <elements/element/indirect.hpp>
 #include <elements/element/layer.hpp>
 #include <elements/element/port.hpp>
 #include <elements/element/margin.hpp>
 #include <elements/element/text.hpp>
 #include <elements/element/size.hpp>
+#include <elements/element/style/misc.hpp>
 #include <elements/support/text_utils.hpp>
 #include <type_traits>
 
@@ -45,11 +47,11 @@ namespace cycfi::elements
    inline auto input_box(
       std::string placeholder
     , font_descr font_
-    , float size // ratio relative to get_theme().text_box_font_size
+    , float size // ratio relative to the size of font_
     , input_clip_action clip_action = input_clip_action::clip_right
    )
    {
-      auto font_size = get_theme().text_box_font._size * size;
+      auto font_size = font_._size * size;
       auto pad = rect{
          font_size * 0.3f, font_size * 0.3f
        , font_size * 0.3f, font_size * 0.3f

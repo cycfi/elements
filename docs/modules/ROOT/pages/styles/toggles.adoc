@@ -234,19 +234,19 @@ A toggle drawn as a star, filled while on, with its label:
 ...
 using namespace cycfi::elements;
 ...
-struct star_styler : toggle_selector                                    <1>
+struct star_styler : toggle_selector                                             <1>
 {
    using toggle_selector::toggle_selector;
 
    void draw(context const& ctx) override
    {
-      auto btn = find_parent<basic_button*>(ctx);                       <2>
+      auto btn = find_parent<basic_button*>(ctx);                                <2>
       if (!btn)
          return;
 
       auto& cnv = ctx.canvas;
       auto const& thm = get_theme();
-      rect box = ctx.bounds.move(15, 0);                                <3>
+      rect box = ctx.bounds.move(15, 0);                                         <3>
       box.width(box.height());
 
       auto on = btn->value();
@@ -256,11 +256,11 @@ struct star_styler : toggle_selector                                    <1>
       cnv.fill_style(thm.label_font_color);
       cnv.font(thm.label_font);
       cnv.text_align(cnv.left | cnv.middle);
-      cnv.fill_text(_text, point{box.right + 10, center_point(ctx.bounds).y});  <4>
+      cnv.fill_text(_text, point{box.right + 10, center_point(ctx.bounds).y});   <4>
    }
 };
 ...
-auto favorite = toggle_button(star_styler{"Favorite"});                <5>
+auto favorite = toggle_button(star_styler{"Favorite"});                          <5>
 ```
 
 <1> The size, a box and the label, comes from `toggle_selector`.

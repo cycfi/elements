@@ -89,6 +89,7 @@ namespace cycfi::elements
       {
          _current_bounds = subj_bounds;
          _main_element.layout(ctx);
+         update_drop_types();
       }
 
       // draw the subject
@@ -109,8 +110,22 @@ namespace cycfi::elements
       }
    }
 
+   // Tell the host the MIME types the content takes drops of, when they
+   // change. Asked when the content is set and laid out, not on every
+   // draw: it is a walk of the whole element tree.
+   void view::update_drop_types()
+   {
+      auto types = _main_element.drop_types();
+      if (!_drop_types || types != *_drop_types)
+      {
+         _drop_types = types;
+         accept_drop_types(types);
+      }
+   }
+
    void view::layout()
    {
+      update_drop_types();
       if (_current_bounds.is_empty())
          return;
 
@@ -124,6 +139,7 @@ namespace cycfi::elements
 
    void view::layout(element& element)
    {
+      update_drop_types();
       if (_current_bounds.is_empty())
          return;
 

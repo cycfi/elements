@@ -9,8 +9,11 @@
 #include <utility>
 #include <memory>
 #include <string>
+#include <string_view>
+#include <vector>
 #include <cstdint>
 #include <functional>
+#include <optional>
 
 #include <infra/support.hpp>
 #include <artist/point.hpp>
@@ -368,9 +371,18 @@ namespace cycfi::elements
       void                 size(extent size_);
       host_view_handle     host() const { return _view; }
 
+      // The MIME types the view takes drops of. The host takes a drag only
+      // if it offers one of them, and reads only those on the drop. Until
+      // it is told, a view takes drops of any type; elements' view tells it
+      // the types its content takes (see element::drop_types).
+      void                 accept_drop_types(mime_types const& types);
+      std::optional<mime_types> const&
+                           accepted_drop_types() const { return _drop_types; }
+
    private:
 
       host_view_handle     _view;
+      std::optional<mime_types> _drop_types;
    };
 
    ////////////////////////////////////////////////////////////////////////////
@@ -395,8 +407,6 @@ namespace cycfi::elements
    inline void base_view::on_close() {}
 
    ////////////////////////////////////////////////////////////////////////////
-   // The clipboard
-   std::string clipboard();
    // Set up the resources a view needs: the search path its images are
    // found on, and the fonts it draws with, registered with the system.
    // Done once per process, on the first view if nothing does it sooner.
@@ -407,7 +417,44 @@ namespace cycfi::elements
    // someone is waiting. Idempotent, and safe to call more than once.
    void init_resources();
 
-   void clipboard(std::string_view text);
+   ////////////////////////////////////////////////////////////////////////////
+   // The clipboard
+   //
+   // The clipboard holds a payload, the same as a drop does: one entry per
+   // format, keyed by MIME type. Copy puts every format the data has on the
+   // clipboard; paste asks for the formats it can use and gets the ones
+   // that are there. The common types are "text/plain" (UTF-8 text),
+   // "text/uri-list" (files, as file:// URIs), "text/html" and "image/png";
+   // each host maps them to and from its own formats. Any other MIME type
+   // is passed through as is, for data exchanged between applications that
+   // know it.
+   ////////////////////////////////////////////////////////////////////////////
+
+   // The MIME types the clipboard holds now. No data is fetched.
+   std::vector<std::string> clipboard_types();
+
+   // Whether the clipboard holds data of the MIME type. No data is fetched.
+   bool clipboard_contains(std::string_view mime_type);
+
+   // The data of each of the MIME types the clipboard holds now. Types the
+   // clipboard does not hold are left out: an empty payload means there is
+   // nothing there that the caller can use.
+   payload get_clipboard(mime_types const& types);
+
+   // Replace what the clipboard holds with the payload, every entry in it.
+   void set_clipboard(payload const& data);
+
+   [[deprecated("Use get_plain_text(get_clipboard({\"text/plain\"})) instead.")]]
+   inline std::string clipboard()
+   {
+      return get_plain_text(get_clipboard({"text/plain"}));
+   }
+
+   [[deprecated("Use set_clipboard({{\"text/plain\", text}}) instead.")]]
+   inline void clipboard(std::string_view text)
+   {
+      set_clipboard({{"text/plain", std::string{text}}});
+   }
 
    ////////////////////////////////////////////////////////////////////////////
    // The Cursor

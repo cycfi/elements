@@ -10,6 +10,7 @@
 #include <artist/canvas.hpp>
 #include <elements/support/perf.hpp>
 #include "wayland_host.hpp"
+#include "../common/transfer.hpp"
 
 #include <wayland-client.h>
 #include <libdecor.h>
@@ -38,6 +39,10 @@
 #endif
 
 #include <sys/mman.h>
+#include <poll.h>
+#include <pthread.h>
+#include <signal.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <unistd.h>
 #include <limits.h>
@@ -52,6 +57,8 @@
 #include <memory>
 #include <string>
 #include <string_view>
+#include <optional>
+#include <vector>
 #include <stdexcept>
 
 namespace cycfi::artist
@@ -172,6 +179,9 @@ namespace cycfi::elements
       }
       libdecor_interface decor_iface = { libdecor_error };
 
+      struct platform;
+      void init_data_device(platform& p);   // fwd
+
       struct platform
       {
          wl_display*    display = nullptr;
@@ -198,6 +208,19 @@ namespace cycfi::elements
 
          std::map<wl_surface*, base_view*> views;
 
+         // Data transfer: the clipboard (the selection) and drag and drop
+         // both come as a wl_data_offer on the seat's data device.
+         wl_data_device_manager* data_device_manager = nullptr;
+         uint32_t       data_device_manager_version = 0;
+         wl_data_device* data_device = nullptr;
+         uint32_t       input_serial = 0;       // of the latest input event
+         std::map<wl_data_offer*, std::vector<std::string>> offers;  // types on offer
+         wl_data_offer* selection_offer = nullptr;   // the clipboard, if not ours
+         wl_data_source* clip_source = nullptr;      // the clipboard, if ours
+         payload        clip_data;                   // what clip_source offers
+         wl_data_offer* dnd_offer = nullptr;
+         base_view*     dnd_view = nullptr;
+
          // Ctor does NO roundtrips — just connect + registry + xkb context, so
          // no Wayland listener fires before the singleton pointer is set.
          platform()
@@ -219,6 +242,7 @@ namespace cycfi::elements
             wl_display_roundtrip(display);   // receive globals
             if (!compositor || !shm)
                throw std::runtime_error("Missing required Wayland globals");
+            init_data_device(*this);
             wl_display_roundtrip(display);   // receive seat capabilities + keymap
             decor = libdecor_new(display, &decor_iface);
          }
@@ -296,9 +320,10 @@ namespace cycfi::elements
             p.pointer_focus->cursor(p.pointer_pos, cursor_tracking::hovering);
          }
       }
-      void ptr_button(void*, wl_pointer*, uint32_t, uint32_t time, uint32_t button, uint32_t state)
+      void ptr_button(void*, wl_pointer*, uint32_t serial, uint32_t time, uint32_t button, uint32_t state)
       {
          auto& p = plat();
+         p.input_serial = serial;
          if (!p.pointer_focus)
             return;
          mouse_button::what w;
@@ -375,9 +400,10 @@ namespace cycfi::elements
          }
          close(fd);
       }
-      void kb_enter(void*, wl_keyboard*, uint32_t, wl_surface* surf, wl_array*)
+      void kb_enter(void*, wl_keyboard*, uint32_t serial, wl_surface* surf, wl_array*)
       {
          auto& p = plat();
+         p.input_serial = serial;
          auto i = p.views.find(surf);
          p.keyboard_focus = (i != p.views.end()) ? i->second : nullptr;
          if (p.keyboard_focus)
@@ -390,9 +416,10 @@ namespace cycfi::elements
             p.keyboard_focus->end_focus();
          p.keyboard_focus = nullptr;
       }
-      void kb_key(void*, wl_keyboard*, uint32_t, uint32_t, uint32_t key, uint32_t state)
+      void kb_key(void*, wl_keyboard*, uint32_t serial, uint32_t, uint32_t key, uint32_t state)
       {
          auto& p = plat();
+         p.input_serial = serial;
          if (!p.keyboard_focus || !p.xkb_st)
             return;
          uint32_t keycode = key + 8;   // evdev → xkb
@@ -454,7 +481,7 @@ namespace cycfi::elements
       constexpr wl_seat_listener seat_listener = { seat_caps, seat_name };
 
       void registry_global(void* data, wl_registry* reg, uint32_t name,
-                           const char* iface, uint32_t /*ver*/)
+                           const char* iface, uint32_t ver)
       {
          auto* p = static_cast<platform*>(data);
          if (!strcmp(iface, wl_compositor_interface.name))
@@ -467,6 +494,13 @@ namespace cycfi::elements
             auto* o = static_cast<wl_output*>(wl_registry_bind(reg, name, &wl_output_interface, 2));
             p->output_scale[o] = 1;
             wl_output_add_listener(o, &output_listener, nullptr);
+         }
+         else if (!strcmp(iface, wl_data_device_manager_interface.name))
+         {
+            p->data_device_manager_version = std::min<uint32_t>(ver, 3);
+            p->data_device_manager = static_cast<wl_data_device_manager*>(
+               wl_registry_bind(reg, name, &wl_data_device_manager_interface,
+                  p->data_device_manager_version));
          }
          else if (!strcmp(iface, wl_seat_interface.name))
          {
@@ -956,10 +990,384 @@ namespace cycfi::elements
       render(*this);
    }
 
+   void base_view::accept_drop_types(mime_types const& types)
+   {
+      _drop_types = types;
+   }
+
    ////////////////////////////////////////////////////////////////////////////
-   // Clipboard / cursor / scroll — stubs for Phase W3
-   std::string clipboard() { return {}; }
-   void clipboard(std::string_view) {}
+   // Data transfer: the clipboard and drag and drop
+   //
+   // Both come as a wl_data_offer on the seat's data device: the clipboard
+   // through the selection event, a drag through enter, motion and drop.
+   // An offer lists its MIME types; its data is read from a pipe, one type
+   // at a time. Our own clipboard is a wl_data_source, which writes the
+   // payload's entries to the pipes of whoever asks.
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      // Read all a pipe gives until its writer closes it, waiting at most a
+      // second at a time for more.
+      std::optional<std::string> read_all(int fd)
+      {
+         std::string data;
+         char buf[65536];
+         for (;;)
+         {
+            pollfd pfd{fd, POLLIN, 0};
+            int n = poll(&pfd, 1, 1000);
+            if (n < 0 && errno == EINTR)
+               continue;
+            if (n <= 0)
+               return std::nullopt;       // the writer stalled
+            ssize_t r = read(fd, buf, sizeof buf);
+            if (r == 0)
+               return data;
+            if (r < 0)
+            {
+               if (errno == EINTR || errno == EAGAIN)
+                  continue;
+               return std::nullopt;
+            }
+            data.append(buf, std::size_t(r));
+         }
+      }
+
+      // Write all of the bytes to a pipe, waiting at most a second at a time
+      // for the reader to take more. A reader that goes away must not end
+      // the process with SIGPIPE, so the signal is held off meanwhile.
+      void write_all(int fd, std::string const& bytes)
+      {
+         sigset_t pipe_set, old_set;
+         sigemptyset(&pipe_set);
+         sigaddset(&pipe_set, SIGPIPE);
+         pthread_sigmask(SIG_BLOCK, &pipe_set, &old_set);
+
+         fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) | O_NONBLOCK);
+         std::size_t done = 0;
+         while (done < bytes.size())
+         {
+            ssize_t n = write(fd, bytes.data() + done, bytes.size() - done);
+            if (n > 0)
+            {
+               done += std::size_t(n);
+            }
+            else if (n < 0 && errno == EINTR)
+            {
+               continue;
+            }
+            else if (n < 0 && errno == EAGAIN)
+            {
+               pollfd pfd{fd, POLLOUT, 0};
+               if (poll(&pfd, 1, 1000) <= 0)
+                  break;
+            }
+            else
+            {
+               break;                     // the reader went away
+            }
+         }
+
+         if (!sigismember(&old_set, SIGPIPE))
+         {
+            timespec zero{};
+            while (sigtimedwait(&pipe_set, nullptr, &zero) > 0)
+               ;                          // consume the SIGPIPE we held off
+            pthread_sigmask(SIG_SETMASK, &old_set, nullptr);
+         }
+      }
+
+      std::optional<std::string> receive(wl_data_offer* offer, std::string const& name)
+      {
+         auto& p = plat();
+         int fds[2];
+         if (pipe2(fds, O_CLOEXEC) != 0)
+            return std::nullopt;
+         wl_data_offer_receive(offer, name.c_str(), fds[1]);
+         close(fds[1]);
+         wl_display_flush(p.display);
+         auto data = read_all(fds[0]);
+         close(fds[0]);
+         return data;
+      }
+
+      // Read each of the MIME types asked for that the offer has.
+      payload receive_payload(wl_data_offer* offer, mime_types const& types)
+      {
+         payload result;
+         auto const& offered = plat().offers[offer];
+         for (auto const& mime : types)
+         {
+            if (auto name = transfer::best_name(mime, offered))
+            {
+               if (auto data = receive(offer, *name))
+                  result[mime] = transfer::from_wire(*name, mime, *data);
+            }
+         }
+         return result;
+      }
+
+      void forget_offer(wl_data_offer*& offer)
+      {
+         if (offer)
+         {
+            plat().offers.erase(offer);
+            wl_data_offer_destroy(offer);
+            offer = nullptr;
+         }
+      }
+
+      // --- data offer ---
+      void offer_offer(void*, wl_data_offer* offer, const char* mime_type)
+      {
+         plat().offers[offer].push_back(mime_type);
+      }
+      void offer_source_actions(void*, wl_data_offer*, uint32_t) {}
+      void offer_action(void*, wl_data_offer*, uint32_t) {}
+      constexpr wl_data_offer_listener data_offer_listener = {
+         offer_offer, offer_source_actions, offer_action
+      };
+
+      // --- data source (our clipboard) ---
+      void source_target(void*, wl_data_source*, const char*) {}
+      void source_send(void*, wl_data_source* source, const char* name, int32_t fd)
+      {
+         auto& p = plat();
+         if (source == p.clip_source)
+         {
+            if (auto mime = transfer::mime_type(name))
+            {
+               if (auto i = p.clip_data.find(*mime); i != p.clip_data.end())
+                  write_all(fd, transfer::to_wire(name, *mime, i->second));
+            }
+         }
+         close(fd);
+      }
+      void source_cancelled(void*, wl_data_source* source)
+      {
+         // Someone else's clipboard now.
+         auto& p = plat();
+         if (source == p.clip_source)
+         {
+            p.clip_source = nullptr;
+            p.clip_data.clear();
+         }
+         wl_data_source_destroy(source);
+      }
+      void source_dnd_drop_performed(void*, wl_data_source*) {}
+      void source_dnd_finished(void*, wl_data_source*) {}
+      void source_action(void*, wl_data_source*, uint32_t) {}
+      constexpr wl_data_source_listener data_source_listener = {
+         source_target, source_send, source_cancelled,
+         source_dnd_drop_performed, source_dnd_finished, source_action
+      };
+
+      // --- data device ---
+      void device_data_offer(void*, wl_data_device*, wl_data_offer* offer)
+      {
+         plat().offers[offer];
+         wl_data_offer_add_listener(offer, &data_offer_listener, nullptr);
+      }
+
+      void device_enter(void*, wl_data_device*, uint32_t serial, wl_surface* surface
+       , wl_fixed_t x, wl_fixed_t y, wl_data_offer* offer)
+      {
+         auto& p = plat();
+         forget_offer(p.dnd_offer);
+         p.dnd_offer = offer;
+         auto i = p.views.find(surface);
+         p.dnd_view = (i != p.views.end()) ? i->second : nullptr;
+         if (!offer)
+            return;                       // a drag with no data
+
+         auto const& offered = p.offers[offer];
+         std::vector<std::string> types;
+         if (p.dnd_view)
+         {
+            types = transfer::accepted_types(
+               transfer::mime_types_of(offered), p.dnd_view->accepted_drop_types());
+         }
+         if (types.empty())
+         {
+            wl_data_offer_accept(offer, serial, nullptr);
+            return;
+         }
+
+         // Accept, as a copy: what the drop is for is up to the view's
+         // elements, and a move would have the source delete its data.
+         auto name = transfer::best_name(types.front(), offered);
+         wl_data_offer_accept(offer, serial, name ? name->c_str() : offered.front().c_str());
+         if (p.data_device_manager_version >= 3)
+         {
+            wl_data_offer_set_actions(offer,
+               WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY,
+               WL_DATA_DEVICE_MANAGER_DND_ACTION_COPY);
+         }
+
+         auto* h = platform_access::get_host_view(*p.dnd_view);
+         point pos{float(wl_fixed_to_double(x)), float(wl_fixed_to_double(y))};
+         h->cursor_position = pos;
+         h->_drop_info = std::make_unique<drop_info>();
+         for (auto const& type : types)
+            h->_drop_info->data[type] = std::string{};   // no data yet
+         h->_drop_info->where = pos;
+         p.dnd_view->track_drop(*h->_drop_info, cursor_tracking::entering);
+      }
+
+      void device_leave(void*, wl_data_device*)
+      {
+         auto& p = plat();
+         if (p.dnd_view)
+         {
+            auto* h = platform_access::get_host_view(*p.dnd_view);
+            if (h->_drop_info)
+            {
+               p.dnd_view->track_drop(*h->_drop_info, cursor_tracking::leaving);
+               h->_drop_info.reset();
+            }
+         }
+         p.dnd_view = nullptr;
+         forget_offer(p.dnd_offer);
+      }
+
+      void device_motion(void*, wl_data_device*, uint32_t, wl_fixed_t x, wl_fixed_t y)
+      {
+         auto& p = plat();
+         if (!p.dnd_view)
+            return;
+         auto* h = platform_access::get_host_view(*p.dnd_view);
+         if (!h->_drop_info)
+            return;
+         point pos{float(wl_fixed_to_double(x)), float(wl_fixed_to_double(y))};
+         h->cursor_position = pos;
+         h->_drop_info->where = pos;
+         p.dnd_view->track_drop(*h->_drop_info, cursor_tracking::hovering);
+      }
+
+      void device_drop(void*, wl_data_device*)
+      {
+         auto& p = plat();
+         if (!p.dnd_view || !p.dnd_offer)
+            return;
+         auto* h = platform_access::get_host_view(*p.dnd_view);
+         if (!h->_drop_info)
+            return;
+
+         mime_types types;
+         for (auto const& [type, data] : h->_drop_info->data)
+            types.insert(type);
+         auto data = receive_payload(p.dnd_offer, types);
+         if (!data.empty())
+         {
+            h->_drop_info->data = std::move(data);
+            p.dnd_view->drop(*h->_drop_info);
+         }
+         if (p.data_device_manager_version >= 3)
+            wl_data_offer_finish(p.dnd_offer);
+
+         // The drag ends here: no leave follows a drop.
+         h->_drop_info.reset();
+         p.dnd_view = nullptr;
+         forget_offer(p.dnd_offer);
+      }
+
+      void device_selection(void*, wl_data_device*, wl_data_offer* offer)
+      {
+         auto& p = plat();
+         if (p.selection_offer != offer)
+            forget_offer(p.selection_offer);
+         p.selection_offer = offer;
+      }
+
+      constexpr wl_data_device_listener data_device_listener = {
+         device_data_offer, device_enter, device_leave,
+         device_motion, device_drop, device_selection
+      };
+
+      void init_data_device(platform& p)
+      {
+         if (p.data_device_manager && p.seat && !p.data_device)
+         {
+            p.data_device = wl_data_device_manager_get_data_device(
+               p.data_device_manager, p.seat);
+            wl_data_device_add_listener(p.data_device, &data_device_listener, nullptr);
+         }
+      }
+
+      // Whether the clipboard is ours: the one we set, or, with no data
+      // device to share it through, the process's own.
+      bool own_clipboard()
+      {
+         auto& p = plat();
+         return p.clip_source || !p.data_device;
+      }
+   }
+
+   std::vector<std::string> clipboard_types()
+   {
+      auto& p = plat();
+      if (own_clipboard())
+      {
+         std::vector<std::string> types;
+         for (auto const& [type, data] : p.clip_data)
+            types.push_back(type);
+         return types;
+      }
+      if (!p.selection_offer)
+         return {};
+      return transfer::mime_types_of(p.offers[p.selection_offer]);
+   }
+
+   payload get_clipboard(mime_types const& types)
+   {
+      auto& p = plat();
+      if (own_clipboard())
+      {
+         payload result;
+         for (auto const& type : types)
+         {
+            if (auto i = p.clip_data.find(type); i != p.clip_data.end())
+               result.insert(*i);
+         }
+         return result;
+      }
+      if (!p.selection_offer)
+         return {};
+      return receive_payload(p.selection_offer, types);
+   }
+
+   void set_clipboard(payload const& data)
+   {
+      auto& p = plat();
+      if (p.clip_source)
+      {
+         wl_data_source_destroy(p.clip_source);
+         p.clip_source = nullptr;
+      }
+      p.clip_data = data;
+      if (!p.data_device)
+         return;
+
+      wl_data_source* source = nullptr;
+      if (!data.empty())
+      {
+         source = wl_data_device_manager_create_data_source(p.data_device_manager);
+         wl_data_source_add_listener(source, &data_source_listener, nullptr);
+         for (auto const& [type, entry] : data)
+         {
+            for (auto const& name : transfer::native_names(type))
+               wl_data_source_offer(source, name.c_str());
+         }
+      }
+      // The compositor takes the clipboard only in answer to input: the
+      // serial is that of the latest key or button event.
+      wl_data_device_set_selection(p.data_device, source, p.input_serial);
+      p.clip_source = source;
+      wl_display_flush(p.display);
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Cursor / scroll — stubs for Phase W3
    void set_cursor(cursor_type) {}
 
    // No registration step; resources are found by path (see gtk3 host).

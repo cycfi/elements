@@ -176,7 +176,7 @@ TEST_CASE("text page: clipboard and undo", "[text_page]")
    tb.select_end(4);
    tv.press(key_code::c, mod_action);
    if (clip)
-      CHECK(clipboard() == "cut ");
+      CHECK(clipboard_text() == "cut ");
 
    tv.press(key_code::x, mod_action);
    CHECK(tb.get_utf8() == "here");
@@ -222,7 +222,7 @@ TEST_CASE("text page: read only and disabled", "[text_page]")
    tb.select_all();
    tv.press(key_code::c, mod_action);
    if (clip)
-      CHECK(clipboard() == "fixed");             // copying is not
+      CHECK(clipboard_text() == "fixed");        // copying is not
 
    tb.read_only(false);
    CHECK(tb.editable());
@@ -268,7 +268,7 @@ TEST_CASE("text page: input box", "[text_page]")
    // Paste stops at the first newline.
    if (clipboard_works())
    {
-      clipboard("first\nsecond");
+      clipboard_text("first\nsecond");
       in.select_all();
       tv.press(key_code::v, mod_action);
       CHECK(in.get_utf8() == "first");
@@ -338,7 +338,7 @@ TEST_CASE("text page: cut reports through on_text", "[text_page]")
    CHECK(in.get_utf8().empty());
    CHECK(last.empty());
    if (clip)
-      CHECK(clipboard() == "abc");
+      CHECK(clipboard_text() == "abc");
 }
 
 TEST_CASE("text page: on_enter decides the focus", "[text_page]")

@@ -32,6 +32,7 @@
 #include <artist/resources.hpp>
 #include <system_error>
 #include "drag_and_drop.hpp"
+#include "transfer.hpp"
 
 #ifndef UNICODE
 # define UNICODE
@@ -1093,25 +1094,9 @@ namespace cycfi::elements
       InvalidateRect(_view, &r, false);
    }
 
-   std::string clipboard()
+   void base_view::accept_drop_types(mime_types const& types)
    {
-      if (!OpenClipboard(nullptr))
-         return {};
-
-      HANDLE object = GetClipboardData(CF_UNICODETEXT);
-      if (!object)
-         return {};
-
-      WCHAR* buffer = static_cast<WCHAR*>(GlobalLock(object));
-      if (!buffer)
-         return {};
-
-      std::wstring source{buffer, std::char_traits<WCHAR>::length(buffer)};
-
-      GlobalUnlock(object);
-      CloseClipboard();
-
-      return utf8_encode(source);
+      _drop_types = types;
    }
 
    // Nothing to do here: this host finds its resources by path and needs
@@ -1121,33 +1106,81 @@ namespace cycfi::elements
    {
    }
 
-   void clipboard(std::string_view text)
+   ////////////////////////////////////////////////////////////////////////////
+   // The clipboard
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
    {
-      auto len = MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), nullptr, 0);
-      if (!len)
-         return;
-      ++len; // null terminator
-
-      HANDLE object = GlobalAlloc(GMEM_MOVEABLE, len * sizeof(WCHAR));
-      if (!object)
-         return;
-
-      WCHAR* buffer = static_cast<WCHAR*>(GlobalLock(object));
-      if (!buffer)
+      // The clipboard is opened by one application at a time: wait a little
+      // for another to be done with it.
+      bool open_clipboard(HWND owner)
       {
-         GlobalFree(object);
-         return;
+         for (int i = 0; i != 20; ++i)
+         {
+            if (OpenClipboard(owner))
+               return true;
+            Sleep(5);
+         }
+         return false;
       }
 
-      MultiByteToWideChar(CP_UTF8, 0, text.data(), text.size(), buffer, len);
-      buffer[text.size()] = 0;
-      GlobalUnlock(object);
+      // Setting the clipboard needs a window to own what is put on it.
+      HWND clipboard_owner()
+      {
+         static HWND const owner = CreateWindowExW(
+            0, L"STATIC", L"", 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr,
+            GetModuleHandleW(nullptr), nullptr);
+         return owner;
+      }
 
-      if (!OpenClipboard(nullptr))
+      std::vector<UINT> clipboard_formats()
+      {
+         std::vector<UINT> formats;
+         if (!open_clipboard(nullptr))
+            return formats;
+         for (UINT f = EnumClipboardFormats(0); f; f = EnumClipboardFormats(f))
+            formats.push_back(f);
+         CloseClipboard();
+         return formats;
+      }
+   }
+
+   std::vector<std::string> clipboard_types()
+   {
+      return transfer::mime_types_of(clipboard_formats());
+   }
+
+   payload get_clipboard(mime_types const& types)
+   {
+      auto available = clipboard_formats();
+      if (!open_clipboard(nullptr))
+         return {};
+      auto result = transfer::read(available, types,
+         [](UINT format)
+         {
+            return transfer::global_bytes(GetClipboardData(format));
+         });
+      CloseClipboard();
+      return result;
+   }
+
+   void set_clipboard(payload const& data)
+   {
+      if (!open_clipboard(clipboard_owner()))
          return;
-
       EmptyClipboard();
-      SetClipboardData(CF_UNICODETEXT, object);
+      for (auto const& [mime, entry] : data)
+      {
+         UINT format = transfer::format(mime);
+         auto bytes = transfer::to_bytes(format, mime, entry);
+         if (bytes.empty() && format == CF_HDROP)
+            continue;                  // no files to put there
+         if (HGLOBAL global = transfer::make_global(bytes))
+         {
+            if (!SetClipboardData(format, global))
+               GlobalFree(global);      // still ours if the clipboard did not take it
+         }
+      }
       CloseClipboard();
    }
 

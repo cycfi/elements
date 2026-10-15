@@ -152,6 +152,7 @@ namespace cycfi::elements
       scaled_content          _main_element;
 
       void                    set_limits();
+      void                    update_drop_types();
       void                    refresh_pending();
 
       // Elements to refresh, gathered until the next poll, so that a
@@ -164,6 +165,7 @@ namespace cycfi::elements
       std::mutex              _pending_mutex;
 
       rect                    _current_bounds;
+      std::optional<mime_types> _drop_types;   // as told to the host
       view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
       mouse_button            _current_button;
       bool                    _is_focus = false;
@@ -244,6 +246,7 @@ namespace cycfi::elements
       _content = list;
       std::reverse(_content.begin(), _content.end());
       set_limits();
+      update_drop_types();
    }
 
    namespace detail
@@ -268,6 +271,7 @@ namespace cycfi::elements
       _content = {detail::add_element(std::forward<E>(elements))...};
       std::reverse(_content.begin(), _content.end());
       set_limits();
+      update_drop_types();
    }
 
    inline void view::add(element_ptr e, bool focus_top)

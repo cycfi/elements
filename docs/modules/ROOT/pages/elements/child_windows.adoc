@@ -4,9 +4,264 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `element/child_window.hpp`.
+A child window is a window drawn inside the view: a
+xref:layout/floating.adoc[floating element] that comes to the front
+when clicked, moves when its title is dragged,
+and closes when its close button is clicked. It is not a window of the
+system; it lives among the view's layers (see xref:view.adoc[View]),
+and the user moves it within the view.
 
-// To be written.
+Four pieces make one:
+
+* `child_window(bounds, subject)` places the subject at `bounds`, in
+  view coordinates, and brings it to the front on a click.
+* `movable(e)` makes `e`, usually the title bar, a handle: dragging it
+  moves the child window that contains it.
+* `resizable(e)` makes the edges and corners of `e` handles: dragging
+  them resizes the child window that contains it.
+* `closable(b)` makes the button `b` close the child window that
+  contains it.
+
+The parts can be anything: a child window's look is its subject's.
+
+`examples/child_window` as it opens, with two windows in the stock
+`closable_child_window` style:
+
+image::elements/child_windows_open.png[alt="Two child windows titled Child Window 1 and Child Window 2, each with a close button and a scroller over a picture of a galaxy; the first is in front", width=420px, link={imagesdir}/elements/child_windows_open.png]
+
+And after the second is resized by its bottom right corner, moved by
+its title, and so brought to the front:
+
+image::elements/child_windows_moved.png[alt="The same two windows; the second, now larger and moved down and to the right, is in front of the first", width=420px, link={imagesdir}/elements/child_windows_moved.png]
+
+=== Placing and Opening
+
+A child window is a xref:layout/floating.adoc[floating element]: it
+ignores the bounds its container gives it and takes its own, `bounds`,
+clamped to its subject's {limits}, keeping its top left. A size of zero,
+`{x, y, x, y}`, gives the subject its minimum size at `x`, `y`.
+
+A child window is a layer of the view. Put it in the view's content,
+before the main content, so it is drawn on top; or open it while the
+view runs with `view.add(window)`:
+
+```c++
+auto settings = share(make_window({60, 60, 300, 200}, "Settings"));
+open_settings.on_click = [&view_, settings](bool)
+{
+   view_.add(settings);
+};
+```
+
+`view.add` takes effect at the next `poll` and gives the window the
+focus if it wants it; `view.is_open(window)` tells whether it is open.
+
+=== Front and Back
+
+A press anywhere on a child window brings it to the front. A window
+takes the mouse anywhere inside it: a click on its body stays with the
+window and does not reach what is under it. A press on a control in the
+window goes on to the control, so a click on a button in a window
+behind another both raises the window and presses the button. A child window that is not a layer of the view, one inside
+another element, takes its clicks the same way, but has no front to
+come to.
+
+=== Moving
+
+`movable(e)` takes the mouse on `e` that no element inside `e` takes,
+and drags the enclosing child window, or any
+xref:layout/floating.adoc[floating element], with it. The drag stops at
+the view's edges, with the handle in view, so the window can always be
+dragged back. A movable title
+bar can hold buttons; a click on a button goes to the button.
+
+=== Resizing
+
+`resizable(e)` makes a band along each edge of `e`, `grip` wide, 6 by
+default, a handle. Dragging an edge moves it and leaves the opposite
+edge where it is; dragging a corner moves its two edges. The window
+stops at its content's {limits}. Over an edge, the cursor becomes the
+resize cursor; a corner takes the cursor of its left or right edge.
+Elsewhere, the mouse goes to `e`. Put `resizable` around the window's
+whole content, so its edges are the window's.
+
+=== Closing
+
+`closable(b)` finds the button inside `b` and sets its `on_click` to
+close the enclosing child window. It replaces whatever `on_click` the
+button had.
+
+`close(view)` closes a child window from code. A closed window is out
+of the view, not destroyed: keep a `shared_ptr` to it to open it again
+with `view.add`.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class child_window_element : public floating_element
+   {
+   public:
+
+      using floating_element::floating_element;
+
+      void                 draw(context const& ctx) override;
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 wants_control() const override { return true; }
+      bool                 click(context const& ctx, mouse_button btn) override;
+      std::string          class_name() const override;
+
+      // Fade the window out, then remove it from the view.
+      void                 close(view& view_);
+      bool                 is_closing() const { return _opacity < 1.0f; }
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, child_window_element>
+   child_window(rect bounds, Subject&& subject);
+
+   class movable_base : public tracker<proxy_base, movable_tracker_info>
+   {
+   public:
+
+      using tracker = tracker<proxy_base, movable_tracker_info>;
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      void                 keep_tracking(context const& ctx, tracker_info& track_info) override;
+      std::string          class_name() const override;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, movable_base>
+   movable(Subject&& subject);
+
+   class resizable_base : public proxy_base
+   {
+   public:
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 wants_control() const override { return true; }
+      bool                 click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      std::string          class_name() const override;
+
+      // The width of the band along each edge that grabs it.
+      float                grip = 6;
+   };
+
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, resizable_base>
+   resizable(Subject&& subject);
+
+   template <concepts::Element Subject>
+   class closable_element : public proxy<Subject>
+   {
+   public:
+
+      using proxy<Subject>::proxy;
+
+      void                    prepare_subject(context& ctx) override;
+   };
+
+   template <concepts::Element Subject>
+   inline closable_element<remove_cvref_t<Subject>>
+   closable(Subject&& subject);
+
+   void close_floating_element(context& ctx, floating_element* cw);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`r`:: A `rect`, in view coordinates.
+`e`:: An element.
+`b`:: An element holding a button.
+`ctx`:: A {context}.
+`f`:: A pointer to a `floating_element`.
+`w`:: A child window.
+`view_`:: A `view`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `child_window(r, e)`
+| A child window of `e` at `r`, clamped to the limits of `e`.
+
+| `movable(e)`
+| `e` as a handle that drags the enclosing floating element.
+
+| `resizable(e)`
+| `e`, whose edges and corners resize the enclosing floating element.
+
+| `closable(b)`
+| `b`, whose button closes the enclosing floating element.
+
+| `w.close(view_)`
+| Close `w`: remove it from the view.
+
+| `close_floating_element(ctx, f)`
+| Close `f`, and remove it from the view.
+|===
+
+== Example
+
+Two child windows over a background, each with a movable title and a
+button that closes it. Each is placed by its top left, at its minimum
+size; the first is on top:
+
+```c++
+auto make_window(rect bounds, std::string title)
+{
+   auto title_bar = movable(
+      layer(
+         margin({10, 6, 10, 6}, label(std::move(title))),
+         box(rgba(60, 70, 90, 255))
+      ));
+
+   auto close = closable(
+      momentary_button(
+         layer(
+            margin({14, 4, 14, 4}, label("Close")),
+            rbox(colors::dim_gray, 4)
+         )));
+
+   return child_window(bounds,
+      layer(
+         vtile(
+            title_bar,
+            margin({12, 12, 12, 12},
+               vtile(
+                  label("Drag the title to move."),
+                  margin_top(12, align_right(close))
+               ))
+         ),
+         box(rgba(40, 42, 48, 255))
+      ));
+}
+
+view_.content(
+   make_window({20, 20, 20, 20}, "First"),
+   make_window({170, 85, 170, 85}, "Second"),
+   box(bkd_color)
+);
+```
+
+image::elements/child_windows_example.png[alt="Two child windows over a dark background, the first, First, drawn over the second, Second; each has a blue title bar, a line of text, and a Close button", width=370px, link={imagesdir}/elements/child_windows_example.png]
 
 '''
 

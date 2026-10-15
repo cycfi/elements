@@ -8,6 +8,13 @@ A container holds content and decides how much of it is shown, and where.
 
 * xref:elements/ports.adoc[Ports and Scrollers]: a view of part of an
   element larger than its space, moved by its alignment or by the user.
+* xref:elements/child_windows.adoc[Child Windows]: windows drawn inside
+  the view, which the user brings to the front, moves, resizes and
+  closes.
+* xref:elements/splits.adoc[Splits]: tiles whose boundaries the user
+  drags.
+* xref:elements/docking.adoc[Docking]: child windows the user docks
+  along the edges of the view, and floats again.
 
 '''
 

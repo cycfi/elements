@@ -679,6 +679,18 @@ namespace cycfi::elements
 
    /**
     * \brief
+    *    The MIME types the elements of the composite take drops of.
+    */
+   mime_types composite_base::drop_types() const
+   {
+      mime_types types;
+      for (std::size_t i = 0; i != size(); ++i)
+         types.merge(at(i).drop_types());
+      return types;
+   }
+
+   /**
+    * \brief
     *    Tests whether a point 'p' intersects an element in the
     *    composite_base.
     *

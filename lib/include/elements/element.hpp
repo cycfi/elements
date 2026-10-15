@@ -9,6 +9,7 @@
 #include <elements/element/align.hpp>
 #include <elements/element/button.hpp>
 #include <elements/element/child_window.hpp>
+#include <elements/element/dock.hpp>
 #include <elements/element/collapsable.hpp>
 #include <elements/element/composite.hpp>
 #include <elements/element/curve_editor.hpp>
@@ -37,6 +38,7 @@
 #include <elements/element/status_bar.hpp>
 #include <elements/element/text.hpp>
 #include <elements/element/thumbwheel.hpp>
+#include <elements/element/split.hpp>
 #include <elements/element/tile.hpp>
 #include <elements/element/tooltip.hpp>
 

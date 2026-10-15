@@ -11,10 +11,15 @@
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
 #include <elements/support/perf.hpp>
+#include "../common/transfer.hpp"
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <map>
 #include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include <limits.h>
 #include <unistd.h>
@@ -113,6 +118,9 @@ namespace cycfi::elements
       cairo_t*                   _cr;                 // The current cairo context
 
       std::unique_ptr<drop_info> _drop_info;          // For drag and drop
+
+      // The types of a drop still to come in: MIME type and native name.
+      std::map<GdkAtom, std::pair<std::string, std::string>> _drop_pending;
 
       // What holds the base_view, cut when it goes: the idle on_open, the
       // poll timer, and the signals on the widget and its parent. Both
@@ -626,82 +634,131 @@ namespace cycfi::elements
       return true;
    }
 
+   ////////////////////////////////////////////////////////////////////////////
+   // Drag and drop: while the drag hovers, the payload names the types on
+   // offer with no data; on the drop, each is asked for and the drop is
+   // made when all of them are in.
+   ////////////////////////////////////////////////////////////////////////////
+   std::vector<std::string> offered_names(GdkDragContext* context)
+   {
+      std::vector<std::string> names;
+      for (GList* i = gdk_drag_context_list_targets(context); i; i = i->next)
+      {
+         if (gchar* name = gdk_atom_name(GDK_POINTER_TO_ATOM(i->data)))
+         {
+            names.push_back(name);
+            g_free(name);
+         }
+      }
+      return names;
+   }
+
    gboolean on_drag_motion(GtkWidget* /* widget */, GdkDragContext* context, gint x, gint y, guint time, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
+      point pos{float(x), float(y)};
+      host_view_h->_cursor_position = pos;
 
       if (!host_view_h->_drop_info)
       {
+         auto types = transfer::accepted_types(
+            transfer::mime_types_of(offered_names(context)), base_view.accepted_drop_types());
+         if (types.empty())
+         {
+            gdk_drag_status(context, GdkDragAction(0), time);
+            return true;
+         }
          host_view_h->_drop_info = std::make_unique<drop_info>();
-         host_view_h->_drop_info->data["text/uri-list"] = ""; // We do not have the data yet
-         host_view_h->_drop_info->where = point{float(x), float(y)};
+         for (auto const& type : types)
+            host_view_h->_drop_info->data[type] = std::string{};   // no data yet
+         host_view_h->_drop_info->where = pos;
          base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::entering);
       }
       else
       {
+         host_view_h->_drop_info->where = pos;
          base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::hovering);
-         host_view_h->_drop_info->where = point{float(x), float(y)};
       }
-      host_view_h->_cursor_position = point{float(x), float(y)};
 
-      // You can set the drag context to indicate whether the drop is accepted or not
       gdk_drag_status(context, GDK_ACTION_COPY, time);
       return true;
    }
 
+   // GTK leaves before it drops, too.
    void on_drag_leave(GtkWidget* /* widget */, GdkDragContext* /* context */, guint /* time */, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      if (host_view_h->_drop_info)
+      if (host_view_h->_drop_info && host_view_h->_drop_pending.empty())
+      {
          base_view.track_drop(*host_view_h->_drop_info, cursor_tracking::leaving);
+         host_view_h->_drop_info.reset();
+      }
+   }
+
+   gboolean on_drag_drop(GtkWidget* widget, GdkDragContext* context, gint x, gint y, guint time, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      auto* host_view_h = platform_access::get_host_view(base_view);
+
+      auto names = offered_names(context);
+      host_view_h->_drop_info = std::make_unique<drop_info>();
+      host_view_h->_drop_info->where = point{float(x), float(y)};
+      host_view_h->_drop_pending.clear();
+      auto types = transfer::accepted_types(
+         transfer::mime_types_of(names), base_view.accepted_drop_types());
+      for (auto const& mime : types)
+      {
+         if (auto name = transfer::best_name(mime, names))
+            host_view_h->_drop_pending[gdk_atom_intern(name->c_str(), false)] = {mime, *name};
+      }
+      if (host_view_h->_drop_pending.empty())
+      {
+         host_view_h->_drop_info.reset();
+         gtk_drag_finish(context, false, false, time);
+         return true;
+      }
+
+      // Copy the targets first: the data may come back before the loop is
+      // done, and each reply takes its target off the pending list.
+      std::vector<GdkAtom> targets;
+      for (auto const& [target, type] : host_view_h->_drop_pending)
+         targets.push_back(target);
+      for (auto target : targets)
+         gtk_drag_get_data(widget, context, target, time);
+      return true;
    }
 
    void on_drag_data_received(
       GtkWidget* /* widget */, GdkDragContext* context, gint /* x */, gint /* y */
-    , GtkSelectionData* data, guint info, guint time, gpointer user_data)
+    , GtkSelectionData* data, guint /* info */, guint time, gpointer user_data)
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      bool success = false;
+      auto& pending = host_view_h->_drop_pending;
 
-      if (host_view_h->_drop_info)
+      auto i = pending.find(gtk_selection_data_get_target(data));
+      if (!host_view_h->_drop_info || i == pending.end())
+         return;
+
+      auto [mime, name] = i->second;
+      pending.erase(i);
+      gint length = gtk_selection_data_get_length(data);
+      if (length >= 0)
       {
-         auto& base_view = get(user_data);
-         auto* host_view_h = platform_access::get_host_view(base_view);
-
-         if (info == 0)
-         {
-            // The URIs come percent-encoded ("My%20File.wav"). Hand over
-            // the paths as the file system has them, as the other hosts
-            // do, so get_filepaths need not decode. A URI that is not a
-            // local file is passed as is.
-            std::string paths;
-            gchar** uris = gtk_selection_data_get_uris(data);
-            for (gchar** i = uris; i && *i; ++i)
-            {
-               if (!paths.empty())
-                  paths += "\n";
-               if (gchar* path = g_filename_from_uri(*i, nullptr, nullptr))
-               {
-                  paths += std::string("file://") + path;
-                  g_free(path);
-               }
-               else
-               {
-                  paths += *i;
-               }
-            }
-
-            host_view_h->_drop_info->data["text/uri-list"] = paths;
-            success = base_view.drop(*host_view_h->_drop_info);
-            g_strfreev(uris);
-         }
-
-         host_view_h->_drop_info.reset();
+         auto const* bytes = reinterpret_cast<char const*>(gtk_selection_data_get_data(data));
+         host_view_h->_drop_info->data[mime] =
+            transfer::from_wire(name, mime, std::string_view(bytes, std::size_t(length)));
       }
-      gtk_drag_finish(context, success, false, time);
+
+      if (pending.empty())
+      {
+         bool success = !host_view_h->_drop_info->data.empty()
+            && base_view.drop(*host_view_h->_drop_info);
+         host_view_h->_drop_info.reset();
+         gtk_drag_finish(context, success, false, time);
+      }
    }
 
    void on_size_allocate(GtkWidget* /*widget*/, GdkRectangle* alloc, gpointer user_data)
@@ -774,6 +831,8 @@ namespace cycfi::elements
          G_CALLBACK(on_drag_motion), &view);
       g_signal_connect(content_view, "drag-leave",
          G_CALLBACK(on_drag_leave), &view);
+      g_signal_connect(content_view, "drag-drop",
+         G_CALLBACK(on_drag_drop), &view);
       g_signal_connect(content_view, "drag-data-received",
          G_CALLBACK(on_drag_data_received), &view);
 
@@ -782,14 +841,9 @@ namespace cycfi::elements
       g_signal_connect(content_view, "notify::scale-factor",
          G_CALLBACK(on_scale_factor), &view);
 
-      // Enable drag-and-drop for uri-list(s)
-      static GtkTargetEntry target_entries[] =
-      {
-         {const_cast<char*>("text/uri-list"), 0, 0}
-      };
-
-      gtk_drag_dest_set(content_view, GTK_DEST_DEFAULT_ALL,
-         target_entries, G_N_ELEMENTS(target_entries), GDK_ACTION_COPY);
+      // Take drops of any type: the view's elements decide what they
+      // accept, so the motion, drop and data are handled here, not by GTK.
+      gtk_drag_dest_set(content_view, GtkDestDefaults(0), nullptr, 0, GDK_ACTION_COPY);
 
       // Add to the event masks rather than set them: the window may be
       // realized already, and GTK refuses a new mask on a realized widget.
@@ -990,15 +1044,9 @@ namespace cycfi::elements
       );
    }
 
-   std::string clipboard()
+   void base_view::accept_drop_types(mime_types const& types)
    {
-      GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-      gchar* text = gtk_clipboard_wait_for_text(clip);
-      if (!text)                    // empty, or not text
-         return {};
-      std::string result{text};
-      g_free(text);
-      return result;
+      _drop_types = types;
    }
 
    // Nothing to do here: this host finds its resources by path and needs
@@ -1008,10 +1056,152 @@ namespace cycfi::elements
    {
    }
 
-   void clipboard(std::string_view text)
+   ////////////////////////////////////////////////////////////////////////////
+   // The clipboard
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
    {
-      GtkClipboard* clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-      gtk_clipboard_set_text(clip, text.data(), text.size());
+      payload  the_clip_data;          // the clipboard, while we own it
+      bool     own_clip = false;
+
+      GtkClipboard* the_clipboard()
+      {
+         return gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+      }
+
+      std::string atom_name(GdkAtom atom)
+      {
+         std::string name;
+         if (gchar* n = gdk_atom_name(atom))
+         {
+            name = n;
+            g_free(n);
+         }
+         return name;
+      }
+
+      // The native names of the types the clipboard's owner offers.
+      std::vector<std::string> clipboard_names()
+      {
+         GdkAtom* targets = nullptr;
+         gint n = 0;
+         std::vector<std::string> names;
+         if (gtk_clipboard_wait_for_targets(the_clipboard(), &targets, &n))
+         {
+            for (gint i = 0; i != n; ++i)
+               names.push_back(atom_name(targets[i]));
+            g_free(targets);
+         }
+         return names;
+      }
+
+      void clip_get(GtkClipboard*, GtkSelectionData* selection, guint, gpointer)
+      {
+         GdkAtom target = gtk_selection_data_get_target(selection);
+         std::string name = atom_name(target);
+         if (auto mime = transfer::mime_type(name))
+         {
+            if (auto i = the_clip_data.find(*mime); i != the_clip_data.end())
+            {
+               auto bytes = transfer::to_wire(name, *mime, i->second);
+               gtk_selection_data_set(selection, target, 8,
+                  reinterpret_cast<guchar const*>(bytes.data()), gint(bytes.size()));
+            }
+         }
+      }
+
+      // Someone else's clipboard now, or ours replaced.
+      void clip_clear(GtkClipboard*, gpointer)
+      {
+         own_clip = false;
+         the_clip_data.clear();
+      }
+   }
+
+   std::vector<std::string> clipboard_types()
+   {
+      if (own_clip)
+      {
+         std::vector<std::string> types;
+         for (auto const& [type, data] : the_clip_data)
+            types.push_back(type);
+         return types;
+      }
+      return transfer::mime_types_of(clipboard_names());
+   }
+
+   payload get_clipboard(mime_types const& types)
+   {
+      payload result;
+      if (own_clip)
+      {
+         for (auto const& type : types)
+         {
+            if (auto i = the_clip_data.find(type); i != the_clip_data.end())
+               result.insert(*i);
+         }
+         return result;
+      }
+
+      auto offered = clipboard_names();
+      for (auto const& mime : types)
+      {
+         auto name = transfer::best_name(mime, offered);
+         if (!name)
+         {
+            // GTK converts text from encodings we do not read ourselves.
+            if (mime == "text/plain")
+            {
+               if (gchar* text = gtk_clipboard_wait_for_text(the_clipboard()))
+               {
+                  result[mime] = std::string{text};
+                  g_free(text);
+               }
+            }
+            continue;
+         }
+         GtkSelectionData* selection = gtk_clipboard_wait_for_contents(
+            the_clipboard(), gdk_atom_intern(name->c_str(), false));
+         if (!selection)
+            continue;
+         gint length = gtk_selection_data_get_length(selection);
+         if (length >= 0)
+         {
+            auto const* bytes = reinterpret_cast<char const*>(gtk_selection_data_get_data(selection));
+            result[mime] = transfer::from_wire(*name, mime, std::string_view(bytes, std::size_t(length)));
+         }
+         gtk_selection_data_free(selection);
+      }
+      return result;
+   }
+
+   void set_clipboard(payload const& data)
+   {
+      if (data.empty())
+      {
+         gtk_clipboard_clear(the_clipboard());
+         return;
+      }
+
+      GtkTargetList* list = gtk_target_list_new(nullptr, 0);
+      for (auto const& [type, entry] : data)
+      {
+         for (auto const& name : transfer::native_names(type))
+            gtk_target_list_add(list, gdk_atom_intern(name.c_str(), false), 0, 0);
+      }
+      gint n = 0;
+      GtkTargetEntry* targets = gtk_target_table_new_from_list(list, &n);
+
+      // Taking the clipboard clears what we held before (clip_clear), so
+      // the new payload is kept only after.
+      if (gtk_clipboard_set_with_data(the_clipboard(), targets, guint(n), clip_get, clip_clear, nullptr))
+      {
+         the_clip_data = data;
+         own_clip = true;
+         gtk_clipboard_set_can_store(the_clipboard(), nullptr, 0);
+      }
+      gtk_target_table_free(targets, n);
+      gtk_target_list_unref(list);
    }
 
    void set_cursor(cursor_type type)

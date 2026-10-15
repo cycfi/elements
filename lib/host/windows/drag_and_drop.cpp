@@ -5,6 +5,11 @@
 =============================================================================*/
 #include "drag_and_drop.hpp"
 #include "utils.hpp"
+#include "transfer.hpp"
+#include <algorithm>
+#include <optional>
+#include <string>
+#include <vector>
 
 #ifndef UNICODE
 # define UNICODE
@@ -59,14 +64,21 @@ STDMETHODIMP_(ULONG) DropTarget::Release()
 using cycfi::elements::cursor_tracking;
 
 // IDropTarget methods
+//
+// While the drag hovers, the drop names the types on offer, with no data;
+// the data is read on the drop.
 STDMETHODIMP DropTarget::DragEnter(IDataObject* data_obj, DWORD /*key_state*/, POINTL pt, DWORD* effect)
 {
-   makeDropInfo(data_obj);
+   makeDropInfo(data_obj, false);
    if (_drop_valid)
    {
       _drop_info.where = get_point(pt);
       _vptr->track_drop(_drop_info, cursor_tracking::entering);
       *effect &= DROPEFFECT_COPY;
+   }
+   else
+   {
+      *effect = DROPEFFECT_NONE;
    }
    return S_OK;
 }
@@ -79,6 +91,10 @@ STDMETHODIMP DropTarget::DragOver(DWORD /*key_state*/, POINTL pt, DWORD* effect)
       _vptr->track_drop(_drop_info, cursor_tracking::hovering);
       *effect &= DROPEFFECT_COPY;
    }
+   else
+   {
+      *effect = DROPEFFECT_NONE;
+   }
    return S_OK;
 }
 
@@ -86,65 +102,89 @@ STDMETHODIMP DropTarget::DragLeave()
 {
    if (_drop_valid)
       _vptr->track_drop(_drop_info, cursor_tracking::leaving);
+   _drop_valid = false;
    return S_OK;
 }
 
-STDMETHODIMP DropTarget::Drop(IDataObject* /*data_obj*/, DWORD /*key_state*/, POINTL pt, DWORD* /*effect*/)
+STDMETHODIMP DropTarget::Drop(IDataObject* data_obj, DWORD /*key_state*/, POINTL pt, DWORD* effect)
 {
+   bool success = false;
    if (_drop_valid)
    {
-      _drop_info.where = get_point(pt);
-      _vptr->drop(_drop_info);
+      makeDropInfo(data_obj, true);
+      if (_drop_valid)
+      {
+         _drop_info.where = get_point(pt);
+         success = _vptr->drop(_drop_info);
+      }
    }
+   _drop_valid = false;
+   *effect = success ? DROPEFFECT_COPY : DROPEFFECT_NONE;
    return S_OK;
 }
 
-namespace cycfi::elements
+namespace
 {
-   // UTF8 conversion utils defined in base_view.cpp
+   std::vector<UINT> offered_formats(IDataObject* data_obj)
+   {
+      std::vector<UINT> formats;
+      IEnumFORMATETC* e = nullptr;
+      if (SUCCEEDED(data_obj->EnumFormatEtc(DATADIR_GET, &e)) && e)
+      {
+         FORMATETC fmt;
+         while (e->Next(1, &fmt, nullptr) == S_OK)
+         {
+            if (fmt.ptd)
+               CoTaskMemFree(fmt.ptd);
+            if (fmt.tymed & TYMED_HGLOBAL)
+               formats.push_back(fmt.cfFormat);
+         }
+         e->Release();
+      }
+      return formats;
+   }
 
-   // Convert a wide Unicode string to an UTF8 string
-   std::string utf8_encode(std::wstring const& wstr);
-
-   // Convert an UTF8 string to a wide Unicode String
-   std::wstring utf8_decode(std::string const& str);
+   std::optional<std::string> format_bytes(IDataObject* data_obj, UINT format)
+   {
+      FORMATETC fmt = { CLIPFORMAT(format), nullptr, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+      STGMEDIUM stg_medium;
+      if (FAILED(data_obj->GetData(&fmt, &stg_medium)))
+         return std::nullopt;
+      std::optional<std::string> bytes;
+      if (stg_medium.tymed == TYMED_HGLOBAL)
+         bytes = cycfi::elements::transfer::global_bytes(stg_medium.hGlobal);
+      ReleaseStgMedium(&stg_medium);
+      return bytes;
+   }
 }
 
-void DropTarget::makeDropInfo(IDataObject* data_obj)
+void DropTarget::makeDropInfo(IDataObject* data_obj, bool with_data)
 {
-   using cycfi::elements::utf8_encode;
+   namespace transfer = cycfi::elements::transfer;
 
-   // Retrieve file paths from IDataObject
-   FORMATETC fmt = { CF_HDROP, nullptr, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
-   STGMEDIUM stg_medium;
-
-   _drop_valid = false;
-   if (SUCCEEDED(data_obj->GetData(&fmt, &stg_medium)))
+   auto formats = offered_formats(data_obj);
+   auto types = transfer::mime_types_of(formats);
+   if (auto const& accepted = _vptr->accepted_drop_types())
    {
-      HDROP drop = static_cast<HDROP>(GlobalLock(stg_medium.hGlobal));
-      if (UINT num_files = DragQueryFile(drop, 0xFFFFFFFF, nullptr, 0))
-      {
-         std::string paths;
-         for (UINT i = 0; i < num_files; ++i)
-         {
-            WCHAR path[MAX_PATH];
-            if (UINT length = DragQueryFileW(drop, i, path, MAX_PATH))
-            {
-               if (i != 0)
-                  paths += "\n";
-               std::wstring wpath(&path[0], length);
-               paths += std::string("file://") + utf8_encode(wpath);
-               _drop_valid = true;
-            }
-         }
-
-         if (_drop_valid)
-            _drop_info.data["text/uri-list"] = paths;
-      }
-
-      GlobalUnlock(stg_medium.hGlobal);
-      ReleaseStgMedium(&stg_medium);
+      // Only the types the view takes drops of.
+      types.erase(
+         std::remove_if(types.begin(), types.end(),
+            [&](auto const& type) { return !accepted->count(type); }),
+         types.end());
    }
+   _drop_info.data.clear();
+   if (with_data)
+   {
+      _drop_info.data = transfer::read(formats,
+         cycfi::elements::mime_types(types.begin(), types.end()),
+         [&](UINT format) { return format_bytes(data_obj, format); });
+   }
+   else
+   {
+      for (auto const& type : types)
+         _drop_info.data[type] = std::string{};
+   }
+   _drop_valid = !_drop_info.data.empty();
 }
 
 using cycfi::elements::point;

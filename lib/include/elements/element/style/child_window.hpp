@@ -13,18 +13,20 @@
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
-   // Basic Child Window (movable, non-closable)
+   // Basic Child Window (movable and resizable, non-closable)
    ////////////////////////////////////////////////////////////////////////////
    template <typename Content>
    auto basic_child_window(std::string title, rect bounds, Content&& content)
    {
       return child_window(bounds,
-         pane_ex(
-            movable(title_bar{}),
-            title,
-            std::forward<Content>(content),
-            get_theme().child_window_title_size,
-            get_theme().child_window_opacity
+         resizable(
+            pane_ex(
+               movable(title_bar{}),
+               title,
+               std::forward<Content>(content),
+               get_theme().child_window_title_size,
+               get_theme().child_window_opacity
+            )
          )
       );
    }
@@ -40,27 +42,30 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Closable Child Window (movable and closable)
+   // Closable Child Window (movable, resizable and closable)
    ////////////////////////////////////////////////////////////////////////////
    template <typename Content>
    auto closable_child_window(std::string title, rect bounds, Content&& content)
    {
       return child_window(bounds,
-         pane_ex(
-            movable(
-               layer(
-                  closable(
-                     align_right_middle(
-                        plain_icon_button(icons::cancel, 0.8)
-                     )
-                  ),
-                  title_bar{}
-               )
-            ),
-            title,
-            std::forward<Content>(content),
-            get_theme().child_window_title_size,
-            get_theme().child_window_opacity
+         resizable(
+            pane_ex(
+               movable(
+                  layer(
+                     closable(
+                        // Clear of the resizable edge's grip
+                        align_right_middle(margin_right(6,
+                           plain_icon_button(icons::cancel, 0.8)
+                        ))
+                     ),
+                     title_bar{}
+                  )
+               ),
+               title,
+               std::forward<Content>(content),
+               get_theme().child_window_title_size,
+               get_theme().child_window_opacity
+            )
          )
       );
    }

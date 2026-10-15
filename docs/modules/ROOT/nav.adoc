@@ -40,6 +40,9 @@
 **** xref:elements/status_bars.adoc[Status Bars]
 *** xref:elements/containers.adoc[Containers]
 **** xref:elements/ports.adoc[Ports and Scrollers]
+**** xref:elements/child_windows.adoc[Child Windows]
+**** xref:elements/splits.adoc[Splits]
+**** xref:elements/docking.adoc[Docking]
 *** xref:styles.adoc[Styles]
 **** xref:styles/marks.adoc[Marks and Scales]
 ** Support
@@ -51,4 +54,5 @@
 *** xref:support/text_utils.adoc[Text Utilities]
 *** xref:support/icons.adoc[Icons]
 *** xref:support/payload.adoc[Payload]
+*** xref:support/clipboard.adoc[Clipboard]
 *** xref:support/diagnostics.adoc[Logging and Diagnostics]

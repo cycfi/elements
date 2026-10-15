@@ -37,8 +37,10 @@ namespace cycfi::elements
       void                    prepare_subject(context& ctx) override;
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      mime_types              drop_types() const override;
 
       bool                    is_tracking() const     { return _is_tracking; }
+      bool                    accepts(drop_info const& info) const;
       mime_types const&       get_mime_types() const  { return _mime_types; }
       mime_types&             get_mime_types()        { return _mime_types; }
       std::string             class_name() const override;

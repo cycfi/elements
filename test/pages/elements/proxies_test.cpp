@@ -111,6 +111,11 @@ TEST_CASE("proxies page: a proxy forwards to its subject", "[proxies_page]")
    CHECK(p->stretch().x == probe.stretch().x);
    CHECK(p->span() == probe.span());
 
+   // So do the MIME types it takes drops of.
+   auto box = drop_box(label("Drop"), {"text/uri-list"});
+   auto proxied = margin({1, 1, 1, 1}, box);
+   CHECK(proxied.drop_types() == mime_types{"text/uri-list"});
+
    // Events too: the click lands on the subject with the inset bounds.
    auto before = p->prepares;
    tv.view_.click(left_button({100, 50}, true));

@@ -840,7 +840,7 @@ namespace cycfi::elements
       {
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
-         clipboard(to_utf8(get_text().substr(start, end_-start_)));
+         set_clipboard({{"text/plain", to_utf8(get_text().substr(start, end_-start_))}});
          delete_(false);
       }
    }
@@ -851,7 +851,7 @@ namespace cycfi::elements
       {
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
-         clipboard(to_utf8(get_text().substr(start, end_-start_)));
+         set_clipboard({{"text/plain", to_utf8(get_text().substr(start, end_-start_))}});
       }
    }
 
@@ -861,7 +861,7 @@ namespace cycfi::elements
       {
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
-         std::string ins = clipboard();
+         std::string ins = get_plain_text(get_clipboard({"text/plain"}));
          start += replace(start, end_-start_, ins);
          _select_end = _select_start = start;
       }
@@ -1126,7 +1126,7 @@ namespace cycfi::elements
          auto  end_ = std::max(start, end);
          auto  start_ = std::min(start, end);
 
-         std::u32string clip = to_utf32(clipboard());
+         std::u32string clip = to_utf32(get_plain_text(get_clipboard({"text/plain"})));
          if (clip.empty())
             return;
 

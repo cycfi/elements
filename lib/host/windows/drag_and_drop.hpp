@@ -37,13 +37,13 @@ private:
    STDMETHOD(DragLeave)();
    STDMETHOD(Drop)(IDataObject* data_obj, DWORD key_state, POINTL pt, DWORD* effect);
 
-   void  makeDropInfo(IDataObject* data_obj);
+   void  makeDropInfo(IDataObject* data_obj, bool with_data);
    point get_point(POINTL pt);
 
    ULONG       _ref_count;
    base_view*  _vptr = nullptr;
    drop_info   _drop_info;
-   bool        _drop_valid;
+   bool        _drop_valid = false;
    HWND        _hwnd;
 };
 

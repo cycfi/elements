@@ -63,7 +63,9 @@ Command on macOS, Control elsewhere.
 `base_view.hpp` also declares functions that act on the system, not on
 a view:
 
-* `clipboard()` and `clipboard(text)`: read and write the clipboard.
+* `set_clipboard`, `get_clipboard`, `clipboard_types` and
+  `clipboard_contains`: the clipboard, which holds a payload (see
+  xref:support/clipboard.adoc[Clipboard]).
 * `set_cursor`: set the cursor's shape.
 * `scroll_direction`: the sign, +1 or -1 on each axis, of the user's
   scroll setting (natural scrolling or not).
@@ -341,8 +343,10 @@ namespace cycfi::elements
       model_binder&           bindings() { return _bindings; }
    };
 
-   std::string clipboard();
-   void clipboard(std::string_view text);
+   std::vector<std::string> clipboard_types();
+   bool clipboard_contains(std::string_view mime_type);
+   payload get_clipboard(mime_types const& types);
+   void set_clipboard(payload const& data);
    void init_resources();
    void set_cursor(cursor_type type);
    point scroll_direction();

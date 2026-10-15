@@ -284,8 +284,8 @@ namespace
             case 5:                        // paste
             {
                if (s.chance(40))
-                  clipboard(clips[s.pick(int(clips.size()))]);
-               auto clip = to_utf32(clipboard());
+                  clipboard_text(clips[s.pick(int(clips.size()))]);
+               auto clip = to_utf32(clipboard_text());
                tv.view_.key(key_info{key_code::v, key_action::press, mod_action});
                if (live)
                {
@@ -385,7 +385,7 @@ namespace
                break;
             case 5:
                if (s.chance(40))
-                  clipboard(clips[s.pick(int(clips.size()))]);
+                  clipboard_text(clips[s.pick(int(clips.size()))]);
                tv.view_.key(key_info{key_code::v, key_action::press, mod_action});
                break;
             case 6:

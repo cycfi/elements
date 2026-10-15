@@ -10,6 +10,7 @@
 #include <artist/canvas.hpp>
 #include <elements/support/perf.hpp>
 #include "x11_host.hpp"
+#include "../common/transfer.hpp"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -44,7 +45,9 @@
 #include <dlfcn.h>
 #include <locale.h>
 #include <memory>
+#include <optional>
 #include <string>
+#include <vector>
 #include <string_view>
 #include <map>
 #include <array>
@@ -170,8 +173,9 @@ namespace cycfi::elements
 
       // XDND (drag-and-drop) state for the in-flight drag, if any.
       ::Window          xdnd_source = 0;   // the drag source window
-      Atom              xdnd_type   = 0;   // matched target atom, or None
       int               xdnd_version = 0;
+      std::vector<std::string> xdnd_offered;  // native type names on offer
+      std::vector<std::string> xdnd_types;    // the same, as MIME types
    };
 
    struct platform_access
@@ -188,6 +192,17 @@ namespace cycfi::elements
    ////////////////////////////////////////////////////////////////////////////
    namespace
    {
+      struct incr_transfer
+      {
+         ::Window    requestor;
+         Atom        property;
+         Atom        type;
+         std::string data;
+         std::size_t offset;
+         bool        done;
+         std::chrono::steady_clock::time_point last;   // of the last piece
+      };
+
       struct platform
       {
          Display*  display = nullptr;
@@ -198,8 +213,16 @@ namespace cycfi::elements
                    a_xdnd_status = 0, a_xdnd_leave = 0, a_xdnd_drop = 0,
                    a_xdnd_finished = 0, a_xdnd_selection = 0, a_xdnd_type_list = 0,
                    a_xdnd_action_copy = 0, a_uri_list = 0, a_xdnd_prop = 0;
-         ::Window  clip_window = 0;        // hidden selection-owner window
-         std::string clip_text;            // clipboard text we own
+         Atom      a_incr = 0;
+         ::Window  clip_window = 0;        // hidden selection window
+         payload   clip_data;              // the clipboard, while we own it
+
+         // Atom names, both ways, as they are asked for.
+         std::map<std::string, Atom> atoms;
+         std::map<Atom, std::string> names;
+
+         // Replies to other clients' requests being sent in pieces (INCR).
+         std::vector<incr_transfer> incr_transfers;
 
          std::map<::Window, base_view*>            views;
          std::map<::Window, std::function<void()>> closers;
@@ -222,6 +245,7 @@ namespace cycfi::elements
             a_utf8      = XInternAtom(display, "UTF8_STRING", False);
             a_targets   = XInternAtom(display, "TARGETS", False);
             a_clip_prop = XInternAtom(display, "ELEMENTS_CLIPBOARD", False);
+            a_incr      = XInternAtom(display, "INCR", False);
 
             a_xdnd_aware       = XInternAtom(display, "XdndAware", False);
             a_xdnd_enter       = XInternAtom(display, "XdndEnter", False);
@@ -241,6 +265,10 @@ namespace cycfi::elements
             clip_window = XCreateSimpleWindow(
                display, RootWindow(display, DefaultScreen(display)),
                -10, -10, 1, 1, 0, 0, 0);
+
+            // Selections are read into the clip window's properties, and
+            // large ones arrive in pieces, announced by property changes.
+            XSelectInput(display, clip_window, PropertyChangeMask);
          }
       };
 
@@ -400,11 +428,266 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Clipboard (CLIPBOARD selection)
+   // Selections: the clipboard (CLIPBOARD) and a drop (XdndSelection) are
+   // both read the same way, by asking the owner to convert the selection
+   // to a target type. We own CLIPBOARD after set_clipboard, and answer
+   // other clients' requests for it.
    ////////////////////////////////////////////////////////////////////////////
    namespace
    {
-      void handle_selection_request(XSelectionRequestEvent& req)
+      // Other clients' windows can go away, and their atoms can be bad,
+      // and Xlib's default error handler ends the process. Calls on them
+      // are made with the errors trapped: f's errors are ignored, and
+      // whether there were any is returned.
+      bool x_error_trapped = false;
+
+      int trap_x_error(Display*, XErrorEvent*)
+      {
+         x_error_trapped = true;
+         return 0;
+      }
+
+      template <typename F>
+      bool without_x_errors(F f)
+      {
+         auto* d = plat().display;
+         XSync(d, False);
+         x_error_trapped = false;
+         auto old = XSetErrorHandler(trap_x_error);
+         f();
+         XSync(d, False);
+         XSetErrorHandler(old);
+         return !x_error_trapped;
+      }
+
+      Atom atom(std::string const& name)
+      {
+         auto& p = plat();
+         if (auto i = p.atoms.find(name); i != p.atoms.end())
+            return i->second;
+         Atom a = XInternAtom(p.display, name.c_str(), False);
+         p.atoms[name] = a;
+         p.names[a] = name;
+         return a;
+      }
+
+      std::string atom_name(Atom a)
+      {
+         auto& p = plat();
+         if (a == None)
+            return {};
+         if (auto i = p.names.find(a); i != p.names.end())
+            return i->second;
+         std::string name;
+         without_x_errors(
+            [&]
+            {
+               if (char* n = XGetAtomName(p.display, a))
+               {
+                  name = n;
+                  XFree(n);
+               }
+            });
+         p.atoms[name] = a;
+         p.names[a] = name;
+         return name;
+      }
+
+      // Wait for an event of the type on the clip window that satisfies the
+      // predicate, up to the timeout. Other events of the type on the clip
+      // window are dropped: nothing else is waiting for them.
+      template <typename Pred>
+      bool wait_for(int type, XEvent& ev, Pred pred, int timeout_ms = 1000)
+      {
+         auto& p = plat();
+         XFlush(p.display);
+         for (int i = 0; i < timeout_ms; ++i)
+         {
+            while (XCheckTypedWindowEvent(p.display, p.clip_window, type, &ev))
+            {
+               if (pred(ev))
+                  return true;
+            }
+            usleep(1000);
+         }
+         return false;
+      }
+
+      // The bytes of a property, in the units of its format: chars for 8,
+      // shorts for 16 and longs (not 32-bit ints) for 32, as Xlib has them.
+      struct property
+      {
+         Atom        type = None;
+         int         format = 0;
+         std::string bytes;
+      };
+
+      property take_property(::Window w, Atom prop)
+      {
+         auto& p = plat();
+         property result;
+         unsigned long n = 0, after = 0;
+         unsigned char* data = nullptr;
+         if (XGetWindowProperty(p.display, w, prop, 0, LONG_MAX / 4, True,
+               AnyPropertyType, &result.type, &result.format, &n, &after, &data) == Success
+            && data)
+         {
+            std::size_t unit = result.format == 32 ? sizeof(long)
+                             : result.format == 16 ? sizeof(short) : 1;
+            result.bytes.assign(reinterpret_cast<char*>(data), n * unit);
+            XFree(data);
+         }
+         return result;
+      }
+
+      // Convert a selection to a target and read the result, following the
+      // INCR protocol when the owner sends it in pieces.
+      std::optional<property> read_selection(Atom selection, Atom target, ::Time t)
+      {
+         auto& p = plat();
+         XDeleteProperty(p.display, p.clip_window, p.a_clip_prop);
+         XConvertSelection(p.display, selection, target, p.a_clip_prop, p.clip_window, t);
+
+         XEvent ev;
+         bool got = wait_for(SelectionNotify, ev,
+            [&](XEvent& e)
+            {
+               return e.xselection.selection == selection
+                  && e.xselection.target == target;
+            });
+         if (!got || ev.xselection.property == None)
+            return std::nullopt;
+
+         auto result = take_property(p.clip_window, p.a_clip_prop);
+         if (result.type != p.a_incr)
+            return result;
+
+         // INCR: deleting the property (done by take_property) asks for the
+         // next piece; an empty piece ends the transfer.
+         result.bytes.clear();
+         for (;;)
+         {
+            bool more = wait_for(PropertyNotify, ev,
+               [&](XEvent& e)
+               {
+                  return e.xproperty.atom == p.a_clip_prop
+                     && e.xproperty.state == PropertyNewValue;
+               });
+            if (!more)
+               return std::nullopt;
+            auto piece = take_property(p.clip_window, p.a_clip_prop);
+            if (piece.type == None)
+               continue;      // the INCR announcement's own notification
+            if (piece.bytes.empty())
+               break;
+            result.type = piece.type;
+            result.format = piece.format;
+            result.bytes += piece.bytes;
+         }
+         return result;
+      }
+
+      std::vector<std::string> atom_names(Atom const* atoms, std::size_t n)
+      {
+         std::vector<std::string> names;
+         for (std::size_t i = 0; i != n; ++i)
+         {
+            if (atoms[i] != None)
+               names.push_back(atom_name(atoms[i]));
+         }
+         return names;
+      }
+
+      // The native names of the types the owner of the selection offers.
+      std::vector<std::string> selection_targets(Atom selection, ::Time t)
+      {
+         auto targets = read_selection(selection, plat().a_targets, t);
+         if (!targets || targets->format != 32)
+            return {};
+         return atom_names(
+            reinterpret_cast<Atom const*>(targets->bytes.data()),
+            targets->bytes.size() / sizeof(Atom));
+      }
+
+      // Read each of the MIME types asked for that are on offer.
+      payload read_payload(
+         Atom selection, ::Time t
+       , std::vector<std::string> const& offered, mime_types const& types)
+      {
+         payload result;
+         for (auto const& mime : types)
+         {
+            if (auto name = transfer::best_name(mime, offered))
+            {
+               if (auto data = read_selection(selection, atom(*name), t))
+                  result[mime] = transfer::from_wire(*name, mime, data->bytes);
+            }
+         }
+         return result;
+      }
+
+      bool own_clipboard()
+      {
+         auto& p = plat();
+         return XGetSelectionOwner(p.display, p.a_clipboard) == p.clip_window;
+      }
+
+      // Larger replies than this go in pieces (INCR), as the server may
+      // not take them in one request.
+      std::size_t max_reply_size()
+      {
+         auto& p = plat();
+         long max = XExtendedMaxRequestSize(p.display);
+         if (max == 0)
+            max = XMaxRequestSize(p.display);
+         return std::min<std::size_t>(std::size_t(max) * 4 - 1024, 256 * 1024);
+      }
+
+      // Send the next piece of an INCR reply, after the requestor deleted
+      // the last one. An empty piece ends it.
+      void send_incr_piece(incr_transfer& x)
+      {
+         auto& p = plat();
+         auto size = std::min(max_reply_size(), x.data.size() - x.offset);
+         XChangeProperty(p.display, x.requestor, x.property, x.type, 8,
+            PropModeReplace,
+            reinterpret_cast<unsigned char const*>(x.data.data() + x.offset), int(size));
+         x.offset += size;
+         x.last = std::chrono::steady_clock::now();
+         if (size == 0)
+            x.done = true;
+         XFlush(p.display);
+      }
+
+      // Forget the transfers that are done, and those whose requestor
+      // stopped taking pieces.
+      void forget_incr_transfers()
+      {
+         auto& p = plat();
+         auto expired = std::chrono::steady_clock::now() - std::chrono::seconds(10);
+         p.incr_transfers.erase(
+            std::remove_if(p.incr_transfers.begin(), p.incr_transfers.end(),
+               [&](auto const& x) { return x.done || x.last < expired; }),
+            p.incr_transfers.end());
+      }
+
+      void handle_incr_progress(XPropertyEvent& e)
+      {
+         auto& p = plat();
+         if (e.state != PropertyDelete)
+            return;
+         for (auto& x : p.incr_transfers)
+         {
+            if (x.requestor == e.window && x.property == e.atom && !x.done)
+            {
+               without_x_errors([&] { send_incr_piece(x); });
+               break;
+            }
+         }
+         forget_incr_transfers();
+      }
+
+      void answer_selection_request(XSelectionRequestEvent& req)
       {
          auto& p = plat();
          XSelectionEvent resp = {};
@@ -414,70 +697,98 @@ namespace cycfi::elements
          resp.selection = req.selection;
          resp.target    = req.target;
          resp.time      = req.time;
-         resp.property  = req.property;
+         resp.property  = req.property != None ? req.property : req.target;
 
-         if (req.target == p.a_targets)
+         forget_incr_transfers();
+         std::string target = atom_name(req.target);
+         std::optional<std::string> mime =
+            req.selection == p.a_clipboard ? transfer::mime_type(target) : std::nullopt;
+         auto entry = mime ? p.clip_data.find(*mime) : p.clip_data.end();
+
+         if (req.selection == p.a_clipboard && req.target == p.a_targets)
          {
-            Atom targets[] = {p.a_targets, p.a_utf8, XA_STRING};
-            XChangeProperty(p.display, req.requestor, req.property, XA_ATOM, 32,
-               PropModeReplace, (unsigned char*)targets,
-               int(sizeof(targets) / sizeof(targets[0])));
+            std::vector<Atom> targets = {p.a_targets};
+            for (auto const& [type, data] : p.clip_data)
+            {
+               for (auto const& name : transfer::native_names(type))
+                  targets.push_back(atom(name));
+            }
+            XChangeProperty(p.display, req.requestor, resp.property, XA_ATOM, 32,
+               PropModeReplace, reinterpret_cast<unsigned char*>(targets.data()),
+               int(targets.size()));
          }
-         else if (req.target == p.a_utf8 || req.target == XA_STRING)
+         else if (entry != p.clip_data.end())
          {
-            XChangeProperty(p.display, req.requestor, req.property, req.target, 8,
-               PropModeReplace, (unsigned char*)p.clip_text.data(),
-               int(p.clip_text.size()));
+            std::string bytes = transfer::to_wire(target, *mime, entry->second);
+            if (bytes.size() > max_reply_size())
+            {
+               // Too large for one reply: announce the size and send it in
+               // pieces as the requestor deletes each one.
+               XSelectInput(p.display, req.requestor, PropertyChangeMask);
+               long size = long(bytes.size());
+               XChangeProperty(p.display, req.requestor, resp.property, p.a_incr, 32,
+                  PropModeReplace, reinterpret_cast<unsigned char*>(&size), 1);
+               p.incr_transfers.push_back(
+                  {req.requestor, resp.property, req.target, std::move(bytes), 0, false,
+                   std::chrono::steady_clock::now()});
+            }
+            else
+            {
+               XChangeProperty(p.display, req.requestor, resp.property, req.target, 8,
+                  PropModeReplace, reinterpret_cast<unsigned char const*>(bytes.data()),
+                  int(bytes.size()));
+            }
          }
          else
          {
-            resp.property = None;
+            resp.property = None;   // MULTIPLE, or a type we do not hold
          }
 
          XSendEvent(p.display, req.requestor, False, 0, (XEvent*)&resp);
          XFlush(p.display);
       }
+
+      // The requestor may be gone by the time we answer.
+      void handle_selection_request(XSelectionRequestEvent& req)
+      {
+         without_x_errors([&] { answer_selection_request(req); });
+      }
    }
 
-   std::string clipboard()
+   std::vector<std::string> clipboard_types()
    {
       auto& p = plat();
-      if (XGetSelectionOwner(p.display, p.a_clipboard) == p.clip_window)
-         return p.clip_text;   // we own it
-
-      XConvertSelection(p.display, p.a_clipboard, p.a_utf8, p.a_clip_prop,
-         p.clip_window, CurrentTime);
-      XFlush(p.display);
-
-      // Wait (bounded) for the SelectionNotify reply.
-      XEvent ev;
-      bool got = false;
-      for (int i = 0; i < 200 && !got; ++i)
+      if (own_clipboard())
       {
-         if (XCheckTypedWindowEvent(p.display, p.clip_window, SelectionNotify, &ev))
-            got = true;
-         else
-            usleep(1000);
+         std::vector<std::string> types;
+         for (auto const& [type, data] : p.clip_data)
+            types.push_back(type);
+         return types;
       }
-      if (!got || ev.xselection.property == None)
-         return {};
-
-      Atom type; int fmt; unsigned long nitems, after; unsigned char* data = nullptr;
-      XGetWindowProperty(p.display, p.clip_window, p.a_clip_prop, 0, ~0L, True,
-         AnyPropertyType, &type, &fmt, &nitems, &after, &data);
-      std::string result;
-      if (data)
-      {
-         result.assign((char*)data, nitems);
-         XFree(data);
-      }
-      return result;
+      return transfer::mime_types_of(selection_targets(p.a_clipboard, CurrentTime));
    }
 
-   void clipboard(std::string_view text)
+   payload get_clipboard(mime_types const& types)
    {
       auto& p = plat();
-      p.clip_text.assign(text);
+      if (own_clipboard())
+      {
+         payload result;
+         for (auto const& type : types)
+         {
+            if (auto i = p.clip_data.find(type); i != p.clip_data.end())
+               result.insert(*i);
+         }
+         return result;
+      }
+      auto offered = selection_targets(p.a_clipboard, CurrentTime);
+      return read_payload(p.a_clipboard, CurrentTime, offered, types);
+   }
+
+   void set_clipboard(payload const& data)
+   {
+      auto& p = plat();
+      p.clip_data = data;
       XSetSelectionOwner(p.display, p.a_clipboard, p.clip_window, CurrentTime);
       XFlush(p.display);
    }
@@ -821,66 +1132,13 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Drag-and-drop (XDND target side) — mirrors the GTK host's drag-dest:
-   // accepts a text/uri-list drop and routes it to base_view::track_drop/drop.
+   // Drag-and-drop (XDND target side): a drop is a selection, XdndSelection,
+   // read like the clipboard. While the drag hovers, the payload holds the
+   // MIME types on offer, with no data; the data is read on the drop.
    ////////////////////////////////////////////////////////////////////////////
    namespace
    {
       constexpr long the_xdnd_version = 5;
-
-      std::string percent_decode(std::string_view s)
-      {
-         auto hex = [](char c) -> int
-         {
-            if (c >= '0' && c <= '9') return c - '0';
-            if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-            if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-            return -1;
-         };
-         std::string out;
-         out.reserve(s.size());
-         for (std::size_t i = 0; i < s.size(); ++i)
-         {
-            if (s[i] == '%' && i + 2 < s.size())
-            {
-               int hi = hex(s[i+1]), lo = hex(s[i+2]);
-               if (hi >= 0 && lo >= 0)
-               {
-                  out += char((hi << 4) | lo);
-                  i += 2;
-                  continue;
-               }
-            }
-            out += s[i];
-         }
-         return out;
-      }
-
-      // Convert a raw text/uri-list selection (CRLF lines, percent-encoded,
-      // possibly with '#' comment lines) into the '\n'-separated, decoded form
-      // the elements payload parser (get_filepaths) expects.
-      std::string normalize_uri_list(char const* data, unsigned long n)
-      {
-         std::string_view in(data, n);
-         std::string out;
-         std::size_t i = 0;
-         while (i < in.size())
-         {
-            std::size_t e = in.find('\n', i);
-            std::string_view line =
-               in.substr(i, e == std::string_view::npos ? std::string_view::npos : e - i);
-            i = (e == std::string_view::npos) ? in.size() : e + 1;
-            while (!line.empty() &&
-                   (line.back() == '\r' || line.back() == ' ' || line.back() == '\t'))
-               line.remove_suffix(1);
-            if (line.empty() || line.front() == '#')
-               continue;
-            if (!out.empty())
-               out += '\n';
-            out += percent_decode(line);
-         }
-         return out;
-      }
 
       void send_xdnd(::Window target, Atom message,
          long d0, long d1, long d2, long d3, long d4)
@@ -894,32 +1152,35 @@ namespace cycfi::elements
          m.format       = 32;
          m.data.l[0] = d0; m.data.l[1] = d1; m.data.l[2] = d2;
          m.data.l[3] = d3; m.data.l[4] = d4;
-         XSendEvent(p.display, target, False, NoEventMask, (XEvent*)&m);
-         XFlush(p.display);
+         without_x_errors(   // the source may be gone
+            [&] { XSendEvent(p.display, target, False, NoEventMask, (XEvent*)&m); });
       }
 
       // The offered types are inline in XdndEnter (≤3) or, if the low bit of
       // data.l[1] is set, in the source's XdndTypeList property.
-      bool source_offers_uri_list(XClientMessageEvent& e)
+      std::vector<std::string> source_offers(XClientMessageEvent& e)
       {
          auto& p = plat();
          if (e.data.l[1] & 1)
          {
-            Atom type; int fmt; unsigned long n, after; unsigned char* data = nullptr;
-            bool found = false;
-            if (XGetWindowProperty(p.display, e.data.l[0], p.a_xdnd_type_list, 0, 1024,
-                  False, XA_ATOM, &type, &fmt, &n, &after, &data) == Success && data)
+            Atom type; int fmt; unsigned long n = 0, after; unsigned char* data = nullptr;
+            without_x_errors(   // the source may be gone
+               [&]
+               {
+                  if (XGetWindowProperty(p.display, e.data.l[0], p.a_xdnd_type_list, 0, 1024,
+                     False, XA_ATOM, &type, &fmt, &n, &after, &data) != Success)
+                     data = nullptr;
+               });
+            std::vector<std::string> names;
+            if (data)
             {
-               Atom* atoms = reinterpret_cast<Atom*>(data);
-               for (unsigned long i = 0; i < n && !found; ++i)
-                  found = (atoms[i] == p.a_uri_list);
+               names = atom_names(reinterpret_cast<Atom*>(data), n);
                XFree(data);
             }
-            return found;
+            return names;
          }
-         return Atom(e.data.l[2]) == p.a_uri_list
-             || Atom(e.data.l[3]) == p.a_uri_list
-             || Atom(e.data.l[4]) == p.a_uri_list;
+         Atom inline_types[] = {Atom(e.data.l[2]), Atom(e.data.l[3]), Atom(e.data.l[4])};
+         return atom_names(inline_types, 3);
       }
 
       point xdnd_logical_pos(host_view* h, long packed_xy)
@@ -941,20 +1202,24 @@ namespace cycfi::elements
          {
             h->xdnd_source  = e.data.l[0];
             h->xdnd_version = (e.data.l[1] >> 24) & 0xff;
-            h->xdnd_type    = source_offers_uri_list(e) ? p.a_uri_list : None;
+            h->xdnd_offered = source_offers(e);
+            h->xdnd_types   = transfer::accepted_types(
+               transfer::mime_types_of(h->xdnd_offered), view.accepted_drop_types());
          }
          else if (e.message_type == p.a_xdnd_position)
          {
             h->xdnd_source = e.data.l[0];
             point pos = xdnd_logical_pos(h, e.data.l[2]);
             h->cursor_position = pos;
+            bool accept = !h->xdnd_types.empty();
 
-            if (h->xdnd_type != None)
+            if (accept)
             {
                if (!h->_drop_info)
                {
                   h->_drop_info = std::make_unique<drop_info>();
-                  h->_drop_info->data["text/uri-list"] = std::string{};
+                  for (auto const& type : h->xdnd_types)
+                     h->_drop_info->data[type] = std::string{};   // no data yet
                   h->_drop_info->where = pos;
                   view.track_drop(*h->_drop_info, cursor_tracking::entering);
                }
@@ -965,11 +1230,12 @@ namespace cycfi::elements
                }
             }
 
-            // Accept (action copy) iff we matched a target; rect = 0 so the
-            // source keeps sending position updates for every move.
+            // Accept (action copy) if the view takes any of the types on
+            // offer; rect = 0 so the source keeps sending position updates
+            // for every move.
             send_xdnd(h->xdnd_source, p.a_xdnd_status, long(h->window),
-               h->xdnd_type != None ? 1 : 0, 0, 0,
-               h->xdnd_type != None ? long(p.a_xdnd_action_copy) : long(None));
+               accept ? 1 : 0, 0, 0,
+               accept ? long(p.a_xdnd_action_copy) : long(None));
          }
          else if (e.message_type == p.a_xdnd_leave)
          {
@@ -979,7 +1245,8 @@ namespace cycfi::elements
                h->_drop_info.reset();
             }
             h->xdnd_source = 0;
-            h->xdnd_type   = None;
+            h->xdnd_offered.clear();
+            h->xdnd_types.clear();
          }
          else if (e.message_type == p.a_xdnd_drop)
          {
@@ -987,34 +1254,14 @@ namespace cycfi::elements
             ::Time   t = e.data.l[2] ? ::Time(e.data.l[2]) : CurrentTime;
             bool success = false;
 
-            if (h->xdnd_type != None && h->_drop_info)
+            if (h->_drop_info)
             {
-               XConvertSelection(p.display, p.a_xdnd_selection, h->xdnd_type,
-                  p.a_xdnd_prop, h->window, t);
-               XFlush(p.display);
-
-               // Wait (bounded) for the conversion reply on our window.
-               XEvent ev;
-               bool got = false;
-               for (int i = 0; i < 500 && !got; ++i)
+               mime_types types(h->xdnd_types.begin(), h->xdnd_types.end());
+               auto data = read_payload(p.a_xdnd_selection, t, h->xdnd_offered, types);
+               if (!data.empty())
                {
-                  if (XCheckTypedWindowEvent(p.display, h->window, SelectionNotify, &ev))
-                     got = true;
-                  else
-                     usleep(1000);
-               }
-               if (got && ev.xselection.property != None)
-               {
-                  Atom type; int fmt; unsigned long n, after; unsigned char* data = nullptr;
-                  XGetWindowProperty(p.display, h->window, p.a_xdnd_prop, 0, ~0L, True,
-                     AnyPropertyType, &type, &fmt, &n, &after, &data);
-                  if (data)
-                  {
-                     h->_drop_info->data["text/uri-list"] =
-                        normalize_uri_list(reinterpret_cast<char*>(data), n);
-                     XFree(data);
-                     success = view.drop(*h->_drop_info);
-                  }
+                  h->_drop_info->data = std::move(data);
+                  success = view.drop(*h->_drop_info);
                }
             }
 
@@ -1025,7 +1272,8 @@ namespace cycfi::elements
 
             h->_drop_info.reset();
             h->xdnd_source = 0;
-            h->xdnd_type   = None;
+            h->xdnd_offered.clear();
+            h->xdnd_types.clear();
          }
       }
    }
@@ -1263,7 +1511,16 @@ namespace cycfi::elements
          return;
       }
       if (ev.type == SelectionClear)
+      {
+         // Someone else's now, unless we took it back since.
+         auto& p = plat();
+         if (ev.xselectionclear.selection == p.a_clipboard
+            && XGetSelectionOwner(p.display, p.a_clipboard) != p.clip_window)
+            p.clip_data.clear();
          return;
+      }
+      if (ev.type == PropertyNotify && !plat().incr_transfers.empty())
+         handle_incr_progress(ev.xproperty);
 
       // Window-close protocol.
       if (ev.type == ClientMessage &&
@@ -1462,5 +1719,10 @@ namespace cycfi::elements
    {
       invalidate(_view, area);
       do_render(*this);
+   }
+
+   void base_view::accept_drop_types(mime_types const& types)
+   {
+      _drop_types = types;
    }
 }

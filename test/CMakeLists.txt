@@ -33,8 +33,13 @@ set(elements_test_sources
    lib/status_bar_test.cpp
    lib/scroller_test.cpp
    lib/view_layers_test.cpp
+   lib/child_window_test.cpp
+   lib/split_test.cpp
+   lib/dock_test.cpp
+   lib/clipboard_test.cpp
 
    # The documentation's page tests, one per page, by section
+   pages/aspects_test.cpp
    pages/view_test.cpp
    pages/support/canvas_test.cpp
    pages/support/context_test.cpp
@@ -44,6 +49,7 @@ set(elements_test_sources
    pages/support/text_utils_test.cpp
    pages/support/icons_test.cpp
    pages/support/payload_test.cpp
+   pages/support/clipboard_test.cpp
    pages/support/diagnostics_test.cpp
    pages/elements/element_test.cpp
    pages/elements/proxies_test.cpp
@@ -61,6 +67,9 @@ set(elements_test_sources
    pages/elements/images_test.cpp
    pages/elements/status_bars_test.cpp
    pages/elements/ports_test.cpp
+   pages/elements/child_windows_test.cpp
+   pages/elements/splits_test.cpp
+   pages/elements/docking_test.cpp
    pages/layout/collapsible_test.cpp
    pages/styles/styles_test.cpp
    pages/styles/marks_test.cpp

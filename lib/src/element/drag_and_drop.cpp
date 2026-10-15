@@ -38,14 +38,19 @@ namespace cycfi::elements
          _mime_types.insert(std::move(id));
    }
 
-   void drop_receiver::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
+   // Whether the drop holds any of the MIME types this receiver takes.
+   bool drop_receiver::accepts(drop_info const& info) const
    {
-      // Return early if none of registered mime types is in the `drop_info`
-      if (!std::any_of(_mime_types.begin(), _mime_types.end(),
+      return std::any_of(_mime_types.begin(), _mime_types.end(),
          [&](auto const& item)
          {
             return info.data.find(item) != info.data.end();
-         }))
+         });
+   }
+
+   void drop_receiver::track_drop(context const& ctx, drop_info const& info, cursor_tracking status)
+   {
+      if (!accepts(info))
          return;
 
       auto new_is_tracking = status != cursor_tracking::leaving;
@@ -60,6 +65,19 @@ namespace cycfi::elements
    {
       _is_tracking = false;
       return false;
+   }
+
+   mime_types drop_receiver::drop_types() const
+   {
+      // Not the receiver's own id, which names drags within the view only.
+      auto types = proxy_base::drop_types();
+      auto id = address_to_string(const_cast<drop_receiver*>(this));
+      for (auto const& type : _mime_types)
+      {
+         if (type != id)
+            types.insert(type);
+      }
+      return types;
    }
 
    drop_box_element::drop_box_element(std::initializer_list<std::string> mime_types_)
@@ -90,6 +108,8 @@ namespace cycfi::elements
    bool drop_box_element::drop(context const& ctx, drop_info const& info)
    {
       base_type::drop(ctx, info);
+      if (!accepts(info))
+         return false;         // none of the box's types: not for on_drop
       bool r = on_drop(info);
       ctx.view.refresh(ctx);
       return r;

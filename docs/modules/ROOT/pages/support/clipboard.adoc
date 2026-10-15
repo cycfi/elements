@@ -1,0 +1,188 @@
+= Clipboard
+
+include::../common.adoc[]
+
+== Overview
+
+The clipboard holds a xref:support/payload.adoc[payload], as a drop
+does: one entry per format, keyed by MIME type. Copying puts every
+format the data has on the clipboard, so each application that pastes
+takes the one it understands best. Pasting asks for the formats the
+caller can use, and gets those the clipboard holds.
+
+```c++
+// Copy: the text, and the same as HTML.
+set_clipboard({
+   {"text/plain", std::string{"hello"}},
+   {"text/html", std::string{"<b>hello</b>"}}
+});
+
+// Paste: HTML if it is there, text if not.
+auto data = get_clipboard({"text/html", "text/plain"});
+```
+
+`clipboard_types()` lists the MIME types the clipboard holds, and
+`clipboard_contains(type)` asks for one, without fetching any data: a
+Paste menu item can be enabled or not this way.
+
+=== Formats
+
+Text is `"text/plain"`, a `std::string` of UTF-8; `get_plain_text`
+reads it from a payload. Files are `"text/uri-list"`, one `file://` URI
+per line, as in a drop (see xref:support/payload.adoc[Payload]). Each
+host maps the common MIME types to its own formats, so the data goes to
+and comes from other applications:
+
+[cols="1,2,2"]
+|===
+| MIME type | macOS | Windows
+
+| `"text/plain"`
+| String
+| `CF_UNICODETEXT`, and `CF_TEXT` when read
+
+| `"text/uri-list"`
+| File URL
+| `CF_HDROP`
+
+| `"text/html"`
+| HTML
+| `"HTML Format"`
+
+| `"image/png"`
+| PNG
+| `"PNG"`
+|===
+
+macOS also has types of its own for RTF, CSV, JSON, PDF, TIFF, JPEG,
+GIF and SVG. On X11, Wayland and GTK, formats are named by MIME type
+already; text is offered and read under its other names as well, such
+as `UTF8_STRING` and `text/plain;charset=utf-8`. Any other MIME type
+is passed through under its own name, for data exchanged between
+applications that know it.
+
+Whatever was put on the clipboard, a type that starts with `text/`
+comes back as a `std::string`, and any other as a
+`std::vector<std::byte>`.
+
+=== Drop Types
+
+The host is told which MIME types the view takes drops of, so that it
+takes a drag only if it offers one of them, and reads only those on the
+drop. An element names the types it takes in `drop_types()`; a
+container names its children's. The view gathers them from its content
+when the content is set and laid out, and tells the host. A
+`drop_receiver` names the MIME types it was made with.
+
+NOTE: An element that overrides `drop` must also override `drop_types`
+to name what it takes: the host offers it nothing else.
+
+=== The Text Functions
+
+`clipboard()` and `clipboard(text)`, which read and write text only,
+remain, deprecated: they are `get_plain_text(get_clipboard({"text/plain"}))`
+and `set_clipboard({{"text/plain", text}})`.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   using mime_types = std::set<std::string>;
+
+   // The MIME types the clipboard holds now. No data is fetched.
+   std::vector<std::string> clipboard_types();
+
+   // Whether the clipboard holds data of the MIME type. No data is fetched.
+   bool clipboard_contains(std::string_view mime_type);
+
+   // The data of each of the MIME types the clipboard holds now. Types the
+   // clipboard does not hold are left out: an empty payload means there is
+   // nothing there that the caller can use.
+   payload get_clipboard(mime_types const& types);
+
+   // Replace what the clipboard holds with the payload, every entry in it.
+   void set_clipboard(payload const& data);
+
+   bool                    contains_plain_text(payload const& data);
+   std::string             get_plain_text(payload const& data);
+
+   [[deprecated("Use get_plain_text(get_clipboard({\"text/plain\"})) instead.")]]
+   inline std::string clipboard();
+
+   [[deprecated("Use set_clipboard({{\"text/plain\", text}}) instead.")]]
+   inline void clipboard(std::string_view text);
+}
+```
+
+The clipboard functions are declared in `base_view.hpp`, `mime_types`
+and the text functions in `support/payload.hpp`. `element::drop_types`
+is on the xref:elements/element.adoc[Element] page.
+
+== Expressions
+
+=== Notation
+
+`pl`:: A `payload`.
+`t`:: A `mime_types`, a set of MIME types.
+`mime`:: A MIME type.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `set_clipboard(pl)`
+| Replace what the clipboard holds with every entry of `pl`.
+
+| `get_clipboard(t)`
+| The entries of the types in `t` that the clipboard holds.
+
+| `clipboard_types()`
+| The MIME types the clipboard holds, as a `std::vector<std::string>`.
+
+| `clipboard_contains(mime)`
+| Whether the clipboard holds `mime`.
+
+| `contains_plain_text(pl)`
+| Whether `pl` has a `"text/plain"` entry that is text.
+
+| `get_plain_text(pl)`
+| The `"text/plain"` entry of `pl`, or an empty string.
+|===
+
+== Example
+
+Copy and paste of a document's selection, as text for other
+applications and in the application's own format for itself:
+
+```c++
+void copy(selection const& sel)
+{
+   set_clipboard({
+      {"text/plain", sel.as_text()},
+      {"application/x-my-app", sel.serialize()}      // std::vector<std::byte>
+   });
+}
+
+void paste(document& doc)
+{
+   auto data = get_clipboard({"application/x-my-app", "text/plain"});
+   if (auto i = data.find("application/x-my-app"); i != data.end())
+      doc.insert_serialized(std::get<std::vector<std::byte>>(i->second));
+   else if (contains_plain_text(data))
+      doc.insert_text(get_plain_text(data));
+}
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

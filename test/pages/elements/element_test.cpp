@@ -179,6 +179,7 @@ TEST_CASE("element page: the defaults", "[element_page]")
    CHECK_FALSE(e.cursor(ctx, {5, 5}, cursor_tracking::hovering));
    CHECK_FALSE(e.scroll(ctx, {0, 1}, {5, 5}));
    CHECK_FALSE(e.drop(ctx, drop_info{}));
+   CHECK(e.drop_types().empty());
 
    // The base keeps no enabled state.
    e.enable(false);

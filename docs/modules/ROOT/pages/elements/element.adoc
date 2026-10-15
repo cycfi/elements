@@ -91,6 +91,7 @@ or, for this header alone:
 
       virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
       virtual bool            drop(context const& ctx, drop_info const& info);
+      virtual mime_types      drop_types() const;
 
       enum tracking { none, begin_tracking, while_tracking, end_tracking };
 
@@ -378,6 +379,13 @@ happens only if it declines.
                                       Return `true` if taken.
                                       The default returns
                                       `false`.                 | `bool`
+| `e.drop_types()`                  | The MIME types `e` and
+                                      the elements it holds
+                                      take drops of. The view
+                                      tells its host, which
+                                      offers drops of those
+                                      types only. The default
+                                      is none.                 | `mime_types`
 |===
 
 === Tracking

@@ -106,6 +106,7 @@ namespace cycfi::elements
 
       virtual void            track_drop(context const& ctx, drop_info const& info, cursor_tracking status);
       virtual bool            drop(context const& ctx, drop_info const& info);
+      virtual mime_types      drop_types() const;
 
       /**
        * \enum element::tracking

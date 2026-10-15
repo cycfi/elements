@@ -47,6 +47,20 @@ namespace cycfi::elements
       }
       return paths;
    }
+
+   bool contains_plain_text(payload const& data)
+   {
+      auto i = data.find("text/plain");
+      return i != data.end() && std::holds_alternative<std::string>(i->second);
+   }
+
+   std::string get_plain_text(payload const& data)
+   {
+      if (auto i = data.find("text/plain"); i != data.end())
+      {
+         if (auto const* text = std::get_if<std::string>(&i->second))
+            return *text;
+      }
+      return {};
+   }
 }
-
-

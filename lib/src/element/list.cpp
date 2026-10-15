@@ -107,6 +107,18 @@ namespace cycfi::elements
       return *(_cells[ix].elem_ptr =_composer->compose(ix)).get();
    }
 
+   // Only the cells the list holds now: at() would make the others.
+   mime_types list::drop_types() const
+   {
+      mime_types types;
+      for (auto const& cell : _cells)
+      {
+         if (cell.elem_ptr)
+            types.merge(cell.elem_ptr->drop_types());
+      }
+      return types;
+   }
+
    view_limits list::limits(basic_context const& ctx) const
    {
       if (_composer)

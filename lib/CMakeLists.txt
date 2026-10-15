@@ -105,12 +105,15 @@ set(ELEMENTS_SOURCES
    src/element/style/thumbwheel.cpp
    src/element/text.cpp
    src/element/thumbwheel.cpp
+   src/element/dock.cpp
+   src/element/split.cpp
    src/element/tile.cpp
    src/element/tooltip.cpp
    src/support/draw_utils.cpp
    src/support/error_handler.cpp
    src/support/log.cpp
    src/support/trace.cpp
+   src/support/clipboard.cpp
    src/support/payload.cpp
    src/support/receiver.cpp
    src/support/text_utils.cpp
@@ -176,6 +179,8 @@ set(ELEMENTS_HEADERS
    include/elements/element/style/thumbwheel.hpp
    include/elements/element/text.hpp
    include/elements/element/thumbwheel.hpp
+   include/elements/element/dock.hpp
+   include/elements/element/split.hpp
    include/elements/element/tile.hpp
    include/elements/element/tracker.hpp
    include/elements/support.hpp
@@ -238,6 +243,8 @@ elseif (WIN32)
       host/windows/key.cpp
       host/windows/window.cpp
       host/windows/drag_and_drop.cpp
+      host/windows/transfer.hpp
+      host/windows/transfer.cpp
    )
 endif()
 

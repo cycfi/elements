@@ -13,6 +13,11 @@
 #include <dlfcn.h>
 #include <memory>
 #include <map>
+#include <optional>
+#include <algorithm>
+#include <string>
+#include <utility>
+#include <vector>
 #include <infra/filesystem.hpp>
 #include <elements/support/perf.hpp>
 #include <chrono>
@@ -214,6 +219,194 @@ namespace
          return false;
       return _view.text(info);
    }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Pasteboards: the clipboard is the general pasteboard, and a drop comes
+   // on the dragging pasteboard. Both are read and written the same way.
+   ////////////////////////////////////////////////////////////////////////////
+
+   using type_map = std::vector<std::pair<std::string, NSPasteboardType>>;
+
+   // The MIME types with a pasteboard type of their own, which the system
+   // declares. Any other MIME type goes on the pasteboard under its own
+   // name, which the pasteboard takes as a type of its own making.
+   type_map const& known_types()
+   {
+      static type_map const types = []
+      {
+         type_map types = {
+            {"text/plain", NSPasteboardTypeString},
+            {"text/uri-list", NSPasteboardTypeFileURL},
+            {"text/html", NSPasteboardTypeHTML},
+            {"text/rtf", NSPasteboardTypeRTF},
+            {"text/csv", @"public.comma-separated-values-text"},
+            {"application/json", @"public.json"},
+            {"application/pdf", NSPasteboardTypePDF},
+            {"image/png", NSPasteboardTypePNG},
+            {"image/tiff", NSPasteboardTypeTIFF},
+            {"image/jpeg", @"public.jpeg"},
+            {"image/gif", @"com.compuserve.gif"},
+            {"image/svg+xml", @"public.svg-image"}
+         };
+         return types;
+      }();
+      return types;
+   }
+
+   NSPasteboardType pasteboard_type(std::string const& mime)
+   {
+      for (auto const& [m, type] : known_types())
+      {
+         if (m == mime)
+            return type;
+      }
+      return [NSString stringWithUTF8String : mime.c_str()];
+   }
+
+   // The MIME type of a pasteboard type, or empty if it has none: a
+   // pasteboard type of its own we do not know, or another name for one
+   // we do.
+   std::string mime_type(NSPasteboardType type)
+   {
+      for (auto const& [mime, t] : known_types())
+      {
+         if ([t isEqualToString : type])
+            return mime;
+      }
+      std::string name = [type UTF8String];
+      if (name.find('/') != std::string::npos)
+         return name;
+      return {};
+   }
+
+   std::vector<std::string> pasteboard_mime_types(NSPasteboard* pasteboard)
+   {
+      std::vector<std::string> types;
+      for (NSPasteboardType type in [pasteboard types])
+      {
+         auto mime = mime_type(type);
+         if (!mime.empty() && std::find(types.begin(), types.end(), mime) == types.end())
+            types.push_back(mime);
+      }
+      return types;
+   }
+
+   std::string file_paths(NSPasteboard* pasteboard)
+   {
+      NSDictionary* options = @{NSPasteboardURLReadingFileURLsOnlyKey:@YES};
+      NSArray* urls = [pasteboard readObjectsForClasses : @[[NSURL class]] options : options];
+      std::string paths;
+      for (NSURL* url in urls)
+      {
+         if (!paths.empty())
+            paths += "\n";
+         paths += std::string("file://") + [url fileSystemRepresentation];
+      }
+      return paths;
+   }
+
+   // Whether the pasteboard holds the MIME type. Asked of the pasteboard,
+   // not looked up in its types: it may list a type under another name of
+   // its own making.
+   bool pasteboard_has(NSPasteboard* pasteboard, std::string const& mime)
+   {
+      return [pasteboard availableTypeFromArray : @[pasteboard_type(mime)]] != nil;
+   }
+
+   ph::payload read_pasteboard(NSPasteboard* pasteboard, ph::mime_types const& types)
+   {
+      ph::payload result;
+      for (auto const& mime : types)
+      {
+         if (!pasteboard_has(pasteboard, mime))
+            continue;
+
+         if (mime == "text/plain")
+         {
+            if (NSString* text = [pasteboard stringForType : NSPasteboardTypeString])
+               result[mime] = std::string{[text UTF8String]};
+         }
+         else if (mime == "text/uri-list")
+         {
+            if (auto paths = file_paths(pasteboard); !paths.empty())
+               result[mime] = paths;
+         }
+         else if (NSData* data = [pasteboard dataForType : pasteboard_type(mime)])
+         {
+            auto const* p = static_cast<char const*>([data bytes]);
+            if (mime.substr(0, 5) == "text/")
+               result[mime] = std::string(p, [data length]);
+            else
+               result[mime] = std::vector<std::byte>(
+                  reinterpret_cast<std::byte const*>(p),
+                  reinterpret_cast<std::byte const*>(p) + [data length]);
+         }
+      }
+      return result;
+   }
+
+   NSData* as_data(ph::payload_data const& data)
+   {
+      if (auto const* s = std::get_if<std::string>(&data))
+         return [NSData dataWithBytes : s->data() length : s->size()];
+      auto const& b = std::get<std::vector<std::byte>>(data);
+      return [NSData dataWithBytes : b.data() length : b.size()];
+   }
+
+   void write_pasteboard(NSPasteboard* pasteboard, ph::payload const& data)
+   {
+      [pasteboard clearContents];
+
+      // Files go first, an item each; the other formats go on the first.
+      if (auto i = data.find("text/uri-list"); i != data.end())
+      {
+         NSMutableArray* urls = [NSMutableArray array];
+         for (auto const& path : ph::get_filepaths(data))
+         {
+            [urls addObject : [NSURL fileURLWithFileSystemRepresentation : path.c_str()
+               isDirectory : NO relativeToURL : nil]];
+         }
+         if ([urls count])
+            [pasteboard writeObjects : urls];
+      }
+
+      for (auto const& [mime, entry] : data)
+      {
+         if (mime == "text/uri-list")
+            continue;
+         if (mime == "text/plain")
+         {
+            auto text = ph::get_plain_text(data);
+            NSString* s = [[NSString alloc] initWithBytes : text.data()
+               length : text.size() encoding : NSUTF8StringEncoding];
+            if (s)
+               [pasteboard setString : s forType : NSPasteboardTypeString];
+         }
+         else
+         {
+            [pasteboard setData : as_data(entry) forType : pasteboard_type(mime)];
+         }
+      }
+   }
+
+   // The pasteboard types a view takes drops of, which it names before any
+   // drag begins: those of the MIME types its elements take, or, until it
+   // is told them, the known ones.
+   NSArray* drop_types(std::optional<ph::mime_types> const& accepted)
+   {
+      NSMutableArray* types = [NSMutableArray array];
+      if (accepted)
+      {
+         for (auto const& mime : *accepted)
+            [types addObject : pasteboard_type(mime)];
+      }
+      else
+      {
+         for (auto const& [mime, type] : known_types())
+            [types addObject : type];
+      }
+      return types;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -350,7 +543,7 @@ namespace
    [self setPostsBoundsChangedNotifications : YES];
    _text_inserted = false;
 
-   [self registerForDraggedTypes:@[NSPasteboardTypeURL]];
+   [self registerForDraggedTypes : drop_types(std::nullopt)];
 }
 
 - (void) dealloc
@@ -1001,34 +1194,44 @@ namespace
 
 #endif
 
--(void) makeDropInfo : (id <NSDraggingInfo>) sender : (ph::drop_info*) info
+// While the drag hovers, the drop names the types on offer, with no data;
+// the data is read on the drop.
+-(void) makeDropInfo : (id <NSDraggingInfo>) sender : (ph::drop_info*) info : (bool) with_data
 {
    auto pos = [sender draggingLocation];
    pos = [self convertPoint : pos fromView : nil];
+   info->where = ph::point{float(pos.x), float(pos.y)};
 
+   // The MIME types on offer that the view takes drops of.
    NSPasteboard* pasteboard = [sender draggingPasteboard];
-   NSDictionary* options = @{NSPasteboardURLReadingFileURLsOnlyKey:@YES};
-   NSArray* urls = [pasteboard   readObjectsForClasses:@[[NSURL class]]
-                                 options:options];
-   const NSUInteger count = [urls count];
-   if (count)
+   std::vector<std::string> types;
+   if (auto const& accepted = _view->accepted_drop_types())
    {
-      std::string paths;
-      info->where = ph::point{float(pos.x), float(pos.y)};
-      for (NSUInteger i = 0; i < count; ++i)
+      for (auto const& mime : *accepted)
       {
-         if (i != 0)
-            paths += "\n";
-         paths += std::string("file://") + [urls[i] fileSystemRepresentation];
+         if (pasteboard_has(pasteboard, mime))
+            types.push_back(mime);
       }
-      info->data["text/uri-list"] = paths;
+   }
+   else
+   {
+      types = pasteboard_mime_types(pasteboard);
+   }
+   if (with_data)
+   {
+      info->data = read_pasteboard(pasteboard, ph::mime_types(types.begin(), types.end()));
+   }
+   else
+   {
+      for (auto const& type : types)
+         info->data[type] = std::string{};
    }
 }
 
 - (BOOL) performDragOperation : (id <NSDraggingInfo>) sender
 {
    ph::drop_info info;
-   [self makeDropInfo : sender : &info];
+   [self makeDropInfo : sender : &info : true];
    if (info.data.size())
    {
       if (_view->drop(info))
@@ -1045,7 +1248,7 @@ namespace
 - (NSDragOperation) draggingEntered : (id <NSDraggingInfo>) sender
 {
    ph::drop_info info;
-   [self makeDropInfo : sender : &info];
+   [self makeDropInfo : sender : &info : false];
    if (info.data.size())
       _view->track_drop(info, ph::cursor_tracking::entering);
    return NSDragOperationGeneric;
@@ -1054,7 +1257,7 @@ namespace
 - (NSDragOperation) draggingUpdated : (id<NSDraggingInfo>) sender
 {
    ph::drop_info info;
-   [self makeDropInfo : sender : &info];
+   [self makeDropInfo : sender : &info : false];
    if (info.data.size())
       _view->track_drop(info, ph::cursor_tracking::hovering);
    return NSDragOperationGeneric;
@@ -1063,7 +1266,7 @@ namespace
 - (void) draggingExited : (id <NSDraggingInfo>) sender
 {
    ph::drop_info info;
-   [self makeDropInfo : sender : &info];
+   [self makeDropInfo : sender : &info : false];
    if (info.data.size())
       _view->track_drop(info, ph::cursor_tracking::leaving);
 }
@@ -1208,31 +1411,34 @@ namespace cycfi::elements
       ];
    }
 
-   std::string clipboard()
+   void base_view::accept_drop_types(mime_types const& types)
    {
-      NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-      if (![[pasteboard types] containsObject:NSPasteboardTypeString])
-         return {};
-
-      NSString* object = [pasteboard stringForType:NSPasteboardTypeString];
-      if (!object)
-         return {};
-      return [object UTF8String];
+      _drop_types = types;
+      auto ns_view = get_mac_view(host());
+      [ns_view unregisterDraggedTypes];
+      [ns_view registerForDraggedTypes : drop_types(_drop_types)];
    }
 
-   void clipboard(std::string_view text)
+   // Types of the pasteboard's own making, a custom MIME type's, are not
+   // listed here: clipboard_contains finds them.
+   std::vector<std::string> clipboard_types()
    {
-      auto cf_string = CFStringCreateWithBytesNoCopy(
-         nullptr, (UInt8 const*)text.begin(), text.size(), kCFStringEncodingUTF8
-       , false, kCFAllocatorNull
-      );
+      return pasteboard_mime_types([NSPasteboard generalPasteboard]);
+   }
 
-      NSArray* types = [NSArray arrayWithObjects:NSPasteboardTypeString, nil];
+   bool clipboard_contains(std::string_view mime_type)
+   {
+      return pasteboard_has([NSPasteboard generalPasteboard], std::string{mime_type});
+   }
 
-      NSPasteboard* pasteboard = [NSPasteboard generalPasteboard];
-      [pasteboard declareTypes:types owner:nil];
-      [pasteboard setString : (__bridge NSString*) cf_string
-                    forType : NSPasteboardTypeString];
+   payload get_clipboard(mime_types const& types)
+   {
+      return read_pasteboard([NSPasteboard generalPasteboard], types);
+   }
+
+   void set_clipboard(payload const& data)
+   {
+      write_pasteboard([NSPasteboard generalPasteboard], data);
    }
 
    void set_cursor(cursor_type type)

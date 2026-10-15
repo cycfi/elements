@@ -15,6 +15,7 @@
 #include "headless_host.hpp"
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace cycfi::artist
 {
@@ -43,7 +44,7 @@ namespace cycfi::elements
 {
    namespace
    {
-      std::string    the_clipboard;
+      payload        the_clipboard;
       cursor_type    the_cursor = cursor_type::arrow;
    }
 
@@ -106,14 +107,33 @@ namespace cycfi::elements
       _view->invalidated.push_back(area);
    }
 
-   std::string clipboard()
+   void base_view::accept_drop_types(mime_types const& types)
    {
-      return the_clipboard;
+      _drop_types = types;
    }
 
-   void clipboard(std::string_view text)
+   std::vector<std::string> clipboard_types()
    {
-      the_clipboard = text;
+      std::vector<std::string> types;
+      for (auto const& [type, data] : the_clipboard)
+         types.push_back(type);
+      return types;
+   }
+
+   payload get_clipboard(mime_types const& types)
+   {
+      payload result;
+      for (auto const& type : types)
+      {
+         if (auto i = the_clipboard.find(type); i != the_clipboard.end())
+            result.insert(*i);
+      }
+      return result;
+   }
+
+   void set_clipboard(payload const& data)
+   {
+      the_clipboard = data;
    }
 
    void init_resources()

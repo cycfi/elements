@@ -255,6 +255,11 @@ namespace cycfi::elements
       return r;
    }
 
+   mime_types proxy_base::drop_types() const
+   {
+      return subject().drop_types();
+   }
+
    std::string proxy_base::class_name() const
    {
       return "proxy";

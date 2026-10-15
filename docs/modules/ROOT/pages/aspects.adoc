@@ -105,7 +105,7 @@ view_.content(
 
 Running this example, you get:
 
-image::aspects/aspects_a.png[]
+image::aspects/aspects_a.png[width=500px, align="center"]
 
 == Aligns and Sizes
 
@@ -174,7 +174,7 @@ placed inside the `fixed_size` element which is then placed inside a
 
 Let’s run this example:
 
-image::aspects/aspects_b.png[]
+image::aspects/aspects_b.png[width=500px, align="center"]
 
 == Labels, Margins and Layers
 
@@ -256,7 +256,7 @@ view’s main content is a `layer` element.
 
 So now we have:
 
-image::aspects/aspects_c.png[]
+image::aspects/aspects_c.png[width=500px, align="center"]
 
 == Let’s Make a Slider
 
@@ -297,7 +297,7 @@ auto funny_slider = slider(thumb, track);
 
 And here it is in action:
 
-video::936052497[vimeo,width=732,height=462]
+image::aspects/funny_slider.webp[alt="The funny slider: a black track with the blue Dogs are my favorite people label as its thumb, sliding down the track and back up, in a window titled Aspects", width=500px, align="center"]
 
 Now, like before, we add our funny slider to our view:
 

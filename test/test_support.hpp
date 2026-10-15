@@ -105,15 +105,25 @@ namespace cycfi::elements::test
 #endif
    }
 
+   // The clipboard's text.
+   inline void clipboard_text(std::string text)
+   {
+      set_clipboard({{"text/plain", std::move(text)}});
+   }
+
+   inline std::string clipboard_text()
+   {
+      return get_plain_text(get_clipboard({"text/plain"}));
+   }
+
    // Whether the clipboard keeps what is put on it. The headless host's is
    // the process's own. A real host's is the system's, shared with
-   // everything else, and some cannot be set at all without a focused
-   // window (Wayland, as on CI): checks that go through the clipboard are
-   // made only where it works.
+   // everything else, and another application may take it at any time:
+   // checks that go through the clipboard are made only where it works.
    inline bool clipboard_works()
    {
-      clipboard("elements test");
-      return clipboard() == "elements test";
+      clipboard_text("elements test");
+      return clipboard_text() == "elements test";
    }
 
    // A view plus an offscreen canvas of the same size: the pair a drawing

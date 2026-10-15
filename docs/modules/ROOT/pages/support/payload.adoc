@@ -4,7 +4,8 @@ include::../common.adoc[]
 
 == Overview
 
-A `payload` is the data a drag and drop carries. It is a `std::map` from
+A `payload` is the data a drag and drop carries, and what the
+xref:support/clipboard.adoc[clipboard] holds. It is a `std::map` from
 a MIME type, such as `"text/plain"` or `"text/uri-list"`, to the data in
 that format: a `std::string` for text, a `std::vector<std::byte>` for
 anything else. One payload can hold the same data in several formats, and
@@ -39,8 +40,13 @@ namespace cycfi::elements
       using base_type::operator=;
    };
 
+   using mime_types = std::set<std::string>;
+
    bool                    contains_filepaths(payload const& data);
    std::vector<fs::path>   get_filepaths(payload const& data);
+
+   bool                    contains_plain_text(payload const& data);
+   std::string             get_plain_text(payload const& data);
 
    struct drop_info
    {
@@ -88,6 +94,16 @@ element's coordinates and back.
 | The file paths in the `"text/uri-list"` entry, one per line, each with
   its `file://` prefix removed. Lines that are not `file://` URIs are
   skipped. Empty when there is no such entry.
+
+| `contains_plain_text(pl)`
+| `true` if `pl` has a `"text/plain"` entry that is a `std::string`.
+
+| `get_plain_text(pl)`
+| The `"text/plain"` entry, UTF-8, or an empty string if there is none.
+
+| `mime_types`
+| A set of MIME types: those an element takes drops of, or those asked
+  of the clipboard.
 |===
 
 The hosts write the `"text/uri-list"` entry with the paths as the file

@@ -80,6 +80,7 @@ namespace cycfi::elements
 
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      mime_types              drop_types() const override;
 
    // Proxy
 

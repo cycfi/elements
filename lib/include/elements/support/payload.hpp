@@ -7,6 +7,7 @@
 #define ELEMENTS_PAYLOAD_OCTOBER_31_2023
 
 #include <map>
+#include <set>
 #include <vector>
 #include <string>
 #include <string_view>
@@ -47,8 +48,30 @@ namespace cycfi::elements
       using base_type::operator=;
    };
 
+   /**
+    * \typedef mime_types
+    *
+    * \brief
+    *    A set of MIME types: the formats a drop receiver accepts, or the
+    *    formats asked of the clipboard.
+    */
+   using mime_types = std::set<std::string>;
+
    bool                    contains_filepaths(payload const& data);
    std::vector<fs::path>   get_filepaths(payload const& data);
+
+   /**
+    * \brief
+    *    Whether the payload holds text: a "text/plain" entry.
+    */
+   bool                    contains_plain_text(payload const& data);
+
+   /**
+    * \brief
+    *    The payload's "text/plain" entry, UTF-8, or an empty string if it
+    *    has none.
+    */
+   std::string             get_plain_text(payload const& data);
 }
 
 #endif

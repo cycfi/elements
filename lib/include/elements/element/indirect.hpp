@@ -95,6 +95,7 @@ namespace cycfi::elements
 
       void                    track_drop(context const& ctx, drop_info const& info, cursor_tracking status) override;
       bool                    drop(context const& ctx, drop_info const& info) override;
+      mime_types              drop_types() const override;
 
    };
 
@@ -342,6 +343,12 @@ namespace cycfi::elements
    inline bool indirect<Base>::drop(context const& ctx, drop_info const& info)
    {
       return this->get().drop(ctx, info);
+   }
+
+   template <concepts::Element Base>
+   inline mime_types indirect<Base>::drop_types() const
+   {
+      return this->get().drop_types();
    }
 
    /**

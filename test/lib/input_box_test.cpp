@@ -133,7 +133,7 @@ TEST_CASE("the text limit holds for typing and pasting", "[input_box]")
       return;
    iv.in->select_start(0);
    iv.in->select_end(2);
-   clipboard("12345\nmore");
+   clipboard_text("12345\nmore");
    iv.press(key_code::v, mod_action);
    CHECK(iv.in->get_utf8() == "12cdZ");
 

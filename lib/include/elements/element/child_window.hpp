@@ -28,8 +28,19 @@ namespace cycfi::elements
 
       using floating_element::floating_element;
 
+      void                 draw(context const& ctx) override;
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 wants_control() const override { return true; }
       bool                 click(context const& ctx, mouse_button btn) override;
       std::string          class_name() const override;
+
+      // Fade the window out, then remove it from the view.
+      void                 close(view& view_);
+      bool                 is_closing() const { return _opacity < 1.0f; }
+
+   private:
+
+      float                _opacity = 1.0f;
    };
 
    /**
@@ -108,6 +119,51 @@ namespace cycfi::elements
    template <concepts::Element Subject>
    inline proxy<remove_cvref_t<Subject>, movable_base>
    movable(Subject&& subject)
+   {
+      return {std::forward<Subject>(subject)};
+   }
+
+   /**
+    * \class resizable_base
+    *
+    * \brief
+    *    Makes the edges and corners of an element handles that resize the
+    *    floating element containing it, within its content's limits. The
+    *    mouse elsewhere goes to the subject.
+    */
+   class resizable_base : public proxy_base
+   {
+   public:
+
+      element*             hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                 wants_control() const override { return true; }
+      bool                 click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      bool                 cursor(context const& ctx, point p, cursor_tracking status) override;
+      std::string          class_name() const override;
+
+      // The width of the band along each edge that grabs it.
+      float                grip = 6;
+
+   private:
+
+      enum edge { none = 0, left = 1, top = 2, right = 4, bottom = 8 };
+
+      int                  edges_at(context const& ctx, point p) const;
+
+      int                  _edges = none;
+      point                _start;
+      rect                 _start_bounds;
+   };
+
+   /**
+    * \brief
+    *    Make the edges and corners of an element resize the floating
+    *    element (a child window) that contains it.
+    */
+   template <concepts::Element Subject>
+   inline proxy<remove_cvref_t<Subject>, resizable_base>
+   resizable(Subject&& subject)
    {
       return {std::forward<Subject>(subject)};
    }

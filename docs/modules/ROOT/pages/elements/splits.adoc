@@ -1,0 +1,143 @@
+= Splits
+
+include::../common.adoc[]
+
+== Overview
+
+A split is a tile (see xref:layout/tiles.adoc[Tiles]) whose boundaries
+the user drags. `hsplit` places its children left to right, `vsplit`
+top to bottom, and between each pair is a boundary: drag it, and the
+two children beside it trade space.
+
+A split starts out laid out as a tile: each child gets its minimum, and
+the rest is shared by stretch. Once a boundary is dragged, each child
+keeps its share of the split, and holds it as the split is resized.
+
+image::elements/splits_example.png[alt="An editor's layout: a Files pane at the left, and at the right an Editor pane over an Output pane, each pair separated by a thin line", width=480px, link={imagesdir}/elements/splits_example.png]
+
+=== Dragging a Boundary
+
+A boundary is a thin line between two children. Within `grip` of it, 6
+by default, the cursor becomes the resize cursor, and a press grabs it.
+The drag trades space between the two children beside the boundary,
+and stops where either reaches its minimum or maximum (see {limits}).
+Elsewhere, the mouse goes to the children.
+
+Splits nest: a split's child can be a split along the other axis, as
+the Editor and Output panes are in the figure, and each boundary drags
+on its own.
+
+=== Shares
+
+`shares()` gives each child's share of the split's extent, from 0.0 to
+1.0, once a boundary has been dragged; until then it is empty.
+`shares(s)` sets them, to restore a saved layout. A split whose number
+of children changes is laid out as a tile again.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   template <axis Axis>
+   class split_element : public composite_base
+   {
+   public:
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+      void                    layout(context const& ctx) override;
+      rect                    bounds_of(context const& ctx, std::size_t index) const override;
+
+      element*                hit_test(context const& ctx, point p, bool leaf, bool control) override;
+      bool                    wants_control() const override { return true; }
+      bool                    click(context const& ctx, mouse_button btn) override;
+      void                    drag(context const& ctx, mouse_button btn) override;
+      bool                    cursor(context const& ctx, point p, cursor_tracking status) override;
+      std::string             class_name() const override;
+
+      // The width of the area around a boundary that grabs it.
+      float                   grip = 6;
+
+      // The children's shares of the extent, once a boundary is dragged.
+      std::vector<float> const& shares() const { return _shares; }
+      void                    shares(std::vector<float> shares_);
+   };
+
+   using hsplit_element = split_element<axis::x>;
+   using vsplit_element = split_element<axis::y>;
+
+   using hsplit_composite = vector_composite<hsplit_element>;
+   using vsplit_composite = vector_composite<vsplit_element>;
+
+   template <concepts::Element... E>
+   inline auto hsplit(E&&... elements);
+
+   template <concepts::Element... E>
+   inline auto vsplit(E&&... elements);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`a`, `b`, ...:: Elements.
+`s`:: A split.
+`v`:: A `std::vector<float>` of shares.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `hsplit(a, b, ...)`
+| A split of `a`, `b`, ..., left to right.
+
+| `vsplit(a, b, ...)`
+| A split of `a`, `b`, ..., top to bottom.
+
+| `hsplit_composite`, `vsplit_composite`
+| A split whose children are added and removed at run time, as a
+  `std::vector<element_ptr>`.
+
+| `s.grip`
+| The width of the area around a boundary that grabs it.
+
+| `s.shares()`
+| Each child's share of the extent; empty while laid out as a tile.
+
+| `s.shares(v)`
+| Set the shares.
+|===
+
+== Example
+
+The layout of `examples/split`: files at the left, the editor at the
+right above its output. Each pane has a minimum size, where its
+boundary stops.
+
+```c++
+view_.content(
+   hsplit(
+      hmin_size(120, make_pane("Files", make_files())),
+      vsplit(
+         vmin_size(120, make_pane("Editor", make_editor())),
+         vmin_size(80, make_pane("Output", make_output()))
+      )
+   ),
+   box(bkd_color)
+);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

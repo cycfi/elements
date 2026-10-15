@@ -1,0 +1,217 @@
+= Docking
+
+include::../common.adoc[]
+
+== Overview
+
+Docking lets the user move a child window (see
+xref:elements/child_windows.adoc[Child Windows]) to an edge of the
+view, where it becomes a pane beside the main content, and move it back
+out. Two pieces make it:
+
+* `dock(content)` holds the main content, and the panes docked along
+  its four sides.
+* `dockable(dock, content)` makes a child window's content dockable in
+  `dock`.
+
+image::elements/docking_example.png[alt="Tools and Layers docked at the left, one over the other; Output docked along the bottom; a window titled Floating over the main content", width=640px, link={imagesdir}/elements/docking_example.png]
+
+=== The Dock
+
+A dock places the panes docked at its left and right beside the
+content, and those docked at its top and bottom above and below them.
+Panes on one side share it, one after the other along it. Every
+boundary, between two panes or between a side and the content, is a
+split boundary the user drags (see xref:elements/splits.adoc[Splits]).
+
+When a pane docks or leaves, its side is shared out again: each docked
+side takes a quarter of the dock, the content the rest, and the panes
+on a side share it evenly.
+
+=== Docking a Window
+
+A dockable window is dragged by its title, a `movable` handle in its
+content. When the drag brings an edge of the window, or the pointer,
+within `gravity` of an edge of the dock, 16 by default, the window
+snaps to that edge, and the dock shows where it would go. Released
+there, the window's content docks, and the window leaves the view's
+layers. The window is kept, to undock into.
+
+=== Undocking
+
+Dragging a docked pane's title out by more than `gravity` undocks it.
+Its window opens with the title under the pointer, where it was
+grabbed, and the drag goes on, moving the window. A pane docked from
+the start, with `add`, has no window yet: it gets a plain resizable
+one, the size it had in the dock.
+
+=== Docking in Code
+
+`add(pane, side)` docks a pane at one of the four `dock_side` values,
+and `remove(pane)` takes it out. `side_of(pane)` says where a pane is
+docked, if it is. `preview(side)` shows where a pane would dock, and
+`preview(std::nullopt)` hides it; `dockable` does this as it drags.
+
+=== Building a Dockable Window
+
+`dockable` goes inside the window, around the content that docks: the
+title, a `movable` handle, and what is under it. Keep the dockable
+content in a `shared_ptr`, held by the window, so the dock can take
+it. `resizable`, if the window has it, stays with the window:
+
+```c++
+auto pane = share(dockable(dock_,
+   pane_ex(
+      movable(title_bar{}),
+      label("Tools"),
+      tools_content,
+      get_theme().child_window_opacity
+   )));
+auto window = share(child_window(bounds, resizable(hold(pane))));
+```
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   enum class dock_side { left, top, right, bottom };
+
+   class dock_element : public vsplit_composite
+   {
+   public:
+
+      explicit                dock_element(element_ptr content);
+
+      void                    add(element_ptr pane, dock_side side);
+      bool                    remove(element_ptr pane);
+      std::optional<dock_side> side_of(element_ptr pane) const;
+
+      // Show where a pane would dock; nullopt hides it.
+      void                    preview(std::optional<dock_side> side);
+      std::optional<dock_side> preview() const { return _preview; }
+
+      void                    draw(context const& ctx) override;
+      std::string             class_name() const override;
+   };
+
+   template <concepts::Element Content>
+   inline dock_element dock(Content&& content);
+
+   class dockable_base : public proxy_base
+   {
+   public:
+
+      explicit             dockable_base(std::shared_ptr<dock_element> dock)
+                            : _dock{std::move(dock)}
+                           {}
+
+      bool                 click(context const& ctx, mouse_button btn) override;
+      void                 drag(context const& ctx, mouse_button btn) override;
+      std::string          class_name() const override;
+
+      bool                 is_docked() const;
+
+      // How near an edge must come to the dock's to be pulled to it.
+      float                gravity = 16;
+   };
+
+   template <concepts::Element Content>
+   inline proxy<remove_cvref_t<Content>, dockable_base>
+   dockable(std::shared_ptr<dock_element> dock, Content&& content);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`c`:: An element: the main content.
+`d`:: A `std::shared_ptr<dock_element>`.
+`e`:: An element: a dockable window's content.
+`p`:: An `element_ptr` to dockable content.
+`s`:: A `dock_side`.
+`k`:: A dockable element.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `dock(c)`
+| A dock around `c`, with nothing docked.
+
+| `d->add(p, s)`
+| Dock `p` at the side `s`.
+
+| `d->remove(p)`
+| Undock `p`; return whether it was docked.
+
+| `d->side_of(p)`
+| The side `p` is docked at, or `std::nullopt`.
+
+| `d->preview(s)`
+| Show where a pane would dock at `s`; `std::nullopt` hides it.
+
+| `dockable(d, e)`
+| `e`, dockable in `d`.
+
+| `k.is_docked()`
+| Whether `k` is docked.
+
+| `k.gravity`
+| How near an edge must come to the dock's to be pulled to it.
+|===
+
+== Example
+
+`examples/dock`: Output starts docked along the bottom; Tools and
+Layers float, to be docked.
+
+```c++
+auto make_pane(std::shared_ptr<dock_element> d, std::string title
+ , char const* text)
+{
+   return share(dockable(d,
+      pane_ex(
+         movable(title_bar{}),
+         label(std::move(title)),
+         margin({10, 10, 10, 10}, align_left_top(label(text))),
+         get_theme().child_window_opacity
+      )));
+}
+
+auto make_window(std::shared_ptr<dock_element> d, std::string title
+ , rect bounds, char const* text)
+{
+   auto pane = make_pane(d, std::move(title), text);
+   return share(child_window(bounds, resizable(hold(pane))));
+}
+
+auto main_content = layer(
+   align_center_middle(label("Main content").font_size(24)),
+   box(bkd_color)
+);
+auto d = share(dock(std::move(main_content)));
+
+// Output starts docked; Tools and Layers float.
+d->add(make_pane(d, "Output", "Output goes here."), dock_side::bottom);
+
+view_.content(
+   make_window(d, "Tools", {40, 40, 220, 200}, "Tools go here."),
+   make_window(d, "Layers", {260, 80, 440, 260}, "Layers go here."),
+   d
+);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

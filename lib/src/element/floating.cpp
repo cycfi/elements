@@ -31,7 +31,7 @@ namespace cycfi::elements
       else if (h > e_limits.max.y)
          ctx.bounds.height(e_limits.max.y);
 
-      ctx.bounds = center(ctx.bounds, this->bounds());
+      // Kept at its top left: the bounds' size gives way to the limits.
       this->bounds(ctx.bounds);
    }
 

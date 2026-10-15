@@ -686,6 +686,24 @@ namespace cycfi::elements
 
    /**
     * \brief
+    *    The MIME types this element takes drops of.
+    *
+    *    An element that takes drops names the MIME types it takes; one that
+    *    holds others names theirs too. The view gathers them from its
+    *    content and tells its host, which takes drops of those types only,
+    *    and reads only those on a drop. By default, none.
+    *
+    * \return
+    *    The MIME types this element, and the elements it holds, take drops
+    *    of.
+    */
+   mime_types element::drop_types() const
+   {
+      return {};
+   }
+
+   /**
+    * \brief
     *    Notifies the view about mouse events on the element.
     *
     *    This member function is called to notify the view when a mouse event

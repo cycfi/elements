@@ -104,25 +104,24 @@ namespace cycfi::elements
       // Make the window background transparent
       [window_ setBackgroundColor: [NSColor colorWithCalibratedRed:0 green:0 blue:0 alpha:0]];
 
+      // A window with a title takes the frame saved under it, if there is
+      // one; else, and always without a title, the bounds.
       auto title = [window_ title];
-      if ([title length] != 0)
+      if ([title length] == 0 || ![window_ setFrameUsingName : title])
       {
-         if (![window_ setFrameUsingName : title])
-         {
-            size({bounds.width(), bounds.height()});
-            position({bounds.left, bounds.top});
-         }
-         else
-         {
-            NSMutableString* key =[title mutableCopy];
-            [key appendString : @"_zoom_state"];
+         size({bounds.width(), bounds.height()});
+         position({bounds.left, bounds.top});
+      }
+      else
+      {
+         NSMutableString* key =[title mutableCopy];
+         [key appendString : @"_zoom_state"];
 
-            auto zoom_state = [[NSUserDefaults standardUserDefaults] stringForKey : key];
-            if ([zoom_state isEqualToString : @"zoomed"])
-               [window_ zoom : window_];
-            else if ([zoom_state isEqualToString : @"fullscreen"])
-               [window_ toggleFullScreen : window_];
-         }
+         auto zoom_state = [[NSUserDefaults standardUserDefaults] stringForKey : key];
+         if ([zoom_state isEqualToString : @"zoomed"])
+            [window_ zoom : window_];
+         else if ([zoom_state isEqualToString : @"fullscreen"])
+            [window_ toggleFullScreen : window_];
       }
    }
 
@@ -130,11 +129,12 @@ namespace cycfi::elements
    {
    }
 
+   // The size is the content's, the title bar left out, as on every host
    point window::size() const
    {
       id const& window_ = (__bridge id) _window;
-      auto const& frame = [window_ frame];
-      return {float(frame.size.width), float(frame.size.height)};
+      auto const content = [window_ contentRectForFrameRect : [window_ frame]];
+      return {float(content.size.width), float(content.size.height)};
    }
 
    void window::size(point const& p)
@@ -144,10 +144,10 @@ namespace cycfi::elements
       auto min = [window_ contentMinSize];
       auto max = [window_ contentMaxSize];
 
-      auto frame = [window_ frame];
-      frame.size.width = std::min<float>(std::max<float>(p.x, min.width), max.width);
-      frame.size.height = std::min<float>(std::max<float>(p.y, min.height), max.height);
-      [window_ setFrame : frame display : YES animate : false];
+      auto content = [window_ contentRectForFrameRect : [window_ frame]];
+      content.size.width = std::min<float>(std::max<float>(p.x, min.width), max.width);
+      content.size.height = std::min<float>(std::max<float>(p.y, min.height), max.height);
+      [window_ setFrame : [window_ frameRectForContentRect : content] display : YES animate : false];
       position(pos);
    }
 

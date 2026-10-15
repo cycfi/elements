@@ -19,6 +19,14 @@
 #include <cmath>
 #include <cstddef>
 
+// MSVC lays out only the first of several empty bases at no cost unless
+// told to lay out all of them so: a styler's colors are empty bases.
+#if defined(_MSC_VER)
+# define ELEMENTS_EMPTY_BASES __declspec(empty_bases)
+#else
+# define ELEMENTS_EMPTY_BASES
+#endif
+
 namespace cycfi::elements
 {
    ////////////////////////////////////////////////////////////////////////////
@@ -94,7 +102,7 @@ namespace cycfi::elements
     , typename Color = default_track_color
     , track_shape _shape = track_shape::round
    >
-   class basic_track_styler : Color, public element
+   class ELEMENTS_EMPTY_BASES basic_track_styler : Color, public element
    {
    public:
 
@@ -165,7 +173,7 @@ namespace cycfi::elements
    };
 
    template <typename Track, typename Fill>
-   struct fill_track_colors : track_part<Track>, fill_part<Fill>
+   struct ELEMENTS_EMPTY_BASES fill_track_colors : track_part<Track>, fill_part<Fill>
    {
       using track_type = Track;
       using fill_type = Fill;
@@ -241,7 +249,7 @@ namespace cycfi::elements
     , track_shape _shape = track_shape::round
     , bool _glow = false
    >
-   class basic_fill_track_styler : Colors, public element
+   class ELEMENTS_EMPTY_BASES basic_fill_track_styler : Colors, public element
    {
    public:
 
@@ -519,7 +527,7 @@ namespace cycfi::elements
     , bool _glow = false
     , track_origin _origin = track_origin::start
    >
-   class radial_fill_track_styler : Colors, public radial_styler_base<_size, Subject>
+   class ELEMENTS_EMPTY_BASES radial_fill_track_styler : Colors, public radial_styler_base<_size, Subject>
    {
    public:
 

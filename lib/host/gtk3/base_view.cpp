@@ -1020,10 +1020,11 @@ namespace cycfi::elements
       return {float(x), float(y)};
    }
 
+   // The view's window is sized: the view is its content.
+   // The view's window is sized: the view is its content.
    void base_view::size(elements::extent p)
    {
-      // $$$ Wrong: don't size the window!!! $$$
-      gtk_window_resize(GTK_WINDOW(_view->_widget), p.x, p.y);
+      gtk_window_resize(GTK_WINDOW(gtk_widget_get_toplevel(_view->_widget)), p.x, p.y);
    }
 
    void base_view::refresh()

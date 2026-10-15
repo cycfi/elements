@@ -22,6 +22,7 @@ namespace cycfi::elements
       std::function<void()> on_close;
       int                   init_w = 660, init_h = 500;   // requested logical size
       int                   cur_w = 660, cur_h = 500;     // current logical size
+      view_limits           limits = {{0, 0}, {10E6, 10E6}};
    };
 
    wl_surface*     get_surface(host_window& h) { return h.surface; }
@@ -86,14 +87,29 @@ namespace cycfi::elements
       return {float(_window->cur_w), float(_window->cur_h)};
    }
 
-   void window::size(point const& /*p*/)
+   // A client picks its own content size on Wayland: a commit of the new
+   // size, kept within the limits, as frame_configure makes one.
+   void window::size(point const& p)
    {
-      // Wayland windows are sized by the compositor via configure; clients
-      // request via libdecor on the next commit. No-op for now.
+      auto const& l = _window->limits;
+      int const w = int(std::lround(std::clamp(p.x, l.min.x, std::max(l.min.x, l.max.x))));
+      int const h = int(std::lround(std::clamp(p.y, l.min.y, std::max(l.min.y, l.max.y))));
+      if (w == _window->cur_w && h == _window->cur_h)
+         return;
+      _window->cur_w = _window->init_w = w;
+      _window->cur_h = _window->init_h = h;
+      if (!_window->frame)
+         return;
+      auto* st = libdecor_state_new(w, h);
+      libdecor_frame_commit(_window->frame, st, nullptr);
+      libdecor_state_free(st);
+      view_configure(*_window, w, h);
+      view_render(*_window);
    }
 
    void window::limits(view_limits limits_)
    {
+      _window->limits = limits_;
       if (!_window->frame)
          return;
       constexpr float max = 10E6;

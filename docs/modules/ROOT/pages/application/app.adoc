@@ -4,9 +4,125 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `app.hpp`.
+An app runs the host's event loop. It delivers the mouse, the keyboard
+and the timers to the windows and their views until it is stopped. A
+standalone program makes one app, its windows and their views, then
+calls `run`, which returns once `stop` is called, typically when the
+main window closes. An app has a name, given when it is made.
 
-// To be written.
+The app is a thin layer over the host, kept intentionally simple.
+Elements does not require that it own the event loop: a plug-in, or a
+program built on another framework, already has a loop and windows of
+its own, and there Elements uses a view alone, made directly on a
+platform window (see xref:view.adoc[View]). The app and the window exist
+so that a standalone program needs nothing else, and no more. The bulk
+of the GUI functionality is in the view, which works the same in both
+cases. This also keeps a port to a new host small: the app, the window
+and the view's host side are the few files that change.
+
+== Include
+
+```c++
+#include <elements/app.hpp>
+```
+
+== Declaration
+
+```c++
+class app : non_copyable
+{
+public:
+                        app(std::string name);
+                        ~app();
+
+   std::string const&   name() const;
+   void                 run();
+   void                 stop();
+};
+```
+
+== Expressions
+
+=== Notation
+
+`name`            :: A `std::string`, the app's name.
+`a`               :: An `app`.
+
+=== Constructors and Assignment
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `app(name)`                      | Construct an `app` given `name`.
+|===
+
+`app` is non-copyable.
+
+=== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `a.name()`                       | Get the app's name.           | `std::string const&`
+|===
+
+=== Operation
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `a.run()`                        | Run the event loop until
+                                     `stop` is called.             | `void`
+| `a.stop()`                       | Stop the event loop: `run`
+                                     returns.                      | `void`
+|===
+
+== Example
+
+The shape of every Elements program:
+
+```c++
+#include <elements.hpp>
+
+using namespace cycfi::elements;
+
+int main()
+{
+   app _app("Hello Universe");                   <1>
+   window _win(_app.name());                     <2>
+   _win.on_close = [&_app]() { _app.stop(); };   <3>
+
+   view view_(_win);                             <4>
+   view_.content(
+      align_center_middle(label("Hello, Universe")),
+      box(rgba(35, 35, 37, 255))
+   );
+
+   _app.run();                                   <5>
+   return 0;
+}
+```
+
+<1> The app, named.
+<2> A window, its title the app's name (see
+    xref:application/window.adoc[Window]).
+<3> Closing the window stops the app.
+<4> A view, filling the window (see xref:view.adoc[View]).
+<5> Run until stopped.
+
+== Host Notes
+
+[cols="1,3"]
+|===
+| Host                | Note
+
+| macOS               | The name labels the application menu's Quit item,
+                        "Quit" followed by the name. Given an empty name,
+                        the app takes the process's own.
+|===
 
 '''
 

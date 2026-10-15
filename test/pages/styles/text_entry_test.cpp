@@ -34,7 +34,7 @@ namespace
       return m.ascent + m.descent + m.leading;
    }
 
-   bool near(float a, float b)
+   bool close_to(float a, float b)
    {
       return std::abs(a - b) < 0.01f;
    }
@@ -53,16 +53,16 @@ TEST_CASE("text entry page: factories", "[text_entry_page]")
 
    // One line of the font, padded by 0.3 of the font size above and below.
    auto fs = thm.text_box_font._size;
-   CHECK(near(box.limits(bctx).min.y, line_height(thm.text_box_font) + 0.6f * fs));
+   CHECK(close_to(box.limits(bctx).min.y, line_height(thm.text_box_font) + 0.6f * fs));
 
    // `size` scales the font's own size.
    auto big = input_box("Your name", 1.5).first;
-   CHECK(near(big.limits(bctx).min.y,
+   CHECK(close_to(big.limits(bctx).min.y,
       line_height(thm.text_box_font.size(fs * 1.5f)) + 0.6f * fs * 1.5f));
 
    auto f = font_descr{"Open Sans"}.size(20);
    auto custom = input_box("Your name", f, 1.5).first;
-   CHECK(near(custom.limits(bctx).min.y, line_height(f.size(30)) + 0.6f * 30));
+   CHECK(close_to(custom.limits(bctx).min.y, line_height(f.size(30)) + 0.6f * 30));
 
    // No placeholder.
    auto [plain, plain_in] = input_box();
@@ -71,9 +71,9 @@ TEST_CASE("text entry page: factories", "[text_entry_page]")
    // Any input box of your own, with a padding of 5 unless given.
    auto mine = share(basic_input_box("Your name"));
    auto framed = input_box(hold(mine));
-   CHECK(near(framed.limits(bctx).min.y, line_height(thm.text_box_font) + 10));
+   CHECK(close_to(framed.limits(bctx).min.y, line_height(thm.text_box_font) + 10));
    auto framed2 = input_box(hold(mine), {8, 8, 8, 8});
-   CHECK(near(framed2.limits(bctx).min.y, line_height(thm.text_box_font) + 16));
+   CHECK(close_to(framed2.limits(bctx).min.y, line_height(thm.text_box_font) + 16));
 }
 
 namespace

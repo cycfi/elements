@@ -26,6 +26,7 @@ namespace cycfi::elements
 
    void app::run()
    {
+      on_start();
       _running = true;
       wl_display* d = get_display();
       int fd = wl_display_get_fd(d);
@@ -53,6 +54,7 @@ namespace cycfi::elements
 
    void app::stop()
    {
+      on_stop();
       _running = false;
    }
 }

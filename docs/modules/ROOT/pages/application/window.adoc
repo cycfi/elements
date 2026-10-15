@@ -4,9 +4,184 @@ include::../common.adoc[]
 
 == Overview
 
-Covers `window.hpp`.
+A window is a place on the host's desktop for a view (see
+xref:view.adoc[View]). It is a thin layer over the host's own window,
+kept intentionally simple, as the app is (see
+xref:application/app.adoc[App]): it provides a title, a style and a
+position and size, and nothing else. Everything inside it, the drawing
+and the interaction, is the view's.
 
-// To be written.
+A window can have a title bar, a close button, a minimize button and a
+resizable frame, as its style specifies. A bare window has none of
+these, not even a frame.
+
+A window's size is the size of its content, without the title bar or
+frame: the size of the view inside. Its position is its top left corner
+on the screen. The bounds given at construction set both. The size stays
+within the window's limits, which the view derives from its content. The
+host applies a new size or position when it gets to it, which may be
+after the call returns, and keeps the window within the screen.
+
+`on_close` is called when the window closes. Programs usually stop the
+app there.
+
+== Include
+
+```c++
+#include <elements/window.hpp>
+```
+
+== Declaration
+
+```c++
+class window : non_copyable
+{
+public:
+
+   enum style
+   {
+      with_title     = 1
+    , closable       = 2
+    , miniaturizable = 4
+    , resizable      = 8
+
+    , bare           = 0
+    , standard       = with_title | closable | miniaturizable | resizable
+   };
+
+                        window(
+                           std::string const& name
+                         , int style_ = standard
+                         , rect const& bounds = rect{20, 20, 660, 500}
+                        );
+
+                        window(
+                           int style_ = standard
+                         , rect const& bounds = rect{20, 20, 660, 500}
+                        );
+
+                        ~window();
+
+   point                size() const;
+   void                 size(point const& p);
+   void                 limits(view_limits limits_);
+   point                position() const;
+   void                 position(point const& p);
+   host_window_handle   host() const;
+
+   using callback_fn = std::function<void()>;
+
+   callback_fn          on_close;
+};
+```
+
+== Expressions
+
+=== Notation
+
+`name`            :: A `std::string`, the title.
+`st`              :: An `int`, the style: `window::style` values or'ed
+                     together.
+`b`               :: A `rect`, the bounds: the position and the content's
+                     size.
+`w`               :: A `window`.
+`p`               :: A `point`.
+`l`               :: A `view_limits`.
+`f`               :: A function, `void()`.
+
+=== Constructors and Assignment
+
+[cols="1,1"]
+|===
+| Expression                       | Semantics
+
+| `window(name [, st, b])`         | Construct a `window` titled `name`, of
+                                     style `st`, `window::standard` unless
+                                     given, at `b`, `{20, 20, 660, 500}`
+                                     unless given.
+| `window([st, b])`                | Construct a `window` with no title.
+|===
+
+`window` is non-copyable.
+
+=== Accessors
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `w.size()`                       | Get the content's size.       | `point`
+| `w.position()`                   | Get the top left, on the
+                                     screen.                       | `point`
+| `w.host()`                       | Get the host's window.        | `host_window_handle`
+|===
+
+=== Mutators
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `w.size(p)`                      | Set the content's size, kept
+                                     within the limits.            | `void`
+| `w.position(p)`                  | Set the top left, on the
+                                     screen.                       | `void`
+| `w.limits(l)`                    | Set the limits of the
+                                     content's size, and keep the
+                                     size within them.             | `void`
+|===
+
+=== Access
+
+[cols="1,1,1"]
+|===
+| Expression                       | Semantics                     | Return Type
+
+| `w.on_close`                     | Access the callback for the
+                                     window closing.               | `callback_fn`
+|===
+
+== Example
+
+A window that cannot be resized, its content 400 by 300, stopping the
+app when it closes:
+
+```c++
+#include <elements.hpp>
+...
+using namespace cycfi::elements;
+...
+app _app("Settings");
+
+window _win(
+   _app.name()
+ , window::with_title | window::closable      <1>
+ , rect{100, 100, 500, 400}                   <2>
+);
+_win.on_close = [&_app]() { _app.stop(); };   <3>
+```
+
+<1> A title bar and a close button: no minimizing, no resizing.
+<2> At 100, 100 on the screen, the content 400 by 300.
+<3> Closing the window stops the app.
+
+== Host Notes
+
+[cols="1,3"]
+|===
+| Host                | Note
+
+| macOS               | A window with a title saves its frame, and whether
+                        it was zoomed or full screen, under its title, and
+                        takes them again when a window is made with that
+                        title, in place of the bounds. A window without a
+                        title always takes the bounds.
+| Wayland             | The compositor places windows: a window cannot be
+                        placed, nor its place found. The bounds' position
+                        is not used, `position()` is 0, 0, and
+                        `position(p)` does nothing.
+| GTK                 | On a Wayland display, as Wayland.
+|===
 
 '''
 

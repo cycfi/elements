@@ -19,13 +19,16 @@ namespace cycfi::elements
    {
    }
 
+   // There is no event loop: run returns at once.
    void app::run()
    {
+      on_start();
       _running = false;
    }
 
    void app::stop()
    {
+      on_stop();
       _running = false;
    }
 }

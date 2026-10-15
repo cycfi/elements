@@ -29,6 +29,7 @@ namespace cycfi::elements
 
    void app::run()
    {
+      on_start();
       _running = true;
       Display* d = get_display();
       int fd = ConnectionNumber(d);
@@ -58,6 +59,7 @@ namespace cycfi::elements
 
    void app::stop()
    {
+      on_stop();
       _running = false;
    }
 }

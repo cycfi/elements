@@ -224,6 +224,9 @@ namespace cycfi::elements
       if (hIcon)
          ::SendMessage(_window, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 
+      // The bounds give the content's size: the frame goes around it
+      size({bounds.width(), bounds.height()});
+
       ShowWindow(_window, SW_RESTORE);
    }
 
@@ -233,24 +236,27 @@ namespace cycfi::elements
       DeleteObject(_window);
    }
 
+   // The size is the content's, the client area, the frame left out, as
+   // on every host
    point window::size() const
    {
       auto scale = get_scale_for_window(_window);
-      RECT frame;
-      GetWindowRect(_window, &frame);
+      RECT content;
+      GetClientRect(_window, &content);
       return {
-         float((frame.right - frame.left) / scale),
-         float((frame.bottom - frame.top) / scale)
+         float((content.right - content.left) / scale),
+         float((content.bottom - content.top) / scale)
       };
    }
 
    void window::size(point const& p)
    {
       auto scale = get_scale_for_window(_window);
+      auto extra = window_frame_size(_window);
       RECT frame;
       GetWindowRect(_window, &frame);
-      frame.right = frame.left + (p.x * scale);
-      frame.bottom = frame.top + (p.y * scale);
+      frame.right = frame.left + extra.x + LONG(p.x * scale);
+      frame.bottom = frame.top + extra.y + LONG(p.y * scale);
       constrain_size(
          _window, frame, get_window_info(_window)->limits);
 

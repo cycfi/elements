@@ -10,7 +10,8 @@ namespace cycfi::elements
 {
    // Note: Unlike Windows and Linux, MacOS contains the app name and id in the
    //       plist.info file. We ignore the ctor params here and use those instead.
-   app::app(std::string /*name*/)
+   app::app(std::string name)
+    : _app_name(std::move(name))
    {
       [NSApplication sharedApplication];
       [NSApp setActivationPolicy : NSApplicationActivationPolicyRegular];
@@ -22,8 +23,10 @@ namespace cycfi::elements
       [menubar_ addItem : _app_menu_item];
       [NSApp setMainMenu : menubar_];
       id _app_menu = [NSMenu new];
-      id app_name = [NSRunningApplication currentApplication].localizedName;
-      _app_name = [app_name UTF8String];
+      // The name given, or the process's own without one
+      if (_app_name.empty())
+         _app_name = [[NSRunningApplication currentApplication].localizedName UTF8String];
+      id app_name = [NSString stringWithUTF8String : _app_name.c_str()];
       id quitTitle = [@"Quit " stringByAppendingString : app_name];
       id quitMenuItem = [[NSMenuItem alloc] initWithTitle : quitTitle
          action : @selector(terminate:) keyEquivalent : @"q"];
@@ -42,10 +45,22 @@ namespace cycfi::elements
       [NSApp run];
    }
 
+   // Stop the run loop, so run() returns, as on every host. The event
+   // posted wakes the loop to see the stop.
    void app::stop()
    {
       on_stop();
-      [NSApp terminate : nil];
+      [NSApp stop : nil];
+      NSEvent* wake = [NSEvent otherEventWithType : NSEventTypeApplicationDefined
+         location : NSZeroPoint
+         modifierFlags : 0
+         timestamp : 0
+         windowNumber : 0
+         context : nil
+         subtype : 0
+         data1 : 0
+         data2 : 0];
+      [NSApp postEvent : wake atStart : YES];
    }
 }
 

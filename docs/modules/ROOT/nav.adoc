@@ -2,6 +2,8 @@
 * xref:setup.adoc[Setup and Installation]
 * Reference
 ** xref:aspects.adoc[Design Aspects]
+** xref:application/app.adoc[App]
+** xref:application/window.adoc[Window]
 ** xref:view.adoc[View]
 ** xref:model.adoc[Model]
 ** xref:elements.adoc[Elements]

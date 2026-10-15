@@ -176,26 +176,36 @@ TEST_CASE("view page: post", "[view_page]")
    test_view tv{extent{100, 100}};
    open(tv);
    int now = 0, later = 0;
+
+   // Poll until the count is reached, within a generous bound: a host's
+   // timers may be coarse, as Windows' are.
+   auto poll_until = [&](int count)
+   {
+      for (int i = 0; i != 250 && later < count; ++i)
+      {
+         std::this_thread::sleep_for(2ms);
+         tv.view_.poll();
+      }
+   };
+
    std::thread{[&] { tv.view_.post([&] { ++now; }); }}.join();
    auto timer = tv.view_.post(5ms, [&] { ++later; });
    CHECK(now == 0);
    tv.view_.poll();
    CHECK(now == 1);
    CHECK(later == 0);
-   std::this_thread::sleep_for(10ms);
-   tv.view_.poll();
+   poll_until(1);
    CHECK(later == 1);
 
    // A timed post from another thread runs here, at a poll.
    std::thread{[&] { tv.view_.post(5ms, [&] { ++later; }); }}.join();
-   std::this_thread::sleep_for(10ms);
-   tv.view_.poll();
+   poll_until(2);
    CHECK(later == 2);
 
    // Cancelled through its timer: it does not run.
    timer = tv.view_.post(5ms, [&] { ++later; });
    timer->cancel();
-   std::this_thread::sleep_for(10ms);
+   std::this_thread::sleep_for(50ms);
    tv.view_.poll();
    CHECK(later == 2);
 }

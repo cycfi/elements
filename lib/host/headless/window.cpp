@@ -30,8 +30,14 @@ namespace cycfi::elements
       return {_window->bounds.width(), _window->bounds.height()};
    }
 
-   void window::size(point const& p)
+   // Within the limits, as a host's window manager keeps it
+   void window::size(point const& p_)
    {
+      auto const& l = _window->limits;
+      point const p{
+         std::clamp(p_.x, l.min.x, std::max(l.min.x, l.max.x))
+       , std::clamp(p_.y, l.min.y, std::max(l.min.y, l.max.y))
+      };
       if (_window->view)
       {
          _window->view->size(p);

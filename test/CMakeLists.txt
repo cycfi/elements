@@ -80,6 +80,8 @@ set(elements_test_sources
    pages/elements/visibility_test.cpp
    pages/elements/curve_editor_test.cpp
    pages/elements/swatches_test.cpp
+   pages/application/app_test.cpp
+   pages/application/window_test.cpp
    pages/layout/sizing_test.cpp
    pages/layout/stretch_test.cpp
    pages/layout/span_test.cpp

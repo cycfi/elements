@@ -8,6 +8,7 @@
 #include "x11_host.hpp"
 
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <cmath>
 
@@ -44,6 +45,19 @@ namespace cycfi::elements
       // fills the whole window, and an X background clear on each resize step
       // shows up as flicker (a white flash) behind the new frame.
       XSetWindowBackgroundPixmap(d, _window->window, None);
+
+      // The bounds' position is meant: without this, a window manager
+      // places a new window where it chooses.
+      if (XSizeHints* hints = XAllocSizeHints())
+      {
+         hints->flags = PPosition | PSize;
+         hints->x = x;
+         hints->y = y;
+         hints->width = w;
+         hints->height = h;
+         XSetWMNormalHints(d, _window->window, hints);
+         XFree(hints);
+      }
 
       XStoreName(d, _window->window, name.c_str());
 
@@ -97,6 +111,37 @@ namespace cycfi::elements
       XFree(hints);
    }
 
+   namespace
+   {
+      // The frame the window manager put around the window, as
+      // _NET_FRAME_EXTENTS gives it: left, right, top, bottom; zero
+      // without one.
+      void frame_extents(Display* d, ::Window w, long& left, long& top)
+      {
+         left = top = 0;
+         Atom prop = XInternAtom(d, "_NET_FRAME_EXTENTS", True);
+         if (prop == None)
+            return;
+         Atom type;
+         int format = 0;
+         unsigned long n = 0, after = 0;
+         unsigned char* data = nullptr;
+         if (XGetWindowProperty(d, w, prop, 0, 4, False, XA_CARDINAL
+            , &type, &format, &n, &after, &data) == Success && data)
+         {
+            if (type == XA_CARDINAL && format == 32 && n >= 4)
+            {
+               auto const* v = reinterpret_cast<long const*>(data);
+               left = v[0];
+               top = v[2];
+            }
+            XFree(data);
+         }
+      }
+   }
+
+   // The top left of the window as the user sees it: the frame's, when
+   // the window manager gave it one, as position(p) places it.
    point window::position() const
    {
       Display* d = get_display();
@@ -104,8 +149,10 @@ namespace cycfi::elements
       int x = 0, y = 0;
       ::Window root = DefaultRootWindow(d);
       XTranslateCoordinates(d, _window->window, root, 0, 0, &x, &y, &child);
+      long left = 0, top = 0;
+      frame_extents(d, _window->window, left, top);
       double scale = window_scale(_window->window);
-      return {float(x / scale), float(y / scale)};
+      return {float((x - left) / scale), float((y - top) / scale)};
    }
 
    void window::position(point const& p)

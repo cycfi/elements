@@ -11,7 +11,6 @@
 #include <elements/element/selection.hpp>
 #include <elements/element/traversal.hpp>
 #include <elements/support/context.hpp>
-#include <elements/support/sender.hpp>
 #include <elements/view.hpp>
 #include <type_traits>
 #include <concepts>

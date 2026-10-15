@@ -94,10 +94,10 @@ TEST_CASE("grids page: the factories and the composites", "[grids_page]")
    probe a, b, c;
 
    auto h = hgrid(positions, link(a), link(b), link(c));
-   CHECK(std::is_same_v<decltype(h), array_composite<3, range_grid<hgrid_element>>>);
+   CHECK(std::is_same_v<decltype(h), array_composite<3, array_grid<3, hgrid_element>>>);
    CHECK(std::is_same_v<decltype(h)::container_type, std::array<element_ptr, 3>>);
    auto ha = hgrid(array_positions, link(a), link(b), link(c));
-   CHECK(std::is_same_v<decltype(ha), array_composite<3, range_grid<hgrid_element>>>);
+   CHECK(std::is_same_v<decltype(ha), array_composite<3, array_grid<3, hgrid_element>>>);
    auto he = hgrid(link(a), link(b), link(c));
    CHECK(std::is_same_v<decltype(he), array_composite<3, equal_grid<hgrid_element>>>);
    CHECK(std::is_same_v<hgrid_composite,
@@ -105,9 +105,9 @@ TEST_CASE("grids page: the factories and the composites", "[grids_page]")
    CHECK(std::is_base_of_v<grid_base, hgrid_element>);
 
    auto v = vgrid(positions, link(a), link(b), link(c));
-   CHECK(std::is_same_v<decltype(v), array_composite<3, range_grid<vgrid_element>>>);
+   CHECK(std::is_same_v<decltype(v), array_composite<3, array_grid<3, vgrid_element>>>);
    auto va = vgrid(array_positions, link(a), link(b), link(c));
-   CHECK(std::is_same_v<decltype(va), array_composite<3, range_grid<vgrid_element>>>);
+   CHECK(std::is_same_v<decltype(va), array_composite<3, array_grid<3, vgrid_element>>>);
    auto ve = vgrid(link(a), link(b), link(c));
    CHECK(std::is_same_v<decltype(ve), array_composite<3, equal_grid<vgrid_element>>>);
    CHECK(std::is_same_v<vgrid_composite,

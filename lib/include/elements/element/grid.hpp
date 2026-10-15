@@ -188,39 +188,6 @@ namespace cycfi::elements
 
    /**
     * \brief
-    *    Create vertical grid layout, given row coordinates as a C-style
-    *    array.
-    *
-    * \tparam N
-    *    The number of rows.
-    *
-    * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
-    *
-    * \param coords
-    *    C-style array with coordinates for grid cells.
-    *
-    * \param elements
-    *    Elements intended to place in grid cells.
-    *
-    * \returns
-    *    A vertical grid element represented as an instance of
-    *    `array_composite` that is derived from `range_grid<vgrid_element>`.
-    *    The row coordinates are provided by the `coords` parameter.
-    */
-   template <std::size_t N, concepts::Element... E>
-   inline auto vgrid(float const(&coords)[N], E&&... elements)
-   {
-      using composite = array_composite<sizeof...(elements), range_grid<vgrid_element>>;
-      using container = typename composite::container_type;
-      composite r{coords, N};
-      r = container{{share(std::forward<E>(elements))...}};
-      return r;
-   }
-
-   /**
-    * \brief
     *    Create a vertical grid layout, given row coordinates as an
     *    `std::array`.
     *
@@ -254,12 +221,29 @@ namespace cycfi::elements
 
    /**
     * \brief
-    *    Create a vertical grid layout, given coordinates as a temporary
-    *    C-style array, such as a braced list. The grid keeps a copy of the
-    *    coordinates.
+    *    Create vertical grid layout, given row coordinates as a C-style
+    *    array.
+    *
+    * \tparam N
+    *    The number of rows.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param coords
+    *    C-style array with coordinates for grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A vertical grid element represented as an instance of
+    *    `array_composite` that is derived from `array_grid<N, vgrid_element>`.
+    *    The grid keeps a copy of the row coordinates in `coords`.
     */
    template <std::size_t N, concepts::Element... E>
-   inline auto vgrid(float const(&&coords)[N], E&&... elements)
+   inline auto vgrid(float const(&coords)[N], E&&... elements)
    {
       std::array<float, N> copy;
       std::copy(coords, coords+N, copy.begin());
@@ -322,39 +306,6 @@ namespace cycfi::elements
 
    /**
     * \brief
-    *    Create horizontal grid layout, given column coordinates as a C-style
-    *    array.
-    *
-    * \tparam N
-    *    The number of columns.
-    *
-    * \tparam E
-    *    A parameter pack representing a variadic template parameter. It
-    *    consists of the elements put into grid cells.
-    *
-    * \param coords
-    *    C-style array with coordinates for grid cells.
-    *
-    * \param elements
-    *    Elements intended to place in grid cells.
-    *
-    * \returns
-    *    A horizontal grid element represented as an instance of
-    *    `array_composite` that is derived from `range_grid<hgrid_element>`.
-    *    The column coordinates are provided by the `coords` parameter.
-    */
-   template <std::size_t N, concepts::Element... E>
-   inline auto hgrid(float const(&coords)[N], E&&... elements)
-   {
-      using composite = array_composite<sizeof...(elements), range_grid<hgrid_element>>;
-      using container = typename composite::container_type;
-      composite r{coords, N};
-      r = container{{share(std::forward<E>(elements))...}};
-      return r;
-   }
-
-   /**
-    * \brief
     *    Create a horizontal grid layout, given column coordinates as an
     *    `std::array`.
     *
@@ -388,12 +339,29 @@ namespace cycfi::elements
 
    /**
     * \brief
-    *    Create a horizontal grid layout, given coordinates as a temporary
-    *    C-style array, such as a braced list. The grid keeps a copy of the
-    *    coordinates.
+    *    Create horizontal grid layout, given column coordinates as a C-style
+    *    array.
+    *
+    * \tparam N
+    *    The number of columns.
+    *
+    * \tparam E
+    *    A parameter pack representing a variadic template parameter. It
+    *    consists of the elements put into grid cells.
+    *
+    * \param coords
+    *    C-style array with coordinates for grid cells.
+    *
+    * \param elements
+    *    Elements intended to place in grid cells.
+    *
+    * \returns
+    *    A horizontal grid element represented as an instance of
+    *    `array_composite` that is derived from `array_grid<N, hgrid_element>`.
+    *    The grid keeps a copy of the column coordinates in `coords`.
     */
    template <std::size_t N, concepts::Element... E>
-   inline auto hgrid(float const(&&coords)[N], E&&... elements)
+   inline auto hgrid(float const(&coords)[N], E&&... elements)
    {
       std::array<float, N> copy;
       std::copy(coords, coords+N, copy.begin());

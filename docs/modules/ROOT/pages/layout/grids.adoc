@@ -68,12 +68,8 @@ using hgrid_composite = vector_composite<
 >;
 
 template <std::size_t N, concepts::Element... E>
-array_composite<sizeof...(E), range_grid<hgrid_element>>
-hgrid(float const(&coords)[N], E&&... elements);
-
-template <std::size_t N, concepts::Element... E>
 array_composite<sizeof...(E), array_grid<N, hgrid_element>>
-hgrid(float const(&&coords)[N], E&&... elements);
+hgrid(float const(&coords)[N], E&&... elements);
 
 template <std::size_t N, concepts::Element... E>
 array_composite<sizeof...(E), array_grid<N, hgrid_element>>
@@ -86,9 +82,8 @@ hgrid(E&&... elements);
 
 `hgrid` returns an `array_composite` and `hgrid_composite` is a
 `vector_composite`, each with `hgrid_element` as its base, under a class that
-supplies the positions: `range_grid` refers to a plain array, `array_grid`
-holds a copy, `equal_grid` divides the grid equally, and `container_grid`
-refers to a container. All of `hgrid_element` is the `Composite` interface (see
+supplies the positions: `array_grid` holds a copy of them, `equal_grid`
+divides the grid equally, and `container_grid` refers to a container. All of `hgrid_element` is the `Composite` interface (see
 xref:elements/composites.adoc[Composites]).
 
 === Expressions
@@ -127,9 +122,8 @@ static float positions[] = {0.25, 0.5, 0.75, 1.0};
 hgrid(positions, item1, item2, item3, item4)
 ----
 
-A named plain array of positions is not copied: it must outlive the grid, as
-a `static` array does. A `std::array` or a braced list of positions, such as
-`+hgrid({0.25f, 1.0f}, item1, item2)+`, is copied into the grid.
+The positions are copied into the grid, whether given as a plain array, a
+`std::array`, or a braced list such as `+hgrid({0.25f, 1.0f}, item1, item2)+`.
 
 NOTE: If the number of elements is not fixed, you can use an
 `hgrid_composite` (see below).
@@ -239,12 +233,8 @@ using vgrid_composite = vector_composite<
 >;
 
 template <std::size_t N, concepts::Element... E>
-array_composite<sizeof...(E), range_grid<vgrid_element>>
-vgrid(float const(&coords)[N], E&&... elements);
-
-template <std::size_t N, concepts::Element... E>
 array_composite<sizeof...(E), array_grid<N, vgrid_element>>
-vgrid(float const(&&coords)[N], E&&... elements);
+vgrid(float const(&coords)[N], E&&... elements);
 
 template <std::size_t N, concepts::Element... E>
 array_composite<sizeof...(E), array_grid<N, vgrid_element>>
@@ -257,9 +247,8 @@ vgrid(E&&... elements);
 
 `vgrid` returns an `array_composite` and `vgrid_composite` is a
 `vector_composite`, each with `vgrid_element` as its base, under a class that
-supplies the positions: `range_grid` refers to a plain array, `array_grid`
-holds a copy, `equal_grid` divides the grid equally, and `container_grid`
-refers to a container. All of `vgrid_element` is the `Composite` interface (see
+supplies the positions: `array_grid` holds a copy of them, `equal_grid`
+divides the grid equally, and `container_grid` refers to a container. All of `vgrid_element` is the `Composite` interface (see
 xref:elements/composites.adoc[Composites]).
 
 === Expressions
@@ -298,9 +287,8 @@ static float positions[] = {0.25, 0.5, 0.75, 1.0};
 vgrid(positions, item1, item2, item3, item4)
 ----
 
-A named plain array of positions is not copied: it must outlive the grid, as
-a `static` array does. A `std::array` or a braced list of positions, such as
-`+vgrid({0.25f, 1.0f}, item1, item2)+`, is copied into the grid.
+The positions are copied into the grid, whether given as a plain array, a
+`std::array`, or a braced list such as `+vgrid({0.25f, 1.0f}, item1, item2)+`.
 
 NOTE: If the number of elements is not fixed, you can use a
 `vgrid_composite` (see below).

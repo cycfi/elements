@@ -12,6 +12,7 @@
 #include <artist/canvas.hpp>
 #include <elements/support/perf.hpp>
 #include "../common/transfer.hpp"
+#include "../common/scroll_direction.hpp"
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
@@ -1238,48 +1239,9 @@ namespace cycfi::elements
       }
    }
 
-   namespace
-   {
-      std::string exec(char const* cmd)
-      {
-         std::array<char, 128> buffer;
-         std::string result;
-         std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-         if (!pipe)
-            throw std::runtime_error("popen() failed!");
-         while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-            result += buffer.data();
-         return result;
-      }
-
-      point get_scroll_direction()
-      {
-         std::string output = exec("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
-         output.erase(remove(output.begin(), output.end(), '\n'), output.end());
-
-         if (output == "true")
-            return {+1.0f, +1.0f};  // Assuming positive for natural scrolling
-         else
-            return {-1.0f, -1.0f};  // Assuming negative for traditional scrolling
-      }
-   }
-
    point scroll_direction()
    {
-      using namespace std::chrono;
-      static auto last_call = steady_clock::now() - seconds(10);
-      static point dir = get_scroll_direction(); // Initial call
-
-      // In case the user changed the scroll direction settings, we will call
-      // get_scroll_direction() if 10 seconds have passed since the last call.
-      auto now = steady_clock::now();
-      if (duration_cast<seconds>(now - last_call) >= seconds(10))
-      {
-         dir = get_scroll_direction(); // Update the direction if 10 seconds have passed
-         last_call = now;              // Update the last call time
-      }
-
-      return dir;
+      return linux_host::scroll_direction();
    }
 
 }

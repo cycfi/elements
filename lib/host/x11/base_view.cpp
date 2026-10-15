@@ -11,6 +11,7 @@
 #include <elements/support/perf.hpp>
 #include "x11_host.hpp"
 #include "../common/transfer.hpp"
+#include "../common/scroll_direction.hpp"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -793,47 +794,9 @@ namespace cycfi::elements
       XFlush(p.display);
    }
 
-   namespace
-   {
-      std::string exec(char const* cmd)
-      {
-         std::array<char, 128> buffer;
-         std::string result;
-         std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-         if (!pipe)
-            return result;
-         while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-            result += buffer.data();
-         return result;
-      }
-
-      // Read the GNOME natural-scroll setting (mirrors the GTK host). +1 for
-      // natural scrolling, -1 for traditional (the default if unreadable).
-      point get_scroll_direction()
-      {
-         std::string output =
-            exec("gsettings get org.gnome.desktop.peripherals.touchpad natural-scroll");
-         output.erase(std::remove(output.begin(), output.end(), '\n'), output.end());
-         if (output == "true")
-            return {+1.0f, +1.0f};
-         return {-1.0f, -1.0f};
-      }
-   }
-
    point scroll_direction()
    {
-      using namespace std::chrono;
-      static auto last_call = steady_clock::now() - seconds(10);
-      static point dir = get_scroll_direction();
-
-      // Re-read at most every 10s in case the user changed the setting.
-      auto now = steady_clock::now();
-      if (duration_cast<seconds>(now - last_call) >= seconds(10))
-      {
-         dir = get_scroll_direction();
-         last_call = now;
-      }
-      return dir;
+      return linux_host::scroll_direction();
    }
 
    ////////////////////////////////////////////////////////////////////////////

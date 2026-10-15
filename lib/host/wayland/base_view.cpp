@@ -11,11 +11,13 @@
 #include <elements/support/perf.hpp>
 #include "wayland_host.hpp"
 #include "../common/transfer.hpp"
+#include "../common/scroll_direction.hpp"
 
 #include <wayland-client.h>
 #include <libdecor.h>
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
+#include <wayland-cursor.h>
 #include <linux/input-event-codes.h>
 
 #if defined(ARTIST_SKIA)
@@ -52,6 +54,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <chrono>
+#include <initializer_list>
 #include <map>
 #include <set>
 #include <algorithm>
@@ -202,7 +205,21 @@ namespace cycfi::elements
          xkb_compose_state* compose = nullptr;  // dead keys and compose sequences
          base_view*     pointer_focus = nullptr;
          base_view*     keyboard_focus = nullptr;
+
+         // The cursor: a client sets it each time the pointer enters one of
+         // its surfaces, from the theme, at the surface's scale.
+         uint32_t       pointer_serial = 0;     // of the latest pointer enter
+         cursor_type    cursor = cursor_type::arrow;
+         wl_surface*    cursor_surface = nullptr;
+         std::map<int, wl_cursor_theme*> cursor_themes;
          point          pointer_pos;
+
+         // Key repeat: the compositor gives the rate and delay, and the
+         // client repeats a held key itself.
+         int32_t        repeat_rate = 25;       // per second; 0 is none
+         int32_t        repeat_delay = 400;     // ms before the first repeat
+         uint32_t       repeat_keycode = 0;     // the held key; 0 is none
+         std::chrono::steady_clock::time_point repeat_next;
          uint32_t       click_time = 0;
          int            click_count = 0;
          uint32_t       last_button = 0;
@@ -279,14 +296,72 @@ namespace cycfi::elements
          return m;
       }
 
+      // The theme's names for a cursor, the CSS name first, then the older
+      // X11 one.
+      std::initializer_list<char const*> cursor_names(cursor_type type)
+      {
+         switch (type)
+         {
+            case cursor_type::ibeam:      return {"text", "xterm"};
+            case cursor_type::cross_hair: return {"crosshair", "cross"};
+            case cursor_type::hand:       return {"pointer", "hand2"};
+            case cursor_type::h_resize:   return {"ew-resize", "sb_h_double_arrow"};
+            case cursor_type::v_resize:   return {"ns-resize", "sb_v_double_arrow"};
+            default:                      return {"default", "left_ptr"};
+         }
+      }
+
+      // Shows the current cursor over the surface the pointer is in.
+      void apply_cursor()
+      {
+         auto& p = plat();
+         if (!p.pointer || !p.pointer_focus || !p.shm || !p.compositor)
+            return;
+         int const scale = std::max(1, int(std::lround(
+            platform_access::get_host_view(*p.pointer_focus)->scale)));
+
+         auto& theme = p.cursor_themes[scale];
+         if (!theme)
+         {
+            int size = 24;
+            if (char const* s = std::getenv("XCURSOR_SIZE"))
+               size = std::max(1, std::atoi(s));
+            theme = wl_cursor_theme_load(std::getenv("XCURSOR_THEME"), size * scale, p.shm);
+            if (!theme)
+               return;
+         }
+
+         wl_cursor* c = nullptr;
+         for (auto name : cursor_names(p.cursor))
+            if ((c = wl_cursor_theme_get_cursor(theme, name)))
+               break;
+         if (!c || c->image_count == 0)
+            return;
+         wl_cursor_image* img = c->images[0];
+         wl_buffer* buffer = wl_cursor_image_get_buffer(img);
+         if (!buffer)
+            return;
+
+         if (!p.cursor_surface)
+            p.cursor_surface = wl_compositor_create_surface(p.compositor);
+         wl_surface_set_buffer_scale(p.cursor_surface, scale);
+         wl_surface_attach(p.cursor_surface, buffer, 0, 0);
+         wl_surface_damage(p.cursor_surface, 0, 0, int(img->width), int(img->height));
+         wl_surface_commit(p.cursor_surface);
+         wl_pointer_set_cursor(p.pointer, p.pointer_serial, p.cursor_surface,
+            int(img->hotspot_x) / scale, int(img->hotspot_y) / scale);
+      }
+
       // --- pointer ---
-      void ptr_enter(void*, wl_pointer*, uint32_t, wl_surface* surf, wl_fixed_t x, wl_fixed_t y)
+      void ptr_enter(void*, wl_pointer*, uint32_t serial, wl_surface* surf, wl_fixed_t x, wl_fixed_t y)
       {
          auto& p = plat();
          auto i = p.views.find(surf);
          p.pointer_focus = (i != p.views.end()) ? i->second : nullptr;
+         p.pointer_serial = serial;
          if (p.pointer_focus)
          {
+            apply_cursor();
             p.pointer_pos = {float(wl_fixed_to_double(x)), float(wl_fixed_to_double(y))};
             platform_access::get_host_view(*p.pointer_focus)->cursor_position = p.pointer_pos;
             p.pointer_focus->cursor(p.pointer_pos, cursor_tracking::entering);
@@ -435,6 +510,7 @@ namespace cycfi::elements
          if (p.keyboard_focus)
             p.keyboard_focus->end_focus();
          p.keyboard_focus = nullptr;
+         p.repeat_keycode = 0;
       }
       void kb_key(void*, wl_keyboard*, uint32_t serial, uint32_t, uint32_t key, uint32_t state)
       {
@@ -486,7 +562,43 @@ namespace cycfi::elements
             }
             if (cp >= 0x20 && cp != 0x7F)
                p.keyboard_focus->text({cp, mods});
+            if (p.repeat_rate > 0 && xkb_keymap_key_repeats(p.xkb_map, keycode))
+            {
+               p.repeat_keycode = keycode;
+               p.repeat_next = std::chrono::steady_clock::now()
+                  + std::chrono::milliseconds(p.repeat_delay);
+            }
          }
+         else if (keycode == p.repeat_keycode)
+         {
+            p.repeat_keycode = 0;
+         }
+      }
+
+      // Sends the held key again when its time comes: as a repeat, and its
+      // text, as the other hosts do.
+      void repeat_key()
+      {
+         auto& p = plat();
+         if (!p.repeat_keycode || !p.keyboard_focus || !p.xkb_st || p.repeat_rate <= 0)
+            return;
+         auto const now = std::chrono::steady_clock::now();
+         if (now < p.repeat_next)
+            return;
+         p.repeat_next = now + std::chrono::microseconds(1000000 / p.repeat_rate);
+
+         xkb_keysym_t sym = XKB_KEY_NoSymbol;
+         xkb_layout_index_t const layout = xkb_state_key_get_layout(p.xkb_st, p.repeat_keycode);
+         xkb_keysym_t const* syms = nullptr;
+         if (layout != XKB_LAYOUT_INVALID
+            && xkb_keymap_key_get_syms_by_level(p.xkb_map, p.repeat_keycode, layout, 0, &syms) > 0)
+            sym = syms[0];
+         int const mods = get_mods();
+         if (auto kc = translate_key(sym); kc != key_code::unknown)
+            p.keyboard_focus->key({kc, key_action::repeat, mods});
+         uint32_t cp = xkb_state_key_get_utf32(p.xkb_st, p.repeat_keycode);
+         if (cp >= 0x20 && cp != 0x7F)
+            p.keyboard_focus->text({cp, mods});
       }
       void kb_mods(void*, wl_keyboard*, uint32_t, uint32_t dep, uint32_t lat, uint32_t lock, uint32_t group)
       {
@@ -494,7 +606,12 @@ namespace cycfi::elements
          if (p.xkb_st)
             xkb_state_update_mask(p.xkb_st, dep, lat, lock, 0, 0, group);
       }
-      void kb_repeat(void*, wl_keyboard*, int32_t, int32_t) {}
+      void kb_repeat(void*, wl_keyboard*, int32_t rate, int32_t delay)
+      {
+         auto& p = plat();
+         p.repeat_rate = rate;
+         p.repeat_delay = delay;
+      }
       constexpr wl_keyboard_listener keyboard_listener = {
          kb_keymap, kb_enter, kb_leave, kb_key, kb_mods, kb_repeat
       };
@@ -986,6 +1103,7 @@ namespace cycfi::elements
 
    void poll_views()
    {
+      repeat_key();
       for (auto& [s, view] : plat().views)
       {
          view->poll();
@@ -1443,10 +1561,17 @@ namespace cycfi::elements
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   // Cursor / scroll — stubs for Phase W3
-   void set_cursor(cursor_type) {}
+   // The cursor and the scroll direction
+   void set_cursor(cursor_type type)
+   {
+      auto& p = plat();
+      if (type == p.cursor)
+         return;
+      p.cursor = type;
+      apply_cursor();
+   }
 
    // No registration step; resources are found by path (see gtk3 host).
    void init_resources() {}
-   point scroll_direction() { return {-1.0f, -1.0f}; }
+   point scroll_direction() { return linux_host::scroll_direction(); }
 }

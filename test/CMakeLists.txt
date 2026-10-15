@@ -15,6 +15,7 @@ set(elements_test_sources
    # The library's own tests
    lib/draw_cull_test.cpp
    lib/view_refresh_test.cpp
+   lib/linux_host_test.cpp
    lib/button_tracking_test.cpp
    lib/curve_editor_test.cpp
    lib/undo_anchor_test.cpp
@@ -121,6 +122,12 @@ if (APPLE)
 endif()
 
 target_link_libraries(elements_test PRIVATE elements)
+
+# The Linux host test pumps the window's events itself, as app::run does.
+if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "x11")
+   find_package(X11 REQUIRED)
+   target_link_libraries(elements_test PRIVATE X11::X11)
+endif()
 target_include_directories(elements_test PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
 # Artist's Quartz backend measures and draws text through Core Text and

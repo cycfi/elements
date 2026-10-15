@@ -129,7 +129,7 @@ namespace cycfi::elements
       point             cursor_position;
       base_view*        self = nullptr;       // back-pointer (for deferred render)
       bool              configured = false;
-      bool              pending = false;       // a render was deferred (both busy)
+      bool              pending = false;       // a render is due: asked for, or deferred
 
       // Integer per-monitor HiDPI: the outputs the surface is on; scale = the
       // max of their wl_output scales (set via wl_surface_set_buffer_scale).
@@ -930,6 +930,13 @@ namespace cycfi::elements
       for (auto& [s, view] : plat().views)
       {
          view->poll();
+#if defined(ARTIST_CAIRO)
+         // A refresh only marks an area. Each view is drawn here, once,
+         // after its posted work has run, however many refreshes that
+         // work asked for.
+         if (platform_access::get_host_view(*view)->pending)
+            render(*view);
+#endif
       }
    }
 
@@ -978,16 +985,26 @@ namespace cycfi::elements
 
    void base_view::size(elements::extent /*p*/) { /* window-driven; no-op */ }
 
+   // Skia draws once per compositor frame, so it is asked to render
+   // straight away. Cairo is drawn from poll_views.
    void base_view::refresh()
    {
       invalidate(_view, {0, 0, _view->size.x, _view->size.y});
+#if defined(ARTIST_CAIRO)
+      _view->pending = true;
+#else
       render(*this);
+#endif
    }
 
    void base_view::refresh(rect area)
    {
       invalidate(_view, area);
+#if defined(ARTIST_CAIRO)
+      _view->pending = true;
+#else
       render(*this);
+#endif
    }
 
    void base_view::accept_drop_types(mime_types const& types)

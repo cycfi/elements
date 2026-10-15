@@ -1536,9 +1536,14 @@ namespace cycfi::elements
 
    void poll_views()
    {
+      // A refresh only marks an area. Each view is drawn here, once, after
+      // its posted work has run, however many refreshes that work asked
+      // for.
       for (auto& [w, view] : plat().views)
       {
          view->poll();
+         if (platform_access::get_host_view(*view)->has_dirty)
+            do_render(*view);
       }
    }
 
@@ -1709,16 +1714,12 @@ namespace cycfi::elements
 
    void base_view::refresh()
    {
-      // Render into the back buffer and blit, with no window clear, so no
-      // flicker.
       invalidate(_view, {0, 0, _view->size.x, _view->size.y});
-      do_render(*this);
    }
 
    void base_view::refresh(rect area)
    {
       invalidate(_view, area);
-      do_render(*this);
    }
 
    void base_view::accept_drop_types(mime_types const& types)

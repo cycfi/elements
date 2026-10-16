@@ -127,8 +127,14 @@ namespace cycfi::elements
       void                    home(bool shift = false);
       void                    end(bool shift = false);
 
+      // The text an input method is composing, drawn at the caret until
+      // it is committed as text. Empty text ends it.
+      void                    composition(composition_info const& info);
+      composition_info const& composition() const     { return _composition; }
+
       virtual void            draw_selection(context const& ctx);
       virtual void            draw_caret(context const& ctx);
+      virtual void            draw_composition(context const& ctx);
       virtual bool            word_break(int index) const;
       virtual bool            line_break(int index) const;
 
@@ -184,6 +190,7 @@ namespace cycfi::elements
       bool                    _enabled : 1;
       bool                    _scroll_into_view : 1;
       undo_anchor<basic_text_box> _anchor;
+      composition_info        _composition;
    };
 
    /**

@@ -50,6 +50,7 @@ namespace cycfi::elements
       void                    scroll(point dir, point p) override;
       bool                    key(key_info const& k) override;
       bool                    text(text_info const& info) override;
+      void                    composition(composition_info const& info) override;
       void                    begin_focus() override;
       void                    end_focus() override;
       void                    relinquish_focus();

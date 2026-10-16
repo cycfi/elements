@@ -226,3 +226,45 @@ TEST_CASE("a focused text box tells the host where its caret is", "[input_box]")
    CHECK(then->top == first->top);
 }
 #endif
+
+#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
+TEST_CASE("an input method's composition shows at the caret until committed", "[input_box]")
+{
+   auto in = share(basic_input_box{});
+   input_view v{in};
+   auto& view_ = v.view_;
+
+   // Focus the box the way a click does, so the view finds it.
+   mouse_button b{};
+   b.state = mouse_button::left;
+   b.down = true;
+   b.num_clicks = 1;
+   b.pos = {10, 10};
+   view_.click(b);
+   b.down = false;
+   view_.click(b);
+
+   view_.text(text_info{'a', 0});
+   REQUIRE(in->get_text() == U"a");
+   v.draw();
+   auto const plain = headless::text_caret(view_);
+   REQUIRE(plain);
+
+   // Composing leaves the text alone; the reported caret moves to the
+   // composition's cursor.
+   view_.composition({U"にほん", 2});
+   CHECK(in->composition().text == U"にほん");
+   CHECK(in->composition().cursor == 2);
+   CHECK(in->get_text() == U"a");
+   v.draw();
+   auto const composing = headless::text_caret(view_);
+   REQUIRE(composing);
+   CHECK(composing->left > plain->left);
+
+   // Committing ends it.
+   view_.composition({});
+   view_.text(text_info{U'日', 0});
+   CHECK(in->composition().text.empty());
+   CHECK(in->get_text() == U"a日");
+}
+#endif

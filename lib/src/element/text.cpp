@@ -338,6 +338,7 @@ namespace cycfi::elements
          return false;
 
       _show_caret = true;
+      _composition = {};
 
       if (_select_start == -1)
          return false;
@@ -665,6 +666,12 @@ namespace cycfi::elements
       if (!editable() || _select_start == -1)
          return;
 
+      if (_is_focus && !_composition.text.empty())
+      {
+         draw_composition(ctx);
+         return;
+      }
+
       auto& canvas = ctx.canvas;
       auto const& theme = get_theme();
       rect caret_bounds;
@@ -735,6 +742,65 @@ namespace cycfi::elements
             }
          );
       }
+   }
+
+   void basic_text_box::composition(composition_info const& info)
+   {
+      _composition = info;
+      _composition.cursor = std::min(info.cursor, info.text.size());
+   }
+
+   // The composition is drawn over the text at the caret, on the panel
+   // color, underlined, with a caret at its cursor. That caret is the one
+   // the host is told of, so the input method's candidates sit under it.
+   void basic_text_box::draw_composition(context const& ctx)
+   {
+      auto& cnv = ctx.canvas;
+      auto const& theme = get_theme();
+      auto _text = get_text();
+      auto const m = get_font().metrics();
+
+      point pos{ctx.bounds.left, ctx.bounds.top + m.leading + m.ascent};
+      if (!_text.empty())
+      {
+         auto at = std::max(0, std::min(_select_start, _select_end));
+         pos = caret_info(ctx, _text.data() + at).pos;
+      }
+
+      auto state = cnv.new_state();
+      cnv.font(get_font());
+      cnv.text_align(canvas::left | canvas::baseline);
+
+      auto const& comp = _composition.text;
+      auto const utf8 = to_utf8(comp);
+      auto const width = cnv.measure_text(utf8).size.x;
+      auto const top = pos.y - (m.leading + m.ascent);
+      auto const bottom = pos.y + m.descent;
+
+      cnv.fill_style(theme.panel_color.opacity(1));
+      cnv.fill_rect({pos.x, top, pos.x + width, bottom});
+
+      cnv.fill_style(get_color());
+      cnv.fill_text(utf8, pos);
+
+      cnv.line_width(1);
+      cnv.stroke_style(get_color());
+      cnv.move_to({pos.x, pos.y + 2});
+      cnv.line_to({pos.x + width, pos.y + 2});
+      cnv.stroke();
+
+      auto const before = to_utf8(comp.substr(0, _composition.cursor));
+      auto const x = pos.x + cnv.measure_text(before).size.x;
+      auto const caret_width = theme.text_box_caret_width;
+      cnv.line_width(caret_width);
+      cnv.stroke_style(theme.text_box_caret_color);
+      cnv.move_to({x + caret_width/2, top});
+      cnv.line_to({x + caret_width/2, bottom});
+      cnv.stroke();
+
+      auto const tl = cnv.user_to_device({x, top});
+      auto const br = cnv.user_to_device({x + caret_width, bottom});
+      ctx.view.text_caret({tl.x, tl.y, br.x, br.y});
    }
 
    void basic_text_box::draw_selection(context const& ctx)
@@ -936,6 +1002,7 @@ namespace cycfi::elements
    bool basic_text_box::end_focus()
    {
       _is_focus = false;
+      _composition = {};
       _typing_state = {}; // the typing run, if any, ends here
       return true;
    }

@@ -97,6 +97,17 @@ namespace cycfi::elements
    };
 
    ////////////////////////////////////////////////////////////////////////////
+   // Composition info: the text an input method is composing, before it
+   // is committed as text, and the cursor's place in it, in characters.
+   // Empty text ends the composition.
+   ////////////////////////////////////////////////////////////////////////////
+   struct composition_info
+   {
+      std::u32string text;
+      std::size_t    cursor = 0;
+   };
+
+   ////////////////////////////////////////////////////////////////////////////
    // Keyboard information
    //
    // Key mapping ported to C++ from GLFW3
@@ -352,6 +363,7 @@ namespace cycfi::elements
       virtual void         scroll(point dir, point p);
       virtual bool         key(key_info const& k);
       virtual bool         text(text_info const& info);
+      virtual void         composition(composition_info const& info);
       virtual void         begin_focus();
       virtual void         end_focus();
       virtual void         track_drop(drop_info const& info, cursor_tracking status);
@@ -398,6 +410,7 @@ namespace cycfi::elements
    inline void base_view::scroll(point /* dir */, point /* p */) {}
    inline bool base_view::key(key_info const& /* k */) { return false; }
    inline bool base_view::text(text_info const& /* info */) { return false; }
+   inline void base_view::composition(composition_info const& /* info */) {}
    inline void base_view::begin_focus() {}
    inline void base_view::end_focus() {}
    inline void base_view::track_drop(drop_info const& /*info*/, cursor_tracking /* status */) {}

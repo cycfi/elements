@@ -164,6 +164,12 @@ namespace
    // Defines a constant for empty ranges in NSTextInputClient
    NSRange const kEmptyRange = {NSNotFound, 0};
 
+   std::u32string utf32_of(NSString* s)
+   {
+      NSData* d = [s dataUsingEncoding : NSUTF32LittleEndianStringEncoding];
+      return {static_cast<char32_t const*>([d bytes]), [d length] / sizeof(char32_t)};
+   }
+
    float transformY(float y)
    {
       return CGDisplayBounds(CGMainDisplayID()).size.height - y;
@@ -449,7 +455,10 @@ namespace
 #endif
 
    bool                             _text_inserted;
+   NSRect                           _text_caret;   // in view coordinates
 }
+
+- (void) set_text_caret : (NSRect) caret;
 
 @end
 
@@ -1012,6 +1021,14 @@ namespace
       mods &= ~ph::mod_action;
       key = ph::key_code::end;
    }
+   // While an input method is composing, its keys are its own: Return,
+   // the arrows and Backspace work on the composition, not the text.
+   if ([self hasMarkedText])
+   {
+      [self interpretKeyEvents : [NSArray arrayWithObject : event]];
+      return;
+   }
+
    bool handled = handle_key(_keys, *_view, {key, ph::key_action::press, mods});
    _text_inserted = false;
    [self interpretKeyEvents : [NSArray arrayWithObject : event]];
@@ -1086,7 +1103,7 @@ namespace
 - (NSRange) markedRange
 {
    if ([_marked_text length] > 0)
-      return NSMakeRange(0, [_marked_text length] - 1);
+      return NSMakeRange(0, [_marked_text length]);
    else
       return kEmptyRange;
 }
@@ -1104,11 +1121,24 @@ namespace
       (void)[_marked_text initWithAttributedString:string];
    else
       (void)[_marked_text initWithString:string];
+
+   NSString* text = [_marked_text string];
+   auto const upto = std::min<NSUInteger>(selectedRange.location, [text length]);
+   ph::composition_info info;
+   info.text = utf32_of(text);
+   info.cursor = utf32_of([text substringToIndex : upto]).size();
+   _view->composition(info);
 }
 
 - (void) unmarkText
 {
    [[_marked_text mutableString] setString:@""];
+   _view->composition({});
+}
+
+- (void) set_text_caret : (NSRect) caret
+{
+   _text_caret = caret;
 }
 
 - (NSArray*) validAttributesForMarkedText
@@ -1130,10 +1160,15 @@ namespace
 - (NSRect) firstRectForCharacterRange : (NSRange)range
                           actualRange : (NSRangePointer)actualRange
 {
-   int xpos, ypos;
-   get_window_pos([self window], xpos, ypos);
-   NSRect const content_rect = [[self window] frame];
-   return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
+   if (NSIsEmptyRect(_text_caret))
+   {
+      int xpos, ypos;
+      get_window_pos([self window], xpos, ypos);
+      NSRect const content_rect = [[self window] frame];
+      return NSMakeRect(xpos, transformY(ypos + content_rect.size.height), 0.0, 0.0);
+   }
+   NSRect const in_window = [self convertRect : _text_caret toView : nil];
+   return [[self window] convertRectToScreen : in_window];
 }
 
 - (void) insertText : (id)string replacementRange : (NSRange)replacementRange
@@ -1142,6 +1177,12 @@ namespace
    auto const  mods = ph::translate_flags([event modifierFlags]);
    auto*       characters = ([string isKindOfClass:[NSAttributedString class]]) ?
                  [string string] : (NSString*) string;
+
+   if ([self hasMarkedText])
+   {
+      [[_marked_text mutableString] setString:@""];
+      _view->composition({});
+   }
 
    NSUInteger i, length = [characters length];
    for (i = 0;  i < length;  i++)
@@ -1419,10 +1460,11 @@ namespace cycfi::elements
       [ns_view registerForDraggedTypes : drop_types(_drop_types)];
    }
 
-   // The input method's windows are not placed at the caret on this
-   // host yet.
-   void base_view::text_caret(rect /* bounds */)
+   void base_view::text_caret(rect bounds)
    {
+      [get_mac_view(host()) set_text_caret
+         : NSMakeRect(bounds.left, bounds.top, bounds.width(), bounds.height())
+      ];
    }
 
    // Types of the pasteboard's own making, a custom MIME type's, are not

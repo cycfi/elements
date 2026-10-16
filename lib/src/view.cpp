@@ -9,6 +9,7 @@
 #include <elements/support/log.hpp>
 #include <elements/support/trace.hpp>
 #include <elements/element/traversal.hpp>
+#include <elements/element/text.hpp>
 #include <algorithm>
 
 namespace cycfi::elements
@@ -510,6 +511,24 @@ namespace cycfi::elements
          *this, _current_bounds
       );
       return handled;
+   }
+
+   // An input method's composition goes to the text box that has the
+   // focus, if the focus is in one.
+   void view::composition(composition_info const& info)
+   {
+      element* e = nullptr;
+      composite_base* c = &_content;
+      while (c && c->_focus != -1 && c->_focus < int(c->size()))
+      {
+         e = &c->at(c->_focus);
+         c = next_composite(e);
+      }
+      if (auto* box = e? find_element<basic_text_box*>(e) : nullptr)
+      {
+         box->composition(info);
+         refresh();
+      }
    }
 
    void view::add_undo(undo_redo_task f)

@@ -7,14 +7,16 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <cmath>
+#include <cstdint>
 #include <random>
 
 /*=============================================================================
    Sliders and knobs on styled tracks: fills in solid colors and gradients,
    glows, radial arcs, meter bands and a pan knob that fills from the
-   center. Each fader drives the level meter beside it, which moves with a
-   little noise, the way a mixer's meters do; the master fader, on a
-   decibel scale, drives a stereo pair.
+   center. A drum machine plays to the meters: each fader sets the level
+   of one drum on the meter beside it, and the master fader, on a decibel
+   scale, sets the level of their mix on a stereo pair.
 =============================================================================*/
 
 using namespace cycfi::elements;
@@ -223,26 +225,83 @@ namespace
          );
    }
 
-   // Every 40 ms, each meter moves toward its fader's level, plus a little
-   // noise, so the meters look alive.
+   // The drum machine plays at 120 beats a minute, in sixteenths: a kick,
+   // a snare and hi-hats, one on each channel. A meter reads its channel in
+   // decibels, as a peak meter does: it jumps up on a hit and falls back at
+   // a steady rate until the next.
+   struct drum
+   {
+      std::uint16_t  pattern;    // the sixteenths it plays on, bit 0 first
+      double         peak;       // decibels at the top of a hit
+      double         fall;       // decibels a second
+      double         left;       // the share of its power on the left
+   };
+
+   std::array<drum, num_channels> const drums = {{
+      {0x0501, -2, 40, 0.5}      // kick: 1, the and of 2, 3
+    , {0x1010, -3, 45, 0.6}      // snare: 2 and 4
+    , {0x5555, -8, 70, 0.35}     // hi-hats: eighths
+   }};
+
+   auto constexpr sixteenth = 125ms;
+   auto constexpr tick = 20ms;
+   double constexpr floor_db = -60;
+
+   std::array<double, num_channels> levels = {floor_db, floor_db, floor_db};
+
+   // A meter's travel: -40 dB at the bottom, 0 dB into the red
+   double meter_position(double db)
+   {
+      return std::clamp((db + 40) / 43, 0.0, 1.0);
+   }
+
+   double to_db(double amplitude)
+   {
+      return amplitude > 0? 20 * std::log10(amplitude) : floor_db;
+   }
+
    void animate_meters(view& view_)
    {
+      using clock = std::chrono::steady_clock;
+      static auto const start = clock::now();
+      static long last_step = -1;
       static std::mt19937 gen{std::random_device{}()};
-      static std::uniform_real_distribution<double> noise{-0.12, 0.06};
+      static std::uniform_real_distribution<double> accent{-2, 2};
 
-      auto move = [&](meter_ptr const& m, double to)
-      {
-         auto target = std::clamp(to + noise(gen), 0.0, 1.0);
-         auto level = m->value();
-         m->value(level + (target - level) * 0.5);
-         view_.refresh(*m);
-      };
+      long const step = (clock::now() - start) / sixteenth;
+      double const dt = std::chrono::duration<double>(tick).count();
+      bool const new_step = step != last_step;
+      last_step = step;
 
+      // A fader at 0.8 is unity
+      double sum_left = 0, sum_right = 0;
       for (std::size_t i = 0; i != num_channels; ++i)
-         move(meters[i], faders[i]->value());
+      {
+         auto const& d = drums[i];
+         auto& level = levels[i];
+         level = std::max(floor_db, level - d.fall * dt);
+         if (new_step && (d.pattern >> (step % 16) & 1))
+            level = d.peak + accent(gen);
+
+         auto out = level + to_db(faders[i]->value() / 0.8);
+         meters[i]->value(meter_position(out));
+         view_.refresh(*meters[i]);
+
+         auto power = std::pow(10, out / 10);
+         sum_left += power * d.left;
+         sum_right += power * (1 - d.left);
+      }
+
+      // The mix, at the master fader's gain, with a centered drum at the
+      // same level on both sides as on its own channel
+      db_scale const scale{-60, 10};
+      auto gain = scale.value(master->value()) + 3;
+      master_meters[0]->value(meter_position(10 * std::log10(sum_left) + gain));
+      master_meters[1]->value(meter_position(10 * std::log10(sum_right) + gain));
       for (auto const& m : master_meters)
-         move(m, master->value());
-      view_.post(40ms, [&view_]() { animate_meters(view_); });
+         view_.refresh(*m);
+
+      view_.post(tick, [&view_]() { animate_meters(view_); });
    }
 }
 

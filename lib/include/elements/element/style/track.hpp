@@ -369,17 +369,13 @@ namespace cycfi::elements
       auto const& fill_colors = static_cast<fill_part<fill_type> const&>(*this);
 
       // Call f(rect, color) for each part of the fill in one color: the
-      // bands, or slices of a gradient, `size` long, or a sixteenth of the
-      // fill when `coarse` (a glow is blurred, so its colors need not step
-      // as finely, and each part is a blur of its own)
-      auto for_each_part = [&](auto f, bool coarse = false)
+      // bands, or slices of a gradient, `size` long
+      auto for_each_part = [&](auto f)
       {
-         (void) coarse;   // gradients only
          if constexpr (detail::is_gradient_fill<fill_type>::value)
          {
             auto const len = vertical? shape.height() : shape.width();
-            auto const step = coarse?
-               std::max(float(size), len / 16) : float(size);
+            auto const step = float(size);
             for (float p = 0; p < len; p += step)
             {
                auto part = shape;
@@ -429,10 +425,21 @@ namespace cycfi::elements
          }
       };
 
+      // A gradient along the whole bar of a status bar, or this track
+      auto along = [&]
+      {
+         return vertical?
+            canvas::linear_gradient{point{0, ref.bottom}, point{0, ref.top}} :
+            canvas::linear_gradient{point{ref.left, 0}, point{ref.right, 0}};
+      };
+
       if constexpr (_glow)
       {
-         // The glow: each part's shadow, in its color, kept within the
-         // bounds of a status bar, or this track
+         // The glow: the fill, a quarter of the glow's room wider at each
+         // side and blurred by a third of it, so it has all but faded where
+         // the room ends. It is kept within the bounds of a status bar, or
+         // this track. Bands are a gradient with hard stops, so the glow is
+         // one shape.
          auto clip = ctx.bounds;
          if (auto pctx = find_parent_context<status_bar_base*>(ctx))
             clip = pctx->bounds;
@@ -440,20 +447,41 @@ namespace cycfi::elements
          cnv.begin_path();
          cnv.add_rect(clip);
          cnv.clip();
-         for_each_part(
-            [&](rect part, color c)
+         cnv.blur_style(g / 3);
+
+         if constexpr (detail::is_gradient_fill<fill_type>::value)
+         {
+            auto gr = along();
+            for (auto const& cs : fill_colors.stops)
+               gr.add_color_stop(cs);
+            cnv.fill_style(gr);
+         }
+         else if constexpr (detail::is_band_fill<fill_type>::value)
+         {
+            auto gr = along();
+            float prev = 0;
+            for (std::size_t i = 0; i != fill_colors.bands.size(); ++i)
             {
-               cnv.shadow_style(g, c);
-               cnv.fill_style(c);
-               cnv.begin_path();
-               if (_shape == track_shape::square)
-                  cnv.add_rect(part);
-               else
-                  cnv.add_round_rect(part, r);
-               cnv.fill();
+               auto const& band = fill_colors.bands[i];
+               auto to = (i == fill_colors.bands.size()-1)? 1.0f : band.to;
+               gr.add_color_stop(prev, band.c);
+               gr.add_color_stop(to, band.c);
+               prev = to;
             }
-          , true
-         );
+            cnv.fill_style(gr);
+         }
+         else
+         {
+            cnv.fill_style(this->fill());
+         }
+
+         auto const grow = g / 4;
+         cnv.begin_path();
+         if (_shape == track_shape::square)
+            cnv.add_rect(shape.inset(-grow));
+         else
+            cnv.add_round_rect(shape.inset(-grow), r + grow);
+         cnv.fill();
       }
 
       if constexpr (
@@ -475,9 +503,7 @@ namespace cycfi::elements
 
          if constexpr (detail::is_gradient_fill<fill_type>::value)
          {
-            auto gr = vertical?
-               canvas::linear_gradient{point{0, ref.bottom}, point{0, ref.top}} :
-               canvas::linear_gradient{point{ref.left, 0}, point{ref.right, 0}};
+            auto gr = along();
             for (auto const& cs : fill_colors.stops)
                gr.add_color_stop(cs);
             cnv.fill_style(gr);
@@ -621,10 +647,12 @@ namespace cycfi::elements
       };
 
       // A part of the track as one shape, with round ends where asked, so
-      // nothing is drawn twice: a translucent color stays even.
-      auto segment = [&](double from, double to, color c, bool round_from, bool round_to)
+      // nothing is drawn twice: a translucent color stays even. h is half
+      // its thickness.
+      auto segment = [&](
+         double from, double to, color c, bool round_from, bool round_to
+       , float h)
       {
-         auto const h = thick / 2;
          auto const a0 = angle(from);
          auto const a1 = angle(to);
          cnv.begin_path();
@@ -699,22 +727,29 @@ namespace cycfi::elements
             bool const last = end == to;
             if (!last && c.alpha >= 1)
                end = std::min(to, end + 0.002);
-            segment(from, end, c, round && from == lo, round && last);
+            segment(from, end, c, round && from == lo, round && last, thick / 2);
          };
 
          if constexpr (_glow)
          {
-            // The glow: each part's shadow, in its color, kept within
-            // bounds
+            // The glow: the fill, a sixth of its thickness wider at each
+            // side and blurred by as much, so it has all but faded where
+            // the room outside the track, half its thickness, ends. It is
+            // kept within bounds. The parts are blurred one by one and
+            // added up in a group, which comes to the blur of the whole.
             auto glow_state = cnv.new_state();
             cnv.begin_path();
             cnv.add_rect(ctx.bounds);
             cnv.clip();
+            auto glow_group = cnv.new_group(1);
+            cnv.composite_op(canvas::lighter);
+            cnv.blur_style(thick / 6);
             for_each_part(
                [&](double from, double end, color c)
                {
-                  cnv.shadow_style(thick / 2, c);
-                  part(from, end, c);
+                  segment(
+                     from, end, c, round && from == lo, round && end == to
+                   , thick * 2 / 3);
                }
              , 16
             );

@@ -369,13 +369,17 @@ namespace cycfi::elements
       auto const& fill_colors = static_cast<fill_part<fill_type> const&>(*this);
 
       // Call f(rect, color) for each part of the fill in one color: the
-      // bands, or slices of a gradient, `size` long
-      auto for_each_part = [&](auto f)
+      // bands, or slices of a gradient, `size` long, or a sixteenth of the
+      // fill when `coarse` (a glow is blurred, so its colors need not step
+      // as finely, and each part is a blur of its own)
+      auto for_each_part = [&](auto f, bool coarse = false)
       {
+         (void) coarse;   // gradients only
          if constexpr (detail::is_gradient_fill<fill_type>::value)
          {
-            auto const step = float(size);
             auto const len = vertical? shape.height() : shape.width();
+            auto const step = coarse?
+               std::max(float(size), len / 16) : float(size);
             for (float p = 0; p < len; p += step)
             {
                auto part = shape;
@@ -448,6 +452,7 @@ namespace cycfi::elements
                   cnv.add_round_rect(part, r);
                cnv.fill();
             }
+          , true
          );
       }
 
@@ -654,12 +659,12 @@ namespace cycfi::elements
       {
          // Call f(from, to, color) for each part of the fill in one color:
          // the bands, or slices of a gradient, along the dial's travel
-         auto for_each_part = [&](auto f)
+         auto for_each_part = [&](auto f, int slices = 64)
          {
+            (void) slices;   // gradients only
             if constexpr (detail::is_gradient_fill<fill_type>::value)
             {
                auto const& g = static_cast<fill_part<fill_type> const&>(*this);
-               constexpr int slices = 64;
                for (int i = 0; i != slices; ++i)
                {
                   double from = std::max(lo, double(i) / slices);
@@ -711,6 +716,7 @@ namespace cycfi::elements
                   cnv.shadow_style(thick / 2, c);
                   part(from, end, c);
                }
+             , 16
             );
          }
 

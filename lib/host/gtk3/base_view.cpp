@@ -11,6 +11,7 @@
 #include <artist/resources.hpp>
 #include <artist/canvas.hpp>
 #include <elements/support/perf.hpp>
+#include <infra/utf8_utils.hpp>
 #include "../common/transfer.hpp"
 #include "../common/scroll_direction.hpp"
 #include <chrono>
@@ -106,6 +107,7 @@ namespace cycfi::elements
       key_map                    _keys;               // The key map
       int                        _modifiers = 0;      // the latest modifiers
       GtkIMContext*              _im_context;         // GTK input method context
+      bool                       _composing = false;  // the input method is composing
       GdkCursorType              _active_cursor_type; // The cursor type
 
       point                      _size;               // The current view size
@@ -148,7 +150,7 @@ namespace cycfi::elements
    float get_scale(GtkWidget* widget);
 
    host_view::host_view()
-    : _im_context(gtk_im_context_simple_new())
+    : _im_context(gtk_im_multicontext_new())
     , _active_cursor_type(GDK_ARROW)
    {
    }
@@ -549,8 +551,48 @@ namespace cycfi::elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      auto cp = codepoint(str);
-      base_view.text({cp, host_view_h->_modifiers});
+      for (auto cp : to_utf32(str))
+         base_view.text({cp, host_view_h->_modifiers});
+   }
+
+   // The input method's composition, shown in the text box until it is
+   // committed.
+   static void on_preedit_changed(GtkIMContext* context, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      gchar* str = nullptr;
+      gint cursor = 0;
+      gtk_im_context_get_preedit_string(context, &str, nullptr, &cursor);
+      composition_info info;
+      info.text = to_utf32(str? str : "");
+      info.cursor = std::size_t(std::max(cursor, 0));
+      g_free(str);
+      platform_access::get_host_view(base_view)->_composing = !info.text.empty();
+      base_view.composition(info);
+   }
+
+   static void on_preedit_end(GtkIMContext* /* context */, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      platform_access::get_host_view(base_view)->_composing = false;
+      base_view.composition({});
+   }
+
+   // The input method draws its windows over this widget's window.
+   static void on_im_realize(GtkWidget* widget, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      gtk_im_context_set_client_window(
+         platform_access::get_host_view(base_view)->_im_context,
+         gtk_widget_get_window(widget)
+      );
+   }
+
+   static void on_im_unrealize(GtkWidget* /* widget */, gpointer user_data)
+   {
+      auto& base_view = get(user_data);
+      gtk_im_context_set_client_window(
+         platform_access::get_host_view(base_view)->_im_context, nullptr);
    }
 
    int get_mods(int state)
@@ -595,7 +637,13 @@ namespace cycfi::elements
    {
       auto& base_view = get(user_data);
       auto* host_view_h = platform_access::get_host_view(base_view);
-      gtk_im_context_filter_keypress(host_view_h->_im_context, event);
+
+      // While the input method composes, its keys are its own: Return,
+      // the arrows and Backspace work on the composition, not the text.
+      bool const was_composing = host_view_h->_composing;
+      if (gtk_im_context_filter_keypress(host_view_h->_im_context, event)
+         && (was_composing || host_view_h->_composing))
+         return true;
 
       int modifiers = get_mods(event->state);
       auto const action = event->type == GDK_KEY_PRESS? key_action::press : key_action::release;
@@ -623,10 +671,17 @@ namespace cycfi::elements
    void on_focus(GtkWidget* /* widget */, GdkEventFocus* event, gpointer user_data)
    {
       auto& base_view = get(user_data);
+      auto* im = platform_access::get_host_view(base_view)->_im_context;
       if (event->in)
+      {
+         gtk_im_context_focus_in(im);
          base_view.begin_focus();
+      }
       else
+      {
+         gtk_im_context_focus_out(im);
          base_view.end_focus();
+      }
    }
 
    int poll_function(gpointer user_data)
@@ -876,9 +931,17 @@ namespace cycfi::elements
          | GDK_FOCUS_CHANGE_MASK
       );
 
-      // Subscribe to text entry commit
+      // Subscribe to text entry commit and the input method's composition
       g_signal_connect(view.host()->_im_context, "commit",
          G_CALLBACK(on_text_entry), &view);
+      g_signal_connect(view.host()->_im_context, "preedit-changed",
+         G_CALLBACK(on_preedit_changed), &view);
+      g_signal_connect(view.host()->_im_context, "preedit-end",
+         G_CALLBACK(on_preedit_end), &view);
+      g_signal_connect(content_view, "realize",
+         G_CALLBACK(on_im_realize), &view);
+      g_signal_connect(content_view, "unrealize",
+         G_CALLBACK(on_im_unrealize), &view);
 
       auto* host_view_h = view.host();
       host_view_h->_on_open_source = g_idle_add(fire_on_open, &view);
@@ -1052,10 +1115,13 @@ namespace cycfi::elements
       _drop_types = types;
    }
 
-   // The input method's windows are not placed at the caret on this
-   // host yet.
-   void base_view::text_caret(rect /* bounds */)
+   void base_view::text_caret(rect bounds)
    {
+      GdkRectangle r{
+         int(bounds.left), int(bounds.top)
+       , int(bounds.width()), int(bounds.height())
+      };
+      gtk_im_context_set_cursor_location(_view->_im_context, &r);
    }
 
    // Nothing to do here: this host finds its resources by path and needs

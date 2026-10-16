@@ -2,33 +2,35 @@
 
 include::common.adoc[]
 
-== It’s always a nice to have some pretty pictures:
+== It’s always nice to have some pretty pictures
 
-:g1:    basic-sliders-and-knobs.png
-:g2:    buttons.png
-:g3:    hello-universe.png
-:g4:    layout.png
-:g5:    child-window.png
-:g6:    menus.png
-:g7:    sprite-sliders-and-knobs.png
-:g8:    scale.png
-:g9:    text-and-icons.png
-:g10:   text-edit.png
-:g11:   list-arranger.png
+The examples in the `examples` directory, in use on macOS.
 
-image::gallery/{g1}[, link="{imagesdir}/gallery/{g1}"]
-image::gallery/{g2}[, link="{imagesdir}/gallery/{g2}"]
-image::gallery/{g3}[, link="{imagesdir}/gallery/{g3}"]
-image::gallery/{g4}[, link="{imagesdir}/gallery/{g4}"]
-image::gallery/{g5}[, link="{imagesdir}/gallery/{g5}"]
-image::gallery/{g6}[, link="{imagesdir}/gallery/{g6}"]
-image::gallery/{g7}[, link="{imagesdir}/gallery/{g7}"]
-image::gallery/{g8}[, link="{imagesdir}/gallery/{g8}"]
-image::gallery/{g9}[, link="{imagesdir}/gallery/{g9}"]
-image::gallery/{g10}[, link="{imagesdir}/gallery/{g10}"]
-image::gallery/{g11}[, link="{imagesdir}/gallery/{g11}"]
+image::gallery/menus.png[alt="The Menus example with its File menu open and the Open Recent submenu showing three files, Pulsar.elm highlighted", link="{imagesdir}/gallery/menus.png"]
+image::gallery/text-edit.png[alt="The TextEdit example with several lines of text selected", link="{imagesdir}/gallery/text-edit.png"]
+image::gallery/buttons.png[alt="The Buttons example with toggle and latching buttons on, the Momentary Button held down, and check boxes, radio buttons and icon buttons beside them", link="{imagesdir}/gallery/buttons.png"]
+image::gallery/basic-sliders-and-knobs.png[alt="The Basic Sliders And Knobs example with vertical sliders, horizontal sliders and knobs, one slider being dragged", link="{imagesdir}/gallery/basic-sliders-and-knobs.png"]
+image::gallery/sprite-sliders-and-knobs.png[alt="The Sprite Sliders And Knobs example with fader-style sliders and metal knobs drawn from sprites", link="{imagesdir}/gallery/sprite-sliders-and-knobs.png"]
+image::gallery/range-slider.png[alt="The RangeSlider example with linear and logarithmic range sliders, one thumb being dragged", link="{imagesdir}/gallery/range-slider.png"]
+image::gallery/custom-control.png[alt="The Custom Control example: a circle on a brick background being resized by its handle, its knob and radius readout following", link="{imagesdir}/gallery/custom-control.png"]
+image::gallery/text-and-icons.png[alt="The Text and Icons example with input boxes, labels, headings and icons, and a message box in front", link="{imagesdir}/gallery/text-and-icons.png"]
+image::gallery/tooltip.png[alt="The Tooltip example with a tooltip showing above a row of colored buttons", link="{imagesdir}/gallery/tooltip.png"]
+image::gallery/layout-grids.png[alt="The Layout example showing grids of gold boxes with spans, its Layout menu open", link="{imagesdir}/gallery/layout-grids.png"]
+image::gallery/child-window.png[alt="The Child Window example with two overlapping child windows, each showing a galaxy", link="{imagesdir}/gallery/child-window.png"]
+image::gallery/scale.png[alt="The Scale example: the same controls at scale 1.0 and 0.8, text typed in a box", link="{imagesdir}/gallery/scale.png"]
+image::gallery/rain.png[alt="The Rain example: falling streaks of light in rainbow colors", link="{imagesdir}/gallery/rain.png"]
+image::gallery/hello-universe.png[alt="The Hello Universe example showing a nebula, with scroll bars", link="{imagesdir}/gallery/hello-universe.png"]
+
+== QPlug
+
+https://github.com/cycfi/q[QPlug] builds audio plugins whose editors are made with Elements. These
+are its examples, running as standalone apps.
+
+image::gallery/qplug-dexter.png[alt="Dexter, a six-operator FM synthesizer, with its algorithm, envelopes, operator levels, LFO and voice controls", link="{imagesdir}/gallery/qplug-dexter.png"]
+image::gallery/qplug-anna-5.png[alt="Anna V, the QPlug tutorial synthesizer, with VCA, VCF and chorus panels of envelopes and faders", link="{imagesdir}/gallery/qplug-anna-5.png"]
+image::gallery/qplug-gain.png[alt="QPlug Gain: a single fader on a decibel scale", link="{imagesdir}/gallery/qplug-gain.png"]
 
 '''
 
-_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
 _Distributed under the {mit_license}_

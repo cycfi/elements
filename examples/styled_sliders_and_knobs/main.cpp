@@ -13,7 +13,8 @@
    Sliders and knobs on styled tracks: fills in solid colors and gradients,
    glows, radial arcs, meter bands and a pan knob that fills from the
    center. Each fader drives the level meter beside it, which moves with a
-   little noise, the way a mixer's meters do.
+   little noise, the way a mixer's meters do; the master fader, on a
+   decibel scale, drives a stereo pair.
 =============================================================================*/
 
 using namespace cycfi::elements;
@@ -38,6 +39,9 @@ namespace
 
    std::array<slider_ptr, num_channels> faders;
    std::array<meter_ptr, num_channels> meters;
+
+   slider_ptr master;
+   std::array<meter_ptr, 2> master_meters;      // left and right
 
    // Horizontal sliders: the fill in its default color, a range, solid
    // colors, a fill on a lighter track, and a gradient.
@@ -72,6 +76,21 @@ namespace
       );
    }
 
+   auto make_meter(double init)
+   {
+      return share(
+         progress_bar(
+            basic_track<8, true, track_shape::square>()
+          , basic_fill_track<8, true, track_shape::square>().glow().fill_colors({
+               {0.7f, meter_green}
+             , {0.9f, meter_yellow}
+             , {1.0f, meter_red}
+            })
+          , init
+         )
+      );
+   }
+
    // A fader on a glowing gradient track, and the level meter it drives:
    // green, then yellow, then red near the top.
    auto make_channel(std::size_t index, double init)
@@ -87,21 +106,41 @@ namespace
          )
       );
 
-      meters[index] = share(
-         progress_bar(
-            basic_track<8, true, track_shape::square>()
-          , basic_fill_track<8, true, track_shape::square>().glow().fill_colors({
-               {0.7f, meter_green}
-             , {0.9f, meter_yellow}
-             , {1.0f, meter_red}
-            })
-          , init
-         )
-      );
+      meters[index] = make_meter(init);
 
       return htile(
          hmargin({10, 6}, hold(faders[index])),
          hmargin({6, 10}, hold(meters[index]))
+      );
+   }
+
+   // The master fader, on a decibel scale from -60 dB to +10 dB with its
+   // marks and labels, starting at unity, and the stereo pair of meters it
+   // drives.
+   auto make_master()
+   {
+      db_scale const scale{-60, 10};
+      master = share(
+         slider(
+            basic_thumb<20>(),
+            slider_labels_db<10>(
+               slider_marks_db<20>(
+                  basic_fill_track<5, true>().glow().fill_color(colors::light_sea_green),
+                  scale
+               ),
+               0.7,
+               scale
+            ),
+            scale.position(0)
+         )
+      );
+      master_meters[0] = make_meter(0.6);
+      master_meters[1] = make_meter(0.6);
+
+      return htile(
+         hmargin({10, 6}, hsize(70, hold(master))),
+         hmargin({6, 2}, hold(master_meters[0])),
+         hmargin({2, 10}, hold(master_meters[1]))
       );
    }
 
@@ -112,7 +151,8 @@ namespace
             htile(
                make_channel(0, 0.55),
                make_channel(1, 0.8),
-               make_channel(2, 0.35)
+               make_channel(2, 0.35),
+               margin_left(10, make_master())
             )
          )
       );
@@ -190,13 +230,18 @@ namespace
       static std::mt19937 gen{std::random_device{}()};
       static std::uniform_real_distribution<double> noise{-0.12, 0.06};
 
-      for (std::size_t i = 0; i != num_channels; ++i)
+      auto move = [&](meter_ptr const& m, double to)
       {
-         auto target = std::clamp(faders[i]->value() + noise(gen), 0.0, 1.0);
-         auto level = meters[i]->value();
-         meters[i]->value(level + (target - level) * 0.5);
-         view_.refresh(*meters[i]);
-      }
+         auto target = std::clamp(to + noise(gen), 0.0, 1.0);
+         auto level = m->value();
+         m->value(level + (target - level) * 0.5);
+         view_.refresh(*m);
+      };
+
+      for (std::size_t i = 0; i != num_channels; ++i)
+         move(meters[i], faders[i]->value());
+      for (auto const& m : master_meters)
+         move(m, master->value());
       view_.post(40ms, [&view_]() { animate_meters(view_); });
    }
 }

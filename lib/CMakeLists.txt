@@ -239,6 +239,7 @@ elseif (ELEMENTS_HOST_UI_LIBRARY STREQUAL "wayland")
       host/wayland/window.cpp
       ${CMAKE_CURRENT_BINARY_DIR}/wayland-gen/fractional-scale-v1-protocol.c
       ${CMAKE_CURRENT_BINARY_DIR}/wayland-gen/viewporter-protocol.c
+      ${CMAKE_CURRENT_BINARY_DIR}/wayland-gen/text-input-unstable-v3-protocol.c
    )
 elseif (WIN32)
    set(ELEMENTS_HOST
@@ -429,7 +430,8 @@ if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "wayland")
    file(MAKE_DIRECTORY "${WL_GEN}")
    foreach(spec
       "fractional-scale-v1=${WL_PROTOCOLS_DIR}/staging/fractional-scale/fractional-scale-v1.xml"
-      "viewporter=${WL_PROTOCOLS_DIR}/stable/viewporter/viewporter.xml")
+      "viewporter=${WL_PROTOCOLS_DIR}/stable/viewporter/viewporter.xml"
+      "text-input-unstable-v3=${WL_PROTOCOLS_DIR}/unstable/text-input/text-input-unstable-v3.xml")
       string(REPLACE "=" ";" parts "${spec}")
       list(GET parts 0 nm)
       list(GET parts 1 xml)
@@ -442,7 +444,8 @@ if (ELEMENTS_HOST_UI_LIBRARY STREQUAL "wayland")
    endforeach()
    target_sources(elements PRIVATE
       "${WL_GEN}/fractional-scale-v1-client-protocol.h"
-      "${WL_GEN}/viewporter-client-protocol.h")
+      "${WL_GEN}/viewporter-client-protocol.h"
+      "${WL_GEN}/text-input-unstable-v3-client-protocol.h")
    target_include_directories(elements PRIVATE "${WL_GEN}")
 endif()
 

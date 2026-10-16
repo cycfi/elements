@@ -17,6 +17,8 @@
 #include <libdecor.h>
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
+#include <infra/utf8_utils.hpp>
+#include "text-input-unstable-v3-client-protocol.h"
 #include <wayland-cursor.h>
 #include <linux/input-event-codes.h>
 
@@ -185,6 +187,7 @@ namespace cycfi::elements
 
       struct platform;
       void init_data_device(platform& p);   // fwd
+      void init_text_input(platform& p);    // fwd
 
       struct platform
       {
@@ -205,6 +208,16 @@ namespace cycfi::elements
          xkb_compose_state* compose = nullptr;  // dead keys and compose sequences
          base_view*     pointer_focus = nullptr;
          base_view*     keyboard_focus = nullptr;
+
+         // Input methods (text-input-v3): enabled while one of our surfaces
+         // has the text input focus. Its events gather until done.
+         zwp_text_input_manager_v3* text_input_manager = nullptr;
+         zwp_text_input_v3* text_input = nullptr;
+         base_view*     text_input_view = nullptr;
+         std::string    pending_preedit;
+         int32_t        pending_cursor = 0;
+         std::string    pending_commit;
+         rect           text_caret;
 
          // The cursor: a client sets it each time the pointer enters one of
          // its surfaces, from the theme, at the surface's scale.
@@ -262,6 +275,7 @@ namespace cycfi::elements
             if (!compositor || !shm)
                throw std::runtime_error("Missing required Wayland globals");
             init_data_device(*this);
+            init_text_input(*this);
             wl_display_roundtrip(display);   // receive seat capabilities + keymap
             decor = libdecor_new(display, &decor_iface);
          }
@@ -670,11 +684,101 @@ namespace cycfi::elements
                wl_registry_bind(reg, name, &wl_data_device_manager_interface,
                   p->data_device_manager_version));
          }
+         else if (!strcmp(iface, zwp_text_input_manager_v3_interface.name))
+         {
+            p->text_input_manager = static_cast<zwp_text_input_manager_v3*>(
+               wl_registry_bind(reg, name, &zwp_text_input_manager_v3_interface, 1));
+         }
          else if (!strcmp(iface, wl_seat_interface.name))
          {
             p->seat = static_cast<wl_seat*>(wl_registry_bind(reg, name, &wl_seat_interface, 5));
             wl_seat_add_listener(p->seat, &seat_listener, p);   // pass platform*, not plat()
          }
+      }
+   }
+
+   ////////////////////////////////////////////////////////////////////////////
+   // Input methods (text-input-v3)
+   ////////////////////////////////////////////////////////////////////////////
+   namespace
+   {
+      void ti_enter(void*, zwp_text_input_v3* ti, wl_surface* surf)
+      {
+         auto& p = plat();
+         auto i = p.views.find(surf);
+         p.text_input_view = (i != p.views.end()) ? i->second : nullptr;
+         if (!p.text_input_view)
+            return;
+         zwp_text_input_v3_enable(ti);
+         zwp_text_input_v3_set_content_type(ti,
+            ZWP_TEXT_INPUT_V3_CONTENT_HINT_NONE, ZWP_TEXT_INPUT_V3_CONTENT_PURPOSE_NORMAL);
+         auto const& r = p.text_caret;
+         zwp_text_input_v3_set_cursor_rectangle(ti,
+            int32_t(r.left), int32_t(r.top), int32_t(r.width()), int32_t(r.height()));
+         zwp_text_input_v3_commit(ti);
+      }
+
+      void ti_leave(void*, zwp_text_input_v3* ti, wl_surface*)
+      {
+         auto& p = plat();
+         if (p.text_input_view)
+            p.text_input_view->composition({});
+         p.text_input_view = nullptr;
+         zwp_text_input_v3_disable(ti);
+         zwp_text_input_v3_commit(ti);
+      }
+
+      void ti_preedit(void*, zwp_text_input_v3*, const char* text, int32_t cursor, int32_t)
+      {
+         auto& p = plat();
+         p.pending_preedit = text? text : "";
+         p.pending_cursor = cursor;
+      }
+
+      void ti_commit_string(void*, zwp_text_input_v3*, const char* text)
+      {
+         plat().pending_commit = text? text : "";
+      }
+
+      void ti_delete_surrounding(void*, zwp_text_input_v3*, uint32_t, uint32_t) {}
+
+      // The gathered events take effect together: the committed text is
+      // typed, then the composition, if any, is shown.
+      void ti_done(void*, zwp_text_input_v3*, uint32_t)
+      {
+         auto& p = plat();
+         auto* v = p.text_input_view;
+         auto preedit = std::exchange(p.pending_preedit, {});
+         auto commit = std::exchange(p.pending_commit, {});
+         auto cursor = std::exchange(p.pending_cursor, 0);
+         if (!v)
+            return;
+
+         if (!commit.empty())
+         {
+            v->composition({});
+            for (auto cp : to_utf32(commit))
+               v->text({cp, 0});
+         }
+
+         composition_info info;
+         info.text = to_utf32(preedit);
+         if (cursor > 0 && std::size_t(cursor) <= preedit.size())
+            info.cursor = to_utf32(preedit.substr(0, cursor)).size();
+         if (!info.text.empty() || commit.empty())
+            v->composition(info);
+      }
+
+      constexpr zwp_text_input_v3_listener text_input_listener = {
+         ti_enter, ti_leave, ti_preedit, ti_commit_string, ti_delete_surrounding, ti_done
+      };
+
+      void init_text_input(platform& p)
+      {
+         if (!p.text_input_manager || !p.seat)
+            return;
+         p.text_input = zwp_text_input_manager_v3_get_text_input(p.text_input_manager, p.seat);
+         zwp_text_input_v3_add_listener(p.text_input, &text_input_listener, nullptr);
       }
    }
 
@@ -1189,10 +1293,19 @@ namespace cycfi::elements
       _drop_types = types;
    }
 
-   // The input method's windows are not placed at the caret on this
-   // host yet.
-   void base_view::text_caret(rect /* bounds */)
+   void base_view::text_caret(rect bounds)
    {
+      auto& p = plat();
+      if (bounds == p.text_caret)
+         return;
+      p.text_caret = bounds;
+      if (p.text_input && p.text_input_view == this)
+      {
+         zwp_text_input_v3_set_cursor_rectangle(p.text_input,
+            int32_t(bounds.left), int32_t(bounds.top),
+            int32_t(bounds.width()), int32_t(bounds.height()));
+         zwp_text_input_v3_commit(p.text_input);
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////

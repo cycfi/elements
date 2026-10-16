@@ -487,6 +487,10 @@ namespace
           repeats : YES
       ];
 
+   // The common modes include event tracking, so the timer, and with it
+   // animation, keeps running while the window is resized or a menu is open.
+   [[NSRunLoop currentRunLoop] addTimer : _task forMode : NSRunLoopCommonModes];
+
    _tracking_area = nil;
    [self updateTrackingAreas];
 

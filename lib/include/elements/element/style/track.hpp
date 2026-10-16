@@ -435,7 +435,7 @@ namespace cycfi::elements
 
       if constexpr (_glow)
       {
-         // The glow: the fill, a quarter of the glow's room wider at each
+         // The glow: the fill, an eighth of the glow's room wider at each
          // side and blurred by a third of it, so it has all but faded where
          // the room ends. It is kept within the bounds of a status bar, or
          // this track. Bands are a gradient with hard stops, so the glow is
@@ -475,7 +475,7 @@ namespace cycfi::elements
             cnv.fill_style(this->fill());
          }
 
-         auto const grow = g / 4;
+         auto const grow = g / 8;
          cnv.begin_path();
          if (_shape == track_shape::square)
             cnv.add_rect(shape.inset(-grow));

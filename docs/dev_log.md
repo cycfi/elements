@@ -5,6 +5,23 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-17 -- Windows DPI change between monitors (develop)
+
+**TL;DR:** A window moved to a monitor of a different scale now redraws at
+the new DPI and keeps its logical size (issue #190).
+
+- `d5d615a6` Two causes. Under per-monitor (v1) awareness only top-level
+  windows get `WM_DPICHANGED`, so the view (a child window) never heard of
+  the change and Direct2D kept drawing at the old DPI into the top-left of
+  the window. The Direct2D paint path now follows the window's DPI, as it
+  already followed the client size, which also covers plugin hosts that
+  choose their own awareness. The top-level window ignored the suggested
+  rect; it now scales its client by the DPI ratio and adds its frame back,
+  since the v1 frame does not scale and the suggested rect would hand the
+  surplus to the client. Verified on a 125% laptop panel and a 175%
+  external monitor with the Direct2D build: 885x480 logical on both, exact
+  size on return, sliders responsive. Skia and Cairo were not run.
+
 ## 2026-10-01 -- curve shapes, image fill, button faces (develop)
 
 **TL;DR:** The last drawing in the QPlug Dexter editor moved into

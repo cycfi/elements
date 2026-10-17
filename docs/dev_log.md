@@ -5,6 +5,25 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-17 -- easy bug fixes (develop)
+
+**TL;DR:** Three small fixes from the issue triage (#389, #391, #440) and an
+unused variable.
+
+- `2b1b9f34` The Windows host read the touchpad scroll direction from the
+  registry once, so a change made while the app ran was missed (#391). It
+  is read again at most every 10 seconds, as on Linux.
+- `fdac8610` The GTK host found its executable through
+  `readlink("/proc/self/exe")`, which MinGW lacks (#440). On Windows it
+  now uses `GetModuleFileNameW`, and the two lookups share one helper. The
+  Linux build passes its tests on the GTK host; MinGW itself was not built.
+- `4ac13b60` Removed an unused `thm` from `basic_tri_thumb_styler::draw`.
+- `2453eb10` Artist `cb048b3`: Skia filters a large image downscale through
+  mipmaps instead of aliasing (#389). See Artist's dev log.
+
+The Windows Direct2D run fails three menu focus tests
+(`submenu_test.cpp:590, 621, 635`); unmodified develop fails the same three.
+
 ## 2026-10-17 -- Windows DPI change between monitors (develop)
 
 **TL;DR:** A window moved to a monitor of a different scale now redraws at

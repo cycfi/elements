@@ -27,6 +27,12 @@
 #include <unistd.h>
 #include <gtk/gtk.h>
 
+#if defined(_WIN32)
+# define WIN32_LEAN_AND_MEAN
+# define NOMINMAX
+# include <windows.h>
+#endif
+
 #if defined(ARTIST_SKIA)
 # include <GL/gl.h>
 # include <SkImage.h>
@@ -52,11 +58,19 @@ namespace cycfi::artist
 {
    namespace
    {
+      // The running executable's path, or empty if it cannot be found.
+      // GTK also builds on Windows (MinGW), which has no /proc.
       fs::path exe_path()
       {
+#if defined(_WIN32)
+         wchar_t result[MAX_PATH];
+         DWORD count = GetModuleFileNameW(nullptr, result, MAX_PATH);
+         return std::wstring(result, (count > 0 && count < MAX_PATH)? count : 0);
+#else
          char result[PATH_MAX];
          ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
          return std::string(result, (count > 0)? count : 0);
+#endif
       }
 
       fs::path find_resources()
@@ -976,13 +990,9 @@ namespace cycfi::elements
 
    std::filesystem::path get_app_path()
    {
-      char result[PATH_MAX + 1];
-      // get the full path to the executable file of the current process.
-      if (auto count = readlink("/proc/self/exe", result, PATH_MAX); count != -1)
-      {
-         result[count] = '\0'; // null terminate the string because readlink doesn't
-         return std::filesystem::path(result);
-      }
+      // The full path to the executable file of the current process.
+      if (auto path = artist::exe_path(); !path.empty())
+         return path;
       throw std::runtime_error("Fatal Error: Failed to get application path");
    }
 

@@ -197,7 +197,6 @@ namespace cycfi::elements
    inline void basic_tri_thumb_styler<size, dir, Indicator>
       ::draw(context const& ctx)
    {
-      auto& thm = get_theme();
       auto& cnv = ctx.canvas;
       auto  indicator_color = static_cast<Indicator const&>(*this)();
       auto  c = center_point(ctx.bounds);

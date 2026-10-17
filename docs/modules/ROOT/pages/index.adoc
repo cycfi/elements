@@ -1,23 +1,102 @@
-= Elements C{pp} GUI library
+= Elements C{pp} GUI Library
 
 include::common.adoc[]
 
 == Introduction
 
-image::elements_sampler.jpeg[alt="Elements Sampler"]
+video::https://media.cycfi.com/elements/showreel/elements-showreel.mp4[poster=elements_sampler.jpeg,width=100%,opts="autoplay,muted"]
 
-image:logo.png[width=180, role=left] Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++20 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C{pp}, and therefore, there is no need for an external visual GUI editor or code generator.
+image:logo.png[alt="Elements", width=180, role=left] Elements is a lightweight, fine-grained, resolution-independent, extremely modular GUI library. The library is written using modern C++20 language features. It has a declarative interface with a sensible and easy-to-use Domain Specific Embedded Languages (DSEL) syntax for constructing the GUI elements. A declarative description of the GUI is written exclusively in C{pp}, and therefore, there is no need for an external visual GUI editor or code generator.
 
 Elements is embeddable, meaning you can embed it in any application, and it will play well with other GUI libraries and frameworks. This also implies that you can utilize it for the creation of plugins. It does not own the event loop and is able to co-exist with components within a plugin host, such as {vst} and {au}. Porting to a new host target is straightforward, requiring the porting of only a few files.
 
 Elements is distributed under the liberal and non-viral {mit_license}.
 
-== Documentation
+== Highlights
 
-* xref:gallery.adoc[Gallery]
-* xref:setup.adoc[Setup and Installation]
-* xref:aspects.adoc[Design Aspects]
-* xref:layout.adoc[Layout]
+*Modern C{pp}*
+
+* xref:aspects.adoc[A Declarative C{pp}20 DSEL: No Visual Editor, No Code Generator]
+* xref:elements.adoc[Fine-Grained, Composable Elements]
+* xref:model.adoc[Models That Bind Values to Controls]
+* https://github.com/cycfi/elements/blob/develop/LICENSE[MIT License]
+
+*Cross-Platform and Embeddable*
+
+* xref:setup.adoc[macOS, Windows and Linux]
+* xref:advanced_builds.adoc#_host_ui_libraries[Native Hosts: Cocoa, Win32, GTK 3, X11, Wayland, and Headless]
+* xref:advanced_builds.adoc#_drawing_backends[Drawing with Quartz 2D, Direct2D, Cairo or Skia, Through Artist]
+* xref:aspects.adoc[Resolution Independent, HiDPI Ready]
+* xref:advanced_builds.adoc#_plug_ins[Does Not Own the Event Loop: Plug-ins for Audio Hosts]
+
+*Layout*
+
+* xref:layout.adoc[Tiles, Grids, Flow, Layers, Decks, Margins and Alignment]
+* xref:elements/docking.adoc[Docking, Splits and Child Windows]
+
+*Controls*
+
+* xref:elements/buttons.adoc[Buttons, Check Boxes, Radio Buttons and Switches]
+* xref:elements/sliders.adoc[Sliders, Dials and Thumbwheels]
+* xref:styles/tracks.adoc[Styled Tracks: Gradients, Bands and Glows]
+* xref:styles/marks.adoc[Marks, Labels and Decibel Scales]
+* xref:elements/curve_editor.adoc[Curve Editor and Swatches]
+
+*Text*
+
+* xref:elements/text.adoc[Editable Text: Shaping with HarfBuzz, Clipboard, Undo and Redo]
+* xref:elements/text.adoc[Input Methods for Japanese and Other Languages]
+* xref:elements/labels.adoc[Labels and Icons]
+
+*Menus, Popups and Interaction*
+
+* xref:elements/menus.adoc[Menu Bars, Submenus and Shortcuts]
+* xref:elements/popups.adoc[Popups, Modals and Tooltips]
+* xref:elements/drag_and_drop.adoc[Drag and Drop]
+
+*Look and Feel*
+
+* xref:styles.adoc[Themes and Styles]
+* xref:support/canvas.adoc[A 2D Canvas in the HTML5 Style, Through Artist]
+
+*Testing and Learning*
+
+* xref:testing.adoc#_without_a_display[Test Without a Display: a Headless Host and a Recording Backend]
+* xref:tutorials.adoc[Step-by-Step Tutorials and Over 30 Examples]
+* xref:gallery.adoc[The Gallery]
+
+== Dependencies
+
+None is installed by hand on macOS or Windows: the defaults need only the
+compiler and CMake.
+
+Elements:: https://github.com/cycfi/artist[Artist] for drawing and the
+header-only https://github.com/cycfi/infra[Cycfi infra], both git
+submodules.
+
+Drawing backends:: Quartz 2D on macOS and Direct2D on Windows are part of the
+system. Cairo on Linux is the system's. Skia everywhere, and Cairo on macOS
+and Windows, come as prebuilt bundles that CMake downloads once and caches.
+See xref:advanced_builds.adoc#_drawing_backends[Drawing Backends].
+
+Hosts:: Cocoa on macOS and Win32 on Windows. On Linux, GTK 3 by default, or
+the native X11 and Wayland hosts, each with its development packages. See
+xref:advanced_builds.adoc#_host_ui_libraries[Host UI Libraries].
+
+The compiler, CMake and the system packages each platform needs are in
+xref:setup.adoc[Setup and Installation].
+
+== Where to Start
+
+The navigation follows the path through Elements:
+
+. *Set up.* xref:setup.adoc[Setup and Installation] builds the library and
+  its examples.
+. *Learn by example.* The xref:tutorials.adoc[Tutorials] go from an empty window
+  to a control of your own, in five programs; the
+  xref:gallery.adoc[Gallery] shows the examples at work.
+. *Look things up.* The xref:reference.adoc[Reference], which opens with
+  xref:aspects.adoc[Design Aspects].
 
 == The Author
 
@@ -28,7 +107,12 @@ Joel de Guzman is the principal architect and engineer at https://www.cycfi.com/
 These libraries are all part of the http://tinyurl.com/jubgged[Boost Libraries], a well respected, peer-reviewed, Open Source, collaborative development effort.
 
 
+== Discord
+
+Join the https://discord.gg/NJkadSx[Discord channel] to discuss Elements and
+chat with the developers.
+
 '''
 
-_Copyright (c) 2014-2024 Joel de Guzman. All rights reserved._
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
 _Distributed under the {mit_license}_

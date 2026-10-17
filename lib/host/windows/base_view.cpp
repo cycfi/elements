@@ -469,6 +469,15 @@ namespace cycfi::elements
                if (client.width != target.width || client.height != target.height)
                   info->_target->Resize(client);
 
+               // The target follows the DPI here too. A child window gets no
+               // WM_DPICHANGED under per-monitor (v1) awareness, nor inside a
+               // plugin host that chose its own awareness, so a move to a
+               // monitor of a different scale shows up only as a new DPI.
+               float dpi_x, dpi_y;
+               info->_target->GetDpi(&dpi_x, &dpi_y);
+               if (dpi_x != 96.0f * scale || dpi_y != 96.0f * scale)
+                  info->_target->SetDpi(96.0f * scale, 96.0f * scale);
+
                info->_target->BeginDraw();
                info->_target->SetTransform(D2D1::Matrix3x2F::Identity());
 

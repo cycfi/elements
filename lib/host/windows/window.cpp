@@ -26,6 +26,7 @@ namespace cycfi::elements
       {
          window*     wptr = nullptr;
          view_limits limits = {};
+         UINT        dpi = 96;
       };
 
       window_info* get_window_info(HWND hwnd)
@@ -130,6 +131,31 @@ namespace cycfi::elements
                return on_close(info->wptr);
 
             case WM_DPICHANGED:
+               if (info)
+               {
+                  // Keep the client's logical size. Windows suggests a window
+                  // rect scaled as a whole, but under per-monitor (v1)
+                  // awareness the frame does not scale, so its suggestion
+                  // gives the client the frame's surplus. Scale the client by
+                  // the DPI ratio and add the frame back; the suggested
+                  // position stays. The resulting WM_SIZE fits the view.
+                  auto const& r = *reinterpret_cast<RECT const*>(lparam);
+                  auto const new_dpi = UINT(LOWORD(wparam));
+                  auto const ratio = float(new_dpi) / info->dpi;
+                  info->dpi = new_dpi;
+
+                  RECT client;
+                  GetClientRect(hwnd, &client);
+                  auto extra = window_frame_size(hwnd);
+                  SetWindowPos(
+                     hwnd, nullptr, r.left, r.top
+                   , int(client.right * ratio + 0.5f) + extra.x
+                   , int(client.bottom * ratio + 0.5f) + extra.y
+                   , SWP_NOZORDER | SWP_NOACTIVATE
+                  );
+               }
+               return 0;
+
             case WM_SIZE:
                return on_size(hwnd);
 
@@ -206,6 +232,9 @@ namespace cycfi::elements
       );
 
       auto* info = new window_info{this};
+      #ifndef ELEMENTS_HOST_ONLY_WIN7
+      info->dpi = GetDpiForWindow(_window);
+      #endif
       SetWindowLongPtrW(_window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(info));
 
       if (style_ & with_title)

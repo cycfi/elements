@@ -5,6 +5,27 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-17 -- medium bug fixes (develop)
+
+**TL;DR:** An input box fits a narrow limit (#280), and a tooltip's tip no
+longer takes the focus or opens misplaced the first time (#426).
+
+- `649f56de` A scroller kept a 32 px minimum on each scrolling axis, room
+  for a scrollbar, even with no scrollbars. An input box is such a
+  scroller, so with its padding it could not be narrower than 42, and a
+  narrower limit let it draw past its space. With no scrollbars a
+  scrolling axis now has no minimum. `input_box` is the only user of
+  `no_scrollbars`.
+- `43528a22` A tooltip opened its tip as a popup, which takes the focus
+  when its content can (a text box), so typing in the element under the
+  cursor went to the tip. The tip now opens without the focus. And a tip
+  was placed from its limits before it had been laid out, when wrapped
+  text is one line tall; the first time, a tip above its element reached
+  down over it. The tip is now laid out once before it is placed.
+
+Both are covered by new tests that fail without the fixes. The full suite
+passes on macOS (Quartz 2D); the changes touch no host code.
+
 ## 2026-10-17 -- easy bug fixes (develop)
 
 **TL;DR:** Three small fixes from the issue triage (#389, #391, #440) and an

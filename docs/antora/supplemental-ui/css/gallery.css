@@ -1,0 +1,97 @@
+/* The gallery's carousels: one slide at a time, scrolled sideways. */
+.carousel {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.carousel > .content {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+.carousel > .content::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel .imageblock,
+.carousel .videoblock {
+  flex: 0 0 100%;
+  min-width: 0;
+  margin: 0;
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.carousel .imageblock > .content,
+.carousel .videoblock > .content {
+  width: 100%;
+  text-align: center;
+}
+
+.carousel .imageblock img,
+.carousel .videoblock video {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.carousel .imageblock > .title,
+.carousel .videoblock > .title {
+  font-style: normal;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 2.5rem;
+  cursor: pointer;
+}
+
+.carousel-button:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-prev {
+  left: 0.25rem;
+}
+
+.carousel-next {
+  right: 0.25rem;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.carousel-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #c8c8c8;
+  cursor: pointer;
+}
+
+.carousel-dot.active {
+  background: #404040;
+}

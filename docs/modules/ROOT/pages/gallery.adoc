@@ -1,4 +1,6 @@
 = Gallery
+:page-carousel: true
+:figure-caption!:
 
 include::common.adoc[]
 
@@ -6,29 +8,62 @@ include::common.adoc[]
 
 The examples in the `examples` directory, in use on macOS.
 
-image::gallery/menus.png[alt="The Menus example with its File menu open and the Open Recent submenu showing three files, Pulsar.elm highlighted", link="{imagesdir}/gallery/menus.png"]
-image::gallery/text-edit.png[alt="The TextEdit example with several lines of text selected", link="{imagesdir}/gallery/text-edit.png"]
-image::gallery/buttons.png[alt="The Buttons example with toggle and latching buttons on, the Momentary Button held down, and check boxes, radio buttons and icon buttons beside them", link="{imagesdir}/gallery/buttons.png"]
-image::gallery/basic-sliders-and-knobs.png[alt="The Basic Sliders And Knobs example with vertical sliders, horizontal sliders and knobs, one slider being dragged", link="{imagesdir}/gallery/basic-sliders-and-knobs.png"]
-image::gallery/sprite-sliders-and-knobs.png[alt="The Sprite Sliders And Knobs example with fader-style sliders and metal knobs drawn from sprites", link="{imagesdir}/gallery/sprite-sliders-and-knobs.png"]
-image::gallery/range-slider.png[alt="The RangeSlider example with linear and logarithmic range sliders, one thumb being dragged", link="{imagesdir}/gallery/range-slider.png"]
-image::gallery/custom-control.png[alt="The Custom Control example: a circle on a brick background being resized by its handle, its knob and radius readout following", link="{imagesdir}/gallery/custom-control.png"]
+[.carousel]
+--
+.Menus
+video::gallery/menus.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Text Edit
+video::gallery/text-edit.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Text Edit, Japanese Input
+video::gallery/text-edit-japanese.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Buttons
+video::gallery/buttons.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Basic Sliders and Knobs
+video::gallery/basic-sliders-and-knobs.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Sprite Sliders and Knobs
+video::gallery/sprite-sliders-and-knobs.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Styled Sliders and Knobs
+video::gallery/styled-sliders-and-knobs.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Range Slider
+video::gallery/range-slider.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Custom Control
+video::gallery/custom-control.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Curve Editor
+video::gallery/curve-editor.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Swatches
+video::gallery/swatches.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Dock
+video::gallery/dock.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Text and Icons
 image::gallery/text-and-icons.png[alt="The Text and Icons example with input boxes, labels, headings and icons, and a message box in front", link="{imagesdir}/gallery/text-and-icons.png"]
-image::gallery/tooltip.png[alt="The Tooltip example with a tooltip showing above a row of colored buttons", link="{imagesdir}/gallery/tooltip.png"]
+.Tooltip
+video::gallery/tooltip.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Layout
 image::gallery/layout-grids.png[alt="The Layout example showing grids of gold boxes with spans, its Layout menu open", link="{imagesdir}/gallery/layout-grids.png"]
-image::gallery/child-window.png[alt="The Child Window example with two overlapping child windows, each showing a galaxy", link="{imagesdir}/gallery/child-window.png"]
+.Child Window
+video::gallery/child-window.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Scale
 image::gallery/scale.png[alt="The Scale example: the same controls at scale 1.0 and 0.8, text typed in a box", link="{imagesdir}/gallery/scale.png"]
-image::gallery/rain.png[alt="The Rain example: falling streaks of light in rainbow colors", link="{imagesdir}/gallery/rain.png"]
-image::gallery/hello-universe.png[alt="The Hello Universe example showing a nebula, with scroll bars", link="{imagesdir}/gallery/hello-universe.png"]
+.Rain
+video::gallery/rain.mp4[opts="autoplay,loop,muted,nocontrols"]
+.Hello Universe
+video::gallery/hello-universe.mp4[opts="autoplay,loop,muted,nocontrols"]
+--
 
 == QPlug
 
 https://github.com/cycfi/q[QPlug] builds audio plugins whose editors are made with Elements. These
 are its examples, running as standalone apps.
 
+[.carousel]
+--
+.Dexter
 image::gallery/qplug-dexter.png[alt="Dexter, a six-operator FM synthesizer, with its algorithm, envelopes, operator levels, LFO and voice controls", link="{imagesdir}/gallery/qplug-dexter.png"]
+.Anna V
 image::gallery/qplug-anna-5.png[alt="Anna V, the QPlug tutorial synthesizer, with VCA, VCF and chorus panels of envelopes and faders", link="{imagesdir}/gallery/qplug-anna-5.png"]
+.Gain
 image::gallery/qplug-gain.png[alt="QPlug Gain: a single fader on a decibel scale", link="{imagesdir}/gallery/qplug-gain.png"]
+--
 
 '''
 

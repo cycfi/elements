@@ -95,6 +95,18 @@ TEST_CASE("an input box is made from a placeholder alone", "[input_box]")
    CHECK(c.get_text().empty());
 }
 
+TEST_CASE("an input box fits a limit narrower than a scrollbar", "[input_box]")
+{
+   // The text scrolls in the box, and there is no scrollbar to make room
+   // for: a limit of 30 is the box's width, padding and all.
+   test_view tv{extent{300, 60}, 1};
+   basic_context bctx{tv.view_, tv.cnv};
+   auto box = limit({{0, 0}, {30, full_extent}}, input_box(basic_input_box("Name")));
+   auto l = box.limits(bctx);
+   CHECK(l.min.x <= 30);
+   CHECK(l.max.x == 30);
+}
+
 TEST_CASE("undo and redo report through on_text", "[input_box]")
 {
    input_view iv{share(basic_input_box("Name"))};

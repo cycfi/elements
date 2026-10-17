@@ -267,9 +267,12 @@ namespace cycfi::elements
 
    view_limits scroller_base::limits(basic_context const& ctx) const
    {
+      // A scrolling axis needs no more than room for its scrollbar; with no
+      // scrollbars, it needs nothing: the content scrolls in any width.
       view_limits e_limits = subject().limits(ctx);
-      auto min_x = allow_hscroll() ? min_port_size : e_limits.min.x;
-      auto min_y = allow_vscroll() ? min_port_size : e_limits.min.y;
+      float const min_scroll = has_scrollbars() ? min_port_size : 0;
+      auto min_x = allow_hscroll() ? min_scroll : e_limits.min.x;
+      auto min_y = allow_vscroll() ? min_scroll : e_limits.min.y;
       auto max_x = std::max(min_x, e_limits.max.x);
       auto max_y = std::max(min_y, e_limits.max.y);
       return view_limits{{min_x, min_y}, {max_x, max_y}};

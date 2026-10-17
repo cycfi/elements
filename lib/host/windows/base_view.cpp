@@ -1284,7 +1284,18 @@ namespace cycfi::elements
 
    point scroll_direction()
    {
+      // Read again at most every 10 seconds, in case the user changes it,
+      // as the Linux hosts do.
+      using namespace std::chrono;
+      static auto last_call = steady_clock::now();
       static int scroll_dir = get_scroll_direction();
+
+      auto const now = steady_clock::now();
+      if (now - last_call >= seconds(10))
+      {
+         scroll_dir = get_scroll_direction();
+         last_call = now;
+      }
       return {1.0f, 1.0f * scroll_dir};
    }
 }

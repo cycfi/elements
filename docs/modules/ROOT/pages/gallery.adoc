@@ -14,8 +14,6 @@ The examples in the `examples` directory, in use on macOS.
 video::gallery/menus.mp4[opts="autoplay,loop,muted,nocontrols"]
 .Text Edit
 video::gallery/text-edit.mp4[opts="autoplay,loop,muted,nocontrols"]
-.Text Edit, Japanese Input
-video::gallery/text-edit-japanese.mp4[opts="autoplay,loop,muted,nocontrols"]
 .Buttons
 video::gallery/buttons.mp4[opts="autoplay,loop,muted,nocontrols"]
 .Basic Sliders and Knobs

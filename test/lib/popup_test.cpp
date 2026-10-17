@@ -148,3 +148,76 @@ TEST_CASE("tooltip: a bubble points at its element", "[popup]")
    CHECK(red_after({80, 0, 120, 20}, {100, 23}) > 200);
 }
 #endif
+
+namespace
+{
+   void click_at(view& v, point p)
+   {
+      mouse_button b{};
+      b.state = mouse_button::left;
+      b.num_clicks = 1;
+      b.pos = p;
+      b.down = true;
+      v.click(b);
+      b.down = false;
+      v.click(b);
+      wait(v, 2ms);
+   }
+}
+
+TEST_CASE("tooltip: a tip does not take the focus", "[popup]")
+{
+   // The cursor stays over a text box being typed in, and its tip opens:
+   // typing still goes to the text box, even when the tip could take the
+   // focus itself.
+   test_view tv{extent{300, 200}};
+   open(tv);
+   auto in = share(basic_input_box("Name"));
+   auto t = share(tooltip(input_box(hold(in)), basic_text_box("The tip"), 1ms));
+   tv.view_.content(align_left_top(hsize(200, hold(t))), box(colors::black));
+   tv.view_.layout();
+   tv.draw();
+   auto const base = tv.view_.layers().size();
+
+   point const at{100, 15};
+   click_at(tv.view_, at);
+   tv.view_.text(text_info{'a', 0});
+   REQUIRE(in->get_text() == U"a");
+
+   tv.view_.cursor(at, cursor_tracking::hovering);
+   wait(tv.view_, 10ms);
+   wait(tv.view_, 2ms);
+   REQUIRE(tv.view_.layers().size() == base + 1);
+
+   tv.view_.text(text_info{'b', 0});
+   CHECK(in->get_text() == U"ab");
+}
+
+TEST_CASE("tooltip: a tip whose height follows its width is placed once laid out", "[popup]")
+{
+   // Wrapped text is one line tall until it is laid out. A tip above its
+   // element ends at the element's top the first time it opens too, not
+   // only once it has been laid out before.
+   test_view tv{extent{300, 300}};
+   open(tv);
+   auto t = share(tooltip(
+      fixed_size({100, 20}, element{}),
+      hsize(200, static_text_box(
+         "A tip long enough to wrap onto several lines, so its height "
+         "is known only once it is laid out at its width.")),
+      1ms, tooltip_position::top));
+   tv.view_.content(align_center_bottom(hold(t)), box(colors::black));
+   tv.view_.layout();
+   tv.draw();
+
+   rect const at{100, 280, 200, 300};
+   context ctx{tv.view_, tv.cnv, t.get(), at};
+   t->cursor(ctx, center_point(at), cursor_tracking::entering);
+   wait(tv.view_, 10ms);
+   wait(tv.view_, 2ms);
+   auto tip = tip_of(tv.view_);
+   REQUIRE(tip);
+   tv.draw();
+   CHECK(tip->bounds().height() > 40);
+   CHECK(tip->bounds().bottom <= at.top);
+}

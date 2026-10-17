@@ -186,6 +186,12 @@ namespace cycfi::elements
             auto side = _position;
             _tip->bounds(tip_bounds(ctx, side));
 
+            // A tip's height can follow its width, as wrapped text does,
+            // and is known only once it is laid out: lay it out where it
+            // would go, then place it again.
+            _tip->layout(context{ctx, _tip.get(), _tip->bounds()});
+            _tip->bounds(tip_bounds(ctx, side));
+
             // A bubble points at the element, from the side the tip is on.
             if (auto b = find_subject<tooltip_bubble_base*>(_tip.get()))
             {
@@ -224,7 +230,11 @@ namespace cycfi::elements
                         };
                      on_hover(true);
                      _tip_status = tip_visible;
-                     _tip->open(view_);
+
+                     // Opened without the focus: the element under the
+                     // cursor may be the one being typed in.
+                     view_.add(_tip, false);
+                     view_.refresh();
 
                      // A bubble's shadow reaches past its bounds, which is
                      // all that opening the tip repaints.

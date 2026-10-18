@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="321"
+     viewBox="0 0 750 321"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="59.7773" y="14" width="56.2344" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="87.8945" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="154.012" y="14" width="61.6875" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="184.855" y="40.9" text-anchor="middle" fill="#1a1a1a">slider</text>
+
+  <rect x="524.66" y="14" width="59.3594" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="554.34" y="40.9" text-anchor="middle" fill="#1a1a1a">track</text>
+
+  <rect x="622.02" y="14" width="68.2031" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="656.121" y="40.9" text-anchor="middle" fill="#1a1a1a">thumb</text>
+
+  <line x1="87.8945" y1="96" x2="184.855" y2="96" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 184.86 134 L 212.86 134 Q 220.86 134 220.86 142 L 220.86 146 Q 220.86 154 212.86 154 L 184.86 154" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="184.855" y1="192" x2="554.34" y2="192" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 184.86 230 L 212.86 230 Q 220.86 230 220.86 238 L 220.86 242 Q 220.86 250 212.86 250 L 184.86 250" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="184.855" y1="288" x2="656.121" y2="288" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="87.8945" y1="58" x2="87.8945" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="184.855" y1="58" x2="184.855" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="554.34" y1="58" x2="554.34" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="656.121" y1="58" x2="656.121" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+  <text x="136.375" y="89" text-anchor="middle" fill="#1a1a1a">draw(ctx)</text>
+  <text x="228.855" y="148.9" fill="#1a1a1a">tctx.bounds = track_bounds(tctx)</text>
+  <text x="369.598" y="185" text-anchor="middle" fill="#1a1a1a">draw(tctx)</text>
+  <text x="228.855" y="244.9" fill="#1a1a1a">mctx.bounds = thumb_bounds(mctx)  from value()</text>
+  <text x="369.598" y="281" text-anchor="middle" fill="#1a1a1a">draw(mctx)</text>
+
+  <polygon points="184.855,96 175.855,100 175.855,92" fill="#1565c0"/>
+  <polygon points="184.855,154 193.855,150 193.855,158" fill="#1565c0"/>
+  <polygon points="554.34,192 545.34,196 545.34,188" fill="#1565c0"/>
+  <polygon points="184.855,250 193.855,246 193.855,254" fill="#1565c0"/>
+  <polygon points="656.121,288 647.121,292 647.121,284" fill="#1565c0"/>
+</svg>

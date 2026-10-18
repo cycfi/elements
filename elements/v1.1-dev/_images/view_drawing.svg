@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="339"
+     viewBox="0 0 750 339"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="134.473" y="14" width="90.7188" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="179.832" y="40.9" text-anchor="middle" fill="#1a1a1a">your code</text>
+
+  <rect x="263.191" y="14" width="56.2344" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="291.309" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="437.527" y="14" width="55.2188" height="44" rx="8" fill="#fdeaf2" stroke="#d81b60" stroke-width="1.5"/>
+  <text x="465.137" y="40.9" text-anchor="middle" fill="#1a1a1a">host</text>
+
+  <rect x="530.746" y="14" width="84.7812" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="573.137" y="40.9" text-anchor="middle" fill="#1a1a1a">elements</text>
+
+  <line x1="179.832" y1="96" x2="291.309" y2="96" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="465.137" y1="134" x2="291.309" y2="134" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="291.309" y1="172" x2="465.137" y2="172" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="465.137" y1="210" x2="291.309" y2="210" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 291.31 248 L 319.31 248 Q 327.31 248 327.31 256 L 327.31 260 Q 327.31 268 319.31 268 L 291.31 268" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="291.309" y1="306" x2="573.137" y2="306" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="179.832" y1="58" x2="179.832" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="291.309" y1="58" x2="291.309" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="465.137" y1="58" x2="465.137" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="573.137" y1="58" x2="573.137" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+  <text x="235.57" y="89" text-anchor="middle" fill="#1a1a1a">refresh(e)</text>
+  <text x="378.223" y="127" text-anchor="middle" fill="#1a1a1a">poll()</text>
+  <text x="378.223" y="165" text-anchor="middle" fill="#1a1a1a">invalidate the area</text>
+  <text x="378.223" y="203" text-anchor="middle" fill="#1a1a1a">draw(canvas), clipped</text>
+  <text x="335.309" y="262.9" fill="#1a1a1a">layout, if resized</text>
+  <text x="378.223" y="299" text-anchor="middle" fill="#1a1a1a">draw(ctx), if in the clip</text>
+
+  <polygon points="291.309,96 282.309,100 282.309,92" fill="#1565c0"/>
+  <polygon points="291.309,134 300.309,130 300.309,138" fill="#1565c0"/>
+  <polygon points="465.137,172 456.137,176 456.137,168" fill="#1565c0"/>
+  <polygon points="291.309,210 300.309,206 300.309,214" fill="#1565c0"/>
+  <polygon points="291.309,268 300.309,264 300.309,272" fill="#1565c0"/>
+  <polygon points="573.137,306 564.137,310 564.137,302" fill="#1565c0"/>
+</svg>

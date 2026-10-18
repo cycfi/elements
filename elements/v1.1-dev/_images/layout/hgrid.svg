@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 217 127">
+  <defs>
+    <style>
+      .d {
+        fill: none;
+      }
+
+      .d, .e {
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .f {
+        fill: #1c75bc;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .e {
+        fill: #e6e7e8;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="e" x=".5" y=".5" width="36" height="126"/>
+    <rect class="e" x="36.5" y=".5" width="72" height="126"/>
+    <rect class="e" x="108.5" y=".5" width="36" height="126"/>
+    <rect class="e" x="144.5" y=".5" width="18" height="126"/>
+    <rect class="e" x="162.5" y=".5" width="54" height="126"/>
+    <rect class="d" x=".5" y=".5" width="216" height="126"/>
+    <text class="f" transform="translate(69.09 67.02)"><tspan x="0" y="0">b</tspan></text>
+    <text class="f" transform="translate(123.81 67.02)"><tspan x="0" y="0">c</tspan></text>
+    <text class="f" transform="translate(150.12 67.02)"><tspan x="0" y="0">d</tspan></text>
+    <text class="f" transform="translate(186.49 67.02)"><tspan x="0" y="0">e</tspan></text>
+    <text class="f" transform="translate(15.61 67.02)"><tspan x="0" y="0">a</tspan></text>
+  </g>
+</svg>

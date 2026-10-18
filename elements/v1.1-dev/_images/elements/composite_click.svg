@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="435"
+     viewBox="0 0 750 435"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="145.145" y="14" width="56.2344" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="173.262" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="337.395" y="14" width="53.1406" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="363.965" y="40.9" text-anchor="middle" fill="#1a1a1a">vtile</text>
+
+  <rect x="547.043" y="14" width="57.8125" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="575.949" y="40.9" text-anchor="middle" fill="#1a1a1a">child</text>
+
+  <line x1="173.262" y1="96" x2="363.965" y2="96" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 363.96 134 L 391.96 134 Q 399.96 134 399.96 142 L 399.96 146 Q 399.96 154 391.96 154 L 363.96 154" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 363.96 192 L 391.96 192 Q 399.96 192 399.96 200 L 399.96 204 Q 399.96 212 391.96 212 L 363.96 212" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="363.965" y1="250" x2="575.949" y2="250" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="173.262" y1="288" x2="363.965" y2="288" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="363.965" y1="326" x2="575.949" y2="326" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="173.262" y1="364" x2="363.965" y2="364" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="363.965" y1="402" x2="575.949" y2="402" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="173.262" y1="58" x2="173.262" y2="421" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="363.965" y1="58" x2="363.965" y2="421" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="575.949" y1="58" x2="575.949" y2="421" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+  <text x="268.613" y="89" text-anchor="middle" fill="#1a1a1a">click(ctx, btn)  btn.down</text>
+  <text x="407.965" y="148.9" fill="#1a1a1a">hit_element(ctx, btn.pos)</text>
+  <text x="407.965" y="206.9" fill="#1a1a1a">new_focus(ix)</text>
+  <text x="469.957" y="243" text-anchor="middle" fill="#1a1a1a">click(cctx, btn)</text>
+  <text x="268.613" y="281" text-anchor="middle" fill="#1a1a1a">drag(ctx, btn)</text>
+  <text x="469.957" y="319" text-anchor="middle" fill="#1a1a1a">drag(cctx, btn)</text>
+  <text x="268.613" y="357" text-anchor="middle" fill="#1a1a1a">click(ctx, btn)  !btn.down</text>
+  <text x="469.957" y="395" text-anchor="middle" fill="#1a1a1a">click(cctx, btn)</text>
+
+  <polygon points="363.965,96 354.965,100 354.965,92" fill="#1565c0"/>
+  <polygon points="363.965,154 372.965,150 372.965,158" fill="#1565c0"/>
+  <polygon points="363.965,212 372.965,208 372.965,216" fill="#1565c0"/>
+  <polygon points="575.949,250 566.949,254 566.949,246" fill="#1565c0"/>
+  <polygon points="363.965,288 354.965,292 354.965,284" fill="#1565c0"/>
+  <polygon points="575.949,326 566.949,330 566.949,322" fill="#1565c0"/>
+  <polygon points="363.965,364 354.965,368 354.965,360" fill="#1565c0"/>
+  <polygon points="575.949,402 566.949,406 566.949,398" fill="#1565c0"/>
+</svg>

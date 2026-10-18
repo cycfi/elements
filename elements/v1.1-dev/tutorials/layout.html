@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Laying Out a Window :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/tutorials/layout.html">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+<script src="../../../_/js/video.js"></script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.1-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/app.html">App</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/window.html">Window</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../view.html">View</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/core.html">Core</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/text_and_images.html">Text and Images</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/images.html">Images</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/status_bars.html">Status Bars</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/containers.html">Containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/ports.html">Ports and Scrollers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/child_windows.html">Child Windows</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/splits.html">Splits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/docking.html">Docking</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/popups.html">Popups and Modals</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/tooltips.html">Tooltips</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/lists.html">Lists</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/drag_and_drop.html">Drag and Drop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/visibility.html">Visibility and Event Interception</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/toggles.html">Check Boxes, Radio Buttons and Switches</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/sliders.html">Sliders, Dials and Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/tracks.html">Tracks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/captions.html">Captions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/text_entry.html">Text Entry</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/decorations.html">Borders and Decorations</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/groups.html">Groups and Panes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/notebooks.html">Notebooks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/dialogs.html">Child Windows and Dialogs</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../support.html">Support</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/canvas.html">Canvas</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/clipboard.html">Clipboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.1-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="../index.html">v1.1-dev</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../tutorials.html">Tutorials</a></li>
+    <li><a href="layout.html">Laying Out a Window</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.1-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="layout.html">v1.1-dev</a>
+    <a class="version" href="../../v1.0/tutorials/layout.html">v1.0</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Laying Out a Window</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Hello Universe the content was one element. A real window holds
+many, and they have to be arranged: some side by side, some stacked,
+some a fixed size, some filling whatever room is left. This tutorial
+is about that arrangement, with <code>examples/layout</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/gallery/layout.png"><img src="../_images/gallery/layout.png" alt="A window titled Layout with a Layout menu at the top right. Two panels of gold boxes: at the left, boxes stacked vertically, some of a fixed height and some stretched to fill; at the right, boxes side by side, the same way across" width="600px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>The program shows five arrangements of gold boxes, chosen from the
+Layout menu at the top right: boxes of a fixed size, aligned within
+their space; boxes that stretch to fill it; the two mixed; grids; and
+a flow that wraps boxes into rows. Resize the window and watch each
+one adapt.</p>
+</div>
+<div class="paragraph">
+<p>You will not find a single coordinate in the program. In Elements you
+do not place elements at positions; you nest them, and the elements
+that hold others divide their space among what they hold. Every
+element has <em>limits</em>, the smallest and largest it can be, and the
+division follows the limits. The job of laying out a window is choosing
+what to nest in what. The <a href="../layout.html" class="xref page">Layout</a> pages give every
+rule; this tutorial shows the ones you will use most.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading_a_layout"><a class="anchor" href="#_reading_a_layout"></a>Reading a Layout</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A layout is a nested expression. Read it from the inside out: the
+innermost element is the thing on the screen, and each element around
+it adds something: a margin, a size, an alignment. In this expression
+from the program,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   auto _box = margin_top(
+      {10},
+      hsize(150, rbox_)
+   );</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>rbox_</code> is a rounded gold box, defined at the top of the program. It
+has no size of its own and fills whatever it is given. <code>hsize(150, &#8230;&#8203;)</code>
+gives it a width of 150. <code>margin_top({10}, ...)</code> adds 10 of empty space
+above it. The result, <code>_box</code>, is a box 150 wide, with a gap above.</p>
+</div>
+<div class="paragraph">
+<p>Elements are values, so <code>_box</code> can be used as many times as you like.
+Each use is a copy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fixed_sizes_and_alignment"><a class="anchor" href="#_fixed_sizes_and_alignment"></a>Fixed Sizes and Alignment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <code>vtile</code> stacks its elements top to bottom and gives each one the
+full width. A box 150 wide does not fill the width, so where does it
+go? <code>halign</code> decides:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto make_vtile_aligns()
+{
+   auto _box = margin_top(
+      {10},
+      hsize(150, rbox_)
+   );
+
+   return margin(
+      {10, 40, 10, 10},                            <i class="conum" data-value="1"></i><b>(1)</b>
+      hmin_size(150,                               <i class="conum" data-value="2"></i><b>(2)</b>
+         vtile(
+            halign(0.0, _box),                     <i class="conum" data-value="3"></i><b>(3)</b>
+            halign(0.2, _box),
+            halign(0.4, _box),
+            halign(0.6, _box),
+            halign(0.8, _box),
+            halign(1.0, _box)                      <i class="conum" data-value="4"></i><b>(4)</b>
+         )
+      )
+   );
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Space around the whole column: 10 at the left, 40 at the top (room
+for the group&#8217;s title), 10 at the right and the bottom.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The column is never narrower than 150, so a box always fits.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>At the left of its space.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>At the right. The values between place the box that fraction of
+the way across.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Run the program and choose "Fixed-Sized, Aligned Elements". The six
+boxes step from left to right. Widen the window and they spread out;
+the boxes stay 150 wide.</p>
+</div>
+<div class="paragraph">
+<p>The horizontal version, <code>make_htile_aligns</code>, is the same with the
+directions swapped: an <code>htile</code> places elements left to right and gives
+each the full height, <code>vsize</code> fixes a height, and <code>valign</code> places the
+box within it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_stretching"><a class="anchor" href="#_stretching"></a>Stretching</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An element without a fixed size stretches to fill the space it is
+given. When a tile has more room than its elements need, it shares the
+extra among the ones that can stretch, in proportion to each one&#8217;s
+<em>stretch</em> value. The default is 1.0.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto make_vtile_stretch()
+{
+   auto _box = margin_top(
+      {10},
+      rbox_
+   );
+
+   return margin(
+      {10, 40, 10, 10},
+      hmin_size(150,
+         vtile(
+            vstretch(1.0, _box),
+            vstretch(0.5, _box),                   <i class="conum" data-value="1"></i><b>(1)</b>
+            vstretch(0.5, _box),
+            vstretch(0.5, _box),
+            vstretch(2.0, _box)                    <i class="conum" data-value="2"></i><b>(2)</b>
+         )
+      )
+   );
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Half the share of a box with the default stretch.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Twice the share.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Choose "Stretchable Elements" and make the window taller. All five
+boxes grow, the last one fastest. See <a href="../layout/stretch.html" class="xref page">Stretch</a>
+for the rule.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fixed_and_stretching_together"><a class="anchor" href="#_fixed_and_stretching_together"></a>Fixed and Stretching Together</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most windows mix the two: a toolbar of a fixed height, say, above a
+document that takes the rest. The figure at the top of the page shows
+this pane. The fixed boxes keep their size and the stretching boxes
+share what is left.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto make_vtile_mixed()
+{
+   auto _box = margin_top(
+      {10},
+      rbox_
+   );
+
+   auto _box2 = margin_top(
+      {10},
+      hsize(150, rbox_)
+   );
+
+   return margin(
+      {10, 40, 10, 10},
+      hmin_size(150,
+         vtile(
+            halign(0.0, vsize(40.0, _box2)),       <i class="conum" data-value="1"></i><b>(1)</b>
+            vstretch(2.0, _box),                   <i class="conum" data-value="2"></i><b>(2)</b>
+            vstretch(1.0, _box),
+            vstretch(0.5, vmin_size(20, _box)),    <i class="conum" data-value="3"></i><b>(3)</b>
+            halign(1.0, vsize(40.0, _box2))        <i class="conum" data-value="4"></i><b>(4)</b>
+         )
+      )
+   );
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>40 high and 150 wide, at the left. Its height is fixed, so it does
+not stretch.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Twice the share of the extra height.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Half the share, and never less than 20 high.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>40 high and 150 wide, at the right.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grids"><a class="anchor" href="#_grids"></a>Grids</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A tile gives each element the room its limits allow. A grid divides its
+space into columns (<code>hgrid</code>) or rows (<code>vgrid</code>) first, and puts one
+element in each. With no coordinates the columns are equal. With
+coordinates, each one is where a column ends, as a fraction of the
+width:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   static std::array&lt;float, 6&gt; const hgrid_coords = {0.25, 0.45, 0.6, 0.75, 0.9, 1.0};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>span</code> lets an element take several columns:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   // 2nd element has span 3, 3rd has span 2
+   auto&amp;&amp; make_hgrid3 =
+      [_box]()
+      {
+         return
+            hgrid(
+               hgrid_coords,                       <i class="conum" data-value="1"></i><b>(1)</b>
+               _box,
+               span(3, _box),                      <i class="conum" data-value="2"></i><b>(2)</b>
+               span(2, _box)
+            );
+      };</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Six columns: the first a quarter of the width, the others narrower.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>This box takes the next three columns.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The pane stacks rows like this one in a <code>vgrid</code>. Choose "Grid
+Elements" to see them, and compare the two groups: one with equal
+columns, one with these coordinates. See <a href="../layout/grids.html" class="xref page">Grids</a>
+and <a href="../layout/span.html" class="xref page">Span</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flow"><a class="anchor" href="#_flow"></a>Flow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A flow places its elements left to right and starts a new row when the
+next one does not fit, like words in a paragraph. The program fills one
+with forty boxes of random sizes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   static auto c = flow_composite{};                                                      <i class="conum" data-value="1"></i><b>(1)</b>
+   for (int i = 0; i &lt; num_elements; ++i)
+   {
+      auto w = min_size + ((double(std::rand()) * (max_width - min_size)) / RAND_MAX);
+      auto h = min_size + ((double(std::rand()) * (max_height - min_size)) / RAND_MAX);
+      auto _box = vsize(line_height, align_bottom(margin(
+         {5, 5, 5, 5}, fixed_size({float(w), float(h)}, rbox_)
+      )));
+      c.push_back(share(_box));                                                           <i class="conum" data-value="2"></i><b>(2)</b>
+   }
+
+   auto flow_pane = margin(
+      {0, 50, 10, 10},
+      align_top(flow(c))                                                                  <i class="conum" data-value="3"></i><b>(3)</b>
+   );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A <code>flow_composite</code> holds the flow&#8217;s elements, so they can be added
+one at a time.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>A composite holds its elements through shared pointers; <code>share</code>
+makes one.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The flow, at the top of its space.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Choose "Flow Elements" and change the window&#8217;s width: the boxes
+reflow. See <a href="../layout/flow.html" class="xref page">Flow</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_switching_panes"><a class="anchor" href="#_switching_panes"></a>Switching Panes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The program makes all five panes once, and shows one at a time. It
+does this with a holder whose element can be swapped:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   auto aligns = share(make_aligns());
+   auto percentages = share(make_percentages());
+   auto mixed = share(make_mixed());
+   auto flow = share(make_flow());
+   auto grids = share(make_grids());
+   auto content = hold_any(aligns);                <i class="conum" data-value="1"></i><b>(1)</b>
+
+   view view_(_win);
+
+   align_menu_item.on_click = [&amp;]()
+   {
+      content = aligns;                            <i class="conum" data-value="2"></i><b>(2)</b>
+      view_.layout(content);                       <i class="conum" data-value="3"></i><b>(3)</b>
+   };</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   auto top = align_right(hsize(120, menu));
+   auto main_pane = pane(top, link(content), false);          <i class="conum" data-value="4"></i><b>(4)</b>
+   auto main_element = margin({10, 10, 10, 10}, main_pane);
+
+   view_.content(
+      main_element,                                           <i class="conum" data-value="5"></i><b>(5)</b>
+      background
+   );</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>hold_any</code> makes a holder, starting with the first pane.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Choosing a menu item puts another pane in the holder.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The new pane has different limits, so the view lays out again.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><code>link</code> puts the holder in the layout by reference, without copying
+it, so the pane shows whatever the holder has at the time.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><code>content</code> takes several elements, drawn one over the other: the
+pane in front, the background behind.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a href="../elements/indirection.html" class="xref page">Indirection</a> covers <code>hold_any</code> and
+<code>link</code>, and <a href="../styles/menus.html" class="xref page">Menus</a> the menu.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running"><a class="anchor" href="#_running"></a>Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build
+cmake --build build --target Layout</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The program is in <code>build/examples/layout</code>. Choose each pane from the
+Layout menu and resize the window.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_try_it"><a class="anchor" href="#_try_it"></a>Try It</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>In <code>make_vtile_stretch</code>, change the last <code>vstretch(2.0, &#8230;&#8203;)</code> to
+<code>vstretch(4.0, &#8230;&#8203;)</code>. The last box now takes four shares of the
+extra height.</p>
+</li>
+<li>
+<p>In <code>make_vtile_aligns</code>, replace every <code>halign(&#8230;&#8203;, _box)</code> with
+<code>_box</code>. Without an alignment, each box is placed at the left.</p>
+</li>
+<li>
+<p>Swap <code>vtile</code> for <code>htile</code> in <code>make_vtile_stretch</code>. The boxes are now
+side by side, each the full height, and they share the extra width
+instead. <code>vstretch</code> has no effect across an <code>htile</code>; change each one
+to <code>hstretch</code> to get the proportions back.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_components_used"><a class="anchor" href="#_components_used"></a>Components Used</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/tiles.html" class="xref page"><code>vtile</code>, <code>htile</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stack elements top to bottom, or place them left to right.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/alignment.html" class="xref page"><code>halign</code>, <code>valign</code>, <code>align_top</code>, <code>align_right</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Place an element within a larger space.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/sizing.html" class="xref page"><code>hsize</code>, <code>vsize</code>, <code>fixed_size</code>, <code>hmin_size</code>, <code>vmin_size</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fix a size, or set a smallest one.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/stretch.html" class="xref page"><code>vstretch</code>, <code>hstretch</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set how much of the extra space an element takes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/margins.html" class="xref page"><code>margin</code>, <code>margin_top</code>, <code>margin_left</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leave space around an element.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/grids.html" class="xref page"><code>hgrid</code>, <code>vgrid</code></a> and <a href="../layout/span.html" class="xref page"><code>span</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Place elements in columns and rows.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../layout/flow.html" class="xref page"><code>flow</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Place elements in rows that wrap.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/indirection.html" class="xref page"><code>hold_any</code>, <code>link</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Show one pane at a time.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../styles/groups.html" class="xref page"><code>group</code>, <code>pane</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frame each pane and the window&#8217;s content.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../styles/menus.html" class="xref page"><code>button_menu</code>, <code>menu_item</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Choose the pane.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

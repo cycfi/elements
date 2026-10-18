@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.86 216.83">
+  <defs>
+    <style>
+      .d, .e, .f {
+        stroke-miterlimit: 10;
+      }
+
+      .d, .f {
+        fill: none;
+        stroke: #be1e2d;
+      }
+
+      .g {
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .g, .h {
+        fill: #be1e2d;
+      }
+
+      .i {
+        letter-spacing: 0em;
+      }
+
+      .e {
+        fill: #e6e7e8;
+        stroke: #414042;
+      }
+
+      .j {
+        fill: #414042;
+      }
+
+      .j, .h {
+        stroke-width: 0px;
+      }
+
+      .f {
+        stroke-dasharray: 0 6;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <text/>
+    <g>
+      <line class="d" x1="90.7" y1="99.82" x2="90.52" y2="18.19"/>
+      <polygon class="h" points="93.43 20.16 90.5 9.33 87.62 20.18 93.43 20.16"/>
+    </g>
+    <g>
+      <line class="d" x1="90.5" y1="171.33" x2="90.5" y2="207.47"/>
+      <polygon class="h" points="87.59 205.49 90.5 216.33 93.41 205.49 87.59 205.49"/>
+    </g>
+    <line class="f" x1="72.53" y1="215.97" x2="99.53" y2="216.18"/>
+    <line class="f" x1="72.5" y1="9.22" x2="101.13" y2="9.18"/>
+    <path class="j" d="M73,216.83h-3.5v-1h2.5v-2.5h1v3.5ZM63.5,216.83h-6v-1h6v1ZM51.5,216.83h-6v-1h6v1ZM39.5,216.83h-6v-1h6v1ZM27.5,216.83h-6v-1h6v1ZM15.5,216.83h-6v-1h6v1ZM3.5,216.83H0v-3.5h1v2.5h2.5v1ZM73,207.33h-1v-6h1v6ZM1,207.33H0v-6h1v6ZM73,195.33h-1v-6h1v6ZM1,195.33H0v-6h1v6ZM73,183.33h-1v-6h1v6ZM1,183.33H0v-6h1v6ZM73,171.33h-1v-6h1v6ZM1,171.33H0v-6h1v6ZM73,159.33h-1v-6h1v6ZM1,159.33H0v-6h1v6ZM73,147.33h-1v-6h1v6ZM1,147.33H0v-6h1v6ZM73,135.33h-1v-6h1v6ZM1,135.33H0v-6h1v6ZM73,123.33h-1v-6h1v6ZM1,123.33H0v-6h1v6ZM73,111.33h-1v-6h1v6ZM1,111.33H0v-6h1v6ZM73,99.33h-1v-6h1v6ZM1,99.33H0v-6h1v6ZM73,87.33h-1v-6h1v6ZM1,87.33H0v-6h1v6ZM73,75.33h-1v-6h1v6ZM1,75.33H0v-6h1v6ZM73,63.33h-1v-6h1v6ZM1,63.33H0v-6h1v6ZM73,51.33h-1v-6h1v6ZM1,51.33H0v-6h1v6ZM73,39.33h-1v-6h1v6ZM1,39.33H0v-6h1v6ZM73,27.33h-1v-6h1v6ZM1,27.33H0v-6h1v6ZM73,15.33h-1v-5.5h-5.5v-1h6v.5h.5v6ZM1,15.33H0v-6h1v6ZM60.5,9.83h-6v-1h6v1ZM48.5,9.83h-6v-1h6v1ZM36.5,9.83h-6v-1h6v1ZM24.5,9.83h-6v-1h6v1ZM12.5,9.83h-6v-1h6v1Z"/>
+    <rect class="e" x=".5" y="99.33" width="72" height="72" transform="translate(-98.83 171.83) rotate(-90)"/>
+    <text class="g" transform="translate(78.14 135.33)"><tspan x="0" y="0">ali</tspan><tspan class="i" x="11.42" y="0">g</tspan><tspan x="18.06" y="0">n</tspan></text>
+  </g>
+</svg>

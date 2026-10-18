@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="339"
+     viewBox="0 0 750 339"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="80.0195" y="14" width="59.3594" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="109.699" y="40.9" text-anchor="middle" fill="#1a1a1a">code</text>
+
+  <rect x="177.379" y="14" width="56.2344" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="205.496" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="271.613" y="14" width="104.734" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="323.98" y="40.9" text-anchor="middle" fill="#1a1a1a">thumbwheel</text>
+
+  <rect x="608.293" y="14" width="61.6875" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="639.137" y="40.9" text-anchor="middle" fill="#1a1a1a">styler</text>
+
+  <line x1="109.699" y1="96" x2="323.98" y2="96" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 323.98 134 L 351.98 134 Q 359.98 134 359.98 142 L 359.98 146 Q 359.98 154 351.98 154 L 323.98 154" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="323.98" y1="192" x2="639.137" y2="192" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="205.496" y1="230" x2="323.98" y2="230" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="323.98" y1="268" x2="639.137" y2="268" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="323.98" y1="306" x2="639.137" y2="306" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="109.699" y1="58" x2="109.699" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="205.496" y1="58" x2="205.496" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="323.98" y1="58" x2="323.98" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="639.137" y1="58" x2="639.137" y2="325" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+  <text x="157.598" y="89" text-anchor="middle" fill="#1a1a1a">value(p)</text>
+  <text x="367.98" y="148.9" fill="#1a1a1a">r = find_subject&lt;receiver&lt;double&gt;*&gt;(this)</text>
+  <text x="481.559" y="185" text-anchor="middle" fill="#1a1a1a">r-&gt;value(p.y)</text>
+  <text x="264.738" y="223" text-anchor="middle" fill="#1a1a1a">draw(ctx)</text>
+  <text x="481.559" y="261" text-anchor="middle" fill="#1a1a1a">r-&gt;value(p.y)  in prepare_subject</text>
+  <text x="481.559" y="299" text-anchor="middle" fill="#1a1a1a">draw(sctx)</text>
+
+  <polygon points="323.98,96 314.98,100 314.98,92" fill="#1565c0"/>
+  <polygon points="323.98,154 332.98,150 332.98,158" fill="#1565c0"/>
+  <polygon points="639.137,192 630.137,196 630.137,188" fill="#1565c0"/>
+  <polygon points="323.98,230 314.98,234 314.98,226" fill="#1565c0"/>
+  <polygon points="639.137,268 630.137,272 630.137,264" fill="#1565c0"/>
+  <polygon points="639.137,306 630.137,310 630.137,302" fill="#1565c0"/>
+</svg>

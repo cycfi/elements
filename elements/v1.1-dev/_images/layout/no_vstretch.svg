@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 198.5 73">
+  <defs>
+    <style>
+      .d { stroke: #414042; }
+      .dd { stroke: #414042; stroke-dasharray: 0 0 6 6; }
+      .d, .dd, .e, .f { fill: none; stroke-miterlimit: 10; }
+      .e, .f { stroke: #be1e2d; }
+      .f { stroke-dasharray: 0 0 7 7; }
+      .j { fill: #be1e2d; stroke-width: 0px; }
+      .k { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; fill: #be1e2d; }
+      .t { font-family: MyriadPro-Regular, 'Myriad Pro'; font-size: 12px; fill: #414042; }
+    </style>
+  </defs>
+  <g>
+    <rect class="d" x=".5" y=".5" width="144" height="36"/>
+    <line class="dd" x1=".5" y1="36.5" x2=".5" y2="72.5"/>
+    <line class="dd" x1="144.5" y1="36.5" x2="144.5" y2="72.5"/>
+    <line class="dd" x1=".5" y1="72.5" x2="144.5" y2="72.5"/>
+    <text class="t" x="64.1" y="22.52">0.0</text>
+    <line class="f" x1="144.5" y1=".5" x2="189.5" y2=".5"/>
+    <line class="f" x1="144.5" y1="36.5" x2="189.5" y2="36.5"/>
+    <line class="e" x1="171.5" y1="9.36" x2="171.5" y2="27.64"/>
+    <polygon class="j" points="171.50 0.50 174.41 11.34 168.59 11.34"/>
+    <polygon class="j" points="171.50 36.50 168.59 25.66 174.41 25.66"/>
+    <text class="k" x="177.5" y="22.52">min</text>
+  </g>
+</svg>

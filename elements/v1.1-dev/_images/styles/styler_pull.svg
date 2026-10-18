@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="321"
+     viewBox="0 0 750 321"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="64.9961" y="14" width="56.2344" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="93.1133" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="159.23" y="14" width="68.7031" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="193.582" y="40.9" text-anchor="middle" fill="#1a1a1a">button</text>
+
+  <rect x="352.941" y="14" width="61.6875" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="383.785" y="40.9" text-anchor="middle" fill="#1a1a1a">styler</text>
+
+  <line x1="93.1133" y1="96" x2="193.582" y2="96" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="193.582" y1="134" x2="383.785" y2="134" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 383.79 172 L 411.79 172 Q 419.79 172 419.79 180 L 419.79 184 Q 419.79 192 411.79 192 L 383.79 192" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="383.785" y1="230" x2="193.582" y2="230" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 383.79 268 L 411.79 268 Q 419.79 268 419.79 276 L 419.79 280 Q 419.79 288 411.79 288 L 383.79 288" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="93.1133" y1="58" x2="93.1133" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="193.582" y1="58" x2="193.582" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+  <line x1="383.785" y1="58" x2="383.785" y2="307" stroke="#5d5d5d" stroke-width="1.4" stroke-dasharray="5,3"/>
+
+  <text x="143.348" y="89" text-anchor="middle" fill="#1a1a1a">draw(ctx)</text>
+  <text x="288.684" y="127" text-anchor="middle" fill="#1a1a1a">draw(sctx)</text>
+  <text x="427.785" y="186.9" fill="#1a1a1a">btn = find_parent&lt;basic_button*&gt;(sctx)</text>
+  <text x="288.684" y="223" text-anchor="middle" fill="#1a1a1a">btn-&gt;value(), btn-&gt;hilite()</text>
+  <text x="427.785" y="282.9" fill="#1a1a1a">draw from the state and sctx.enabled</text>
+
+  <polygon points="193.582,96 184.582,100 184.582,92" fill="#1565c0"/>
+  <polygon points="383.785,134 374.785,138 374.785,130" fill="#1565c0"/>
+  <polygon points="383.785,192 392.785,188 392.785,196" fill="#1565c0"/>
+  <polygon points="193.582,230 202.582,226 202.582,234" fill="#1565c0"/>
+  <polygon points="383.785,288 392.785,284 392.785,292" fill="#1565c0"/>
+</svg>

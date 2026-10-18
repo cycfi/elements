@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 145 100">
+  <defs>
+    <style>
+      .d {
+        fill: none;
+      }
+
+      .d, .e {
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .f {
+        letter-spacing: 0em;
+      }
+
+      .g {
+        letter-spacing: 0em;
+      }
+
+      .h {
+        fill: #be1e2d;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .i {
+        letter-spacing: 0em;
+      }
+
+      .e {
+        fill: #e6e7e8;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="d" x=".5" y=".5" width="144" height="99"/>
+    <text class="h" transform="translate(40.06 90.02)"><tspan x="0" y="0">bot</tspan><tspan class="f" x="17.39" y="0">t</tspan><tspan x="21.29" y="0">om</tspan></text>
+    <text class="h" transform="translate(109.96 49.52)"><tspan class="g" x="0" y="0">r</tspan><tspan x="3.97" y="0">ig</tspan><tspan class="i" x="13.49" y="0">h</tspan><tspan x="20.1" y="0">t</tspan></text>
+    <rect class="e" x=".5" y=".5" width="99" height="72"/>
+  </g>
+</svg>

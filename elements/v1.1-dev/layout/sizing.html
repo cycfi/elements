@@ -1,0 +1,2378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sizing :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/layout/sizing.html">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+<script src="../../../_/js/video.js"></script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.1-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/app.html">App</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/window.html">Window</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../view.html">View</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/core.html">Core</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="limits.html">Limits</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/text_and_images.html">Text and Images</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/images.html">Images</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/status_bars.html">Status Bars</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/containers.html">Containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/ports.html">Ports and Scrollers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/child_windows.html">Child Windows</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/splits.html">Splits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/docking.html">Docking</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/popups.html">Popups and Modals</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/tooltips.html">Tooltips</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/lists.html">Lists</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/drag_and_drop.html">Drag and Drop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/visibility.html">Visibility and Event Interception</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/toggles.html">Check Boxes, Radio Buttons and Switches</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/sliders.html">Sliders, Dials and Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/tracks.html">Tracks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/captions.html">Captions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/text_entry.html">Text Entry</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/decorations.html">Borders and Decorations</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/groups.html">Groups and Panes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/notebooks.html">Notebooks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/dialogs.html">Child Windows and Dialogs</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../support.html">Support</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/canvas.html">Canvas</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/clipboard.html">Clipboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.1-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="../index.html">v1.1-dev</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../../v1.0/index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="../layout.html">Layout</a></li>
+    <li><a href="sizing.html">Sizing</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.1-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="sizing.html">v1.1-dev</a>
+    <a class="version" href="../../v1.0/layout/sizing.html">v1.0</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Sizing</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Size elements override the <a href="limits.html" class="xref page">limits</a> of an enclosed element. There is a
+comprehensive list of size related elements in the Elements Library that can
+be used for various purposes. This section catalogues all the available size
+elements.</p>
+</div>
+<div class="paragraph">
+<p>Each returns a <code>Proxy</code>. Except for <code>vcollapsible</code> and <code>hcollapsible</code>,
+which collapse an axis to zero, the natural <em>limits</em> of the element will
+not be violated.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/size.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_limit"><a class="anchor" href="#_limit"></a>limit</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/limit.svg" alt="limit" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <a href="limits.html" class="xref page">limits</a> of an element.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class limit_element : public proxy&lt;Subject&gt;
+{
+public:
+                           limit_element(view_limits limits_, Subject subject);
+
+   void                    limit(view_limits limits);
+   view_limits             limit() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+limit_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+limit(view_limits limits_, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>limit_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>limits</code></dt>
+<dd>
+<p>Instance of <a href="limits.html" class="xref page">view_limits</a></p>
+</dd>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>limit</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory"><a class="anchor" href="#_factory"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit(limits, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <a href="limits.html" class="xref page">limits</a> of <code>subject</code> will be set to the specified <a href="limits.html" class="xref page">limits</a>
+  constrained by the natural <em>limits</em> of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators"><a class="anchor" href="#_mutators"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.limit(limits)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the specified <a href="limits.html" class="xref page">limits</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors"><a class="anchor" href="#_accessors"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.limit()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <a href="limits.html" class="xref page">limits</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="limits.html" class="xref page">view_limits</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fixed_size"><a class="anchor" href="#_fixed_size"></a>fixed_size</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/fixed_size.svg" alt="fixed_size" width="318px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the size of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_2"><a class="anchor" href="#_declaration_2"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           size_element(point size, Subject subject);
+
+   void                    fixed_size(point size);
+   point                   fixed_size() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+fixed_size(point size, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>width</code>, <code>height</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>fixed_size</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_2"><a class="anchor" href="#_factory_2"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fixed_size({width, height}, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code> will be laid out with a fixed <code>width</code> and <code>height</code>,
+  constrained by the natural <em>limits</em> of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_2"><a class="anchor" href="#_mutators_2"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.fixed_size({width, height})</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the fixed <code>width</code> and <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_2"><a class="anchor" href="#_accessors_2"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.fixed_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>width</code> and <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hsize_and_hspace"><a class="anchor" href="#_hsize_and_hspace"></a>hsize and hspace</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hsize.svg" alt="hsize" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the horizontal size of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hspace.svg" alt="hspace" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Makes an empty element with a fixed horizontal size: horizontal space
+between elements.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_3"><a class="anchor" href="#_declaration_3"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class hsize_element : public proxy&lt;Subject&gt;
+{
+public:
+                           hsize_element(float width, Subject subject);
+
+   void                    hsize(float width);
+   float                   hsize() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+hsize_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+hsize(float width, Subject&amp;&amp; subject);
+
+hsize_element&lt;element&gt;                       hspace(float width);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>hsize_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>width</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>hsize</code> or <code>hspace</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_3"><a class="anchor" href="#_factory_3"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hsize(width, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code> will be laid out with a fixed <code>width</code>, constrained by
+  the natural <em>horizontal limits</em> of the <code>subject</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hspace(width)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An empty element will be laid out with a fixed <code>width</code>. The <em>vertical
+  limits</em> of the empty element are full: it takes any height. The same as
+  <code>hsize(width, element{})</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_3"><a class="anchor" href="#_mutators_3"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hsize(width)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the fixed <code>width</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_3"><a class="anchor" href="#_accessors_3"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hsize()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>width</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vsize_and_vspace"><a class="anchor" href="#_vsize_and_vspace"></a>vsize and vspace</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vsize.svg" alt="vsize" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the <em>vertical limits</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vspace.svg" alt="vspace" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Makes an empty element with a fixed vertical size: vertical space between
+elements.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_4"><a class="anchor" href="#_declaration_4"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class vsize_element : public proxy&lt;Subject&gt;
+{
+public:
+                           vsize_element(float height, Subject subject);
+
+   void                    vsize(float height);
+   float                   vsize() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+vsize_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+vsize(float height, Subject&amp;&amp; subject);
+
+vsize_element&lt;element&gt;                       vspace(float height);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>vsize_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>height</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>vsize</code> or <code>vspace</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_4"><a class="anchor" href="#_factory_4"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vsize(height, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code> will be laid out with a fixed <code>height</code>, constrained by
+  the natural <em>vertical limits</em> of the <code>subject</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vspace(height)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An empty element will be laid out with a fixed <code>height</code>. The
+  <em>horizontal limits</em> of the empty element are full: it takes any width.
+  The same as <code>vsize(height, element{})</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_4"><a class="anchor" href="#_mutators_4"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.vsize(height)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the fixed <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_4"><a class="anchor" href="#_accessors_4"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.vsize()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_min_size"><a class="anchor" href="#_min_size"></a>min_size</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/min_size.svg" alt="min_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>minimum limits</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_5"><a class="anchor" href="#_declaration_5"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class min_size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           min_size_element(point size, Subject subject);
+
+   void                    min_size(point size);
+   point                   min_size() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+min_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+min_size(point size, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>min_size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_5"><a class="anchor" href="#_expressions_5"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_5"><a class="anchor" href="#_notation_5"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>width</code>, <code>height</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>min_size</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_5"><a class="anchor" href="#_factory_5"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>min_size({width, height}, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>minimum limits</em> of <code>subject</code> will be set to the specified
+  <code>width</code> and <code>height</code>, constrained by the natural <em>minimum limits</em>
+  of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_5"><a class="anchor" href="#_mutators_5"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.min_size({width, height})</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <em>minimum limits</em> to the specified <code>width</code> and <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_5"><a class="anchor" href="#_accessors_5"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.min_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>width</code> and <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hmin_size_and_hmin_pad"><a class="anchor" href="#_hmin_size_and_hmin_pad"></a>hmin_size and hmin_pad</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hmin_size.svg" alt="hmin_size" width="233px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>minimum horizontal limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hmin_pad.svg" alt="hmin_pad" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a pad to the <em>minimum horizontal limit</em> of an enclosed element
+(<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_6"><a class="anchor" href="#_declaration_6"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class hmin_size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           hmin_size_element(float width, Subject subject);
+
+   void                    hmin_size(float width);
+   float                   hmin_size() const;
+   void                    pad(float pad);
+   float                   pad() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+hmin_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+hmin_size(float width, Subject&amp;&amp; subject);
+
+template &lt;concepts::Element Subject&gt;
+hmin_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+hmin_pad(float pad, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>hmin_size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_6"><a class="anchor" href="#_expressions_6"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_6"><a class="anchor" href="#_notation_6"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>width</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>pad</code></dt>
+<dd>
+<p><code>float</code>, zero or more</p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>hmin_size</code> or <code>hmin_pad</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_6"><a class="anchor" href="#_factory_6"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hmin_size(width, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>minimum horizontal limit</em> of <code>subject</code> will be set to the
+  specified <code>width</code> constrained by the natural <em>horizontal minimum
+  limits</em> of the <code>subject</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hmin_pad(pad, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>minimum horizontal limit</em> of <code>subject</code> will be set to its
+  natural <em>minimum horizontal limit</em> plus <code>pad</code>, constrained by the
+  natural <em>maximum horizontal limit</em> of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_6"><a class="anchor" href="#_mutators_6"></a>Mutators</h4>
+<div class="paragraph">
+<p><code>hmin_size</code> gives a <code>pad</code> of zero and <code>hmin_pad</code> a <code>width</code> of zero. With
+both set, the <em>minimum horizontal limit</em> is the larger of the <code>width</code> and
+the natural <em>minimum horizontal limit</em> plus <code>pad</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hmin_size(width)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <em>minimum horizontal limit</em> to the specified <code>width</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.pad(pad)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <code>pad</code> added to the natural <em>minimum horizontal limit</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_6"><a class="anchor" href="#_accessors_6"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hmin_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>width</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.pad()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>pad</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hmin"><a class="anchor" href="#_hmin"></a>hmin</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hmin.svg" alt="hmin" width="232px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the horizontal size of an enclosed element (<code>subject</code>) at its natural
+<em>minimum horizontal limit</em>.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_7"><a class="anchor" href="#_declaration_7"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class hmin_element : public proxy&lt;Subject&gt;
+{
+public:
+                           hmin_element(Subject subject);
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+hmin_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+hmin(Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>hmin_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_7"><a class="anchor" href="#_expressions_7"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_7"><a class="anchor" href="#_notation_7"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_7"><a class="anchor" href="#_factory_7"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hmin(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code> will be laid out with a fixed width: its natural
+  <em>minimum horizontal limit</em>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vmin_size_and_vmin_pad"><a class="anchor" href="#_vmin_size_and_vmin_pad"></a>vmin_size and vmin_pad</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vmin_size.svg" alt="vmin_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>minimum vertical limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vmin_pad.svg" alt="vmin_pad" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Adds a pad to the <em>minimum vertical limit</em> of an enclosed element
+(<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_8"><a class="anchor" href="#_declaration_8"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class vmin_size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           vmin_size_element(float height, Subject subject);
+
+   void                    vmin_size(float height);
+   float                   vmin_size() const;
+   void                    pad(float pad);
+   float                   pad() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+vmin_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+vmin_size(float height, Subject&amp;&amp; subject);
+
+template &lt;concepts::Element Subject&gt;
+vmin_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+vmin_pad(float pad, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>vmin_size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_8"><a class="anchor" href="#_expressions_8"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_8"><a class="anchor" href="#_notation_8"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>height</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>pad</code></dt>
+<dd>
+<p><code>float</code>, zero or more</p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>vmin_size</code> or <code>vmin_pad</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_8"><a class="anchor" href="#_factory_8"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmin_size(height, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>minimum vertical limit</em> of <code>subject</code> will be set to the
+  specified <code>height</code> constrained by the natural vertical <em>minimum
+  limits</em> of the <code>subject</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmin_pad(pad, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>minimum vertical limit</em> of <code>subject</code> will be set to its
+  natural <em>minimum vertical limit</em> plus <code>pad</code>, constrained by the
+  natural <em>maximum vertical limit</em> of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_7"><a class="anchor" href="#_mutators_7"></a>Mutators</h4>
+<div class="paragraph">
+<p><code>vmin_size</code> gives a <code>pad</code> of zero and <code>vmin_pad</code> a <code>height</code> of zero. With
+both set, the <em>minimum vertical limit</em> is the larger of the <code>height</code> and
+the natural <em>minimum vertical limit</em> plus <code>pad</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.vmin_size(height)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <em>minimum vertical limit</em> to the specified <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.pad(pad)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <code>pad</code> added to the natural <em>minimum vertical limit</em>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_7"><a class="anchor" href="#_accessors_7"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.vmin_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.pad()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>pad</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vmin"><a class="anchor" href="#_vmin"></a>vmin</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vmin.svg" alt="vmin" width="316px">
+</div>
+</div>
+<div class="paragraph">
+<p>Fixes the vertical size of an enclosed element (<code>subject</code>) at its natural
+<em>minimum vertical limit</em>.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_9"><a class="anchor" href="#_declaration_9"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class vmin_element : public proxy&lt;Subject&gt;
+{
+public:
+                           vmin_element(Subject subject);
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+vmin_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+vmin(Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>vmin_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_9"><a class="anchor" href="#_expressions_9"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_9"><a class="anchor" href="#_notation_9"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_9"><a class="anchor" href="#_factory_9"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmin(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject</code> will be laid out with a fixed height: its natural
+  <em>minimum vertical limit</em>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_max_size"><a class="anchor" href="#_max_size"></a>max_size</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/max_size.svg" alt="max_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>maximum limits</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_10"><a class="anchor" href="#_declaration_10"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class max_size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           max_size_element(point size, Subject subject);
+
+   void                    max_size(point size);
+   point                   max_size() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+max_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+max_size(point size, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>max_size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_10"><a class="anchor" href="#_expressions_10"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_10"><a class="anchor" href="#_notation_10"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>width</code>, <code>height</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>max_size</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_10"><a class="anchor" href="#_factory_10"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max_size({width, height}, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>maximum limits</em> of <code>subject</code> will be set to the specified
+  <code>width</code> and <code>height</code>, constrained by the natural <em>maximum limits</em>
+  of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_8"><a class="anchor" href="#_mutators_8"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.max_size({width, height})</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <em>maximum limits</em> to the specified <code>width</code> and <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_8"><a class="anchor" href="#_accessors_8"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.max_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>width</code> and <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>point</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hmax_size"><a class="anchor" href="#_hmax_size"></a>hmax_size</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hmax_size.svg" alt="hmax_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>maximum horizontal limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_11"><a class="anchor" href="#_declaration_11"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class hmax_size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           hmax_size_element(float size, Subject subject);
+
+   void                    hmax_size(float size);
+   float                   hmax_size() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+hmax_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+hmax_size(float size, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>hmax_size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_11"><a class="anchor" href="#_expressions_11"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_11"><a class="anchor" href="#_notation_11"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>width</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>hmax_size</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_11"><a class="anchor" href="#_factory_11"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hmax_size(width, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>maximum horizontal limit</em> of <code>subject</code> will be set to the
+  specified <code>width</code> constrained by the natural <em>maximum horizontal
+  limit</em> of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_9"><a class="anchor" href="#_mutators_9"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hmax_size(width)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <em>maximum horizontal limit</em> to the specified <code>width</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_9"><a class="anchor" href="#_accessors_9"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.hmax_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>width</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vmax_size"><a class="anchor" href="#_vmax_size"></a>vmax_size</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vmax_size.svg" alt="vmax_size" width="360px">
+</div>
+</div>
+<div class="paragraph">
+<p>Overrides the <em>maximum vertical limit</em> of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_12"><a class="anchor" href="#_declaration_12"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class vmax_size_element : public proxy&lt;Subject&gt;
+{
+public:
+                           vmax_size_element(float size, Subject subject);
+
+   void                    vmax_size(float size);
+   float                   vmax_size() const;
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+vmax_size_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+vmax_size(float size, Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>vmax_size_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_12"><a class="anchor" href="#_expressions_12"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_12"><a class="anchor" href="#_notation_12"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>height</code></dt>
+<dd>
+<p><code>float</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>vmax_size</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_12"><a class="anchor" href="#_factory_12"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmax_size(height, subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <em>maximum vertical limit</em> of <code>subject</code> will be set to the
+  specified <code>height</code> constrained by the natural <em>maximum vertical
+  limit</em> of the <code>subject</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_10"><a class="anchor" href="#_mutators_10"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.vmax_size(height)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the <em>maximum vertical limit</em> to the specified <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_10"><a class="anchor" href="#_accessors_10"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.vmax_size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the specified <code>height</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>float</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vcollapsible"><a class="anchor" href="#_vcollapsible"></a>vcollapsible</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/vcollapsible.svg" alt="vcollapsible" width="680px">
+</div>
+</div>
+<div class="paragraph">
+<p>Collapses the height of an enclosed element (<code>subject</code>).</p>
+</div>
+<div class="paragraph">
+<p>A collapsible element folds its enclosed element (<code>subject</code>) away on one
+axis when a predicate says so, and brings it back when the predicate
+changes its mind: the subject&#8217;s <a href="limits.html" class="xref page">limits</a> on that axis are both set to
+zero, so the tile or grid it sits in gives it no room and what follows
+moves up, or over, to take its place; it is not drawn, and takes neither
+the mouse nor the keyboard. The subject is still there, and returns at
+its own size as soon as the predicate is false again. A section of a
+panel that folds under its header, or a sidebar that slides out of the
+way, is built this way.</p>
+</div>
+<div class="paragraph">
+<p>The predicate is read when the enclosing element lays out. After
+changing what it returns, call the view&#8217;s <code>layout()</code> so the tree is laid
+out again.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_13"><a class="anchor" href="#_declaration_13"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class vcollapsible_element : public proxy&lt;Subject&gt;
+{
+public:
+   using is_collapsed_function = std::function&lt;bool()&gt;;
+
+                           vcollapsible_element(Subject subject);
+
+   is_collapsed_function   is_collapsed = []{ return false; };
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+vcollapsible_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+vcollapsible(Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>vcollapsible_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_13"><a class="anchor" href="#_expressions_13"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_13"><a class="anchor" href="#_notation_13"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>pred</code></dt>
+<dd>
+<p>A callable returning <code>bool</code>, <code>bool()</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>vcollapsible</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_13"><a class="anchor" href="#_factory_13"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vcollapsible(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">While <code>pred()</code> returns <code>true</code>, the <code>min</code> and <code>max</code> height of the
+  subject&#8217;s <a href="limits.html" class="xref page">limits</a> are zero; its width is untouched. The subject is not
+  drawn, and <code>wants_control</code> and <code>wants_focus</code> return <code>false</code>. While
+  <code>pred()</code> returns <code>false</code>, the subject&#8217;s <a href="limits.html" class="xref page">limits</a> are its own, and it is
+  drawn and takes events as usual.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_11"><a class="anchor" href="#_mutators_11"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.is_collapsed = pred</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>is_collapsed</code> is a public member holding <code>pred</code>; its default returns
+  <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>is_collapsed_function&amp;</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hcollapsible"><a class="anchor" href="#_hcollapsible"></a>hcollapsible</h2>
+<div class="sectionbody">
+<div class="imageblock center">
+<div class="content">
+<img src="../_images/layout/hcollapsible.svg" alt="hcollapsible" width="466px">
+</div>
+</div>
+<div class="paragraph">
+<p>Collapses the width of an enclosed element (<code>subject</code>), as <code>vcollapsible</code>
+does the height.</p>
+</div>
+<div class="sect2">
+<h3 id="_declaration_14"><a class="anchor" href="#_declaration_14"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;concepts::Element Subject&gt;
+class hcollapsible_element : public proxy&lt;Subject&gt;
+{
+public:
+   using is_collapsed_function = std::function&lt;bool()&gt;;
+
+                           hcollapsible_element(Subject subject);
+
+   is_collapsed_function   is_collapsed = []{ return false; };
+
+   ...
+};
+
+template &lt;concepts::Element Subject&gt;
+hcollapsible_element&lt;remove_cvref_t&lt;Subject&gt;&gt;
+hcollapsible(Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest of <code>hcollapsible_element</code> is the <code>Proxy</code> interface (see
+<a href="../elements/proxies.html" class="xref page">Proxies</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_14"><a class="anchor" href="#_expressions_14"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_14"><a class="anchor" href="#_notation_14"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>subject</code></dt>
+<dd>
+<p>Instance of <code>Element</code></p>
+</dd>
+<dt class="hdlist1"><code>pred</code></dt>
+<dd>
+<p>A callable returning <code>bool</code>, <code>bool()</code></p>
+</dd>
+<dt class="hdlist1"><code>e</code></dt>
+<dd>
+<p>The element <code>hcollapsible</code> returns</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_14"><a class="anchor" href="#_factory_14"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hcollapsible(subject)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">While <code>pred()</code> returns <code>true</code>, the <code>min</code> and <code>max</code> width of the
+  subject&#8217;s <a href="limits.html" class="xref page">limits</a> are zero; its height is untouched. The subject is not
+  drawn, and <code>wants_control</code> and <code>wants_focus</code> return <code>false</code>. While
+  <code>pred()</code> returns <code>false</code>, the subject&#8217;s <a href="limits.html" class="xref page">limits</a> are its own, and it is
+  drawn and takes events as usual.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_mutators_12"><a class="anchor" href="#_mutators_12"></a>Mutators</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.is_collapsed = pred</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>is_collapsed</code> is a public member holding <code>pred</code>; its default returns
+  <code>false</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>is_collapsed_function&amp;</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A row of three boxes, 10 apart: one of a fixed size, one at least 100 wide,
+and one at most 60 wide:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/size.hpp&gt;
+#include &lt;elements/element/tile.hpp&gt;        // For htile
+#include &lt;elements/element/style/misc.hpp&gt;  // For box
+...
+using namespace cycfi::elements;
+...
+auto row = htile(
+   fixed_size({40, 40}, box(colors::red)),     <i class="conum" data-value="1"></i><b>(1)</b>
+   hspace(10),                                 <i class="conum" data-value="2"></i><b>(2)</b>
+   hmin_size(100, box(colors::green)),         <i class="conum" data-value="3"></i><b>(3)</b>
+   hspace(10),
+   hmax_size(60, box(colors::blue))            <i class="conum" data-value="4"></i><b>(4)</b>
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A box fixed at 40 by 40.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>An empty space 10 wide.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>A box at least 100 wide.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>A box at most 60 wide.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>A section of a panel: a header, a body on its own background that folds under it,
+and what follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/size.hpp&gt;
+#include &lt;elements/element/align.hpp&gt;        // For align_left
+#include &lt;elements/element/label.hpp&gt;        // For label
+#include &lt;elements/element/layer.hpp&gt;        // For layer
+#include &lt;elements/element/margin.hpp&gt;       // For margin, margin_top
+#include &lt;elements/element/style/misc.hpp&gt;   // For rbox
+#include &lt;elements/element/tile.hpp&gt;         // For vtile
+...
+using namespace cycfi::elements;
+...
+struct section
+{
+   bool open = true;
+
+   auto make()
+   {
+      auto body = vcollapsible(
+         layer(
+            margin({10, 10, 10, 10}, align_left(label("Collapsible section"))),
+            rbox(rgba(50, 70, 100, 255))
+         ));
+      body.is_collapsed = [this]{ return !open; };
+      return vtile(
+         align_left(label("A section").font_size(16)),
+         margin_top(6, std::move(body)),
+         margin_top(8, align_left(label("What follows the section")))
+      );
+   }
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To fold it, set <code>open</code> to <code>false</code> and call <code>view_.layout()</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/layout/collapsible.png"><img src="../_images/layout/collapsible.png" alt="A section open, with its body shown under its header, and the same section collapsed, the body gone and the text that follows moved up" width="440px"></a>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2024 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

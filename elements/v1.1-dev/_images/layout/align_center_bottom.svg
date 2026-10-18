@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224.72 262.01">
+  <defs>
+    <style>
+      .d {
+        fill: #e6e7e8;
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .e {
+        fill: #414042;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <path class="e" d="M216.5,262.01h-6v-1h6v1ZM204.5,262.01h-6v-1h6v1ZM192.5,262.01h-6v-1h6v1ZM180.5,262.01h-6v-1h6v1ZM168.5,262.01h-6v-1h6v1ZM156.5,262.01h-6v-1h6v1ZM144.5,262.01h-6v-1h6v1ZM132.5,262.01h-6v-1h6v1ZM120.5,262.01h-6v-1h6v1ZM108.5,262.01h-6v-1h6v1ZM96.5,262.01h-6v-1h6v1ZM84.5,262.01h-6v-1h6v1ZM72.5,262.01h-6v-1h6v1ZM60.5,262.01h-6v-1h6v1ZM48.5,262.01h-6v-1h6v1ZM36.5,262.01h-6v-1h6v1ZM24.5,262.01h-6v-1h6v1ZM12.5,262.01h-6v-1h6v1ZM1,261.51H0v-6h1v6ZM217,255.51h-1v-6h1v6ZM1,249.51H0v-6h1v6ZM217,243.51h-1v-6h1v6ZM1,237.51H0v-6h1v6ZM217,231.51h-1v-6h1v6ZM1,225.51H0v-6h1v6ZM217,219.51h-1v-6h1v6ZM1,213.51H0v-6h1v6ZM217,207.51h-1v-6h1v6ZM1,201.51H0v-6h1v6ZM217,195.51h-1v-6h1v6ZM1,189.51H0v-6h1v6ZM217,183.51h-1v-6h1v6ZM1,177.51H0v-6h1v6ZM217,171.51h-1v-6h1v6ZM1,165.51H0v-6h1v6ZM217,159.51h-1v-6h1v6ZM1,153.51H0v-6h1v6ZM217,147.51h-1v-6h1v6ZM1,141.51H0v-6h1v6ZM217,135.51h-1v-6h1v6ZM1,129.51H0v-6h1v6ZM217,123.51h-1v-6h1v6ZM1,117.51H0v-6h1v6ZM217,111.51h-1v-6h1v6ZM1,105.51H0v-6h1v6ZM217,99.51h-1v-6h1v6ZM1,93.51H0v-6h1v6ZM217,87.51h-1v-6h1v6ZM1,81.51H0v-6h1v6ZM217,75.51h-1v-6h1v6ZM1,69.51H0v-6h1v6ZM217,63.51h-1v-6h1v6ZM1,57.51H0v-6h1v6ZM217,51.51h-1v-6h1v6ZM210.5,46.01h-6v-1h6v1ZM198.5,46.01h-6v-1h6v1ZM186.5,46.01h-6v-1h6v1ZM174.5,46.01h-6v-1h6v1ZM162.5,46.01h-6v-1h6v1ZM150.5,46.01h-6v-1h6v1ZM138.5,46.01h-6v-1h6v1ZM126.5,46.01h-6v-1h6v1ZM114.5,46.01h-6v-1h6v1ZM102.5,46.01h-6v-1h6v1ZM90.5,46.01h-6v-1h6v1ZM78.5,46.01h-6v-1h6v1ZM66.5,46.01h-6v-1h6v1ZM54.5,46.01h-6v-1h6v1ZM42.5,46.01h-6v-1h6v1ZM30.5,46.01h-6v-1h6v1ZM18.5,46.01h-6v-1h6v1ZM6.5,46.01H.5v-1h6v1Z"/>
+    <rect class="d" x="72.5" y="189.51" width="72" height="72" transform="translate(-117.01 334.01) rotate(-90)"/>
+  </g>
+</svg>

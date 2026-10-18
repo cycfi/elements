@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="b" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 136 100">
+  <defs>
+    <style>
+      .d {
+        fill: none;
+      }
+
+      .d, .e {
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .f {
+        letter-spacing: 0em;
+      }
+
+      .g {
+        fill: #be1e2d;
+        font-family: MyriadPro-Regular, 'Myriad Pro';
+        font-size: 12px;
+      }
+
+      .e {
+        fill: #e6e7e8;
+      }
+    </style>
+  </defs>
+  <g id="c" data-name="Layer 1">
+    <rect class="e" x=".5" y="27.5" width="135" height="72"/>
+    <rect class="d" x=".5" y=".5" width="135" height="99"/>
+    <text class="g" transform="translate(59.34 18.02)"><tspan class="f" x="0" y="0">t</tspan><tspan x="3.9" y="0">op</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 108">
+  <defs>
+    <style>
+      .box {
+        fill: #e6e7e8;
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .label {
+        font-family: MyriadPro-Regular, 'Myriad Pro', sans-serif;
+        font-size: 12px;
+        fill: #414042;
+      }
+
+      .note {
+        font-family: MyriadPro-Regular, 'Myriad Pro', sans-serif;
+        font-size: 12px;
+        fill: #be1e2d;
+      }
+
+      .link {
+        fill: none;
+        stroke: #414042;
+        stroke-miterlimit: 10;
+      }
+
+      .absent {
+        fill: none;
+        stroke: #be1e2d;
+        stroke-miterlimit: 10;
+        stroke-dasharray: 0 0 7 7;
+      }
+
+      .cross {
+        fill: none;
+        stroke: #be1e2d;
+        stroke-miterlimit: 10;
+      }
+    </style>
+    <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4"
+      markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 8 4 L 0 8 z" fill="#414042"/>
+    </marker>
+    <marker id="arrow-back" viewBox="0 0 8 8" refX="1" refY="4"
+      markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 8 0 L 0 4 L 8 8 z" fill="#414042"/>
+    </marker>
+  </defs>
+
+  <rect class="box" x="10.5" y="10.5" width="112" height="44" rx="3"/>
+  <text class="label" x="66.5" y="37" text-anchor="middle">application</text>
+
+  <rect class="box" x="164.5" y="10.5" width="100" height="44" rx="3"/>
+  <text class="label" x="214.5" y="37" text-anchor="middle">model</text>
+
+  <rect class="box" x="306.5" y="10.5" width="112" height="44" rx="3"/>
+  <text class="label" x="362.5" y="37" text-anchor="middle">GUI</text>
+
+  <line class="link" x1="130" y1="32.5" x2="157" y2="32.5"
+    marker-start="url(#arrow-back)" marker-end="url(#arrow)"/>
+  <line class="link" x1="272" y1="32.5" x2="299" y2="32.5"
+    marker-start="url(#arrow-back)" marker-end="url(#arrow)"/>
+
+  <path class="absent" d="M 66.5 62 L 66.5 88 L 362.5 88 L 362.5 62"/>
+  <line class="cross" x1="207.5" y1="81" x2="221.5" y2="95"/>
+  <line class="cross" x1="221.5" y1="81" x2="207.5" y2="95"/>
+  <text class="note" x="214.5" y="105" text-anchor="middle">unaware of each other</text>
+</svg>

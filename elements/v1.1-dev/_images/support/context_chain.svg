@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="236"
+     viewBox="0 0 750 236"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="206.547" y="14" width="56.2344" height="44" rx="8" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.5"/>
+  <text x="234.664" y="40.9" text-anchor="middle" fill="#1a1a1a">view</text>
+
+  <rect x="300.781" y="14" width="132.328" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="366.945" y="40.9" text-anchor="middle" fill="#1a1a1a">vtile&#x27;s context</text>
+
+  <rect x="471.109" y="14" width="72.3438" height="44" rx="8" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.5"/>
+  <text x="507.281" y="40.9" text-anchor="middle" fill="#1a1a1a">canvas</text>
+
+  <rect x="300.781" y="96" width="132.328" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="366.945" y="122.9" text-anchor="middle" fill="#1a1a1a">margin&#x27;s context</text>
+
+  <rect x="300.781" y="178" width="132.328" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="366.945" y="204.9" text-anchor="middle" fill="#1a1a1a">slider&#x27;s context</text>
+
+  <line x1="262.781" y1="36" x2="300.781" y2="36" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="471.109" y1="36" x2="433.109" y2="36" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="366.945" y1="58" x2="366.945" y2="96" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="366.945" y1="140" x2="366.945" y2="178" stroke="#1565c0" stroke-width="1.4"/>
+
+
+  <polygon points="300.781,36 291.781,40 291.781,32" fill="#1565c0"/>
+  <polygon points="433.109,36 442.109,32 442.109,40" fill="#1565c0"/>
+  <polygon points="366.945,96 362.945,87 370.945,87" fill="#1565c0"/>
+  <polygon points="366.945,178 362.945,169 370.945,169" fill="#1565c0"/>
+</svg>

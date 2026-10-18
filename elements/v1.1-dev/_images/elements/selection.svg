@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="382"
+     viewBox="0 0 750 382"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="474.656" y="128" width="118" height="240" rx="10" fill="#f7fbff" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="533.656" y="158" text-anchor="middle" fill="#1a1a1a">selectable</text>
+
+  <rect x="141.129" y="44" width="55.2188" height="44" rx="8" fill="#fdeaf2" stroke="#d81b60" stroke-width="1.5"/>
+  <text x="168.738" y="70.9" text-anchor="middle" fill="#1a1a1a">user</text>
+
+  <rect x="242.348" y="44" width="108.609" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="296.652" y="70.9" text-anchor="middle" fill="#1a1a1a">selection_list</text>
+
+  <rect x="396.957" y="44" width="80.3438" height="44" rx="8" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="437.129" y="70.9" text-anchor="middle" fill="#1a1a1a">vscroller</text>
+
+  <rect x="523.301" y="44" width="53.1406" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="549.871" y="70.9" text-anchor="middle" fill="#1a1a1a">vtile</text>
+
+  <rect x="488.656" y="172" width="90" height="30" rx="8" fill="#ffffff" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="533.656" y="191.9" text-anchor="middle" fill="#1a1a1a">item 0</text>
+
+  <rect x="488.656" y="210" width="90" height="30" rx="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="1.5"/>
+  <text x="533.656" y="229.9" text-anchor="middle" fill="#1a1a1a">item 1</text>
+
+  <rect x="488.656" y="248" width="90" height="30" rx="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="1.5"/>
+  <text x="533.656" y="267.9" text-anchor="middle" fill="#1a1a1a">item 2</text>
+
+  <rect x="488.656" y="286" width="90" height="30" rx="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="1.5"/>
+  <text x="533.656" y="305.9" text-anchor="middle" fill="#1a1a1a">item 3</text>
+
+  <rect x="488.656" y="324" width="90" height="30" rx="8" fill="#ffffff" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="533.656" y="343.9" text-anchor="middle" fill="#1a1a1a">item 4</text>
+
+  <rect x="141.129" y="165" width="90.7188" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="186.488" y="191.9" text-anchor="middle" fill="#1a1a1a">your code</text>
+
+  <line x1="196.348" y1="66" x2="242.348" y2="66" stroke="#d81b60" stroke-width="1.4"/>
+  <line x1="350.957" y1="66" x2="396.957" y2="66" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="477.301" y1="66" x2="523.301" y2="66" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 296.65 44 L 296.65 30 Q 296.65 22 304.65 22 L 541.87 22 Q 549.87 22 549.87 30 L 549.87 44" fill="none" stroke="#43a047" stroke-width="1.4"/>
+  <path d="M 549.87 88 L 549.87 100 Q 549.87 108 541.87 108 L 541.66 108 Q 533.66 108 533.66 116 L 533.66 128" fill="none" stroke="#1565c0" stroke-width="1.4"/>
+  <path d="M 314.75 88 L 314.75 240 Q 314.75 248 322.75 248 L 474.66 248" fill="none" stroke="#43a047" stroke-width="1.4"/>
+  <path d="M 278.55 88 L 278.55 179 Q 278.55 187 270.55 187 L 231.85 187" fill="none" stroke="#43a047" stroke-width="1.4"/>
+
+  <text x="219.348" y="36" text-anchor="middle" fill="#1a1a1a">click, keys</text>
+  <text x="423.262" y="16" text-anchor="middle" fill="#1a1a1a">find_subject&lt;composite_base*&gt;</text>
+  <text x="332.652" y="257" fill="#1a1a1a">select(true)</text>
+  <text x="260.652" y="141.5" text-anchor="end" fill="#1a1a1a">on_select(1, 3)</text>
+
+  <polygon points="242.348,66 233.348,70 233.348,62" fill="#d81b60"/>
+  <polygon points="396.957,66 387.957,70 387.957,62" fill="#1565c0"/>
+  <polygon points="523.301,66 514.301,70 514.301,62" fill="#1565c0"/>
+  <polygon points="549.871,44 545.871,35 553.871,35" fill="#43a047"/>
+  <polygon points="533.656,128 529.656,119 537.656,119" fill="#1565c0"/>
+  <polygon points="474.656,248 465.656,252 465.656,244" fill="#43a047"/>
+  <polygon points="231.848,187 240.848,183 240.848,191" fill="#43a047"/>
+</svg>

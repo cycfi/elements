@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="388"
+     viewBox="0 0 750 388"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="135" y="54" width="520" height="320" rx="0" fill="#ffffff" stroke="#5d5d5d" stroke-width="1.5"/>
+
+  <rect x="135" y="54" width="285" height="172" rx="0" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+
+  <rect x="408" y="54" width="12" height="160" rx="0" fill="#cfd8e3" stroke="#cfd8e3" stroke-width="1.5"/>
+
+  <rect x="135" y="214" width="273" height="12" rx="0" fill="#cfd8e3" stroke="#cfd8e3" stroke-width="1.5"/>
+
+  <rect x="408" y="54" width="12" height="86" rx="4" fill="#eef2f7" stroke="#8c96a3" stroke-width="1.5"/>
+
+  <rect x="135" y="214" width="149.625" height="12" rx="4" fill="#eef2f7" stroke="#8c96a3" stroke-width="1.5"/>
+
+  <line x1="155.273" y1="38" x2="135" y2="38" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="186.727" y1="38" x2="370.328" y2="38" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="419.672" y1="38" x2="603.273" y2="38" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="634.727" y1="38" x2="655" y2="38" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="111" y1="75" x2="111" y2="54" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="111" y1="105" x2="111" y2="199" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="111" y1="229" x2="111" y2="323" stroke="#1565c0" stroke-width="1.4"/>
+  <line x1="111" y1="353" x2="111" y2="374" stroke="#1565c0" stroke-width="1.4"/>
+
+  <text x="149" y="82" fill="#1a1a1a">port: the part shown</text>
+  <text x="641" y="358" text-anchor="end" fill="#1a1a1a">subject: the whole scrollable area</text>
+  <text x="171" y="43" text-anchor="middle" fill="#1a1a1a">0.0</text>
+  <text x="395" y="43" text-anchor="middle" fill="#1a1a1a">halign</text>
+  <text x="619" y="43" text-anchor="middle" fill="#1a1a1a">1.0</text>
+  <text x="111" y="95" text-anchor="middle" fill="#1a1a1a">0.0</text>
+  <text x="111" y="219" text-anchor="middle" fill="#1a1a1a">valign</text>
+  <text x="111" y="343" text-anchor="middle" fill="#1a1a1a">1.0</text>
+
+  <polygon points="135,38 144,34 144,42" fill="#1565c0"/>
+  <polygon points="655,38 646,42 646,34" fill="#1565c0"/>
+  <polygon points="111,54 115,63 107,63" fill="#1565c0"/>
+  <polygon points="111,374 107,365 115,365" fill="#1565c0"/>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="384"
+     viewBox="0 0 750 384"
+     font-family='-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"' font-size="14">
+
+  <rect x="352.883" y="14" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="40.9" text-anchor="middle" fill="#1a1a1a">htile</text>
+
+  <rect x="352.883" y="92" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="118.9" text-anchor="middle" fill="#1a1a1a">margin</text>
+
+  <rect x="352.883" y="170" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="196.9" text-anchor="middle" fill="#1a1a1a">align_center</text>
+
+  <rect x="352.883" y="248" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="405" y="274.9" text-anchor="middle" fill="#1a1a1a">hold</text>
+
+  <rect x="352.883" y="326" width="104.234" height="44" rx="8" fill="#ffffff" stroke="#43a047" stroke-width="1.5"/>
+  <text x="405" y="352.9" text-anchor="middle" fill="#1a1a1a">slider</text>
+
+  <rect x="517.117" y="92" width="104.234" height="44" rx="8" fill="#e8f2fd" stroke="#1565c0" stroke-width="1.5"/>
+  <text x="569.234" y="118.9" text-anchor="middle" fill="#1a1a1a">label</text>
+
+  <path d="M 569.23 92 L 569.23 83 Q 569.23 75 561.23 75 L 430.37 75 Q 422.37 75 422.37 67 L 422.37 58" fill="none" stroke="#5d5d5d" stroke-width="1.4"/>
+  <path d="M 405 92 L 405 83 Q 405 75 397 75 L 395.63 75 Q 387.63 75 387.63 67 L 387.63 58" fill="none" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="405" y1="170" x2="405" y2="136" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="405" y1="248" x2="405" y2="214" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="405" y1="326" x2="405" y2="292" stroke="#43a047" stroke-width="1.4"/>
+  <line x1="671.352" y1="348" x2="671.352" y2="36" stroke="#43a047" stroke-width="1.4"/>
+
+  <text x="413" y="158" fill="#1a1a1a">parent</text>
+  <text x="663.352" y="344" text-anchor="end" fill="#1a1a1a">find_parent&lt;htile*&gt;(ctx)</text>
+  <text x="663.352" y="362" text-anchor="end" fill="#1a1a1a">find_composite(ctx)</text>
+  <text x="465.117" y="353" fill="#1a1a1a">ctx</text>
+
+  <polygon points="387.628,58 391.628,67 383.628,67" fill="#43a047"/>
+  <polygon points="405,136 409,145 401,145" fill="#43a047"/>
+  <polygon points="405,214 409,223 401,223" fill="#43a047"/>
+  <polygon points="405,292 409,301 401,301" fill="#43a047"/>
+  <polygon points="671.352,36 675.352,45 667.352,45" fill="#43a047"/>
+</svg>

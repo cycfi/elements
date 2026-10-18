@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>View :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/view.html">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+<script src="../../_/js/video.js"></script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.1-dev">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="tutorials/custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="application/app.html">App</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="application/window.html">Window</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="view.html">View</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="elements/core.html">Core</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/trackers.html">Trackers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="elements/controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="elements/text_and_images.html">Text and Images</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/text.html">Text</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/images.html">Images</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/status_bars.html">Status Bars</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="elements/containers.html">Containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/ports.html">Ports and Scrollers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/child_windows.html">Child Windows</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/splits.html">Splits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/docking.html">Docking</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/popups.html">Popups and Modals</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/tooltips.html">Tooltips</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="elements/lists.html">Lists</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="elements/drag_and_drop.html">Drag and Drop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="elements/visibility.html">Visibility and Event Interception</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/toggles.html">Check Boxes, Radio Buttons and Switches</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/sliders.html">Sliders, Dials and Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/tracks.html">Tracks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/marks.html">Marks and Scales</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/captions.html">Captions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/text_entry.html">Text Entry</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/decorations.html">Borders and Decorations</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/groups.html">Groups and Panes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/notebooks.html">Notebooks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/dialogs.html">Child Windows and Dialogs</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="styles/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="support.html">Support</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/canvas.html">Canvas</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/clipboard.html">Clipboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.1-dev</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../v1.0/index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">v1.1-dev</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../v1.0/index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../v1.0/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Elements Library</a></li>
+    <li><a href="reference.html">Reference</a></li>
+    <li><a href="application.html">Application</a></li>
+    <li><a href="view.html">View</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">v1.1-dev</button>
+  <div class="version-menu">
+    <a class="version is-current" href="view.html">v1.1-dev</a>
+    <a class="version" href="../v1.0/view.html">v1.0</a>
+  </div>
+</div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">View</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The view is the root of an Elements user interface. It holds the
+content and sits between it and the host. The host sends the view user
+input and draw calls; the view passes each down the element tree with a
+<a href="support/context.html" class="xref page">context</a>. The view also redraws what has changed and runs the work the
+application posts to it.</p>
+</div>
+<div class="paragraph">
+<p>The view needs neither an <code>app</code> nor a <code>window</code>. In an application, a
+window holds it; in a plug-in, such as an audio plug-in (<a href="https://en.wikipedia.org/wiki/Virtual_Studio_Technology">VST</a>, <a href="https://en.wikipedia.org/wiki/Audio_Units">AU</a>
+and the like) or an image editor&#8217;s filter, the plug-in host provides a
+native view for it. Either way, the host talks to the view through
+the small set of member functions declared in <code>base_view</code>. Elements runs on these hosts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>macOS (Cocoa)</p>
+</li>
+<li>
+<p>Windows (Win32)</p>
+</li>
+<li>
+<p>Linux: GTK 3, X11 and Wayland</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The host API is kept as simple as possible, to make Elements easy to
+port: a new host implements <code>base_view</code> and the few free functions
+beside it, and, for applications, <code>window</code> and <code>app</code>.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="_images/view_structure.svg" alt="The host, a window or a plug-in, sends events and draw calls to base_view, which passes them as virtual calls to view; view sends requests, such as refresh and size, to base_view, which makes the platform calls on the host. Below the view, a scale element passes them, with a context, to the layers: a popup on top and the content under it" width="750px">
+</div>
+</div>
+<div class="sect2">
+<h3 id="_base_view"><a class="anchor" href="#_base_view"></a>Base View</h3>
+<div class="paragraph">
+<p><code>base_view</code> is the interface between the view and its host. The host
+calls its virtual functions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>draw</code>, with a <a href="support/canvas.html" class="xref page">canvas</a>, when the view needs painting.</p>
+</li>
+<li>
+<p><code>click</code>, <code>drag</code>, <code>cursor</code>, <code>scroll</code>, <code>key</code> and <code>text</code>, for mouse and
+keyboard input.</p>
+</li>
+<li>
+<p><code>begin_focus</code> and <code>end_focus</code>, when the view gains and loses the
+keyboard focus.</p>
+</li>
+<li>
+<p><code>track_drop</code> and <code>drop</code>, for drag and drop.</p>
+</li>
+<li>
+<p><code>poll</code>, when the host is idle (see <a href="#_posting_and_polling">Posting and
+Polling</a>).</p>
+</li>
+<li>
+<p><code>on_open</code>, <code>on_size_change</code>, <code>on_scale_change</code> and <code>on_close</code>, for
+changes to the view itself.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>base_view</code> implements them all as no-ops; <code>view</code> overrides them.</p>
+</div>
+<div class="paragraph">
+<p>The host&#8217;s input comes in a few small structs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>mouse_button</code>: the button (<code>left</code>, <code>middle</code> or <code>right</code>), whether it
+is <code>down</code>, the click count, the modifiers and the position.</p>
+</li>
+<li>
+<p><code>cursor_tracking</code>: <code>entering</code>, <code>hovering</code> or <code>leaving</code>.</p>
+</li>
+<li>
+<p><code>key_info</code>: the <code>key_code</code>, the <code>key_action</code> (<code>press</code>, <code>release</code> or
+<code>repeat</code>) and the modifiers.</p>
+</li>
+<li>
+<p><code>text_info</code>: a Unicode code point and the modifiers.</p>
+</li>
+<li>
+<p><code>drop_info</code>: the dragged <a href="support/payload.html" class="xref page">payload</a> and its
+position.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The modifiers are bit flags: <code>mod_shift</code>, <code>mod_control</code>, <code>mod_alt</code>
+(alias <code>mod_option</code>) and <code>mod_super</code> (alias <code>mod_command</code>: the Windows
+key or the Command key). <code>mod_action</code> is the platform&#8217;s command key:
+Command on macOS, Control elsewhere.</p>
+</div>
+<div class="paragraph">
+<p><code>base_view.hpp</code> also declares functions that act on the system, not on
+a view:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>set_clipboard</code>, <code>get_clipboard</code>, <code>clipboard_types</code> and
+<code>clipboard_contains</code>: the clipboard, which holds a payload (see
+<a href="support/clipboard.html" class="xref page">Clipboard</a>).</p>
+</li>
+<li>
+<p><code>set_cursor</code>: set the cursor&#8217;s shape.</p>
+</li>
+<li>
+<p><code>scroll_direction</code>: the sign, +1 or -1 on each axis, of the user&#8217;s
+scroll setting (natural scrolling or not).</p>
+</li>
+<li>
+<p><code>init_resources</code>: set the image search path and register the fonts,
+once per process. The first view calls it if nothing has. A plug-in
+can call it at load time, so the cost is not paid when its window
+opens.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_posting_and_polling"><a class="anchor" href="#_posting_and_polling"></a>Posting and Polling</h3>
+<div class="paragraph">
+<p>The view runs an <code>asio::io_context</code>, <code>io()</code>, which the host polls when
+idle, on the UI thread. <code>post(f)</code> runs <code>f</code> at the next poll.
+<code>post(duration, f)</code> runs <code>f</code> at the first poll after <code>duration</code> has
+passed, and returns the timer, which can cancel it. Both may be called
+from any thread; <code>f</code> always runs on the UI thread. Status bars animate
+this way, and work on another thread returns its result to the view
+this way.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="_images/view_polling.svg" alt="Another thread posts f and, with a delay of 10 milliseconds, g; the view queues f in its io_context and starts a timer for g. The host polls the view when idle; the view polls its io_context, which runs f on the UI thread. A poll 10 milliseconds later runs g." width="750px">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_content"><a class="anchor" href="#_content"></a>Content</h3>
+<div class="paragraph">
+<p>A view&#8217;s content is a stack of layers (see <a href="layout/layers.html" class="xref page">Layers</a>), drawn bottom to
+top. <code>content(a, b, &#8230;&#8203;)</code> sets them, the first on top:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">view_.content(
+   overlay,             // on top
+   main_content,
+   background           // at the bottom
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each argument is an element or a <code>shared_ptr</code> to one. <code>layers()</code>
+returns them, bottom first.</p>
+</div>
+<div class="paragraph">
+<p><code>add</code>, <code>remove</code>, <code>move_to_front</code> and <code>move_to_back</code> change the layers
+while the view runs, as when a popup or a dialog opens and closes. Each
+takes effect at the next <code>poll</code> (see <a href="#_posting_and_polling">Posting and
+Polling</a>), so a callback that opens or closes a layer, such as a
+button&#8217;s <code>on_click</code>, returns before its tree changes.
+<code>add</code> puts its element on top and gives it the focus if it wants it.
+<code>is_open</code> tells whether an element is one of the layers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_limits_and_scale"><a class="anchor" href="#_limits_and_scale"></a>Limits and Scale</h3>
+<div class="paragraph">
+<p><code>limits()</code> returns the content&#8217;s <a href="layout/limits.html" class="xref page">limits</a>. When they change, the view
+calls <code>on_change_limits</code>; a view in a window constrains the window to
+them.</p>
+</div>
+<div class="paragraph">
+<p><code>scale(s)</code> scales the content. At 2, everything is twice as big, and
+the content is laid out in half the view&#8217;s size, in its own units. A
+plug-in uses it to follow the host&#8217;s zoom.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_drawing"><a class="anchor" href="#_drawing"></a>Drawing</h3>
+<div class="paragraph">
+<p>Elements does not draw when something changes. A change calls
+<code>refresh</code>, which marks an area for redrawing; the drawing comes later:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Your code calls <code>refresh</code>, from any thread.</p>
+</li>
+<li>
+<p>At the next <code>poll</code> (see <a href="#_posting_and_polling">Posting and Polling</a>),
+the view passes the marked areas to the host.</p>
+</li>
+<li>
+<p>The host repaints them: it makes a <a href="support/canvas.html" class="xref page">canvas</a>, clips it to the areas,
+and calls the view&#8217;s <code>draw</code>.</p>
+</li>
+<li>
+<p>The view lays out its content again if the view&#8217;s size has changed,
+then draws the content with a <a href="support/context.html" class="xref page">context</a> of the view&#8217;s bounds.</p>
+</li>
+<li>
+<p>Each container draws only the children that fall inside the clip,
+each with a context of its own bounds, down to the elements that draw
+themselves (see <a href="elements/element.html" class="xref page">Element</a>).</p>
+</li>
+</ol>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="_images/view_drawing.svg" alt="Your code calls refresh on the view; at the host&#8217;s poll, the view invalidates the area; the host calls draw with a canvas clipped to it; the view lays out if resized, then calls draw on the elements in the clip" width="750px">
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>refresh</code> functions mark what to redraw:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>refresh()</code>: the whole view.</p>
+</li>
+<li>
+<p><code>refresh(area)</code>: an area, in view coordinates.</p>
+</li>
+<li>
+<p><code>refresh(e)</code>: the element <code>e</code>, wherever it is.</p>
+</li>
+<li>
+<p><code>refresh(e, n)</code>: the element <code>n</code> levels out from <code>e</code>.</p>
+</li>
+<li>
+<p><code>refresh(ctx)</code> and <code>refresh(ctx, n)</code>: the same, from an element&#8217;s
+context, with no search.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Refreshing an element by reference searches the tree for it, so the
+view batches these: up to four are refreshed one by one; with more,
+the whole view is refreshed once.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong><code>refresh</code> may be called from any thread.</strong> <code>refresh()</code>, <code>refresh(area)</code>
+and <code>refresh(e, n)</code> only record what to redraw; the redraw itself runs
+on the UI thread, at the next <code>poll</code>. An audio plug-in&#8217;s audio thread,
+or any worker thread, can refresh a meter or a readout without waiting
+for the UI thread, and without taking a lock of its own.</p>
+</div>
+<div class="paragraph">
+<p>That covers the refresh only. Changing an element&#8217;s state from another
+thread is still a data race, and so is assigning to a model linked to
+one (see <a href="model.html" class="xref page">Model</a>). Post the change instead, with
+<code>post(f)</code>, and make it, and the refresh, in <code>f</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_layout"><a class="anchor" href="#_layout"></a>Layout</h3>
+<div class="paragraph">
+<p>The view lays out its content when it is first drawn and whenever its
+size changes. After a change that moves or resizes an element,
+<code>layout()</code> lays out the content again and refreshes the view;
+<code>layout(e)</code> does the same but refreshes only <code>e</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_events"><a class="anchor" href="#_events"></a>Events</h3>
+<div class="paragraph">
+<p>The view passes each event to its content with a context of the
+content&#8217;s bounds; each element passes it on to its children (see
+<a href="elements/element.html" class="xref page">Element</a>). A click that no element takes,
+on the background for instance, removes the keyboard focus from
+whatever had it, such as a text box being edited. A key press that
+the focus does not take goes to the content again, as a hotkey, which
+any element may take: a menu, for its items' shortcuts. Where no element sets
+the cursor, the view sets it to the arrow. <code>current_button()</code> returns the last mouse
+button event.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="✏️ &#160;NOTE"></i>
+</td>
+<td class="content">
+A host that sends UTF-16, as Windows does, sends a character
+outside the Basic Multilingual Plane as two halves of a surrogate pair;
+the view joins them into one code point.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>in_context_do(e, f)</code> calls <code>f</code> with the context of <code>e</code> in the tree,
+for code that has the element but not its context.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tracking"><a class="anchor" href="#_tracking"></a>Tracking</h3>
+<div class="paragraph">
+<p>A control reports to the view as the user works it: <code>begin_tracking</code>
+at the press, <code>while_tracking</code> as it moves, <code>end_tracking</code> at the
+release. The view passes each to <code>on_tracking</code>; an audio plug-in uses
+it to record automation. The view supplies a missing <code>begin_tracking</code> before
+a <code>while_tracking</code>, and ends a gesture after a second with no change,
+as if released.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_undo_and_redo"><a class="anchor" href="#_undo_and_redo"></a>Undo and Redo</h3>
+<div class="paragraph">
+<p><code>add_undo(t)</code> records an <code>undo_redo_task</code>, a pair of functions that
+undo and redo a change. <code>undo()</code> calls the latest task&#8217;s <code>undo</code>;
+<code>redo()</code> calls the latest undone task&#8217;s <code>redo</code>. Recording a task clears
+the redo history.</p>
+</div>
+<div class="paragraph">
+<p>A task&#8217;s functions return <code>false</code> when the change no longer applies,
+because the element or the part it changed is gone. The view then drops
+the task and tries the next, so one undo always undoes something while
+anything is left to undo. <code>undo()</code> and <code>redo()</code> return whether one did.</p>
+</div>
+<div class="paragraph">
+<p>An element&#8217;s tasks reach it through an <code>undo_anchor</code>, a member of the
+element (in <code>elements/support/undo_anchor.hpp</code>). The anchor keeps the
+tasks right as the element changes: they follow it when it is moved, no
+task recorded before applies to a copy, and assigning to the element or
+destroying it leaves its tasks stale, to be dropped when reached.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bindings"><a class="anchor" href="#_bindings"></a>Bindings</h3>
+<div class="paragraph">
+<p><code>bindings()</code> returns the view&#8217;s <code>model_binder</code>: the links between its
+controls and the application&#8217;s models, which last as long as the view.
+See <a href="model.html#_the_views_bindings" class="xref page">The View&#8217;s Bindings</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/view.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   class base_view : non_copyable
+   {
+   public:
+                           base_view(host_view_handle h);
+                           base_view(extent size_);
+                           base_view(host_window_handle h);
+      virtual              ~base_view();
+
+      virtual void         draw(canvas&amp; cnv);
+      virtual void         click(mouse_button btn);
+      virtual void         drag(mouse_button btn);
+      virtual void         cursor(point p, cursor_tracking status);
+      virtual void         scroll(point dir, point p);
+      virtual bool         key(key_info const&amp; k);
+      virtual bool         text(text_info const&amp; info);
+      virtual void         begin_focus();
+      virtual void         end_focus();
+      virtual void         track_drop(drop_info const&amp; info, cursor_tracking status);
+      virtual bool         drop(drop_info const&amp; info);
+      virtual void         poll();
+
+      virtual void         refresh();
+      virtual void         refresh(rect area);
+
+      virtual void         on_open(extent size_, float scale);
+      virtual void         on_size_change(extent size_);
+      virtual void         on_scale_change(float scale);
+      virtual void         on_close();
+
+      point                cursor_pos() const;
+      extent               size() const;
+      void                 size(extent size_);
+      host_view_handle     host() const { return _view; }
+   };
+
+   class view : public base_view
+   {
+   public:
+                              view(extent size_);
+                              view(host_view_handle h);
+                              view(window&amp; win);
+                              ~view();
+
+      void                    relinquish_focus();
+
+      void                    layout();
+      void                    layout(element&amp; element);
+      float                   scale() const;
+      void                    scale(float val);
+
+      void                    refresh() override;
+      void                    refresh(rect area) override;
+      void                    refresh(context const&amp; ctx, rect area);
+      void                    refresh(element&amp; element, int outward = 0);
+      void                    refresh(context const&amp; ctx, int outward = 0);
+
+      struct undo_redo_task
+      {
+         std::function&lt;bool()&gt; undo;
+         std::function&lt;bool()&gt; redo;
+      };
+
+      void                    add_undo(undo_redo_task t);
+      bool                    has_undo();
+      bool                    has_redo();
+      bool                    undo();
+      bool                    redo();
+
+      using content_type = layer_composite;
+      using layers_type = layer_composite::container_type;
+      using scaled_content = scale_element&lt;indirect&lt;reference&lt;layer_composite&gt;&gt;&gt;;
+
+      scaled_content&amp;         main_element()         { return _main_element; }
+      scaled_content const&amp;   main_element() const   { return _main_element; }
+
+      content_type&amp;           content();
+      content_type const&amp;     content() const;
+      void                    content(std::initializer_list&lt;element_ptr&gt; list);
+
+                              template &lt;typename... E&gt;
+      void                    content(E&amp;&amp;... elements);
+
+      using layers_vector = std::vector&lt;element_ptr&gt;;
+
+      void                    add(element_ptr e, bool focus = true);
+      void                    remove(element_ptr e);
+      void                    move_to_front(element_ptr e);
+      void                    move_to_back(element_ptr e);
+      bool                    is_open(element_ptr e);
+      layers_vector const&amp;    layers() const;
+
+      view_limits             limits() const;
+      mouse_button            current_button() const;
+
+      using change_limits_function = std::function&lt;void(view_limits limits_)&gt;;
+      change_limits_function on_change_limits;
+
+      using io_context = asio::io_context;
+      io_context&amp;             io();
+
+      using steady_timer_ptr = std::shared_ptr&lt;asio::steady_timer&gt;;
+
+                              template &lt;typename T, typename F&gt;
+      steady_timer_ptr        post(T duration, F f);
+
+                              template &lt;typename F&gt;
+      void                    post(F f);
+
+      using tracking = element::tracking;
+
+      using track_function = std::function&lt;void(element&amp; e, tracking state)&gt;;
+      track_function on_tracking = [](element&amp; /* e */, tracking /* state */) {};
+
+      void                    manage_on_tracking(element&amp; e, tracking state);
+
+      using context_function = element::context_function;
+      void                    in_context_do(element&amp; e, context_function f);
+
+      model_binder&amp;           bindings() { return _bindings; }
+   };
+
+   std::vector&lt;std::string&gt; clipboard_types();
+   bool clipboard_contains(std::string_view mime_type);
+   payload get_clipboard(mime_types const&amp; types);
+   void set_clipboard(payload const&amp; data);
+   void init_resources();
+   void set_cursor(cursor_type type);
+   point scroll_direction();
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>view</code> overrides of <code>base_view&#8217;s event functions and `on_</code> hooks
+are left out above. <code>base_view(host_view_handle)</code> is not on Windows,
+where a view&#8217;s handle is its window&#8217;s; on X11, both classes also take
+the parent window, for a view inside a window another program owns.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>v</code></dt>
+<dd>
+<p>A <code>view</code>.</p>
+</dd>
+<dt class="hdlist1"><code>e</code>, <code>a</code>, <code>b</code></dt>
+<dd>
+<p>Elements, or `shared_ptr`s to elements.</p>
+</dd>
+<dt class="hdlist1"><code>p</code></dt>
+<dd>
+<p>An <code>element_ptr</code>.</p>
+</dd>
+<dt class="hdlist1"><code>r</code></dt>
+<dd>
+<p>A <code>rect</code> in view coordinates.</p>
+</dd>
+<dt class="hdlist1"><code>n</code></dt>
+<dd>
+<p>An <code>int</code>: how many levels out from an element to refresh.</p>
+</dd>
+<dt class="hdlist1"><code>ctx</code></dt>
+<dd>
+<p>A <a href="support/context.html" class="xref page">context</a>.</p>
+</dd>
+<dt class="hdlist1"><code>s</code></dt>
+<dd>
+<p>A <code>float</code> scale.</p>
+</dd>
+<dt class="hdlist1"><code>f</code></dt>
+<dd>
+<p>A function taking no arguments.</p>
+</dd>
+<dt class="hdlist1"><code>d</code></dt>
+<dd>
+<p>A <code>std::chrono</code> duration.</p>
+</dd>
+<dt class="hdlist1"><code>t</code></dt>
+<dd>
+<p>An <code>undo_redo_task</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_content_2"><a class="anchor" href="#_content_2"></a>Content</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.content(a, b, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the layers, <code>a</code> on top.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.content()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The layers, as a <code>layer_composite</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.layers()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The layers, bottom first.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.add(p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>p</code> on top at the next poll, and give it the focus if it wants it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.remove(p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove <code>p</code> at the next poll.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.move_to_front(p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move <code>p</code> to the top at the next poll.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.move_to_back(p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move <code>p</code> to the bottom at the next poll.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.is_open(p)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether <code>p</code> is one of the layers.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_limits_scale_and_layout"><a class="anchor" href="#_limits_scale_and_layout"></a>Limits, Scale and Layout</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.limits()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The content&#8217;s limits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.on_change_limits = f</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Called with the new limits when they change.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.scale()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The content&#8217;s scale.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.scale(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the content&#8217;s scale to <code>s</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.layout()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lay the content out again and refresh the view.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.layout(e)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lay the content out again and refresh <code>e</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_refresh"><a class="anchor" href="#_refresh"></a>Refresh</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.refresh()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repaint the whole view.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.refresh(r)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repaint <code>r</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.refresh(e, n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repaint <code>e</code>, or the element <code>n</code> levels out from it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.refresh(ctx, n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repaint the element of <code>ctx</code>, or the one <code>n</code> levels out from it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.refresh(ctx, r)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repaint <code>r</code>, in the coordinates of <code>ctx</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_posting_tracking_and_undo"><a class="anchor" href="#_posting_tracking_and_undo"></a>Posting, Tracking and Undo</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.post(f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run <code>f</code> at the next poll.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.post(d, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run <code>f</code> once <code>d</code> has passed; return its timer.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.on_tracking = f</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Called with each control and its tracking state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.in_context_do(e, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Call <code>f</code> with the context of <code>e</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.add_undo(t)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Record <code>t</code>; forget what was undone.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.undo()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Undo the latest that still applies, dropping those that do not;
+  return whether one was undone.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.redo()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redo the latest undone that still applies; return whether one was
+  redone.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.has_undo()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether there is one to undo.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.has_redo()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether there is one to redo.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>examples/hello_universe</code>: a window, its view, and a scroller over an
+image as the content.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">int main(int argc, char* argv[])
+{
+   app _app("Hello Universe");
+
+   // Set up the fonts and search paths once, at startup, so the
+   // first window does not pay for it.
+   init_resources();
+   window _win(_app.name());
+   _win.on_close = [&amp;_app]() { _app.stop(); };
+
+   view view_(_win);
+
+   view_.content(
+      scroller(image{"space.jpg"})
+   );
+
+   _app.run();
+   return 0;
+}</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../_/js/site.js" data-ui-root-path="../../_"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+<script src="../../_/js/vendor/lunr.js"></script>
+<script src="../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../.." data-snippet-length="100" data-stylesheet="../../_/css/search.css"></script>
+<script async src="../../search-index.js"></script>
+  </body>
+</html>

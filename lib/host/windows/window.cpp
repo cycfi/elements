@@ -7,6 +7,7 @@
 #include <elements/support.hpp>
 
 #include "utils.hpp"
+#include <algorithm>
 
 namespace elements = cycfi::elements;
 
@@ -108,6 +109,21 @@ namespace cycfi::elements
       {
          auto scale = get_scale_for_window(hwnd);
          auto extra = window_frame_size(hwnd);
+
+         // Unbounded limits (full_extent) do not fit a LONG; on x64 the
+         // conversion gives LONG_MIN, and the window collapses. Keep the
+         // minimum within the monitor's work area, as the GTK host keeps it
+         // within the screen, and the maximum within what Win32 can size.
+         MONITORINFO mi{sizeof(mi)};
+         GetMonitorInfoW(MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST), &mi);
+         float const work_w = (mi.rcWork.right - mi.rcWork.left) / scale;
+         float const work_h = (mi.rcWork.bottom - mi.rcWork.top) / scale;
+         float const max_size = 32767 / scale;
+         limits.min.x = std::min(limits.min.x, work_w);
+         limits.min.y = std::min(limits.min.y, work_h);
+         limits.max.x = std::min(limits.max.x, max_size);
+         limits.max.y = std::min(limits.max.y, max_size);
+
          auto w = ((r.right - r.left) - extra.x) / scale;
          auto h = ((r.bottom - r.top) - extra.y) / scale;
 

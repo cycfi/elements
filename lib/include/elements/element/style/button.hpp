@@ -232,7 +232,6 @@ namespace cycfi::elements
    private:
 
       std::uint32_t           _code;
-      icon_placement          _icon_placement;
    };
 
    /**

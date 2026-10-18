@@ -120,7 +120,7 @@ TEST_CASE("child windows page: front and back", "[child_windows_page]")
    // A press on the second's body, where the first does not cover it,
    // raises it.
    click(v, {200, 185});
-   v.poll();
+   poll_until(v, [&]{ return v.layers().back() == wv.second; });
    CHECK(v.layers().back() == wv.second);
 }
 

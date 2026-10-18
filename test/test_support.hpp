@@ -22,6 +22,8 @@
 #endif
 
 #include <infra/catch.hpp>
+#include <chrono>
+#include <thread>
 #include <elements.hpp>
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
@@ -124,6 +126,23 @@ namespace cycfi::elements::test
    {
       clipboard_text("elements test");
       return clipboard_text() == "elements test";
+   }
+
+   // Runs the view's posted work until `done` holds or `timeout` passes. A
+   // slow build (the sanitizers) can need more than one pass, and a timer
+   // posted for later runs only once its time has come.
+   template <typename F>
+   bool poll_until(view& v, F done, std::chrono::milliseconds timeout = std::chrono::seconds{5})
+   {
+      auto const end = std::chrono::steady_clock::now() + timeout;
+      while (!done())
+      {
+         if (std::chrono::steady_clock::now() > end)
+            return false;
+         v.poll();
+         std::this_thread::sleep_for(std::chrono::milliseconds{1});
+      }
+      return true;
    }
 
    // A view plus an offscreen canvas of the same size: the pair a drawing

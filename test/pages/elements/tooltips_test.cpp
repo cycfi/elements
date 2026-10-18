@@ -138,12 +138,15 @@ TEST_CASE("tooltips page: example", "[tooltips_page]")
    auto at = point{240, 157};
    view_.cursor(at, cursor_tracking::entering);
    view_.cursor(at, cursor_tracking::hovering);
-   wait(view_, 600ms);
-   wait(view_, 1ms);
+   auto tip_open = [&]
+   {
+      return std::dynamic_pointer_cast<basic_popup_element>(
+         view_.layers().back()) != nullptr;
+   };
+   poll_until(view_, tip_open);
    view_.layout();
    tv.draw();
    tv.img.save_png(std::string{RESULTS_PATH} + "tooltips_example.png");
-   CHECK(std::dynamic_pointer_cast<basic_popup_element>(
-      view_.layers().back()));
+   CHECK(tip_open());
 }
 #endif

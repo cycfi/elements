@@ -15,7 +15,7 @@ Elements is embeddable, meaning you can embed it in any application, and it will
 
 Elements is distributed under the liberal and non-viral MIT License.
 
-> **Status:** `master` tracks the latest stable release (currently v1.0.0). The next release, **v1.1**, is developed on `develop`, where the docs stay in sync as changes land. See [NEWS.md](NEWS.md) for what is new in each release.
+> **Status:** `master` tracks the latest stable release (currently v1.0.1). The next release, **v1.1**, is developed on `develop`, where the docs stay in sync as changes land. See [NEWS.md](NEWS.md) for what is new in each release.
 
 ## Documentation
 

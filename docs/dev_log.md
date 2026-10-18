@@ -5,6 +5,32 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-18 -- 1.0.1 hotfixes (master, tag v1.0.1)
+
+**TL;DR:** GTK window and app lifetime fixes, Windows x64 window limits, an
+uninitialized button member and docs fixes, cut from `v1.0.0` on a scratch
+branch, on Artist 1.0.1.
+
+- `cfc7fa9a` `window::~window()` only dropped its own reference; GTK keeps a
+  toplevel until it is destroyed, so every test window stayed open with its
+  GL context. The Skia GTK suite grew 30 MB a test and was killed at 5.2 GB
+  (CI: TSan Linux GTK Skia, exit 143); it now peaks at 521 MB.
+- `5dc8457f` Exposed by the above: `app::~app()` released the shared
+  GtkApplication it never referenced, freeing it for every later window.
+- `0c781189` `refresh(rect)` clips to the view. A 1e30 right edge became
+  INT_MIN on x86 (arm64 saturates), 13,779 `gtk_widget_queue_draw_area`
+  criticals per GTK Cairo run; 0 after, verified on Linux x64.
+- `8c11fd4f` Win32 `constrain_size` clamps the limits to the work area and
+  32767 before converting; `full_extent` became LONG_MIN on x64.
+- `2e441467` `button_styler_with_icon` copied an unused, uninitialized
+  `icon_placement` (UBSan, every sanitizer job).
+- `0c5b13b0` The tooltip and child window tests poll for their condition,
+  up to 5 s, instead of a fixed wait (slow CI runners).
+- `cca8ca6c`, `6122f0f2`, `52ee8773` README documentation list, docs nav
+  toggle, README and NEWS.md in Q's layout.
+- The playbook builds `[master, develop]`, as develop's does, so a push to
+  master publishes the v1.0 pages; `lib/artist` is Artist `v1.0.1`.
+
 ## 2026-10-17 -- medium bug fixes (develop)
 
 **TL;DR:** An input box fits a narrow limit (#280), and a tooltip's tip no

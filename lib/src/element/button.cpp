@@ -264,8 +264,8 @@ namespace cycfi::elements
                         }
                      }
                   }
+                  cctx->view.refresh(*cctx);
                }
-               cctx->view.refresh(*cctx);
             }
             return r;
          }

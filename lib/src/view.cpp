@@ -296,12 +296,12 @@ namespace cycfi::elements
          return;
       }
 
-      for (auto [e, outward] : pending)
+      for (auto const& p : pending)
       {
          with_context_do(
-            [e, outward](auto const& ctx, auto& _main_element)
+            [&p](auto const& ctx, auto& _main_element)
             {
-               _main_element.refresh(ctx, *e, outward);
+               _main_element.refresh(ctx, *p.first, p.second);
             },
             *this, _current_bounds
          );

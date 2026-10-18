@@ -18,7 +18,7 @@ namespace cycfi::elements
       cnv.font(thm.icon_font.size(size));
       cnv.fill_style(c);
       cnv.text_align(cnv.middle | cnv.center);
-      cnv.fill_text(codepoint_to_utf8(code).c_str(), point{cx, cy});
+      cnv.fill_text(codepoint_to_utf8(code), point{cx, cy});
    }
 
    void draw_icon(canvas& cnv, rect bounds, uint32_t code, float size)
@@ -31,7 +31,7 @@ namespace cycfi::elements
       auto  state = cnv.new_state();
       auto& thm = get_theme();
       cnv.font(thm.icon_font.size(size));
-      return cnv.measure_text(codepoint_to_utf8(cp).c_str()).size;
+      return cnv.measure_text(codepoint_to_utf8(cp)).size;
    }
 
    point measure_text(canvas& cnv, std::string_view text, font_descr font_)

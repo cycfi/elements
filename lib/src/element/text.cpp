@@ -1314,15 +1314,9 @@ namespace cycfi::elements
 
          // Adjust window if exceeding bounds
          if (desired_right > ext_right)
-         {
-            desired_right = ext_right;
             desired_left = ext_right - port_width;
-         }
          if (desired_left < ext_left)
-         {
             desired_left = ext_left;
-            desired_right = ext_left + port_width;
-         }
 
          // Calculate the alignment value
          auto align = (desired_left - ext_left) / (extent - port_width);

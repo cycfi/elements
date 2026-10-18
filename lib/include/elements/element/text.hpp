@@ -263,7 +263,7 @@ namespace cycfi::elements
 
       std::string             _placeholder;
       clip_action             _clip_action : 2;
-      bool                    _is_hovering : 1;
+      bool                    _is_hovering : 1 = false;
    };
 
    //--------------------------------------------------------------------------

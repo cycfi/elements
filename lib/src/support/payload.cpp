@@ -31,7 +31,7 @@ namespace cycfi::elements
 
          auto fix_path = [&](std::string_view path) -> std::string_view
          {
-            if (path.find("file://") == 0)
+            if (path.starts_with("file://"))
                return path.substr(7);
             return std::string_view{""};
          };

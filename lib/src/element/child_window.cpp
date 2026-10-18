@@ -7,6 +7,7 @@
 #include <elements/element/floating.hpp>
 #include <elements/view.hpp>
 #include <algorithm>
+#include <cassert>
 #include <chrono>
 #include <functional>
 
@@ -246,6 +247,7 @@ namespace cycfi::elements
 
    void close_floating_element(context& ctx, floating_element* fl)
    {
+      assert(fl);
       if (auto cw = dynamic_cast<child_window_element*>(fl))
          cw->close(ctx.view);
       else

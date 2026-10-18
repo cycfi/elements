@@ -103,6 +103,9 @@ namespace cycfi::elements
       if (_window->host)
       {
          g_signal_handlers_disconnect_by_data(_window->host, _window);
+         // GTK holds a toplevel until it is destroyed: dropping our
+         // reference alone leaves the window up.
+         gtk_widget_destroy(_window->host);
          g_object_unref(_window->host);
       }
       delete _window;

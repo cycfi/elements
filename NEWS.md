@@ -7,6 +7,22 @@ High-level, user-facing changes only. For the day-to-day detail, see
 
 Nothing yet.
 
+## v1.0.1 (2026-10-18)
+
+Fixes found by the sanitizer jobs and the other platforms right after 1.0.0,
+built on Artist 1.0.1:
+
+* GTK: a destroyed `window` now closes its GTK window instead of leaving it
+  open (each one kept its GL context, and a long run ran out of memory), and
+  an `app` keeps its own reference to the shared GTK application.
+* GTK: a refresh with an unbounded area no longer reaches GTK as a negative
+  width on x86.
+* Windows x64: content with an unbounded minimum size no longer collapses its
+  window to zero width.
+* `button_styler_with_icon` no longer copies an uninitialized member.
+* Docs: the nav's expand and collapse button; the README lists the
+  documentation's pages.
+
 ## v1.0.0 (2026-10-18)
 
 **The first versioned release, built on Artist 1.0.0.** Each platform uses its

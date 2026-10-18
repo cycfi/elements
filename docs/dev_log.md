@@ -5,6 +5,24 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-18 -- 1.0.1 hotfixes (develop; released as tag v1.0.1)
+
+**TL;DR:** The 1.0.1 fixes landed here first and were cherry-picked onto a
+scratch branch from `v1.0.0`, tagged `v1.0.1`; master follows the tag.
+
+- `32414d10`, `7947f265` GTK: `window::~window()` destroys its GtkWindow
+  (each test window stayed open with its GL context; the Skia GTK suite was
+  killed at 5.2 GB, now peaks at 521 MB), and each `app` holds its own
+  reference to the shared GtkApplication.
+- `4a4deda2` GTK: `refresh(rect)` clips to the view; a 1e30 edge became
+  INT_MIN on x86, 13,779 criticals per GTK Cairo run, now 0.
+- `dbc68b87` Win32: window limits clamp before converting to LONG.
+- `23bab9d3` `button_styler_with_icon`: unused, uninitialized member gone.
+- `b8c8897a` Tooltip and child window tests poll instead of a fixed wait.
+- `f6ffb536`, `0d95bdc8`, `e00a7ed9` README documentation list, docs nav
+  toggle, README and NEWS.md in Q's layout.
+- `lib/artist` moves to Artist develop, which carries Artist 1.0.1's fixes.
+
 ## 2026-10-17 -- medium bug fixes (develop)
 
 **TL;DR:** An input box fits a narrow limit (#280), and a tooltip's tip no

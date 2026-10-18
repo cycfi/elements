@@ -19,13 +19,11 @@ Elements is distributed under the liberal and non-viral MIT License.
 
 ## Documentation
 
-<dl>
-  <dt><a href="https://cycfi.github.io/elements/elements/v1.0/index.html">Elements C++ GUI Library</a></dt>
-  <dd><a href="https://cycfi.github.io/elements/elements/v1.0/gallery.html">Gallery</a></dd>
-  <dd><a href="https://cycfi.github.io/elements/elements/v1.0/setup.html">Setup and Installation</a></dd>
-  <dd><a href="https://cycfi.github.io/elements/elements/v1.0/tutorials.html">Tutorials</a></dd>
-  <dd><a href="https://cycfi.github.io/elements/elements/v1.0/reference.html">Reference</a></dd>
-</dl>
+**[Elements C++ GUI Library](https://cycfi.github.io/elements/elements/v1.0/index.html)**<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Gallery](https://cycfi.github.io/elements/elements/v1.0/gallery.html)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Setup and Installation](https://cycfi.github.io/elements/elements/v1.0/setup.html)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Tutorials](https://cycfi.github.io/elements/elements/v1.0/tutorials.html)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[Reference](https://cycfi.github.io/elements/elements/v1.0/reference.html)
 
 ## <a name="jdeguzman"></a>The Author
 

@@ -82,7 +82,7 @@ outside: `ctx.visible_bounds()` is the part of the view being repainted
 (see {context}).
 
 For further details, see the
-https://cycfi.github.io/artist/artist/v1.0-dev/canvas.html[Artist
+https://cycfi.github.io/artist/artist/v1.0/canvas.html[Artist
 documentation].
 
 '''

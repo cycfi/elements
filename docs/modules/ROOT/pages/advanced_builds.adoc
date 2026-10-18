@@ -80,7 +80,7 @@ The prebuilt bundles have requirements of their own: glibc 2.35 or later
 on Linux, Visual Studio 2022 17.14 or later on Windows, and a deployment
 target of macOS 11 or later. To build Skia or Cairo from source instead,
 with vcpkg, or to use libraries of your own, see Artist's
-https://cycfi.github.io/artist/artist/v1.0-dev/setup.html[Setup and
+https://cycfi.github.io/artist/artist/v1.0/setup.html[Setup and
 Installation]. Elements' `CMakePresets.json` has the same two presets as
 Artist's for Skia: `prebuilt` and `source`.
 

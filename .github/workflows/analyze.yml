@@ -120,8 +120,10 @@ jobs:
           --enable=warning,performance,portability --std=c++20 \
           --inline-suppr -j "$(nproc)" --quiet \
           -i lib/artist -i lib/infra -i build/_deps \
-          --suppress='*:*/lib/artist/*' --suppress='*:*/lib/infra/*' \
+          --suppress='*:lib/artist/*' --suppress='*:*/lib/artist/*' \
+          --suppress='*:lib/infra/*' --suppress='*:*/lib/infra/*' \
           --suppress='*:*/_deps/*' --suppress=missingIncludeSystem \
+          --suppressions-list=.github/cppcheck-suppressions.txt \
           --template='{file}:{line}: {severity}: {message} [{id}]' \
           2> cppcheck_raw.txt
         sed "s#$GITHUB_WORKSPACE/##" cppcheck_raw.txt | sort -u > cppcheck.txt

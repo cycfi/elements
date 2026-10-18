@@ -1,0 +1,10 @@
+# Checks the Analyze workflow's cppcheck job does not report, for the whole
+# library. A false positive at one place is suppressed there instead, with
+# a "cppcheck-suppress" comment giving the reason.
+
+# Parameters taken by value on purpose: sinks that are moved from, and small
+# types such as font_descr that are cheap to copy.
+passedByValue
+
+# Plain aggregates, filled in where they are made.
+uninitMemberVarNoCtor

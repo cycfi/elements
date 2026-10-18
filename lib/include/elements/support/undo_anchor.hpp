@@ -86,6 +86,7 @@ namespace cycfi::elements
    }
 
    template <typename T>
+   // cppcheck-suppress operatorEqVarError ; _offset is the same in every T
    inline undo_anchor<T>& undo_anchor<T>::operator=(undo_anchor const& rhs)
    {
       if (this != &rhs)
@@ -97,6 +98,7 @@ namespace cycfi::elements
    }
 
    template <typename T>
+   // cppcheck-suppress operatorEqVarError ; _offset is the same in every T
    inline undo_anchor<T>& undo_anchor<T>::operator=(undo_anchor&& rhs)
    {
       if (this != &rhs)

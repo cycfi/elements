@@ -46,6 +46,7 @@ namespace cycfi::elements
 
    struct basic_context
    {
+      // cppcheck-suppress uninitMemberVar ; canvas is a reference, bound here
       basic_context(elements::view& view_, elements::canvas& cnv)
        : view(view_)
        , canvas(cnv)

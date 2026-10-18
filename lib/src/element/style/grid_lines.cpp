@@ -74,6 +74,7 @@ namespace cycfi::elements
    {
       if (db <= -1000)
          return std::snprintf(text, size, "\xe2\x88\x9e");   // infinity
+      // cppcheck-suppress invalidPrintfArgType_float ; std::abs(double) is a double
       return std::snprintf(text, size, "%.0f", std::abs(db));
    }
 

@@ -51,7 +51,8 @@ namespace cycfi::elements
     : _app_name(name)
    {
       static init_app init{};
-      _app = the_app;
+      // the_app outlives every app; each holds its own reference
+      _app = GTK_APPLICATION(g_object_ref(the_app));
    }
 
    app::~app()

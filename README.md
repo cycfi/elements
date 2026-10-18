@@ -40,10 +40,10 @@ Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussi
 
 The documentation is published at <https://cycfi.github.io/elements/>.
 
-1. [Gallery](https://cycfi.github.io/elements/elements/v1.0/gallery.html)
-2. [Setup and Installation](https://cycfi.github.io/elements/elements/v1.0/setup.html)
-3. [Design Aspects](https://cycfi.github.io/elements/elements/v1.0/aspects.html)
-4. [Layout](https://cycfi.github.io/elements/elements/v1.0/layout.html)
+* [Gallery](https://cycfi.github.io/elements/elements/v1.0/gallery.html)
+* [Setup and Installation](https://cycfi.github.io/elements/elements/v1.0/setup.html)
+* [Tutorials](https://cycfi.github.io/elements/elements/v1.0/tutorials.html)
+* [Reference](https://cycfi.github.io/elements/elements/v1.0/reference.html)
 
 ## <a name="jdeguzman"></a>About the Author
 

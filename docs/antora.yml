@@ -1,6 +1,7 @@
 name: elements
 title: Elements Library
-version: v1.0
+version: v1.1-dev
+prerelease: true
 start_page: index.adoc
 asciidoc:
   attributes:

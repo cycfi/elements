@@ -14,7 +14,9 @@
 #include <infra/utf8_utils.hpp>
 #include "../common/transfer.hpp"
 #include "../common/scroll_direction.hpp"
+#include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <map>
@@ -1109,15 +1111,19 @@ namespace cycfi::elements
 
    void base_view::refresh(rect area)
    {
-      // Note: GTK uses int coordinates. Make sure area is not empty
-      // when converting from float to int.  Coordinates are widget-local
-      // (the drawing area is windowless), so no allocation offset is added.
-      gtk_widget_queue_draw_area(_view->_widget,
-         std::floor(area.left),
-         std::floor(area.top),
-         std::max<float>(area.width(), 1),
-         std::max<float>(area.height(), 1)
-      );
+      // GTK uses int coordinates, widget-local (the drawing area is
+      // windowless, so no allocation offset is added). Clip the area to the
+      // widget first: an unbounded or NaN extent would not convert to int,
+      // and GTK rejects the negative width that results.
+      float const w = gtk_widget_get_allocated_width(_view->_widget);
+      float const h = gtk_widget_get_allocated_height(_view->_widget);
+      float const l = std::floor(std::max(area.left, 0.0f));
+      float const t = std::floor(std::max(area.top, 0.0f));
+      float const r = std::ceil(std::min(area.right, w));
+      float const b = std::ceil(std::min(area.bottom, h));
+      if (!(r > l && b > t))   // empty, or NaN
+         return;
+      gtk_widget_queue_draw_area(_view->_widget, l, t, r - l, b - t);
    }
 
    void base_view::accept_drop_types(mime_types const& types)

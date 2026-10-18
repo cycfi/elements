@@ -28,10 +28,11 @@
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS)
 # include <elements/headless.hpp>
-# if defined(__APPLE__)
-#  include <CoreText/CoreText.h>
-#  include <filesystem>
-# endif
+#endif
+
+#if defined(__APPLE__)
+# include <CoreText/CoreText.h>
+# include <filesystem>
 #endif
 
 #if defined(ELEMENTS_HOST_UI_LIBRARY_GTK)
@@ -79,13 +80,14 @@ namespace cycfi::elements::test
    };
 
    // On macOS the Cocoa host registers the fonts in the app bundle's
-   // resources when the first view is made. The headless host has no
-   // bundle, so the tests register the fonts the build copied next to
-   // them (test/resources) once, the same way: the icon font draws its
-   // glyphs instead of tofu.
+   // resources when the first view is made. The test binary is not a
+   // bundle, on the Cocoa host or the headless one, so the tests register
+   // the fonts the build copied next to them (test/resources) once, the
+   // same way. Otherwise a Mac without them installed lays the theme's
+   // text out in a fallback font, and the icon font draws tofu.
    inline void register_test_fonts()
    {
-#if defined(ELEMENTS_HOST_UI_LIBRARY_HEADLESS) && defined(__APPLE__)
+#if defined(__APPLE__)
       static bool const once = []
       {
          namespace fs = std::filesystem;

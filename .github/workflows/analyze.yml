@@ -66,7 +66,7 @@ jobs:
         scan-build --use-cc=clang --use-c++=clang++ \
           cmake -S . -B build $CONFIGURE_ARGS
         scan-build --use-cc=clang --use-c++=clang++ -o report \
-          --exclude lib/artist --exclude build/_deps \
+          --exclude "$PWD/lib/artist" --exclude "$PWD/build/_deps" \
           cmake --build build --target elements 2>&1 | tee scan.log
 
     - name: Summary
@@ -75,12 +75,14 @@ jobs:
         {
           echo "## Clang Static Analyzer"
           echo
-          grep -E "scan-build: .*bugs? found|No bugs found" scan.log || echo "No result line."
+          grep -E "warning: .*\[[a-zA-Z]+\.[a-zA-Z.]+\]" scan.log \
+            | sed "s#$GITHUB_WORKSPACE/##" | grep -v -E "^/|lib/artist/|build/_deps/" \
+            | sort -u > library.txt || true
+          echo "$(wc -l < library.txt) findings in Elements's own sources"
+          echo "(scan-build's own count includes bundled third-party code)."
           echo
           echo '```'
-          grep -E "warning: .*\[[a-zA-Z]+\.[a-zA-Z.]+\]" scan.log \
-            | grep -v -E "lib/artist/|build/_deps/" \
-            | sed "s#$GITHUB_WORKSPACE/##" | sort -u
+          cat library.txt
           echo '```'
         } >> "$GITHUB_STEP_SUMMARY"
 

@@ -15,26 +15,7 @@ Elements is embeddable, meaning you can embed it in any application, and it will
 
 Elements is distributed under the liberal and non-viral MIT License.
 
-## Status
-
-Elements 1.0 is out: the first versioned release, built on Artist 1.0. Releases are tagged from here on, `master` is the latest release, and `develop` is where the next one is made. API and usability matter, and I very much welcome suggestions and contributions. Hey, this is an open source project! If you like the design, concepts and ideas behind Elements, I very much welcome collaboration.
-
-## News
-
-**October 18, 2026:**
-Elements 1.0.0 is released, built on Artist 1.0.0. Each platform uses its native backend by default: Direct2D on Windows, Quartz 2D on macOS and Cairo on Linux. Build with `-DELEMENTS_SKIA=ON` for Skia, which comes as a prebuilt bundle. The [documentation](https://cycfi.github.io/elements/elements/v1.0/index.html) covers setup, design and every element.
-
-**June 20, 2026:**
-The `develop` branch is now a unified codebase built on the upgraded [Artist](https://github.com/cycfi/artist/tree/develop) backend, supporting **Skia, Quartz2D, and Cairo**, with HarfBuzz text shaping, Retina/HiDPI support, correct shadow rendering, and significant performance improvements across Linux, Windows, and macOS. Skia is the default backend on Windows/Linux and Quartz2D on macOS; build with `-DELEMENTS_CAIRO=ON` for the lightweight Cairo backend. Skia no longer needs a slow from-source build: prebuilt binaries are fetched automatically (see the [setup guide](https://cycfi.github.io/elements/elements/v1.0/setup.html)). Follow [this link](news.md) for details.
-
-**March 28, 2024:**
-I decided to bring the Cairo-based backend of Elements back into the fold. It will be the master branch once again. The Skia backend version is still very much in active development, but it still needs a lot of testing and work, especially with the way Skia is integrated.
-
-Follow [this link](news.md) for details.
-
-## Discord
-
-Feel free to join the [discord channel](https://discord.gg/NJkadSx) for discussion and chat with the developers.
+> **Status:** `master` tracks the latest stable release (currently v1.0.0). The next release, **v1.1**, is developed on `develop`, where the docs stay in sync as changes land. See [NEWS.md](NEWS.md) for what is new in each release.
 
 ## Documentation
 
@@ -45,7 +26,7 @@ The documentation is published at <https://cycfi.github.io/elements/>.
 * [Tutorials](https://cycfi.github.io/elements/elements/v1.0/tutorials.html)
 * [Reference](https://cycfi.github.io/elements/elements/v1.0/reference.html)
 
-## <a name="jdeguzman"></a>About the Author
+## <a name="jdeguzman"></a>The Author
 
 <img align="right" src="https://github.com/cycfi/elements/blob/assets/images/joel.jpg?raw=true" width="200">
 
@@ -64,6 +45,10 @@ highly successful Open Source projects such as
 [Boost.Fusion](http://tinyurl.com/ybn5oq9v). These libraries are all part of
 the [Boost Libraries](http://tinyurl.com/jubgged), a well respected,
 peer-reviewed, Open Source, collaborative development effort.
+
+## Discord
+
+Join the [Discord channel](https://discord.gg/NJkadSx) to discuss Elements and chat with the developers.
 
 -------------------------------------------------------------------------------
 

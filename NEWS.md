@@ -1,9 +1,30 @@
-# News
+# Release notes
+
+High-level, user-facing changes only. For the day-to-day detail, see
+`docs/dev_log.md`.
+
+## v1.1.0 (in development, on `develop`)
+
+Nothing yet.
+
+## v1.0.0 (2026-10-18)
+
+**The first versioned release, built on Artist 1.0.0.** Each platform uses its
+native backend by default: Direct2D on Windows, Quartz 2D on macOS and Cairo on
+Linux; build with `-DELEMENTS_SKIA=ON` for Skia, which comes as a prebuilt
+bundle. Hosts for Cocoa, Win32, GTK, X11 and Wayland, and a headless host for
+tests. The [documentation](https://cycfi.github.io/elements/elements/v1.0/index.html)
+covers setup, design and every element.
+
+## Before 1.0
+
+**June 20, 2026:**
+The `develop` branch is now a unified codebase built on the upgraded [Artist](https://github.com/cycfi/artist/tree/develop) backend, supporting **Skia, Quartz2D, and Cairo**, with HarfBuzz text shaping, Retina/HiDPI support, correct shadow rendering, and significant performance improvements across Linux, Windows, and macOS. Skia is the default backend on Windows/Linux and Quartz2D on macOS; build with `-DELEMENTS_CAIRO=ON` for the lightweight Cairo backend. Skia no longer needs a slow from-source build: prebuilt binaries are fetched automatically (see the [setup guide](https://cycfi.github.io/elements/elements/v1.0/setup.html)).
 
 **2026:**
 Following up on the March 2024 plan, the `artist_2026` branch delivers the completed Cairo backend port into the [Artist 2026](https://github.com/cycfi/artist/tree/artist_2026_dev) library. This is a major milestone: Cairo is now a first-class Artist backend alongside Skia and Quartz2D, with full feature parity and good performance across Linux, Windows, and macOS.
 
-The new backend adds HarfBuzz text shaping for correct Unicode and OpenType layout, proper HiDPI/Retina support, and correct shadow rendering via a software Gaussian blur. On macOS, the Cairo-Quartz surface and CG font paths are used for hardware-accelerated rendering. Shadow rendering now uses a per-context bitmap cache so unchanged shadows are composited directly without re-running the blur — cutting shadow cost from ~80% of frame time to near zero.
+The new backend adds HarfBuzz text shaping for correct Unicode and OpenType layout, proper HiDPI/Retina support, and correct shadow rendering via a software Gaussian blur. On macOS, the Cairo-Quartz surface and CG font paths are used for hardware-accelerated rendering. Shadow rendering now uses a per-context bitmap cache so unchanged shadows are composited directly without re-running the blur, cutting shadow cost from ~80% of frame time to near zero.
 
 The unification of backends is now well within reach.
 

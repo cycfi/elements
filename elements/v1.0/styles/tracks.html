@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Tracks :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/styles/tracks.html">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+<script src="../../../_/js/video.js"></script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/app.html">App</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/window.html">Window</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../view.html">View</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/core.html">Core</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/text_and_images.html">Text and Images</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/images.html">Images</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/status_bars.html">Status Bars</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/containers.html">Containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/ports.html">Ports and Scrollers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/child_windows.html">Child Windows</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/splits.html">Splits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/docking.html">Docking</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/popups.html">Popups and Modals</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/tooltips.html">Tooltips</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/lists.html">Lists</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/drag_and_drop.html">Drag and Drop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/visibility.html">Visibility and Event Interception</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="toggles.html">Check Boxes, Radio Buttons and Switches</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="sliders.html">Sliders, Dials and Thumbwheels</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="tracks.html">Tracks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="marks.html">Marks and Scales</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="captions.html">Captions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="text_entry.html">Text Entry</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="decorations.html">Borders and Decorations</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="groups.html">Groups and Panes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="notebooks.html">Notebooks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="dialogs.html">Child Windows and Dialogs</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../support.html">Support</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/canvas.html">Canvas</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/clipboard.html">Clipboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="../styles.html">Styles</a></li>
+    <li><a href="tracks.html">Tracks</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Tracks</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A track is the groove a slider&#8217;s thumb runs along (see
+<a href="../elements/sliders.html" class="xref page">Sliders</a>). There are two: a plain track, and a
+fill track, which fills part of itself to show a value. With a fill track,
+one look serves a slider, a range slider, a progress bar, a busy bar and a
+VU meter.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/styles/tracks_fill.png"><img src="../_images/styles/tracks_fill.png" alt="Fill tracks: a slider filled to its thumb, a range slider filled between its thumbs, an orange fill, a teal fill on a gray track, a teal to orchid gradient, and a vertical slider filled from the bottom" width="480px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A fill track in a slider fills from the start up to the thumb: from the
+left, or from the bottom of a vertical track. In a range slider, it fills
+between the two thumbs. As the foreground of a status bar (see
+<a href="../elements/status_bars.html" class="xref page">Status Bars</a>), it fills the part the bar
+gives it: up to the value of a progress bar, or the moving segment of a
+busy bar.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/styles/tracks_status.png"><img src="../_images/styles/tracks_status.png" alt="Status bars: a square progress bar, two rounded progress bars, one of them orange and glowing, a busy bar&#8217;s segment, three VU meters in green, yellow and red bands, the last one glowing, a glowing VU meter in a smooth gradient, and three glowing vertical VU meters" width="480px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A fill track may be filled in bands of color along its length instead of
+one color: green, then yellow, then red, for a VU meter. In a status bar,
+the bands are placed along the whole bar, so each band shows only once
+the value reaches it. A fill track may also be filled in a smooth
+gradient through color stops, placed the same way.</p>
+</div>
+<div class="paragraph">
+<p>A track has round ends, or square ends: its shape is a template
+argument, <code>track_shape::round</code> or <code>track_shape::square</code>. The stock status
+bars are square. A fill track may glow with <code>glow()</code>: the fill is drawn
+with a soft halo in its own color, each band in the band&#8217;s color. The
+glow takes room at both sides of the track, as much as the track is
+thick. Each track is at least 64 long, and as long as it is
+given. Its colors are set by chaining,
+<code>basic_fill_track&lt;5&gt;().fill_color(c)</code>, and a track holds a color only when
+one is set: by default, it holds none.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/style/track.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_track"><a class="anchor" href="#_basic_track"></a>Basic Track</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;
+   unsigned size
+ , bool vertical = false
+ , typename Color = default_track_color
+ , track_shape shape = track_shape::round
+&gt;
+class basic_track_styler : public element
+{
+public:
+
+   basic_track_styler&lt;size, vertical, fixed_color, shape&gt;
+   track_color(color c) const;
+   ...
+};
+
+enum class track_shape
+{
+   round
+ , square
+};
+
+template &lt;
+   unsigned size
+ , bool vertical = false
+ , track_shape shape = track_shape::round
+&gt;
+basic_track_styler&lt;size, vertical, default_track_color, shape&gt;
+basic_track();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>S</code>                 </dt>
+<dd>
+<p>Unsigned integer, the thickness of the track.</p>
+</dd>
+<dt class="hdlist1"><code>V</code>                 </dt>
+<dd>
+<p><code>bool</code>: <code>true</code> for a vertical track.</p>
+</dd>
+<dt class="hdlist1"><code>Sh</code>                </dt>
+<dd>
+<p>A <code>track_shape</code>: <code>track_shape::round</code> or
+<code>track_shape::square</code>.</p>
+</dd>
+<dt class="hdlist1"><code>c</code>                 </dt>
+<dd>
+<p>A <code>color</code>.</p>
+</dd>
+<dt class="hdlist1"><code>tr</code>                </dt>
+<dd>
+<p>A track.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory"><a class="anchor" href="#_factory"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_track&lt;S, [V, Sh]&gt;()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a black track <code>S</code> thick,
+                                    horizontal unless <code>V</code> is <code>true</code>, round
+                                    unless <code>Sh</code> is given.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tr.track_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>tr</code> in <code>c</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fill_track"><a class="anchor" href="#_fill_track"></a>Fill Track</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_declaration_2"><a class="anchor" href="#_declaration_2"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;
+   unsigned size
+ , bool vertical = false
+ , typename Colors = fill_track_colors&lt;default_track_color, default_fill_color&gt;
+ , track_shape shape = track_shape::round
+ , bool glow = false
+&gt;
+class basic_fill_track_styler : public element
+{
+public:
+
+   color                   track_color() const;
+   color                   fill_color() const;
+
+   basic_fill_track_styler&lt;size, vertical, /* unspecified */&gt;
+   track_color(color c) const;
+
+   basic_fill_track_styler&lt;size, vertical, /* unspecified */&gt;
+   fill_color(color c) const;
+
+   template &lt;std::size_t N&gt;
+   basic_fill_track_styler&lt;size, vertical, /* unspecified */&gt;
+   fill_colors(fill_band const (&amp;bands)[N]) const;
+
+   template &lt;std::size_t N&gt;
+   basic_fill_track_styler&lt;size, vertical, /* unspecified */&gt;
+   fill_gradient(canvas::color_stop const (&amp;stops)[N]) const;
+
+   basic_fill_track_styler&lt;size, vertical, Colors, shape, true&gt;
+   glow() const;
+   ...
+};
+
+struct fill_band
+{
+   float    to;
+   color    c;
+};
+
+template &lt;
+   unsigned size
+ , bool vertical = false
+ , track_shape shape = track_shape::round
+&gt;
+basic_fill_track_styler&lt;size, vertical, /* unspecified */, shape&gt;
+basic_fill_track();</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_2"><a class="anchor" href="#_expressions_2"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_2"><a class="anchor" href="#_notation_2"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>S</code>                 </dt>
+<dd>
+<p>Unsigned integer, the thickness of the track.</p>
+</dd>
+<dt class="hdlist1"><code>V</code>                 </dt>
+<dd>
+<p><code>bool</code>: <code>true</code> for a vertical track.</p>
+</dd>
+<dt class="hdlist1"><code>Sh</code>                </dt>
+<dd>
+<p>A <code>track_shape</code>.</p>
+</dd>
+<dt class="hdlist1"><code>c</code>                 </dt>
+<dd>
+<p>A <code>color</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ft</code>                </dt>
+<dd>
+<p>A fill track.</p>
+</dd>
+<dt class="hdlist1"><code>bands</code>             </dt>
+<dd>
+<p>Braced <code>fill_band</code> values, <code>{to, c}</code>, each band
+from the one before up to <code>to</code>, a value from 0.0
+to 1.0 along the track.</p>
+</dd>
+<dt class="hdlist1"><code>stops</code>             </dt>
+<dd>
+<p>Braced <code>canvas::color_stop</code> values, <code>{offset, c}</code>,
+each a color at <code>offset</code>, a value from 0.0 to 1.0
+along the track.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_2"><a class="anchor" href="#_factory_2"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_fill_track&lt;S, [V, Sh]&gt;()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a fill track <code>S</code> thick,
+                                    horizontal unless <code>V</code> is <code>true</code>, round
+                                    unless <code>Sh</code> is given: black, filled in
+                                    the theme&#8217;s <code>indicator_color</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.track_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>ft</code> with the track in
+                                    <code>c</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.fill_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>ft</code> with the fill in
+                                    <code>c</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.fill_colors(bands)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>ft</code> filled in <code>bands</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.fill_gradient(stops)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>ft</code> filled in a
+                                    gradient through <code>stops</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.glow()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>ft</code> whose fill glows.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors"><a class="anchor" href="#_accessors"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.track_color()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the track&#8217;s color.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>color</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ft.fill_color()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the fill&#8217;s color.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>color</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example"><a class="anchor" href="#_example"></a>Example</h3>
+<div class="paragraph">
+<p>A slider whose track fills up to its thumb, in teal on a gray track:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/style/track.hpp&gt;
+#include &lt;elements/element/style/slider.hpp&gt;   // For basic_thumb
+#include &lt;elements/element/slider.hpp&gt;         // For slider
+...
+using namespace cycfi::elements;
+...
+auto level = slider(
+   basic_thumb&lt;20&gt;(),
+   basic_fill_track&lt;5&gt;()                        <i class="conum" data-value="1"></i><b>(1)</b>
+      .track_color(rgba(60, 60, 64, 255))
+      .fill_color(colors::light_sea_green),
+   0.8
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A fill track, 5 thick, filled up to the thumb.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_radial_fill_track"><a class="anchor" href="#_radial_fill_track"></a>Radial Fill Track</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/styles/tracks_radial.png"><img src="../_images/styles/tracks_radial.png" alt="Five dials with radial fill tracks: blue, orange, a glowing teal to orchid gradient with square ends, glowing green, yellow and red bands with square ends, and a blue track inside radial marks" width="530px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p>A radial fill track is a ring around a dial&#8217;s knob: a track along the
+dial&#8217;s travel, filled from its start up to the dial&#8217;s value. Like
+<code>radial_marks</code> (see <a href="sliders.html" class="xref page">Sliders, Dials and
+Thumbwheels</a>), it wraps the knob, and takes the dial&#8217;s value from the dial
+it is in. The ring is <code>size</code> wide, and the track a quarter of <code>size</code>
+thick, in the middle of the ring. Its colors, bands, gradient and glow are
+set by chaining, as with a fill track; bands and a gradient are placed
+along the whole travel.</p>
+</div>
+<div class="paragraph">
+<p>A radial fill track may start at the center of the travel, 12 o&#8217;clock,
+instead: it then fills from the center to the value, on either side, as
+for a pan control.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/styles/tracks_pan.png"><img src="../_images/styles/tracks_pan.png" alt="Four pan dials: blue fills to the left of 12 o&#8217;clock, none at the center, to the right, and a glowing gradient with square ends, filled to the left" width="410px"></a>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_declaration_3"><a class="anchor" href="#_declaration_3"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;
+   std::size_t size
+ , concepts::Element Subject
+ , typename Colors = fill_track_colors&lt;default_track_color, default_fill_color&gt;
+ , track_shape shape = track_shape::round
+ , bool glow = false
+ , track_origin origin = track_origin::start
+&gt;
+class radial_fill_track_styler : public radial_styler_base&lt;size, Subject&gt;
+{
+public:
+
+   color                   track_color() const;
+   color                   fill_color() const;
+
+   radial_fill_track_styler&lt;size, Subject, /* unspecified */, shape, glow, origin&gt;
+   track_color(color c) const;
+
+   radial_fill_track_styler&lt;size, Subject, /* unspecified */, shape, glow, origin&gt;
+   fill_color(color c) const;
+
+   template &lt;std::size_t N&gt;
+   radial_fill_track_styler&lt;size, Subject, /* unspecified */, shape, glow, origin&gt;
+   fill_colors(fill_band const (&amp;bands)[N]) const;
+
+   template &lt;std::size_t N&gt;
+   radial_fill_track_styler&lt;size, Subject, /* unspecified */, shape, glow, origin&gt;
+   fill_gradient(canvas::color_stop const (&amp;stops)[N]) const;
+
+   radial_fill_track_styler&lt;size, Subject, Colors, shape, true, origin&gt;
+   glow() const;
+   ...
+};
+
+enum class track_origin
+{
+   start
+ , center
+};
+
+template &lt;
+   std::size_t size
+ , track_shape shape = track_shape::round
+ , track_origin origin = track_origin::start
+ , concepts::Element Subject
+&gt;
+radial_fill_track_styler&lt;size, remove_cvref_t&lt;Subject&gt;, /* unspecified */, shape, false, origin&gt;
+radial_fill_track(Subject&amp;&amp; subject);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_3"><a class="anchor" href="#_expressions_3"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_3"><a class="anchor" href="#_notation_3"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>S</code>                 </dt>
+<dd>
+<p>Unsigned integer, the width of the ring.</p>
+</dd>
+<dt class="hdlist1"><code>Sh</code>                </dt>
+<dd>
+<p>A <code>track_shape</code>.</p>
+</dd>
+<dt class="hdlist1"><code>O</code>                 </dt>
+<dd>
+<p>A <code>track_origin</code>: <code>track_origin::start</code> or
+<code>track_origin::center</code>.</p>
+</dd>
+<dt class="hdlist1"><code>e</code>                 </dt>
+<dd>
+<p>An element, the knob.</p>
+</dd>
+<dt class="hdlist1"><code>c</code>                 </dt>
+<dd>
+<p>A <code>color</code>.</p>
+</dd>
+<dt class="hdlist1"><code>rt</code>                </dt>
+<dd>
+<p>A radial fill track.</p>
+</dd>
+<dt class="hdlist1"><code>bands</code>, <code>stops</code>    </dt>
+<dd>
+<p>As for a fill track.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_3"><a class="anchor" href="#_factory_3"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>radial_fill_track&lt;S, [Sh, O]&gt;(e)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a radial fill track around
+                                    <code>e</code>, in a ring <code>S</code> wide, round unless
+                                    <code>Sh</code> is given, filled from the start of
+                                    the travel unless <code>O</code> is given: black,
+                                    filled in the theme&#8217;s <code>indicator_color</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.track_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>rt</code> with the track in
+                                    <code>c</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.fill_color(c)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>rt</code> with the fill in
+                                    <code>c</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.fill_colors(bands)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>rt</code> filled in <code>bands</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.fill_gradient(stops)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>rt</code> filled in a
+                                    gradient through <code>stops</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.glow()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a copy of <code>rt</code> whose fill glows.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_accessors_2"><a class="anchor" href="#_accessors_2"></a>Accessors</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.track_color()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the track&#8217;s color.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>color</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rt.fill_color()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get the fill&#8217;s color.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>color</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_example_2"><a class="anchor" href="#_example_2"></a>Example</h3>
+<div class="paragraph">
+<p>A dial with a glowing track in a gradient, around a knob 50 across:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/style/track.hpp&gt;
+#include &lt;elements/element/style/dial.hpp&gt;     // For basic_knob
+...
+using namespace cycfi::elements;
+...
+auto gain = dial(
+   radial_fill_track&lt;20, track_shape::square&gt;(basic_knob&lt;50&gt;())   <i class="conum" data-value="1"></i><b>(1)</b>
+      .glow()
+      .fill_gradient({
+         {0.0f, colors::light_sea_green}
+       , {1.0f, colors::medium_orchid}
+      }),
+   0.8
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A ring 20 wide around the knob, with square ends.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_status_bars"><a class="anchor" href="#_status_bars"></a>Status Bars</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Stock status bars made of a square track and a square fill track. Each takes a value
+from 0.0 to 1.0, and <code>size</code>, the thickness, 6 unless given; a vertical bar
+fills from the bottom.</p>
+</div>
+<div class="sect2">
+<h3 id="_include_2"><a class="anchor" href="#_include_2"></a>Include</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/style/status_bar.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_declaration_4"><a class="anchor" href="#_declaration_4"></a>Declaration</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">template &lt;unsigned size = 6, bool vertical = false&gt;
+auto
+progress_bar(double init_value = 0.0);
+
+template &lt;unsigned size = 6, bool vertical = false&gt;
+auto
+busy_bar(double init_value = 0.0, double start_pos = 0.0);
+
+template &lt;unsigned size = 6, bool vertical = false&gt;
+auto
+vu_meter(double init_value = 0.0);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expressions_4"><a class="anchor" href="#_expressions_4"></a>Expressions</h3>
+<div class="sect3">
+<h4 id="_notation_4"><a class="anchor" href="#_notation_4"></a>Notation</h4>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>S</code>                 </dt>
+<dd>
+<p>Unsigned integer, the thickness of the bar.</p>
+</dd>
+<dt class="hdlist1"><code>V</code>                 </dt>
+<dd>
+<p><code>bool</code>: <code>true</code> for a vertical bar.</p>
+</dd>
+<dt class="hdlist1"><code>v</code>, <code>p</code>            </dt>
+<dd>
+<p>Floating point values from 0.0 to 1.0.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_factory_4"><a class="anchor" href="#_factory_4"></a>Factory</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>progress_bar&lt;[S, V]&gt;([v])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a progress bar at <code>v</code>, 0.0
+                                    unless given.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>busy_bar&lt;[S, V]&gt;([v, p])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a busy bar, its segment from <code>p</code>
+                                    to <code>v</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vu_meter&lt;[S, V]&gt;([v])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make a progress bar in green, yellow
+                                    above 0.7 and red above 0.9.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Each returns the status bar of <a href="../elements/status_bars.html" class="xref page">Status
+Bars</a>, with its expressions: <code>value(v)</code> sets the value, and a busy bar
+has <code>start</code> and <code>stop</code>. For other colors, make the bar from tracks:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements/element/style/status_bar.hpp&gt;
+...
+using namespace cycfi::elements;
+...
+auto meter = progress_bar(                                        <i class="conum" data-value="1"></i><b>(1)</b>
+   basic_track&lt;6, false, track_shape::square&gt;()
+ , basic_fill_track&lt;6, false, track_shape::square&gt;().fill_colors({
+      {0.8f, colors::light_sea_green}
+    , {1.0f, colors::orange}
+   })
+);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>A progress bar in teal, orange above 0.8.</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

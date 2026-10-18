@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Controls and Values :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/tutorials/controls.html">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+<script src="../../../_/js/video.js"></script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/app.html">App</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/window.html">Window</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../view.html">View</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/core.html">Core</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/trackers.html">Trackers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/text_and_images.html">Text and Images</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/text.html">Text</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/images.html">Images</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/status_bars.html">Status Bars</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements/containers.html">Containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/ports.html">Ports and Scrollers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/child_windows.html">Child Windows</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/splits.html">Splits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/docking.html">Docking</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/popups.html">Popups and Modals</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/tooltips.html">Tooltips</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/lists.html">Lists</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/drag_and_drop.html">Drag and Drop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../elements/visibility.html">Visibility and Event Interception</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/toggles.html">Check Boxes, Radio Buttons and Switches</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/sliders.html">Sliders, Dials and Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/tracks.html">Tracks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/captions.html">Captions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/text_entry.html">Text Entry</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/decorations.html">Borders and Decorations</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/groups.html">Groups and Panes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/notebooks.html">Notebooks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/dialogs.html">Child Windows and Dialogs</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../support.html">Support</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/canvas.html">Canvas</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/clipboard.html">Clipboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../tutorials.html">Tutorials</a></li>
+    <li><a href="controls.html">Controls and Values</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Controls and Values</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The windows so far did not respond to anything. This tutorial adds
+controls, and the two things you do with a control: find out when the
+user changes it, and change it from your program.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/gallery/basic-sliders-and-knobs.png"><img src="../_images/gallery/basic-sliders-and-knobs.png" alt="A window titled Basic Sliders And Knobs with three panes: Vertical Sliders, Horizontal Sliders and Knobs, each with three controls marked 0 to 10" width="600px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p><code>examples/basic_sliders_and_knobs</code> makes three vertical sliders, three
+horizontal sliders and three knobs, and connects them in threes. Move
+any one and the other two in its group follow. Then
+<code>examples/buttons</code> does the same with a pair of buttons.</p>
+</div>
+<div class="paragraph">
+<p>A control holds a value. When the user changes it, the control calls a
+function you gave it, <code>on_change</code>, with the new value. When your
+program changes it, with <code>value(v)</code>, nothing is called; you set the
+value and redraw. Those two operations are all the connection there is,
+in this tutorial and in everything you build with Elements.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_making_a_slider"><a class="anchor" href="#_making_a_slider"></a>Making a Slider</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Here, we make a horizontal slider with slider markers.
+auto make_hslider(int index)
+{
+   hsliders[index] = share(      // Use `share` to make shared elements.
+      slider(
+         basic_thumb&lt;25&gt;(),      // Basic thumb 25px in diameter
+         make_markers&lt;false&gt;(),  // The slider markers
+         (index + 1) * 0.25)     // The default slider value
+      );
+
+   // Place a margin of 20 pixels at the left and right of the slider and
+   // align the slider at the middle. Use `hold` to hold shared elements.
+   return align_middle(hmargin({20, 20}, hold(hsliders[index])));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A slider is assembled from parts: a thumb, and a track, here with
+marks and labels along it. You choose the parts, and the library
+supplies a few styles of each. Its value runs from 0 to 1, and the
+three sliders start at 0.25, 0.5 and 0.75. The parts are described in
+<a href="../elements/sliders.html" class="xref page">Sliders</a> and
+<a href="../styles/sliders.html" class="xref page">Slider Styles</a>.</p>
+</div>
+<div class="paragraph">
+<p>The lines to notice are <code>share</code> and <code>hold</code>. Elements are values, and a
+layout holds copies. If the program wrote
+<code>vtile(slider(&#8230;&#8203;), &#8230;&#8203;)</code>, the slider in the window would be a copy
+inside the tile, with no name, and there would be no way to reach it
+later. Instead:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>share(slider(&#8230;&#8203;))</code> makes the slider once and returns a
+<code>std::shared_ptr</code> to it, kept in <code>hsliders</code>.</p>
+</li>
+<li>
+<p><code>hold(hsliders[index])</code> puts that same slider into the layout,
+through the pointer, without copying it.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Now the slider on the screen and <code>hsliders[index]</code> are the same
+object. This pattern is used for every control a program needs to
+reach after it is placed.</p>
+</div>
+<div class="paragraph">
+<p>The knobs are made the same way, with <code>dial</code>, <code>radial_marks</code> and
+<code>basic_knob</code> (see <a href="../elements/dials.html" class="xref page">Dials</a>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_connecting_the_controls"><a class="anchor" href="#_connecting_the_controls"></a>Connecting the Controls</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">// Here, we link the controls such that the Nth slider or knob will move together.
+void link_control(int index, view&amp; view_)
+{
+   vsliders[index]-&gt;on_change =              // When vsliders[index] moves,
+      [index, &amp;view_](double val)
+      {
+         hsliders[index]-&gt;value(val);        // set the value of hsliders[index]
+         dials[index]-&gt;value(val);           // set the value of dials[index]
+         view_.refresh(*hsliders[index]);    // Refresh hsliders[index]
+         view_.refresh(*dials[index]);       // Refresh dials[index]
+      };</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whenever the user moves the vertical slider, this function runs with
+the slider&#8217;s new value. It sets the same value on the horizontal
+slider and the knob, then calls <code>view_.refresh</code> on each of them.</p>
+</div>
+<div class="paragraph">
+<p>Two things keep this simple. Setting a value with <code>value(v)</code> does not
+call that control&#8217;s <code>on_change</code>, so the horizontal slider&#8217;s handler
+does not run in turn, and the three handlers never chase each other
+round a loop. And setting a value does not redraw anything by itself;
+<code>view_.refresh(e)</code> is what puts the new position on the screen.</p>
+</div>
+<div class="paragraph">
+<p>The handlers for the horizontal slider and the knob are the same
+again, with the roles swapped. The connections are made once, after
+the content is in the view:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   view_.content(
+      make_controls(),                       // Make our controls
+      background                             // Add a background
+   );
+
+   link_controls(view_);                     // Link the controls.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_buttons"><a class="anchor" href="#_buttons"></a>Buttons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A button is a control whose value is on or off, and its callback is
+<code>on_click</code>. In <code>examples/buttons</code>, a latching button stays down once
+clicked, and a second button releases it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   auto lbutton         = share(latching_button("Latching Button", 1.0, bgreen));
+   auto reset           = share(button("Clear Latch", icons::lock_open, 1.0, bblue));</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">   reset-&gt;on_click =
+      [lbutton = get(lbutton), reset = get(reset), &amp;view_](bool) mutable
+      {
+         if (auto p = lbutton.lock())                                      <i class="conum" data-value="1"></i><b>(1)</b>
+         {
+            p-&gt;value(0);                                                   <i class="conum" data-value="2"></i><b>(2)</b>
+            view_.refresh(*p);
+         }
+
+         if (auto p = reset.lock())
+         {
+            (*p)-&gt;set_icon(icons::lock_open);                              <i class="conum" data-value="3"></i><b>(3)</b>
+            p-&gt;enable(false);                                              <i class="conum" data-value="4"></i><b>(4)</b>
+            view_.refresh(*p);
+         }
+      };</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The handler holds the buttons through <code>std::weak_ptr</code>, from
+<code>get</code>, and locks one before using it. A handler that captured the
+<code>shared_ptr</code> of its own button would keep the button alive for as
+long as the handler, and the handler is part of the button: it
+would never be freed.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Release the latch: the same <code>value(v)</code> as a slider&#8217;s.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>A button&#8217;s styler holds its icon and label; <code>&#8594;</code> on the button
+reaches it.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Disable the reset button until the latch is set again.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The same shape as the sliders: a callback, <code>value(v)</code> on another
+control, and a refresh. <a href="../elements/buttons.html" class="xref page">Buttons</a> and
+<a href="../styles/buttons.html" class="xref page">Button Styles</a> cover the kinds of button and
+how they are drawn.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running"><a class="anchor" href="#_running"></a>Running</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-sh hljs" data-lang="sh">cmake -B build
+cmake --build build --target BasicSlidersAndKnobs Buttons</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The programs are in <code>build/examples/basic_sliders_and_knobs</code> and
+<code>build/examples/buttons</code>. Move any control; the other two in its group
+follow.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_try_it"><a class="anchor" href="#_try_it"></a>Try It</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>In <code>link_control</code>, delete the two <code>view_.refresh</code> lines from the
+first handler. Move a vertical slider: the horizontal slider and the
+knob do not move until something else redraws them. Resize the
+window and they catch up.</p>
+</li>
+<li>
+<p>Make the first group a pair instead of a trio: in <code>link_control</code>,
+take the knob out of the vertical slider&#8217;s handler.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_components_used"><a class="anchor" href="#_components_used"></a>Components Used</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/sliders.html" class="xref page"><code>slider</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A value set by dragging a thumb along a track.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/dials.html" class="xref page"><code>dial</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A value set by turning a knob.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../styles/sliders.html" class="xref page"><code>basic_thumb</code>, <code>basic_knob</code>, <code>slider_marks_lin</code>, <code>radial_marks</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Draw the sliders and knobs and their marks.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/buttons.html" class="xref page"><code>button</code>, <code>latching_button</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Buttons, and their <code>on_click</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../elements/element.html" class="xref page"><code>share</code>, <code>get</code></a> and <a href="../elements/indirection.html" class="xref page"><code>hold</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep a control the program can reach after it is placed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="../view.html" class="xref page"><code>view::refresh</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redraw a control whose value was set from code.</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

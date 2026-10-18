@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lists :: Elements Docs</title>
+    <link rel="canonical" href="https://www.cycfi.com/elements/v1.0/elements/lists.html">
+    <meta name="generator" content="Antora 3.1.15">
+    <link rel="stylesheet" href="../../../_/css/site.css">
+<meta name="og:title" content="Elements Docs Elements Library Documentation"/>
+<link rel="icon" type="image/png" sizes="16x16" href="https://cycfi.com/assets/icons/favicon-16x16.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="https://cycfi.com/assets/icons/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="96x96" href="https://cycfi.com/assets/icons/favicon-96x96.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="https://cycfi.com/assets/icons/android-chrome-192x192.png"/>
+<link rel="icon" type="image/png" sizes="256x256" href="https://cycfi.com/assets/icons/android-chrome-256x256.png"/>
+<link rel="apple-touch-icon" type="image/png" href="https://cycfi.com/assets/icons/apple-touch-icon.png"/>
+
+<script src="../../../_/js/video.js"></script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <!--  Cycfi Logo -->
+      <a class="m-nav__logo" href="https://www.cycfi.com">
+        <svg version="1.1" x="0px" y="0px" width="200" viewBox="0 0 600 100" style="padding-top: 15;" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(2.55, 0, 0, 2.62, -464.010406, -1042.918213)" fill="#202020">
+            <path d="M234.37,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.7-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-3.5-0.04-4.6,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.59,0.66-0.76,1.35c-0.14,0.84-0.18,1.03-0.19,1.43l-0.14,3.91 c-0.01,0.39,0.04,0.84,0.09,1.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h33.85 c0.8,0,1.45,0.67,1.42,1.47L234.37,431.65z"/>
+            <path d="M276.06,433.02H257.9c-0.8,0-1.45-0.67-1.42-1.47l0.15-4.18c0.03-0.76,0.65-1.37,1.42-1.37h14.16 c1.91,0,3.52,0,4.61-0.12c1.23-0.13,1.75-0.25,2.17-0.71c0.36-0.39,0.4-2.52,0.4-2.52h-27.92c-11.11,0-13.26-5.13-13.1-9.44 l0.12-3.38c0.03-0.76,0.65-1.37,1.42-1.37h8.43c0.8,0,1.45,0.67,1.42,1.47l-0.05,1.36c-0.02,0.46-0.01,2.03,0.11,2.51 c0.1,0.42,0.44,0.82,0.78,1.07c0.47,0.35,0.83,0.42,1.64,0.54c0.9,0.14,2.09,0.21,3.54,0.21h24.09l0.21-5.8 c0.03-0.76,0.65-1.37,1.42-1.37h8.46c0.8,0,1.45,0.67,1.42,1.47l-0.49,13.57c-0.06,1.58-0.46,3.96-1.12,5.07 c-0.68,1.15-1.71,2.08-3.04,2.76c-1.23,0.63-2.76,1.07-4.56,1.32C280.44,432.9,278.4,433.02,276.06,433.02L276.06,433.02z"/>
+            <path d="M401.95,431.55l0.78-21.72c0.03-0.76,0.65-1.37,1.42-1.37h8.59c0.8,0,1.45,0.67,1.42,1.47l-0.78,21.72 c-0.03,0.76-0.65,1.37-1.42,1.37h-8.59C402.56,433.02,401.92,432.35,401.95,431.55z"/>
+            <path d="M346.77,431.65c-0.03,0.76-0.65,1.37-1.42,1.37h-37.03c-2.34,0-4.38-0.12-6.06-0.36 c-1.78-0.25-3.29-0.7-4.47-1.32c-1.28-0.68-2.24-1.61-2.84-2.76c-0.58-1.11-0.85-2.48-0.79-4.07l0.27-7.53 c0.06-1.59,0.42-2.96,1.08-4.07c0.68-1.15,1.71-2.08,3.04-2.76c1.22-0.62,2.76-1.07,4.56-1.32c1.7-0.24,3.75-0.36,6.08-0.36h36.93 c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.19c-0.03,0.76-0.65,1.37-1.42,1.37h-33.96c-1.91,0-2.47-0.04-3.58,0.08 c-1.24,0.13-1.53,0.28-1.83,0.45c-0.47,0.26-0.58,0.66-0.76,1.35c-0.14,0.84-0.22,2.03-0.23,2.43l-0.07,1.91 c-0.01,0.39,0.01,1.84,0.06,2.43c0.02,0.02,0.01,0.72,0.61,1.18c0.7,0.54,1.08,0.41,1.91,0.5c1.1,0.12,2.62,0.18,4.53,0.18h32.83 c0.8,0,1.45,0.67,1.42,1.47L346.77,431.65z"/>
+            <path d="M386.2,425.88l-24.93-0.03l-0.21,5.8c-0.03,0.76-0.65,1.37-1.42,1.37h-8.46c-0.8,0-1.45-0.67-1.42-1.47 l0.49-13.57c0.06-1.58,0.46-3.96,1.12-5.07c0.68-1.15,1.71-2.08,3.04-2.76c1.23-0.63,2.76-1.07,4.56-1.32 c1.7-0.24,3.75-0.36,6.08-0.36l0,0h33.68c0.8,0,1.45,0.67,1.42,1.47l-0.15,4.18c-0.03,0.76-0.65,1.37-1.42,1.37H368.9 c-1.91,0-3.52,0-4.61,0.12c-1.23,0.13-1.75,0.25-2.17,0.71c-0.36,0.39-0.4,2.52-0.4,2.52h24.63c0.8,0,1.45,0.67,1.42,1.47 l-0.15,4.22C387.59,425.28,386.96,425.88,386.2,425.88z"/>
+          </g>
+        </svg>
+      </a>
+      <a class="navbar-item" href="https://www.cycfi.com">Elements Docs</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="elements" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+      <div class="navbar-item search hide-for-print">
+        <div id="search-field" class="field">
+          <input id="search-input" type="text" placeholder="Search the docs">
+        </div>
+      </div>
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../index.html">Elements Library</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../gallery.html">Gallery</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../setup.html">Setup and Installation</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../outside_project.html">Building Outside the Project</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../testing.html">Testing Elements</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../advanced_builds.html">Advanced Builds</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../tutorials.html">Tutorials</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/hello_universe.html">Hello Universe</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/layout.html">Laying Out a Window</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/controls.html">Controls and Values</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/model.html">The Model</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../tutorials/custom_control.html">A Custom Control</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../reference.html">Reference</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../aspects.html">Design Aspects</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../application.html">Application</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/app.html">App</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../application/window.html">Window</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../view.html">View</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../model.html">Model</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../elements.html">Elements</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="core.html">Core</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="element.html">Element</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="indirection.html">Indirection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="traversal.html">Traversal</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="composites.html">Composites</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="selection.html">Selection</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="trackers.html">Trackers</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../layout.html">Layout</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/limits.html">Limits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/sizing.html">Sizing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/stretch.html">Stretch</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/span.html">Span</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/scale.html">Scale</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/alignment.html">Alignment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/margins.html">Margins</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/floating.html">Floating</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/tiles.html">Tiles</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/grids.html">Grids</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/layers.html">Layers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/decks.html">Decks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/flow.html">Flow</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="controls.html">Controls</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="sliders.html">Sliders</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="dials.html">Dials</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="thumbwheels.html">Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="text_and_images.html">Text and Images</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="labels.html">Labels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="text.html">Text</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="images.html">Images</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="status_bars.html">Status Bars</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="containers.html">Containers</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ports.html">Ports and Scrollers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="child_windows.html">Child Windows</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="splits.html">Splits</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="docking.html">Docking</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="popups.html">Popups and Modals</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="tooltips.html">Tooltips</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="menus.html">Menus</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="lists.html">Lists</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="drag_and_drop.html">Drag and Drop</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="visibility.html">Visibility and Event Interception</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../styles.html">Styles</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/buttons.html">Buttons</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/toggles.html">Check Boxes, Radio Buttons and Switches</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/sliders.html">Sliders, Dials and Thumbwheels</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/tracks.html">Tracks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/marks.html">Marks and Scales</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/captions.html">Captions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/text_entry.html">Text Entry</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/decorations.html">Borders and Decorations</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/groups.html">Groups and Panes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/notebooks.html">Notebooks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/dialogs.html">Child Windows and Dialogs</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/menus.html">Menus</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/curve_editor.html">Curve Editor</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../styles/swatches.html">Swatches</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../support.html">Support</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/canvas.html">Canvas</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/context.html">Context</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/theme.html">Theme</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/receivers.html">Receivers</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/draw_utils.html">Drawing Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/text_utils.html">Text Utilities</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/icons.html">Icons</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/payload.html">Payload</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/clipboard.html">Clipboard</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../support/diagnostics.html">Logging and Diagnostics</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Elements Library</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../index.html">Elements Library</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../index.html">Elements Library</a></li>
+    <li><a href="../reference.html">Reference</a></li>
+    <li><a href="../elements.html">Elements</a></li>
+    <li><a href="containers.html">Containers</a></li>
+    <li><a href="lists.html">Lists</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lists</h1>
+<div class="sect1">
+<h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A list shows a column or a row of items, any number of them, by making
+an element for an item only when the item comes into view. A cell
+composer makes the elements and gives the size of each cell. <code>list</code>, or
+its alias <code>vlist</code>, lays the cells out top to bottom; <code>hlist</code>, left to
+right. A list is usually put in a <a href="ports.html" class="xref page">scroller</a>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/elements/lists_example.png"><img src="../_images/elements/lists_example.png" alt="A list of rows reading This is item number 1, 2, 3 and so on, in a scroller whose thumb is a sliver at the top" width="320px"></a>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cell_composers"><a class="anchor" href="#_cell_composers"></a>Cell Composers</h3>
+<div class="paragraph">
+<p>A cell composer gives the number of items, the element of each item,
+and the size of each cell. It derives from the abstract class
+<code>cell_composer</code>. Along the list&#8217;s main axis, the vertical for a <code>list</code>,
+each cell has a size of its own; across it, every cell has the same
+limits.</p>
+</div>
+<div class="paragraph">
+<p><code>basic_cell_composer(size, f)</code>, also named <code>basic_vcell_composer</code>, makes
+a composer of <code>size</code> items for a <code>list</code>, whose element for item <code>i</code> is
+<code>f(i)</code>, an <code>element_ptr</code>. Every cell has the size of item 0&#8217;s element:
+its minimum height, and its minimum and maximum width. Item 0 is made
+once, to measure it, when the list has items. <code>basic_hcell_composer</code> is
+the same for an <code>hlist</code>, measuring item 0&#8217;s width and height limits.</p>
+</div>
+<div class="paragraph">
+<p><code>basic_cell_composer(min, main, size, f)</code> is given the sizes instead:
+each cell is <code>main</code> along the main axis, and at least <code>min</code> across it.
+<code>basic_cell_composer(min, max, main, size, f)</code> also limits it to <code>max</code>
+across.</p>
+</div>
+<div class="paragraph">
+<p>The factories put together the stock composers, each a class template
+over the next: <code>fixed_length_cell_composer</code> keeps the number of items,
+<code>function_cell_composer</code> calls a function, and
+<code>fixed_derived_limits_cell_composer</code> (<code>vfixed_</code> and <code>hfixed_</code>) or
+<code>static_limits_cell_composer</code> gives the sizes. A composer of your own
+derives from <code>cell_composer</code> or from these.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cells_in_and_out_of_view"><a class="anchor" href="#_cells_in_and_out_of_view"></a>Cells In and Out of View</h3>
+<div class="paragraph">
+<p>The list calls the composer&#8217;s <code>compose(i)</code> when cell <code>i</code> first comes
+into view, and lays out and draws the element while the cell is in view.</p>
+</div>
+<div class="paragraph">
+<p>By default, the list releases the element when its cell leaves the
+view, and calls <code>compose(i)</code> again when the cell returns. The new
+element does not have the old one&#8217;s state, such as text typed into it.
+To retain that state:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The composer stores each element it makes and returns the same one
+each time, as <code>examples/active_list</code> does.</p>
+</li>
+<li>
+<p>Or <code>list(composer, false)</code> retains every element it is given.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_the_items"><a class="anchor" href="#_changing_the_items"></a>Changing the Items</h3>
+<div class="paragraph">
+<p>Change the items first, then tell the list, with <code>insert</code>, <code>erase</code>,
+<code>move</code>, <code>resize</code>, <code>clear</code> or <code>update</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>insert</code> and <code>erase</code> also resize the composer. The changes are made at
+the next draw, in the order they were asked for; then refresh the view.
+The indices may be in any order. The focus moves with its cell, and ends
+if its cell is erased.</p>
+</div>
+<div class="paragraph">
+<p><code>move_indices(v, pos, indices)</code> and <code>erase_indices(v, indices)</code> make the
+same changes to a <code>std::vector</code>, for the items themselves. Their indices
+must be in ascending order, with no repeats:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">std::vector&lt;char&gt; v = {'a', 'b', 'c', 'd', 'e'};
+move_indices(v, 1, {3, 4});      // a d e b c
+erase_indices(v, {0, 2});        // d b c</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_include"><a class="anchor" href="#_include"></a>Include</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">#include &lt;elements.hpp&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declaration"><a class="anchor" href="#_declaration"></a>Declaration</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">namespace cycfi::elements
+{
+   class cell_composer : public std::enable_shared_from_this&lt;cell_composer&gt;
+   {
+   public:
+
+      struct limits
+      {
+         float min = 0;
+         float max = full_extent;
+      };
+
+      virtual std::size_t     size() const = 0;
+      virtual void            resize(size_t s) = 0;
+      virtual element_ptr     compose(std::size_t index) = 0;
+      virtual limits          secondary_axis_limits(basic_context const&amp; ctx) const = 0;
+      virtual float           main_axis_size(std::size_t index, basic_context const&amp; ctx) const = 0;
+   };
+
+   template &lt;typename F&gt;
+   inline auto basic_cell_composer(std::size_t size, F&amp;&amp; compose);
+
+   template &lt;typename F&gt;
+   inline auto basic_vcell_composer(std::size_t size, F&amp;&amp; compose);
+
+   template &lt;typename F&gt;
+   inline auto basic_hcell_composer(std::size_t size, F&amp;&amp; compose);
+
+   template &lt;typename F&gt;
+   inline auto basic_cell_composer(
+      float min_secondary_axis_size
+    , float main_axis_size
+    , std::size_t size
+    , F&amp;&amp; compose
+   );
+
+   template &lt;typename F&gt;
+   inline auto basic_cell_composer(
+      float min_secondary_axis_size
+    , float max_secondary_axis_size
+    , float main_axis_size
+    , std::size_t size
+    , F&amp;&amp; compose
+   );
+
+   class list : public composite_base
+   {
+   public:
+
+      using composer_ptr = std::shared_ptr&lt;cell_composer&gt;;
+      using indices_type = std::vector&lt;std::size_t&gt;;
+
+                                 list(composer_ptr composer, bool manage_externally = true);
+
+      void                       update();
+      void                       clear();
+      void                       resize(size_t n);
+      bool                       manage_externally() const;
+      void                       move(std::size_t pos, indices_type const&amp; indices);
+      void                       insert(std::size_t pos, std::size_t num_items);
+      void                       erase(indices_type const&amp; indices);
+   };
+
+   using vlist = list;
+
+   class hlist : public list
+   {
+   public:
+                                 hlist(composer_ptr ptr, bool manage_externally = true);
+   };
+
+   template &lt;typename T&gt;
+   inline void move_indices(std::vector&lt;T&gt;&amp; v, std::size_t pos, std::vector&lt;std::size_t&gt; const&amp; indices);
+
+   template &lt;typename T&gt;
+   inline void erase_indices(std::vector&lt;T&gt;&amp; v, std::vector&lt;std::size_t&gt; const&amp; indices);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The stock composer class templates are declared in the header.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_expressions"><a class="anchor" href="#_expressions"></a>Expressions</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_notation"><a class="anchor" href="#_notation"></a>Notation</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>cp</code></dt>
+<dd>
+<p>A <code>std::shared_ptr</code> to a cell composer.</p>
+</dd>
+<dt class="hdlist1"><code>f</code></dt>
+<dd>
+<p>A function taking an index and returning an <code>element_ptr</code>.</p>
+</dd>
+<dt class="hdlist1"><code>l</code></dt>
+<dd>
+<p>A <code>list</code> or <code>hlist</code>.</p>
+</dd>
+<dt class="hdlist1"><code>c</code></dt>
+<dd>
+<p>A cell composer.</p>
+</dd>
+<dt class="hdlist1"><code>ctx</code></dt>
+<dd>
+<p>A <code>basic_context</code>.</p>
+</dd>
+<dt class="hdlist1"><code>n</code>, <code>pos</code>, <code>i</code></dt>
+<dd>
+<p>Indices or counts, <code>std::size_t</code>.</p>
+</dd>
+<dt class="hdlist1"><code>ix</code></dt>
+<dd>
+<p>A <code>std::vector&lt;std::size_t&gt;</code> of indices.</p>
+</dd>
+<dt class="hdlist1"><code>v</code></dt>
+<dd>
+<p>A <code>std::vector</code>.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics"><a class="anchor" href="#_semantics"></a>Semantics</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Expression</th>
+<th class="tableblock halign-left valign-top">Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.size()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of items, a <code>std::size_t</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.resize(n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Make it <code>n</code> items.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.compose(i)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The element of item <code>i</code>, an <code>element_ptr</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.main_axis_size(i, ctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The size of cell <code>i</code> along the main axis, a <code>float</code>: its height, in a
+  <code>list</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c.secondary_axis_limits(ctx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>min</code> and <code>max</code> of the cells across the list, a
+  <code>cell_composer::limits</code>: their width, in a <code>list</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_cell_composer(n, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A composer of <code>n</code> items for a <code>list</code>, sized by item 0.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_vcell_composer(n, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same as <code>basic_cell_composer(n, f)</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_hcell_composer(n, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A composer of <code>n</code> items for an <code>hlist</code>, sized by item 0.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_cell_composer(min, main, n, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A composer of <code>n</code> items, each <code>main</code> long and at least <code>min</code> across.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>basic_cell_composer(min, max, main, n, f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same, at most <code>max</code> across.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list(cp)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of the items of <code>cp</code>, top to bottom.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vlist(cp)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The same as <code>list(cp)</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hlist(cp)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of the items of <code>cp</code>, left to right.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list(cp, false)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list that keeps every element it made.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.insert(pos, n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n</code> items were inserted before item <code>pos</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.erase(ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The items at <code>ix</code> were erased.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.move(pos, ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The items at <code>ix</code> were moved to before item <code>pos</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.resize(n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">There are <code>n</code> items now; the cells are made again.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.clear()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">There are no items.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>l.update()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The items changed; the cells are made again, and measured.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>move_indices(v, pos, ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Move the items of <code>v</code> at <code>ix</code> to before item <code>pos</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>erase_indices(v, ix)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Erase the items of <code>v</code> at <code>ix</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>examples/list</code>: a million rows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto&amp;&amp; draw_cell =
+   [](std::size_t index)
+   {
+      auto text = "This is item number " + std::to_string(index+1);
+      return share(margin({20, 2, 20, 2}, align_left(label(text))));
+   };
+
+auto my_composer =
+   basic_cell_composer(
+      1000000,                // size (number of rows)
+      draw_cell               // Composer function
+   );
+
+auto content = share(list{my_composer});
+
+view_.content(
+   vscroller(hold(content)),
+   background
+);</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><em>Copyright (c) 2014-2026 Joel de Guzman. All rights reserved.</em>
+<em>Distributed under the <a href="https://opensource.org/licenses/MIT">MIT License</a></em></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../_/js/site.js" data-ui-root-path="../../../_"></script>
+<script async src="../../../_/js/vendor/highlight.js"></script>
+<script src="../../../_/js/vendor/lunr.js"></script>
+<script src="../../../_/js/search-ui.js" id="search-ui-script" data-site-root-path="../../.." data-snippet-length="100" data-stylesheet="../../../_/css/search.css"></script>
+<script async src="../../../search-index.js"></script>
+  </body>
+</html>

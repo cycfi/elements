@@ -23,6 +23,9 @@ on:
     paths:
       - '.github/workflows/sanitize.yml'
 
+permissions:
+  contents: read
+
 concurrency:
   group: sanitize-${{ github.ref }}
   cancel-in-progress: true

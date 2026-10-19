@@ -17,6 +17,9 @@ on:
           - direct2d
           - tests
           - embed
+permissions:
+  contents: read
+
 env:
   BUILD_TYPE: Release
 jobs:

@@ -1,5 +1,9 @@
 name: Publish to GitHub Pages with Lunr Search Extension
 on: [push, pull_request]
+# Publishes the site to the www branch.
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest

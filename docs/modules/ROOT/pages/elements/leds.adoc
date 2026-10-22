@@ -1,0 +1,126 @@
+= LEDs
+
+include::../common.adoc[]
+
+== Overview
+
+An LED is a round lamp that shows whether something is on: a channel
+passing signal, a gate open, a task running. On, it is lit in its color
+and glows; off, it is dark in a dim version of the same color, as a real
+LED looks unlit. Either way, a small highlight dot sits up and to the left
+of center.
+
+image::elements/leds.png[alt="Four LEDs in a row, lit in red, green, gold and blue, and below them the same four unlit, dark in their colors", width=320px, link={imagesdir}/elements/leds.png]
+
+`led(on_color, size)` makes one, `size` across, 12 by default. The lamp
+sits in the middle of a square twice its size, the room its glow takes, so
+the glow is redrawn with it. Unless one is given, the off color is the on
+color at a quarter of its level. Both colors can be changed after the LED
+is made.
+
+An LED is a `receiver<bool>` (see
+xref:support/receivers.adoc[Receivers]): `value(true)` lights it and
+`value(false)` puts it out, and a model bound to it drives it. Setting the
+value does not redraw the LED; refresh it after a change.
+
+== Include
+
+```c++
+#include <elements.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   class led_element : public element, public receiver<bool>
+   {
+   public:
+                              led_element(
+                                 color on_color
+                               , float size
+                               , color off_color
+                              );
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    draw(context const& ctx) override;
+
+      bool                    value() const override;
+      void                    value(bool on) override;
+
+      color                   on_color() const;
+      void                    on_color(color c);
+      color                   off_color() const;
+      void                    off_color(color c);
+   };
+
+   inline auto led(
+      color on_color = get_theme().indicator_hilite_color
+    , float size = 12
+   );
+
+   inline auto led(color on_color, float size, color off_color);
+}
+```
+
+== Expressions
+
+=== Notation
+
+`c`, `off`:: `color`s.
+`s`:: A `float`, the lamp's size.
+`l`:: An LED.
+`b`:: A `bool`.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `led(c, s)`
+| An LED lit in `c`, `s` across, off at first; dark in `c` at a quarter
+  of its level while off.
+
+| `led(c, s, off)`
+| The same, dark in `off` while off.
+
+| `l.value(b)`
+| Lights `l` if `b` is `true`, puts it out if not.
+
+| `l.value()`
+| Whether `l` is lit.
+
+| `l.on_color(c)`, `l.off_color(c)`
+| Changes the color while on, or while off.
+|===
+
+== Example
+
+`examples/status_bars`: two LEDs beside the start button, one lit while
+the bars run and one lit when the progress bar is full.
+
+```c++
+using led_ptr = std::shared_ptr<led_element>;
+
+// Two LEDs: lit while the bars run, and when the progress bar is full
+struct leds
+{
+   led_ptr running = share(led(colors::lime_green));
+   led_ptr full = share(led(colors::gold));
+
+   void set(view& view_, bool run, bool done) const
+   {
+      running->value(run);
+      full->value(done);
+      view_.refresh(*running);
+      view_.refresh(*full);
+   }
+};
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

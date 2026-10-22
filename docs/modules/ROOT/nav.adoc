@@ -51,6 +51,7 @@
 **** xref:elements/text.adoc[Text]
 **** xref:elements/images.adoc[Images]
 **** xref:elements/status_bars.adoc[Status Bars]
+**** xref:elements/leds.adoc[LEDs]
 *** xref:elements/containers.adoc[Containers]
 **** xref:elements/ports.adoc[Ports and Scrollers]
 **** xref:elements/child_windows.adoc[Child Windows]

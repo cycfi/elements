@@ -20,10 +20,26 @@ auto constexpr bkd_color = rgba(35, 35, 37, 255);
 auto background = box(bkd_color);
 
 using bar_list = std::vector<std::shared_ptr<status_bar_base>>;
+using led_ptr = std::shared_ptr<led_element>;
+
+// Two LEDs: lit while the bars run, and when the progress bar is full
+struct leds
+{
+   led_ptr running = share(led(colors::lime_green));
+   led_ptr full = share(led(colors::gold));
+
+   void set(view& view_, bool run, bool done) const
+   {
+      running->value(run);
+      full->value(done);
+      view_.refresh(*running);
+      view_.refresh(*full);
+   }
+};
 
 // Advance the progress bars together, a step every 10 ms, until full.
 bool run = false;
-void prog_animate(bar_list bars, view& view_)
+void prog_animate(bar_list bars, leds lamps, view& view_)
 {
    if (!run)
       return;
@@ -36,9 +52,11 @@ void prog_animate(bar_list bars, view& view_)
    if (bars.front()->value() >= 1.0)
    {
       run = false;
+      lamps.set(view_, false, true);
       return;
    }
-   view_.post(10ms, [bars, &view_]() { prog_animate(bars, view_); });
+   view_.post(10ms,
+      [bars, lamps, &view_]() { prog_animate(bars, lamps, view_); });
 }
 
 auto make_bars(view& view_)
@@ -49,6 +67,7 @@ auto make_bars(view& view_)
    auto vprog_bar = share(progress_bar(rbox(colors::black), rbox(pgold)));
    auto vbsy_bar = share(busy_bar(rbox(colors::black), rbox(bgreen)));
    auto start_stop = toggle_icon_button(icons::play, icons::stop, 2.0, bred);
+   leds lamps;
 
    start_stop.on_click =
       [=, &view_](bool state)
@@ -60,13 +79,15 @@ auto make_bars(view& view_)
             run = true;
             prog_bar->value(0.0);
             vprog_bar->value(0.0);
-            prog_animate({prog_bar, vprog_bar}, view_);
+            lamps.set(view_, true, false);
+            prog_animate({prog_bar, vprog_bar}, lamps, view_);
          }
          else
          {
             bsy_bar->stop(view_);
             vbsy_bar->stop(view_);
             run = false;
+            lamps.set(view_, false, false);
          }
       };
 
@@ -74,6 +95,10 @@ auto make_bars(view& view_)
       margin({20, 20, 20, 20},
          htile_spaced(20,
             align_middle(start_stop),
+            align_middle(vtile_spaced(4,
+               hold(lamps.running),
+               hold(lamps.full)
+            )),
             align_middle(vtile_spaced(10,
                vsize(27, hold(prog_bar)),
                vsize(27, hold(bsy_bar))

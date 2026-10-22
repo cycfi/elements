@@ -71,6 +71,7 @@ set(elements_test_sources
    pages/elements/text_test.cpp
    pages/elements/images_test.cpp
    pages/elements/status_bars_test.cpp
+   pages/elements/leds_test.cpp
    pages/elements/ports_test.cpp
    pages/elements/child_windows_test.cpp
    pages/elements/splits_test.cpp

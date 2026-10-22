@@ -4,8 +4,9 @@
    Distributed under the MIT License [ https://opensource.org/licenses/MIT ]
 
    The view's layers and scale: an element added twice before the poll is
-   added once; moving a layer in an empty view does nothing; and a change
-   of scale updates the limits at once.
+   added once; moving a layer in an empty view does nothing; a change of
+   scale updates the limits at once; and removing a layer under the focus
+   keeps the focus on its layer.
 =============================================================================*/
 #include "test_support.hpp"
 
@@ -58,4 +59,30 @@ TEST_CASE("view: a change of scale updates the limits at once", "[view]")
    tv.view_.scale(2);
    CHECK(tv.view_.limits().min == point{60, 40});
    CHECK(got.min == point{60, 40});
+}
+
+TEST_CASE("view: removing a layer under the focus keeps the focus", "[view]")
+{
+   // A menu opens a window with the focus, then closes: the menu's layer,
+   // under the window's, goes. The window keeps the focus, and a key
+   // reaches it. The focus index went past the layers before.
+   test_view tv{extent{200, 200}};
+   open(tv);
+   tv.view_.content(share(element{}));
+   tv.draw();
+
+   auto menu = share(element{});
+   auto box = share(basic_input_box{});
+   tv.view_.add(menu);
+   tv.view_.add(box);
+   tv.view_.poll();
+   REQUIRE(tv.view_.layers().size() == 3);
+
+   tv.view_.remove(menu);
+   tv.view_.poll();
+   REQUIRE(tv.view_.layers().size() == 2);
+
+   tv.view_.text(text_info{'a', 0});
+   tv.view_.key({key_code::left_shift, key_action::press, 0});
+   CHECK(box->get_text() == U"a");
 }

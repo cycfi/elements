@@ -808,6 +808,32 @@ namespace cycfi::elements
     *    `reset` reinitializes the internal tracking indices and the set of
     *    cursor-hovered elements in the composite_base.
     */
+   // The child at index has been erased: the indices past it move down
+   // one, and an index that was it is cleared.
+   void composite_base::erased(int index)
+   {
+      auto shift = [index](int& ix)
+      {
+         if (ix == index)
+            ix = -1;
+         else if (ix > index)
+            --ix;
+      };
+      shift(_focus);
+      shift(_saved_focus);
+      shift(_click_tracking);
+      shift(_cursor_tracking);
+
+      std::set<int> hovering;
+      for (auto ix : _cursor_hovering)
+      {
+         shift(ix);
+         if (ix != -1)
+            hovering.insert(ix);
+      }
+      _cursor_hovering = std::move(hovering);
+   }
+
    void composite_base::reset()
    {
       _focus = -1;

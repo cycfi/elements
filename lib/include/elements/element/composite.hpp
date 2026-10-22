@@ -121,6 +121,7 @@ namespace cycfi::elements
       friend class view;
 
       bool                    new_focus(context const& ctx, int index, focus_request req);
+      void                    erased(int index);
 
       int                     _focus = -1;
       int                     _saved_focus = -1;

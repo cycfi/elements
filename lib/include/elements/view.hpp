@@ -356,8 +356,10 @@ namespace cycfi::elements
                   if (had_focus)
                      relinquish_focus();
 
-                  // Remove the element.
+                  // Remove the element. The layers above it move down one,
+                  // and the indices that point at them with them.
                   _content.erase(i);
+                  _content.erased(int(ix));
 
                   // Lay it out
                   layout();

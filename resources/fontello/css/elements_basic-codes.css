@@ -259,6 +259,7 @@
 .icon-stop-circle:before { content: '\e901'; } /* '' */
 .icon-play-circle:before { content: '\e902'; } /* '' */
 .icon-pause-circle:before { content: '\e903'; } /* '' */
+.icon-question-circle-o:before { content: '\e904'; } /* '' */
 .icon-menu:before { content: '\f0c9'; } /* '' */
 .icon-lightbulb:before { content: '\f0eb'; } /* '' */
 .icon-folder-empty:before { content: '\f114'; } /* '' */

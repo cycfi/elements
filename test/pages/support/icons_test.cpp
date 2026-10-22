@@ -28,6 +28,7 @@ TEST_CASE("icons page: the codes", "[icons_page]")
    CHECK(icons::menu == 0xf0c9);
    CHECK(icons::file_text == 0xe851);       // the first added later
    CHECK(icons::pause_circle == 0xe903);
+   CHECK(icons::question_circle_o == 0xe904);   // the last added
 
    // mixer and sliders are one glyph.
    CHECK(icons::mixer == icons::sliders);

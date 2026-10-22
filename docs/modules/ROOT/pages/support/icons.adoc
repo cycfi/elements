@@ -8,7 +8,7 @@ Elements draws its icons from a font, `elements_basic.ttf` in
 `resources/fonts`, built with https://fontello.com[Fontello]. Each icon is
 a glyph at a code point in the font's private use area, and
 `support/icon_ids.hpp` names them: `icons::ok`, `icons::cancel`,
-`icons::cog` and so on, 265 in all.
+`icons::cog` and so on, 266 in all.
 
 === Arrows
 
@@ -623,6 +623,10 @@ a glyph at a code point in the font's private use area, and
 | pass:[<span class="ei">&#xe84c;</span>]
 | `icons::question`
 | `0xe84c`
+
+| pass:[<span class="ei">&#xe904;</span>]
+| `icons::question_circle_o`
+| `0xe904`
 
 | pass:[<span class="ei">&#xe886;</span>]
 | `icons::check_circle`

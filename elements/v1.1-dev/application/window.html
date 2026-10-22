@@ -177,6 +177,9 @@
     <a class="nav-link" href="../layout/scale.html">Scale</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../layout/fit.html">Fit</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../layout/alignment.html">Alignment</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -500,6 +503,7 @@ public:
    point                size() const;
    void                 size(point const&amp; p);
    void                 limits(view_limits limits_);
+   void                 aspect_ratio(float ratio);
    point                position() const;
    void                 position(point const&amp; p);
    host_window_handle   host() const;
@@ -544,6 +548,10 @@ size.</p>
 <dt class="hdlist1"><code>l</code>               </dt>
 <dd>
 <p>A <code>view_limits</code>.</p>
+</dd>
+<dt class="hdlist1"><code>r</code>               </dt>
+<dd>
+<p>A <code>float</code>, an aspect ratio, width to height.</p>
 </dd>
 <dt class="hdlist1"><code>f</code>               </dt>
 <dd>
@@ -653,6 +661,14 @@ size.</p>
                                      size within them.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>w.aspect_ratio(r)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep the content&#8217;s width to
+                                     its height at <code>r</code> while the
+                                     window is resized; 0 lets it
+                                     go. See Host Notes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>void</code></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -757,6 +773,13 @@ _win.on_close = [&amp;_app]() { _app.stop(); };   <i class="conum" data-value="3
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GTK</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">On a Wayland display, as Wayland.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All but macOS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aspect_ratio</code> does nothing yet: a resized window
+                        takes any proportion, and a
+                        <a href="../layout/fit.html" class="xref page">fit</a> leaves the space over
+                        empty.</p></td>
 </tr>
 </tbody>
 </table>

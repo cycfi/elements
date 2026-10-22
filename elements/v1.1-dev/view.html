@@ -177,6 +177,9 @@
     <a class="nav-link" href="layout/scale.html">Scale</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="layout/fit.html">Fit</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="layout/alignment.html">Alignment</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -615,6 +618,12 @@ them.</p>
 the content is laid out in half the view&#8217;s size, in its own units. A
 plug-in uses it to follow the host&#8217;s zoom.</p>
 </div>
+<div class="paragraph">
+<p><code>aspect_ratio(r)</code> is the proportion, width to height, the content asks
+the window to keep while it is resized; 0, the default, asks for none. A
+<a href="layout/fit.html" class="xref page">fit</a> sets it. When it changes, the view calls
+<code>on_change_aspect_ratio</code>; a view in a window passes it to the window.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_drawing"><a class="anchor" href="#_drawing"></a>Drawing</h3>
@@ -902,6 +911,12 @@ See <a href="model.html#_the_views_bindings" class="xref page">The View&#8217;s 
       using change_limits_function = std::function&lt;void(view_limits limits_)&gt;;
       change_limits_function on_change_limits;
 
+      float                   aspect_ratio() const;
+      void                    aspect_ratio(float ratio);
+
+      using change_aspect_ratio_function = std::function&lt;void(float ratio)&gt;;
+      change_aspect_ratio_function on_change_aspect_ratio;
+
       using io_context = asio::io_context;
       io_context&amp;             io();
 
@@ -978,6 +993,10 @@ the parent window, for a view inside a window another program owns.</p>
 <dt class="hdlist1"><code>s</code></dt>
 <dd>
 <p>A <code>float</code> scale.</p>
+</dd>
+<dt class="hdlist1"><code>ar</code></dt>
+<dd>
+<p>A <code>float</code> aspect ratio, width to height.</p>
 </dd>
 <dt class="hdlist1"><code>f</code></dt>
 <dd>
@@ -1072,6 +1091,19 @@ the parent window, for a view inside a window another program owns.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.scale(s)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Set the content&#8217;s scale to <code>s</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.aspect_ratio()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The proportion the content asks the window to keep, width to height; 0
+  for none.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.aspect_ratio(ar)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set it to <code>ar</code>, and call <code>on_change_aspect_ratio</code> if it changed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.on_change_aspect_ratio = f</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Called with the new aspect ratio when it changes.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>v.layout()</code></p></td>

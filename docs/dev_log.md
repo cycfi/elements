@@ -5,6 +5,26 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-22 -- fit (develop)
+
+**TL;DR:** `fit` scales the content to fill the view at its proportion,
+optionally within a scale range, and asks the window to keep the
+proportion (#460).
+
+- `54c0d935` `fit(subject)` lays the subject out at its minimum size, its view
+  box, and sets the view's scale so the box fits the view; the space over
+  is the subject's from its left-top, up to its maximum, so an aligned
+  subject centers. It is a top-level proxy: it drives the view's scale,
+  so menus, tooltips and child windows scale with it, where a transform
+  of its own would leave them unscaled and misplaced. `fit(lo, hi,
+  subject)` (`bounded_fit_element`) keeps the scale in range; its limits
+  are the box times the range, divided by the view's scale since they are
+  taken inside it. `view::aspect_ratio` and `on_change_aspect_ratio`
+  carry the proportion to `window::aspect_ratio`, which macOS keeps
+  (`setContentAspectRatio`); the other hosts do nothing yet, and the
+  space over is left. `view::scale` does not lay out, so the fit posts the
+  scale and a layout.
+
 ## 2026-10-22 -- tooltip switch, question mark icon, combo box (develop)
 
 **TL;DR:** Tooltips can be turned off together, the icon font has an

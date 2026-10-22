@@ -5,6 +5,28 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-22 -- tooltip switch, question mark icon, combo box (develop)
+
+**TL;DR:** Tooltips can be turned off together, the icon font has an
+outlined question mark, and an editable combo box with completion lands
+(#462, from discussion #327). Made for Ascend Pre's help button and its
+Base Note field.
+
+- `6c4e870e` `icons::question_circle_o` (0xe904): Font Awesome's
+  `question-circle-o`, added through Fontello. Only the new glyph differs;
+  every outline and the font's metrics are as before. The docs' copy of
+  the font follows. `icons::help` is the lifebuoy, not a question mark.
+- `eaf8d9ef` `tooltip_element::armed`, a `std::shared_ptr<bool>`, true by
+  default: false keeps the tip from opening, one waiting out its delay
+  included. Tooltips given the same pointer switch together; a copy
+  shares it.
+- `04036cb4` `combo_box(items, placeholder)`: an input box and a dropdown
+  arrow in one frame. Typing completes from the list, the completion
+  selected; a pick sets the text and calls the box's `on_enter`. The list
+  opens under the whole frame at its width: the arrow lays out its menu
+  with its parent tile's bounds. `examples/menus` shows one, with the
+  dynamic menu's sayings as its items.
+
 ## 2026-10-18 -- 1.0.1 hotfixes (develop; released as tag v1.0.1)
 
 **TL;DR:** The 1.0.1 fixes landed here first and were cherry-picked onto a

@@ -164,6 +164,7 @@ namespace cycfi::elements
    tooltip_element::tooltip_element(tooltip_element const& rhs)
     : base_type{rhs}
     , on_hover{rhs.on_hover}
+    , armed{rhs.armed}
     , _tip{rhs._tip}
     , _delay{rhs._delay}
     , _position{rhs._position}
@@ -180,7 +181,7 @@ namespace cycfi::elements
    {
       if (status != cursor_tracking::leaving)
       {
-         if (_tip_status != tip_visible)
+         if (*armed && _tip_status != tip_visible)
          {
             _tip_status = tip_delayed;
             auto side = _position;
@@ -211,7 +212,7 @@ namespace cycfi::elements
                {
                   if (!*alive)
                      return;
-                  if (_tip_status == tip_delayed)
+                  if (_tip_status == tip_delayed && *armed)
                   {
                      _tip->on_cursor =
                         [this, alive, tip = std::weak_ptr{_tip}, &view_, bounds]

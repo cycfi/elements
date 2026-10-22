@@ -221,3 +221,45 @@ TEST_CASE("tooltip: a tip whose height follows its width is placed once laid out
    CHECK(tip->bounds().height() > 40);
    CHECK(tip->bounds().bottom <= at.top);
 }
+
+TEST_CASE("tooltip: disarmed, no tip shows", "[popup]")
+{
+   // Two tooltips share one switch. Disarmed, hovering either opens
+   // nothing; armed again, the tip opens. Disarmed during the delay, the
+   // tip does not open either.
+   test_view tv{extent{200, 200}};
+   open(tv);
+   auto a = share(tooltip(element{}, label("a"), 1ms));
+   auto b = share(tooltip(element{}, label("b"), 1ms));
+   b->armed = a->armed;
+   tv.view_.content(hold(a));
+   tv.draw();
+   auto const base = tv.view_.layers().size();
+   rect const at{80, 100, 120, 120};
+   context ctx{tv.view_, tv.cnv, a.get(), at};
+
+   auto hover = [&](auto& t)
+   {
+      t->cursor(ctx, center_point(at), cursor_tracking::entering);
+      wait(tv.view_, 10ms);
+      wait(tv.view_, 1ms);
+      auto n = tv.view_.layers().size();
+      t->cursor(ctx, {0, 0}, cursor_tracking::leaving);
+      wait(tv.view_, 1ms);
+      return n;
+   };
+
+   *a->armed = false;
+   CHECK(hover(a) == base);
+   CHECK(hover(b) == base);
+
+   *a->armed = true;
+   CHECK(hover(a) == base + 1);
+   CHECK(hover(b) == base + 1);
+
+   a->cursor(ctx, center_point(at), cursor_tracking::entering);
+   *a->armed = false;
+   wait(tv.view_, 10ms);
+   wait(tv.view_, 1ms);
+   CHECK(tv.view_.layers().size() == base);
+}

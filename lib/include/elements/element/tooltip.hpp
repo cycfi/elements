@@ -84,6 +84,10 @@ namespace cycfi::elements
 
       on_hover_function       on_hover = [](bool){};
 
+      // While false the tip does not show. Tooltips given the same
+      // pointer are armed and disarmed together, as by a help switch.
+      std::shared_ptr<bool>   armed = std::make_shared<bool>(true);
+
    private:
 
       using popup_ptr = std::shared_ptr<basic_popup_element>;

@@ -124,6 +124,44 @@ TEST_CASE("tooltips page: tooltips", "[tooltips_page]")
    CHECK(!shown);
 }
 
+TEST_CASE("tooltips page: armed", "[tooltips_page]")
+{
+   // The page's help button: two tips share one switch, which the
+   // button turns off; then neither opens.
+   test_view tv{extent{300, 100}};
+   open(tv);
+
+   auto tips = std::make_shared<bool>(true);
+
+   auto open_ = tooltip(icon_button(icons::folder_open_empty, 1.2),
+      tooltip_bubble("Open a file"));
+   auto save = tooltip(icon_button(icons::floppy, 1.2),
+      tooltip_bubble("Save the file"));
+   open_.armed = save.armed = tips;
+
+   auto help = toggle_icon_button(icons::question_circle_o, 1.2);
+   help.value(true);
+   help.on_click = [tips](bool on) { *tips = on; };
+
+   // Armed by default, and a copy shares the switch.
+   CHECK(*tooltip(element{}, element{}).armed);
+   auto copy = open_;
+   CHECK(copy.armed == tips);
+
+   help.on_click(false);
+   CHECK(!*save.armed);
+
+   auto t = share(std::move(save));
+   tv.view_.content(align_center_middle(hold(t)));
+   tv.draw();
+   auto const base = tv.view_.layers().size();
+   context ctx{tv.view_, tv.cnv, t.get(), rect{120, 35, 180, 65}};
+   t->cursor(ctx, {150, 50}, cursor_tracking::entering);
+   wait(tv.view_, 600ms);
+   wait(tv.view_, 1ms);
+   CHECK(tv.view_.layers().size() == base);
+}
+
 #if !defined(ARTIST_RECORDING)
 TEST_CASE("tooltips page: example", "[tooltips_page]")
 {

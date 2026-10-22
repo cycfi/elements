@@ -17,6 +17,7 @@
 #include <elements/element/swatch_grid.hpp>
 #include <elements/element/dial.hpp>
 #include <elements/element/drag_and_drop.hpp>
+#include <elements/element/fit.hpp>
 #include <elements/element/list.hpp>
 #include <elements/element/events_intercept.hpp>
 #include <elements/element/floating.hpp>

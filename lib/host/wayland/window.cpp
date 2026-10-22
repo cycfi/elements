@@ -120,6 +120,11 @@ namespace cycfi::elements
          int(std::lround(std::min<float>(limits_.max.y, max))));
    }
 
+   // The proportion is not kept here: a fit leaves the space over empty.
+   void window::aspect_ratio(float /*ratio*/)
+   {
+   }
+
    point window::position() const
    {
       return {0, 0};   // Wayland clients can't query absolute position

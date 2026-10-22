@@ -120,6 +120,11 @@ them.
 the content is laid out in half the view's size, in its own units. A
 plug-in uses it to follow the host's zoom.
 
+`aspect_ratio(r)` is the proportion, width to height, the content asks
+the window to keep while it is resized; 0, the default, asks for none. A
+xref:layout/fit.adoc[fit] sets it. When it changes, the view calls
+`on_change_aspect_ratio`; a view in a window passes it to the window.
+
 === Drawing
 
 Elements does not draw when something changes. A change calls
@@ -332,6 +337,12 @@ namespace cycfi::elements
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
 
+      float                   aspect_ratio() const;
+      void                    aspect_ratio(float ratio);
+
+      using change_aspect_ratio_function = std::function<void(float ratio)>;
+      change_aspect_ratio_function on_change_aspect_ratio;
+
       using io_context = asio::io_context;
       io_context&             io();
 
@@ -382,6 +393,7 @@ the parent window, for a view inside a window another program owns.
 `n`:: An `int`: how many levels out from an element to refresh.
 `ctx`:: A {context}.
 `s`:: A `float` scale.
+`ar`:: A `float` aspect ratio, width to height.
 `f`:: A function taking no arguments.
 `d`:: A `std::chrono` duration.
 `t`:: An `undo_redo_task`.
@@ -434,6 +446,16 @@ the parent window, for a view inside a window another program owns.
 
 | `v.scale(s)`
 | Set the content's scale to `s`.
+
+| `v.aspect_ratio()`
+| The proportion the content asks the window to keep, width to height; 0
+  for none.
+
+| `v.aspect_ratio(ar)`
+| Set it to `ar`, and call `on_change_aspect_ratio` if it changed.
+
+| `v.on_change_aspect_ratio = f`
+| Called with the new aspect ratio when it changes.
 
 | `v.layout()`
 | Lay the content out again and refresh the view.

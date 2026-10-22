@@ -55,6 +55,10 @@ namespace cycfi::elements
       point                size() const;
       void                 size(point const& p);
       void                 limits(view_limits limits_);
+
+      // Keep the content's width to its height at `ratio` while the window
+      // is resized, where the platform can (macOS); 0 lets it go.
+      void                 aspect_ratio(float ratio);
       point                position() const;
       void                 position(point const& p);
       host_window_handle   host() const { return _window; }

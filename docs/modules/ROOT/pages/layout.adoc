@@ -29,6 +29,8 @@ another, or in rows that wrap.
   element takes.
 * xref:layout/scale.adoc[Scale]: drawing an element and everything in it
   larger or smaller.
+* xref:layout/fit.adoc[Fit]: scaling the whole content to fill the view,
+  keeping its proportion.
 
 == Placement
 

@@ -65,6 +65,7 @@ public:
    point                size() const;
    void                 size(point const& p);
    void                 limits(view_limits limits_);
+   void                 aspect_ratio(float ratio);
    point                position() const;
    void                 position(point const& p);
    host_window_handle   host() const;
@@ -87,6 +88,7 @@ public:
 `w`               :: A `window`.
 `p`               :: A `point`.
 `l`               :: A `view_limits`.
+`r`               :: A `float`, an aspect ratio, width to height.
 `f`               :: A function, `void()`.
 
 === Constructors and Assignment
@@ -129,6 +131,10 @@ public:
 | `w.limits(l)`                    | Set the limits of the
                                      content's size, and keep the
                                      size within them.             | `void`
+| `w.aspect_ratio(r)`              | Keep the content's width to
+                                     its height at `r` while the
+                                     window is resized; 0 lets it
+                                     go. See Host Notes.           | `void`
 |===
 
 === Access
@@ -181,6 +187,10 @@ _win.on_close = [&_app]() { _app.stop(); };   <3>
                         is not used, `position()` is 0, 0, and
                         `position(p)` does nothing.
 | GTK                 | On a Wayland display, as Wayland.
+| All but macOS       | `aspect_ratio` does nothing yet: a resized window
+                        takes any proportion, and a
+                        xref:layout/fit.adoc[fit] leaves the space over
+                        empty.
 |===
 
 '''

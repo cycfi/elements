@@ -62,6 +62,11 @@ namespace cycfi::elements
          size(clamped);
    }
 
+   // The proportion is not kept here: a fit leaves the space over empty.
+   void window::aspect_ratio(float /*ratio*/)
+   {
+   }
+
    point window::position() const
    {
       return {_window->bounds.left, _window->bounds.top};

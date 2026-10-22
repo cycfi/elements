@@ -329,6 +329,11 @@ namespace cycfi::elements
       );
    }
 
+   // The proportion is not kept here: a fit leaves the space over empty.
+   void window::aspect_ratio(float /*ratio*/)
+   {
+   }
+
    point window::position() const
    {
       auto scale = get_scale_for_window(_window);

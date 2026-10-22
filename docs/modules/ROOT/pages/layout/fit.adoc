@@ -1,0 +1,168 @@
+= Fit
+
+include::../common.adoc[]
+
+== Overview
+
+`fit` scales its subject uniformly to fill the view, keeping its
+proportion. Lay a plugin editor out once, in a fixed size, and it scales
+with the window:
+
+```c++
+view_.content(
+   fit(fixed_size({320, 190}, editor)),
+   box(bkd_color)
+);
+```
+
+The subject is laid out at its minimum size, its view box, here 320 by
+190. The fit sets the view's scale (see xref:view.adoc[View]) so that size
+fits the view: the smaller of the view's width over the box's, and its
+height over the box's. In a view 640 by 500, the width decides, and the
+scale is 2.
+
+image::layout/fit_tall.png[alt="A 320 by 190 panel fitted to a taller view: scaled to the view's width, with the space over below it", width=300px, link={imagesdir}/layout/fit_tall.png]
+image::layout/fit_wide.png[alt="The same panel fitted to a wider view: scaled to the view's height, with the space over at its right", width=420px, link={imagesdir}/layout/fit_wide.png]
+
+Along the other axis there is space over. It is the subject's, from its
+left-top up to its maximum size: a fixed size subject stays at the
+left-top, as above, and one that aligns itself centers, or goes where its
+alignment puts it:
+
+```c++
+fit(align_center_middle(fixed_size({320, 190}, editor)))
+```
+
+The fit also asks the view to keep the box's proportion, its
+`aspect_ratio`, which the window keeps while it is resized, where the
+platform can: a macOS window, or a plugin's window in a host that honors
+the proportion it is given. Elsewhere the space over is left empty.
+
+IMPORTANT: `fit` is a top-level proxy: it is the view's content, not
+inside another element. It sets the scale of the whole view, so what the
+content opens (menus, tooltips, child windows) scales with it.
+
+=== Bounded Fit
+
+A plain fit takes any scale, and its own limits are any size: the scale
+follows it. `fit(min_scale, max_scale, subject)` keeps the scale within a
+range. Its limits are the view box times the range, so the window is held
+between them: a 640 by 400 box fitted from 0.75 to 1.5 keeps the window
+between 480 by 300 and 960 by 600. In a view larger than the range allows,
+where a host does not keep to the limits, the scale stops at the top of
+the range and the space over is left.
+
+```c++
+view_.content(
+   fit(0.75, 1.5, fixed_size({640, 400}, editor)),
+   box(bkd_color)
+);
+```
+
+The idea is SVG's: the box is the `viewBox`, and the fit is
+`preserveAspectRatio` with `meet`, aligned left-top unless the subject
+aligns itself.
+
+== Include
+
+```c++
+#include <elements/element/fit.hpp>
+```
+
+== Declaration
+
+```c++
+namespace cycfi::elements
+{
+   template <concepts::Element Subject>
+   class fit_element : public proxy<Subject>
+   {
+   public:
+
+      view_limits             limits(basic_context const& ctx) const override;
+      void                    layout(context const& ctx) override;
+      void                    prepare_subject(context& ctx) override;
+   };
+
+   template <concepts::Element Subject>
+   class bounded_fit_element : public fit_element<Subject>
+   {
+   public:
+
+                              bounded_fit_element(
+                                 float min_scale, float max_scale
+                               , Subject subject
+                              );
+
+      view_limits             limits(basic_context const& ctx) const override;
+
+      float                   min_scale() const;
+      float                   max_scale() const;
+   };
+
+   template <concepts::Element Subject>
+   fit_element<remove_cvref_t<Subject>>
+   fit(Subject&& subject);
+
+   template <concepts::Element Subject>
+   bounded_fit_element<remove_cvref_t<Subject>>
+   fit(float min_scale, float max_scale, Subject&& subject);
+}
+```
+
+The rest of each is the `Proxy` interface (see
+xref:elements/proxies.adoc[Proxies]).
+
+== Expressions
+
+=== Notation
+
+`subject`:: Instance of `Element`.
+`lo`, `hi`:: `float` scales, `lo` the least.
+`f`:: A bounded fit.
+
+=== Semantics
+
+[cols="1,2"]
+|===
+| Expression | Semantics
+
+| `fit(subject)`
+| `subject`, at its minimum size, scaled uniformly to fill the view; the
+  space over is the subject's, from its left-top up to its maximum size.
+  The view's scale and aspect ratio are set to it.
+
+| `fit(lo, hi, subject)`
+| The same, the scale kept from `lo` to `hi`; its limits are the view
+  box times `lo` to times `hi`.
+
+| `f.min_scale()`, `f.max_scale()`
+| The range.
+|===
+
+== Example
+
+Ascend Pre's editor, laid out at 640 by 400 and fitting its window, its
+scale kept to QPlug's zoom range:
+
+```c++
+view_.content(
+   fit(zoom_min, zoom_max, fixed_size({view_width, view_height},
+      vtile(
+         hold(make_header()),
+         margin({15, 2, 15, 15},
+            htile(
+               input,
+               margin_left(15, expander)
+            )
+         )
+      )
+   )),
+   box(bkd_color)
+);
+```
+
+'''
+
+_Copyright (c) 2014-2026 Joel de Guzman. All rights reserved._
+_Distributed under the {mit_license}_

@@ -193,6 +193,11 @@ namespace cycfi::elements
          on_activate.push_back(set_limits);
    }
 
+   // The proportion is not kept here: a fit leaves the space over empty.
+   void window::aspect_ratio(float /*ratio*/)
+   {
+   }
+
    point window::position() const
    {
       gint x, y;

@@ -118,6 +118,14 @@ namespace cycfi::elements
       using change_limits_function = std::function<void(view_limits limits_)>;
       change_limits_function on_change_limits;
 
+      // The proportion, width to height, the content asks the window to
+      // keep while it is resized (a fit does); 0 when there is none.
+      float                   aspect_ratio() const { return _aspect_ratio; }
+      void                    aspect_ratio(float ratio);
+
+      using change_aspect_ratio_function = std::function<void(float ratio)>;
+      change_aspect_ratio_function on_change_aspect_ratio;
+
       using io_context = asio::io_context;
       io_context&             io();
 
@@ -182,6 +190,7 @@ namespace cycfi::elements
       rect                    _current_bounds;
       std::optional<mime_types> _drop_types;   // as told to the host
       view_limits             _current_limits = {{0, 0}, { full_extent, full_extent}};
+      float                   _aspect_ratio = 0;
       mouse_button            _current_button;
       bool                    _is_focus = false;
       uint32_t                _high_surrogate = 0;    // a UTF-16 pair's first half

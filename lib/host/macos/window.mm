@@ -176,6 +176,15 @@ namespace cycfi::elements
       [window_ setContentSize : _size];
    }
 
+   void window::aspect_ratio(float ratio)
+   {
+      id const window_ = (__bridge id) _window;
+      if (ratio > 0)
+         [window_ setContentAspectRatio : NSSize{ratio, 1}];
+      else
+         [window_ setContentResizeIncrements : NSSize{1, 1}];
+   }
+
    point window::position() const
    {
       id const window_ = (__bridge id) _window;

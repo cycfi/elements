@@ -67,6 +67,10 @@ namespace cycfi::elements
       {
          win.limits(limits_);
       };
+      on_change_aspect_ratio = [&win](float ratio)
+      {
+         win.aspect_ratio(ratio);
+      };
       win.limits(_current_limits);
    }
 
@@ -200,6 +204,15 @@ namespace cycfi::elements
       _main_element.scale(val);
       set_limits();
       refresh();
+   }
+
+   void view::aspect_ratio(float ratio)
+   {
+      if (ratio == _aspect_ratio)
+         return;
+      _aspect_ratio = ratio;
+      if (on_change_aspect_ratio)
+         on_change_aspect_ratio(ratio);
    }
 
    void view::on_size_change(extent size_)

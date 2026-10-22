@@ -119,6 +119,11 @@ namespace cycfi::elements
       XFree(hints);
    }
 
+   // The proportion is not kept here: a fit leaves the space over empty.
+   void window::aspect_ratio(float /*ratio*/)
+   {
+   }
+
    namespace
    {
       // The frame the window manager put around the window, as

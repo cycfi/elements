@@ -42,6 +42,7 @@ set(elements_test_sources
    lib/clipboard_test.cpp
    lib/popup_test.cpp
    lib/combo_box_test.cpp
+   lib/fit_test.cpp
 
    # The documentation's page tests, one per page, by section
    pages/aspects_test.cpp
@@ -93,6 +94,7 @@ set(elements_test_sources
    pages/layout/alignment_test.cpp
    pages/layout/margins_test.cpp
    pages/layout/scale_test.cpp
+   pages/layout/fit_test.cpp
    pages/layout/floating_test.cpp
    pages/layout/tiles_test.cpp
    pages/layout/grids_test.cpp

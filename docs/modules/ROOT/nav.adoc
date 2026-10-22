@@ -31,6 +31,7 @@
 **** xref:layout/stretch.adoc[Stretch]
 **** xref:layout/span.adoc[Span]
 **** xref:layout/scale.adoc[Scale]
+**** xref:layout/fit.adoc[Fit]
 **** xref:layout/alignment.adoc[Alignment]
 **** xref:layout/margins.adoc[Margins]
 **** xref:layout/floating.adoc[Floating]

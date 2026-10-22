@@ -40,6 +40,41 @@ namespace
       ).first;
    }
 
+   // The dynamic menu's items, and the combo box's
+   char const* sayings[] =
+   {
+      "Seeker, look within",
+      "Empower yourself",
+      "Have you found your circuit?",
+      "Complexity to the next level",
+      "Ultra-angelic consciousness",
+      "Indigo Child",
+      "Vector of synchronicity",
+      "Aspiration is a constant",
+      "Strange Soup",
+      "Nonchalant Slave",
+      "Shiva will amplify your mind",
+      "This mission never ends",
+      "The future is now",
+      "Who are we?",
+      "One cannot self-actualize",
+      "Ennobling source of stardust"
+   };
+
+   // A combo box: type a saying of your own, or pick one. Typing
+   // completes from the list.
+   auto make_combo_box()
+   {
+      auto [combo, text] = combo_box(
+         {std::begin(sayings), std::end(sayings)}, "Your saying");
+      text->on_enter = [](std::string_view saying)
+      {
+         // This will be called when a saying is entered or picked
+         return true;
+      };
+      return combo;
+   }
+
    // Show which item was chosen, by click or by its shortcut
    void alert(view& view_, std::string text)
    {
@@ -124,30 +159,9 @@ namespace
       auto populate_menu =
          [](auto& menu_button)
          {
-            // Sample menu
-            char const* items[] =
-            {
-               "Seeker, look within",
-               "Empower yourself",
-               "Have you found your circuit?",
-               "Complexity to the next level",
-               "Ultra-angelic consciousness",
-               "Indigo Child",
-               "Vector of synchronicity",
-               "Aspiration is a constant",
-               "Strange Soup",
-               "Nonchalant Slave",
-               "Shiva will amplify your mind",
-               "This mission never ends",
-               "The future is now",
-               "Who are we?",
-               "One cannot self-actualize",
-               "Ennobling source of stardust"
-            };
-
             // Dynamically generate your menu here
             vtile_composite list;
-            for (auto item : items)
+            for (auto item : sayings)
                list.push_back(share(menu_item(item)));
 
             // Shuffle the items just for kicks
@@ -243,6 +257,7 @@ namespace
          margin({20, 0, 20, 20},
             vtile(
                hmin_size(300, make_selection_menu()),
+               margin_top(20, hmin_size(300, make_combo_box())),
                margin_top(20, make_popup_menu("Dropdown Menu", down, view_)),
                margin_top(20, make_dynamic_menu("Dynamic Menu", down)),
                margin_top(20, scroller(image{"deep_space.jpg"})),

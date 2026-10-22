@@ -41,6 +41,7 @@ set(elements_test_sources
    lib/dock_test.cpp
    lib/clipboard_test.cpp
    lib/popup_test.cpp
+   lib/combo_box_test.cpp
 
    # The documentation's page tests, one per page, by section
    pages/aspects_test.cpp

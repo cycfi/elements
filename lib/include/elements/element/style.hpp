@@ -11,6 +11,7 @@
 #include <elements/element/style/caption.hpp>
 #include <elements/element/style/check_box.hpp>
 #include <elements/element/style/child_window.hpp>
+#include <elements/element/style/combo_box.hpp>
 #include <elements/element/style/curve_editor.hpp>
 #include <elements/element/style/image_grid.hpp>
 #include <elements/element/style/swatches.hpp>

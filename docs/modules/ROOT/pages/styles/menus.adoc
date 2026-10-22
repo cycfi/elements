@@ -4,8 +4,8 @@ include::../common.adoc[]
 
 == Overview
 
-The stock menu buttons, menu items and selection menus, built on the
-parts on the xref:elements/menus.adoc[Menus] page.
+The stock menu buttons, menu items, selection menus and combo boxes,
+built on the parts on the xref:elements/menus.adoc[Menus] page.
 
 === Menu Buttons
 
@@ -66,6 +66,31 @@ as it is made, and with its text: to disable some, for instance.
 
 `selection_menu(init)` is the button alone, showing `init`, with no menu,
 for a menu of your own.
+
+=== Combo Boxes
+
+A combo box is an xref:styles/text_entry.adoc[input box] with a list of
+items behind a down arrow, in one frame, as a font box is. The text is
+typed freely, or picked from the list, which opens under the frame and as
+wide as it:
+
+image::styles/menus_combo_box.png[alt="A combo box with Indigo Child typed in it and its list of sayings open below it, Strange Soup highlighted", width=340px, link={imagesdir}/styles/menus_combo_box.png]
+
+`combo_box(items, placeholder)` makes one of `items`, a
+`std::vector<std::string>`, empty until a text is typed or set, and
+showing `placeholder` until then. It returns a pair: the combo box, and
+a shared pointer to its input box, for its text and its functions, as
+`input_box` does.
+
+Typing completes from the list: the first item that starts with the text,
+case aside, fills in, its rest selected, so the next character types over
+it. The right arrow, or Enter, takes it. Only typing at the end of the
+text completes; deleting does not.
+
+Picking an item puts it in the input box and calls the input box's
+`on_enter` with it, as if it were typed and entered, so one function takes
+both. Set `on_end_focus` to the same function to take a text left without
+Enter (see xref:elements/text.adoc[Text]).
 
 == Include
 
@@ -135,6 +160,11 @@ namespace cycfi::elements
     , float text_align = 0.0f
     , on_menu_item_function on_item = [](auto&, auto) {}
    );
+
+   inline auto combo_box(
+      std::vector<std::string> const& items
+    , std::string placeholder = ""
+   );
 }
 ```
 
@@ -149,6 +179,7 @@ namespace cycfi::elements
 `mods`:: Modifiers, as in `key_info`.
 `f`:: A function taking the picked item, a `string_view`.
 `items`:: A sequence of strings, an initializer list, or a `menu_selector`.
+`v`:: A `std::vector<std::string>`.
 
 === Semantics
 
@@ -178,11 +209,15 @@ namespace cycfi::elements
 | `selection_menu(t)`
 | A selection menu's button alone, showing `t`; a pair of the button
   and its label.
+
+| `combo_box(v, t)`
+| A combo box of the items `v`, showing the placeholder `t` while
+  empty; a pair of the combo box and its input box.
 |===
 
-== Example
+== Examples
 
-The selection menu of `examples/menus`, in the figure:
+The selection menu of `examples/menus`, in the first figure:
 
 ```c++
 auto make_selection_menu()
@@ -205,6 +240,23 @@ auto make_selection_menu()
       }
 
    ).first; // We return only the first, the menu. the second is a shared pointer to the label.
+}
+```
+
+The combo box of `examples/menus`, in the second figure. Its items are the
+example's dynamic menu's, an array of sayings:
+
+```c++
+auto make_combo_box()
+{
+   auto [combo, text] = combo_box(
+      {std::begin(sayings), std::end(sayings)}, "Your saying");
+   text->on_enter = [](std::string_view saying)
+   {
+      // This will be called when a saying is entered or picked
+      return true;
+   };
+   return combo;
 }
 ```
 

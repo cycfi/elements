@@ -121,6 +121,51 @@ TEST_CASE("menus style page: selection menu", "[menus_style_page]")
    CHECK(text->get_text() == "Medium");
 }
 
+TEST_CASE("menus style page: combo box", "[menus_style_page]")
+{
+   test_view tv{extent{400, 300}};
+   open(tv);
+   auto [combo, text] = combo_box({"Small", "Medium", "Large"}, "Size");
+   std::string entered;
+   text->on_enter = [&](std::string_view s)
+   {
+      entered = std::string(s);
+      return true;
+   };
+
+   // Empty, showing the placeholder.
+   CHECK(text->get_text().empty());
+
+   auto c = share(std::move(combo));
+   tv.view_.content(margin({20, 20, 20, 20}, align_left_top(hsize(150, hold(c)))),
+      box(bkd_color));
+   tv.view_.layout();
+   tv.draw();
+
+   // Typing completes: m fills in Medium, its rest selected; the right
+   // arrow takes it.
+   click(tv.view_, {50, 32});
+   wait(tv.view_);
+   tv.view_.text(text_info{'m', 0});
+   CHECK(text->get_utf8() == "Medium");
+   CHECK(text->select_start() == 1);
+   CHECK(text->select_end() == 6);
+   tv.view_.key({key_code::right, key_action::press, 0});
+   CHECK(text->select_start() == 6);
+
+   // A pick puts the item in and calls on_enter with it.
+   click(tv.view_, {160, 32});
+   wait(tv.view_); wait(tv.view_);
+   REQUIRE(menu_of(tv.view_));
+   tv.view_.key({key_code::down, key_action::press, 0});
+   tv.view_.key({key_code::down, key_action::press, 0});
+   tv.view_.key({key_code::down, key_action::press, 0});
+   tv.view_.key({key_code::enter, key_action::press, 0});
+   wait(tv.view_); wait(tv.view_);
+   CHECK(text->get_utf8() == "Large");
+   CHECK(entered == "Large");
+}
+
 #if !defined(ARTIST_RECORDING)
 namespace
 {
@@ -170,5 +215,77 @@ TEST_CASE("menus style page: example", "[menus_style_page]")
    wait(view_);
    tv.draw();
    tv.img.save_png(std::string{RESULTS_PATH} + "menus_selection.png");
+}
+
+namespace
+{
+   // The page's second example: examples/menus, verbatim.
+   char const* sayings[] =
+   {
+      "Seeker, look within",
+      "Empower yourself",
+      "Have you found your circuit?",
+      "Complexity to the next level",
+      "Ultra-angelic consciousness",
+      "Indigo Child",
+      "Vector of synchronicity",
+      "Aspiration is a constant",
+      "Strange Soup",
+      "Nonchalant Slave",
+      "Shiva will amplify your mind",
+      "This mission never ends",
+      "The future is now",
+      "Who are we?",
+      "One cannot self-actualize",
+      "Ennobling source of stardust"
+   };
+
+   auto make_combo_box()
+   {
+      auto [combo, text] = combo_box(
+         {std::begin(sayings), std::end(sayings)}, "Your saying");
+      text->on_enter = [](std::string_view saying)
+      {
+         // This will be called when a saying is entered or picked
+         return true;
+      };
+      return combo;
+   }
+}
+
+TEST_CASE("menus style page: combo box example", "[menus_style_page]")
+{
+   test_view tv{extent{340, 380}, 2};
+   open(tv);
+   auto& view_ = tv.view_;
+   auto [combo, text] = combo_box(
+      {std::begin(sayings), std::end(sayings)}, "Your saying");
+   text->set_text("Indigo Child");
+   view_.content(
+      margin({20, 20, 20, 20}, align_left_top(hsize(300, combo))),
+      box(bkd_color)
+   );
+   view_.layout();
+   tv.draw();
+
+   // The arrow, at the right of the frame, opens the list.
+   click(view_, {305, 32});
+   wait(view_); wait(view_);
+   view_.layout();
+   tv.draw();
+   auto m = menu_of(view_);
+   REQUIRE(m);
+   auto mb = m->bounds();
+   // Strange Soup, the ninth of sixteen
+   auto item_height = mb.height() / 16;
+   view_.cursor({mb.left + 60, mb.top + item_height * 8.5f},
+      cursor_tracking::hovering);
+   wait(view_);
+   tv.draw();
+   tv.img.save_png(std::string{RESULTS_PATH} + "menus_combo_box.png");
+
+   // The page's example builds.
+   auto example = share(make_combo_box());
+   CHECK(example);
 }
 #endif

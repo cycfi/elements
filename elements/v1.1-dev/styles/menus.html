@@ -242,6 +242,9 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../elements/status_bars.html">Status Bars</a>
   </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../elements/leds.html">LEDs</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
@@ -426,8 +429,8 @@
 <h2 id="_overview"><a class="anchor" href="#_overview"></a>Overview</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The stock menu buttons, menu items and selection menus, built on the
-parts on the <a href="../elements/menus.html" class="xref page">Menus</a> page.</p>
+<p>The stock menu buttons, menu items, selection menus and combo boxes,
+built on the parts on the <a href="../elements/menus.html" class="xref page">Menus</a> page.</p>
 </div>
 <div class="sect2">
 <h3 id="_menu_buttons"><a class="anchor" href="#_menu_buttons"></a>Menu Buttons</h3>
@@ -503,6 +506,39 @@ as it is made, and with its text: to disable some, for instance.</p>
 <div class="paragraph">
 <p><code>selection_menu(init)</code> is the button alone, showing <code>init</code>, with no menu,
 for a menu of your own.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_combo_boxes"><a class="anchor" href="#_combo_boxes"></a>Combo Boxes</h3>
+<div class="paragraph">
+<p>A combo box is an <a href="text_entry.html" class="xref page">input box</a> with a list of
+items behind a down arrow, in one frame, as a font box is. The text is
+typed freely, or picked from the list, which opens under the frame and as
+wide as it:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<a class="image" href="../_images/styles/menus_combo_box.png"><img src="../_images/styles/menus_combo_box.png" alt="A combo box with Indigo Child typed in it and its list of sayings open below it, Strange Soup highlighted" width="340px"></a>
+</div>
+</div>
+<div class="paragraph">
+<p><code>combo_box(items, placeholder)</code> makes one of <code>items</code>, a
+<code>std::vector&lt;std::string&gt;</code>, empty until a text is typed or set, and
+showing <code>placeholder</code> until then. It returns a pair: the combo box, and
+a shared pointer to its input box, for its text and its functions, as
+<code>input_box</code> does.</p>
+</div>
+<div class="paragraph">
+<p>Typing completes from the list: the first item that starts with the text,
+case aside, fills in, its rest selected, so the next character types over
+it. The right arrow, or Enter, takes it. Only typing at the end of the
+text completes; deleting does not.</p>
+</div>
+<div class="paragraph">
+<p>Picking an item puts it in the input box and calls the input box&#8217;s
+<code>on_enter</code> with it, as if it were typed and entered, so one function takes
+both. Set <code>on_end_focus</code> to the same function to take a text left without
+Enter (see <a href="../elements/text.html" class="xref page">Text</a>).</p>
 </div>
 </div>
 </div>
@@ -581,6 +617,11 @@ for a menu of your own.</p>
     , float text_align = 0.0f
     , on_menu_item_function on_item = [](auto&amp;, auto) {}
    );
+
+   inline auto combo_box(
+      std::vector&lt;std::string&gt; const&amp; items
+    , std::string placeholder = ""
+   );
 }</code></pre>
 </div>
 </div>
@@ -620,6 +661,10 @@ for a menu of your own.</p>
 <dt class="hdlist1"><code>items</code></dt>
 <dd>
 <p>A sequence of strings, an initializer list, or a <code>menu_selector</code>.</p>
+</dd>
+<dt class="hdlist1"><code>v</code></dt>
+<dd>
+<p>A <code>std::vector&lt;std::string&gt;</code>.</p>
 </dd>
 </dl>
 </div>
@@ -668,16 +713,21 @@ for a menu of your own.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A selection menu&#8217;s button alone, showing <code>t</code>; a pair of the button
   and its label.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>combo_box(v, t)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A combo box of the items <code>v</code>, showing the placeholder <code>t</code> while
+  empty; a pair of the combo box and its input box.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The selection menu of <code>examples/menus</code>, in the figure:</p>
+<p>The selection menu of <code>examples/menus</code>, in the first figure:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -701,6 +751,25 @@ for a menu of your own.</p>
       }
 
    ).first; // We return only the first, the menu. the second is a shared pointer to the label.
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The combo box of <code>examples/menus</code>, in the second figure. Its items are the
+example&#8217;s dynamic menu&#8217;s, an array of sayings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto make_combo_box()
+{
+   auto [combo, text] = combo_box(
+      {std::begin(sayings), std::end(sayings)}, "Your saying");
+   text-&gt;on_enter = [](std::string_view saying)
+   {
+      // This will be called when a saying is entered or picked
+      return true;
+   };
+   return combo;
 }</code></pre>
 </div>
 </div>

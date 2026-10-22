@@ -242,6 +242,9 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="status_bars.html">Status Bars</a>
   </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="leds.html">LEDs</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
@@ -443,6 +446,29 @@ it is inside the view.</p>
 <code>on_hover</code> is called with <code>true</code> when the tip opens and <code>false</code> when it
 closes.</p>
 </div>
+<div class="paragraph">
+<p><code>armed</code> turns the tip on and off: while it points to <code>false</code>, the tip
+does not open, nor does one still waiting out its delay. It is a
+<code>std::shared_ptr&lt;bool&gt;</code>, <code>true</code> by default, and a copy of a tooltip
+shares it. Tooltips given the same pointer are armed and disarmed
+together, as by a help button that turns all of a window&#8217;s tips on and
+off:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c++ hljs" data-lang="c++">auto tips = std::make_shared&lt;bool&gt;(true);
+
+auto open = tooltip(icon_button(icons::folder_open_empty, 1.2),
+   tooltip_bubble("Open a file"));
+auto save = tooltip(icon_button(icons::floppy, 1.2),
+   tooltip_bubble("Save the file"));
+open.armed = save.armed = tips;
+
+auto help = toggle_icon_button(icons::question_circle_o, 1.2);
+help.value(true);
+help.on_click = [tips](bool on) { *tips = on; };</code></pre>
+</div>
+</div>
 <div class="imageblock">
 <div class="content">
 <a class="image" href="../_images/elements/tooltips_example.png"><img src="../_images/elements/tooltips_example.png" alt="Four buttons, Option 1 to Option 4; above Option 2, a light bubble pointing down at it reads Take a stand against delusion, and the label at the top shows the same text" width="480px"></a>
@@ -494,6 +520,7 @@ closes.</p>
       std::string             class_name() const override;
 
       on_hover_function       on_hover = [](bool){};
+      std::shared_ptr&lt;bool&gt;   armed = std::make_shared&lt;bool&gt;(true);
    };
 
    template &lt;concepts::Element Subject, typename Tip&gt;
@@ -555,6 +582,11 @@ closes.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>t.on_hover</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Called with <code>true</code> when the tip opens, <code>false</code> when it closes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>t.armed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <code>std::shared_ptr&lt;bool&gt;</code>, <code>true</code> by default; while it points to
+  <code>false</code>, the tip does not open.</p></td>
 </tr>
 </tbody>
 </table>

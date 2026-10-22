@@ -8,8 +8,9 @@ named in the heading.
 ## 2026-10-22 -- tooltip switch, question mark icon, combo box (develop)
 
 **TL;DR:** Tooltips can be turned off together, the icon font has an
-outlined question mark, and an editable combo box with completion lands
-(#462, from discussion #327). Made for Ascend Pre's help button and its
+outlined question mark, an editable combo box with completion lands
+(#462, from discussion #327), and removing a layer no longer strands the
+focus. Made for Ascend Pre's help button and its
 Base Note field.
 
 - `6c4e870e` `icons::question_circle_o` (0xe904): Font Awesome's
@@ -26,6 +27,11 @@ Base Note field.
   opens under the whole frame at its width: the arrow lays out its menu
   with its parent tile's bounds. `examples/menus` shows one, with the
   dynamic menu's sayings as its items.
+- `128217df` Removing a layer under the focused one left the view's focus
+  index past the layers, and the next key dereferenced null: a window
+  opened from a menu, the menu closing under it (Ascend Pre's
+  Configuration, on a Shift). `composite_base::erased` moves the focus,
+  saved focus and tracking indices past the removed child down one.
 
 ## 2026-10-18 -- 1.0.1 hotfixes (develop; released as tag v1.0.1)
 

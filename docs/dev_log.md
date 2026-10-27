@@ -5,6 +5,12 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-27 -- 1.0.2 hotfix (master, tag v1.0.2)
+
+**TL;DR:** `lib/artist` moves to Artist `v1.0.2` (`d64fe84`), with the
+Direct2D shadow offscreen sized to the shape (Artist PR #32); cut from
+`v1.0.1` on a scratch branch.
+
 ## 2026-10-18 -- 1.0.1 hotfixes (master, tag v1.0.1)
 
 **TL;DR:** GTK window and app lifetime fixes, Windows x64 window limits, an

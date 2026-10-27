@@ -7,6 +7,13 @@ High-level, user-facing changes only. For the day-to-day detail, see
 
 Nothing yet.
 
+## v1.0.2 (2026-10-27)
+
+Built on Artist 1.0.2, whose Direct2D backend no longer gives every shadow a
+window-sized offscreen bitmap. On Windows, where Direct2D is the default, an
+app with shadowed panels and cards used to grow to hundreds of MB once its
+window had been resized a few times.
+
 ## v1.0.1 (2026-10-18)
 
 Fixes found by the sanitizer jobs and the other platforms right after 1.0.0,

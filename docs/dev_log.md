@@ -5,6 +5,13 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-10-27 -- 1.0.2 hotfix (develop; released as tag v1.0.2)
+
+**TL;DR:** Elements 1.0.2 (`fa180799`) is 1.0.1 on Artist 1.0.2, whose
+Direct2D shadows no longer take a window-sized offscreen each (Artist PR
+#32, Christopher Cook). Here, `lib/artist` moves to Artist develop, which
+carries the same fix.
+
 ## 2026-10-22 -- fit (develop)
 
 **TL;DR:** `fit` scales the content to fill the view at its proportion,

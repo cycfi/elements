@@ -435,7 +435,7 @@
 <code>resources/fonts</code>, built with <a href="https://fontello.com">Fontello</a>. Each icon is
 a glyph at a code point in the font&#8217;s private use area, and
 <code>support/icon_ids.hpp</code> names them: <code>icons::ok</code>, <code>icons::cancel</code>,
-<code>icons::cog</code> and so on, 266 in all.</p>
+<code>icons::cog</code> and so on, 267 in all.</p>
 </div>
 <div class="sect2">
 <h3 id="_arrows"><a class="anchor" href="#_arrows"></a>Arrows</h3>
@@ -1562,6 +1562,11 @@ a glyph at a code point in the font&#8217;s private use area, and
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>icons::bullseye</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>0xe8fb</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="ei">&#xe905;</span></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>icons::bypass</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0xe905</code></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -2012,14 +2017,14 @@ from the same set take codes in sequence from <code>0xe851</code>. <code>mixer</
 <h2 id="_adding_icons"><a class="anchor" href="#_adding_icons"></a>Adding Icons</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The 265 icons are a starting set. An application adds its own by building
+<p>The 267 icons are a starting set. An application adds its own by building
 a new icon font with Fontello and shipping it in place of Elements':</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Go to <a href="https://fontello.com">fontello.com</a> and drop
-<code>resources/fonts/config.json</code> on the page. The 267 glyphs load with
+<code>resources/fonts/config.json</code> on the page. The 269 glyphs load with
 their names and codes, so everything Elements draws keeps working.</p>
 </li>
 <li>

@@ -3,9 +3,9 @@
 <rect width="837" height="132" rx="3" fill="#444"/>
 <g fill="#fff" font-family="Verdana,DejaVu Sans,Geneva,sans-serif" text-anchor="middle">
 <rect x="0" y="0.0" width="174.0" height="18.0" fill="#555"/>
-<rect x="174.0" y="0.0" width="36.0" height="18.0" fill="#4c1"/>
+<rect x="174.0" y="0.0" width="36.0" height="18.0" fill="#e05d44"/>
 <text x="168.0" y="12.333333333333334" font-size="10.0" text-anchor="end">Cairo (Ubuntu GCC)</text>
-<text x="192.0" y="12.333333333333334" font-size="10.0">pass</text>
+<text x="192.0" y="12.333333333333334" font-size="10.0">fail</text>
 <rect x="0" y="19.0" width="174.0" height="18.0" fill="#555"/>
 <rect x="174.0" y="19.0" width="36.0" height="18.0" fill="#4c1"/>
 <text x="168.0" y="31.333333333333332" font-size="10.0" text-anchor="end">Cairo (Windows MSVC)</text>

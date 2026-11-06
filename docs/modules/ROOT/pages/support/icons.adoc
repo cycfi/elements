@@ -8,7 +8,7 @@ Elements draws its icons from a font, `elements_basic.ttf` in
 `resources/fonts`, built with https://fontello.com[Fontello]. Each icon is
 a glyph at a code point in the font's private use area, and
 `support/icon_ids.hpp` names them: `icons::ok`, `icons::cancel`,
-`icons::cog` and so on, 266 in all.
+`icons::cog` and so on, 267 in all.
 
 === Arrows
 
@@ -860,6 +860,10 @@ a glyph at a code point in the font's private use area, and
 | `icons::bullseye`
 | `0xe8fb`
 
+| pass:[<span class="ei">&#xe905;</span>]
+| `icons::bypass`
+| `0xe905`
+
 |===
 
 === Devices and Objects
@@ -1194,11 +1198,11 @@ from the same set take codes in sequence from `0xe851`. `mixer` is another name 
 
 == Adding Icons
 
-The 265 icons are a starting set. An application adds its own by building
+The 267 icons are a starting set. An application adds its own by building
 a new icon font with Fontello and shipping it in place of Elements':
 
 . Go to https://fontello.com[fontello.com] and drop
-  `resources/fonts/config.json` on the page. The 267 glyphs load with
+  `resources/fonts/config.json` on the page. The 269 glyphs load with
   their names and codes, so everything Elements draws keeps working.
 . Add your icons: pick from Fontello's font sets, or drag in your own
   SVG files.

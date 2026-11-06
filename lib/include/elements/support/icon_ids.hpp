@@ -298,6 +298,7 @@ namespace cycfi::elements::icons
       play_circle                   = 0xe902,
       pause_circle                  = 0xe903,
       question_circle_o             = 0xe904,
+      bypass                        = 0xe905,
    };
 }
 

@@ -5,6 +5,19 @@ would otherwise have lived in commit bodies (commit messages are kept to a
 single subject line). Hashes are the post-rewrite short hashes on the branch
 named in the heading.
 
+## 2026-11-06 -- bypass icon (develop)
+
+**TL;DR:** `icons::bypass` (`0xe905`), an arrow over a node, joins the
+icon font, for a signal path's bypass, which the power icon does not mean.
+
+- `750b3c15` The glyph is a custom one in `resources/fontello/config.json`,
+  regenerated through fontello.com; every other glyph's outline and the
+  font's metrics are unchanged (compared glyph by glyph). The font is
+  replaced in `resources/fonts`, `resources/fontello` and the docs'
+  supplemental UI. The icons page lists it under Transport and Audio, and
+  the counts are 267 icons and 269 glyphs. First used by Q Bender's
+  formants bypass.
+
 ## 2026-10-27 -- 1.0.2 hotfix (develop; released as tag v1.0.2)
 
 **TL;DR:** Elements 1.0.2 (`fa180799`) is 1.0.1 on Artist 1.0.2, whose

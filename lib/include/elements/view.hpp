@@ -167,6 +167,8 @@ namespace cycfi::elements
       void                    update_drop_types();
       void                    update_hotkeys();
       void                    refresh_pending();
+      void                    add_pending(element* e, int outward);
+      element*                focus_leaf();
 
       // The focus held when a mouse button went down: each composite on
       // the path and its focused child. A layer opened by that click

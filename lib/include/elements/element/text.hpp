@@ -99,6 +99,7 @@ namespace cycfi::elements
                                , font_descr font_ = get_theme().text_box_font
                               );
                               basic_text_box(basic_text_box&& rhs) = default;
+                              ~basic_text_box();
 
       void                    draw(context const& ctx) override;
       bool                    click(context const& ctx, mouse_button btn) override;
@@ -191,6 +192,10 @@ namespace cycfi::elements
       bool                    _scroll_into_view : 1;
       undo_anchor<basic_text_box> _anchor;
       composition_info        _composition;
+
+      // Cleared when the box is destroyed: a caret blink still posted to
+      // the view then does nothing.
+      std::shared_ptr<bool>   _alive = std::make_shared<bool>(true);
    };
 
    /**

@@ -30,6 +30,7 @@ set(elements_test_sources
    lib/heading_levels_test.cpp
    lib/max_size_test.cpp
    lib/input_box_test.cpp
+   lib/text_box_caret_test.cpp
    lib/text_stress_test.cpp
    lib/utf8_test.cpp
    lib/image_test.cpp

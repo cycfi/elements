@@ -156,6 +156,12 @@ namespace cycfi::elements
     , _anchor{this}
    {}
 
+   basic_text_box::~basic_text_box()
+   {
+      if (_alive)
+         *_alive = false;
+   }
+
    // A saved state of a box, restored through the box's undo anchor: not
    // at all once the box is gone or its content replaced.
    struct basic_text_box::state_saver
@@ -734,8 +740,10 @@ namespace cycfi::elements
 
          _caret_started = true;
          ctx.view.post(500ms,
-            [this, &_view = ctx.view, caret_bounds]()
+            [this, alive = _alive, &_view = ctx.view, caret_bounds]()
             {
+               if (!*alive)
+                  return;
                _show_caret = !_show_caret;
                _view.refresh(caret_bounds);
                _caret_started = false;

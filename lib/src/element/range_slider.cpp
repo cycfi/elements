@@ -309,7 +309,6 @@ namespace cycfi::elements
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
          _state = state::moving_thumb1;
-         ctx.view.refresh(ctx);     // the thumb taken is drawn on top
       };
 
       auto begin_tracking_2 = [&]()
@@ -318,7 +317,6 @@ namespace cycfi::elements
          track_info.offset.x = track_info.current.x - cp.x;
          track_info.offset.y = track_info.current.y - cp.y;
          _state = state::moving_thumb2;
-         ctx.view.refresh(ctx);     // the thumb taken is drawn on top
       };
 
       if (track_info.modifiers == mod_alt)

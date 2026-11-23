@@ -41,12 +41,10 @@ namespace cycfi::elements
       if (!btn)
          return;
 
-      // Pressed, a pixel down and to the right, within the button's bounds:
-      // only those are redrawn when it changes.
       auto const value = btn->value();
       auto bounds = ctx.bounds;
       if (value)
-         bounds = {bounds.left + 1, bounds.top + 1, bounds.right, bounds.bottom};
+         bounds = bounds.move(1, 1);
       draw_button_base(ctx, bounds
        , value? active_body_color.opacity(0.7) : body_color.level(0.9)
        , ctx.enabled
@@ -103,17 +101,11 @@ namespace cycfi::elements
          get_body_color().level(0.9)
          ;
 
-      // Draw the body. Pressed, it and its label are a pixel down and to
-      // the right, the body within the button's bounds: only those are
-      // redrawn when it changes.
-      auto body = bounds;
+      // Draw the body
       if (value)
-      {
          bounds = bounds.move(1, 1);
-         body = {body.left + 1, body.top + 1, body.right, body.bottom};
-      }
 
-      draw_button_base(ctx, body, body_color, enabled,
+      draw_button_base(ctx, bounds, body_color, enabled,
          {
             get_corner_radius_top_left()*rel_size,
             get_corner_radius_top_right()*rel_size,

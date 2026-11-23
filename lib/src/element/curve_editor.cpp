@@ -512,7 +512,6 @@ namespace cycfi::elements
             _last = _dragging;
             _x_gesture = _y_gesture = false;
             _drag_start = _nodes[at]->spec.pos;
-            ctx.view.refresh(ctx);     // drawn as dragged from the press
          }
       }
       else if (_dragging)

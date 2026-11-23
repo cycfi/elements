@@ -457,13 +457,8 @@ namespace cycfi::elements
             if (reposition(ctx, btn.pos))
                return true;
          }
-         // The end of a scroll bar drag redraws the bar as it is at rest. A
-         // click on the content leaves the scroller as it is.
-         else if (_tracking != none)
-         {
-            refresh(ctx);
-         }
          _tracking = none;
+         refresh(ctx);
       }
       return port_element::click(ctx, btn);
    }

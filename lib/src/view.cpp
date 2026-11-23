@@ -269,13 +269,6 @@ namespace cycfi::elements
 
    void view::refresh(element& element, int outward)
    {
-      add_pending(&element, outward);
-   }
-
-   // Only the address is kept, and the tree is searched for it, so an
-   // element that is gone by the next poll is simply not found.
-   void view::add_pending(element* e, int outward)
-   {
       if (_current_bounds.is_empty())
          return;
 
@@ -285,7 +278,7 @@ namespace cycfi::elements
       {
          std::lock_guard<std::mutex> lock(_pending_mutex);
          first = _pending.empty();
-         pending_refresh const entry{e, outward};
+         pending_refresh const entry{&element, outward};
          if (std::find(_pending.begin(), _pending.end(), entry)
             == _pending.end())
             _pending.push_back(entry);
@@ -354,13 +347,6 @@ namespace cycfi::elements
       if (btn.down)
          _click_focus = current_focus_path();
 
-      // An element redraws what a click changes in it; the view is not
-      // redrawn whole. What the focus shows, a text box's caret and
-      // selection, is redrawn here when the click moves it: in the element
-      // that had it, which may be gone once the click returns (a dialog it
-      // closes), hence by address, and in the one that has it now.
-      auto const focus_before = focus_leaf();
-
       bool handled = false;
       with_context_do(
          [btn, this, &handled](auto const& ctx, auto& _main_element)
@@ -370,17 +356,10 @@ namespace cycfi::elements
                _is_focus = _main_element.focus();
             else if (btn.down)
                elements::relinquish_focus(_content, ctx);
+            refresh(_main_element);
          },
          *this, _current_bounds
       );
-
-      if (auto const focus_after = focus_leaf(); focus_after != focus_before)
-      {
-         if (focus_before)
-            add_pending(focus_before, 0);
-         if (focus_after)
-            add_pending(focus_after, 0);
-      }
 
       // A layer this click opens is added after it returns (see add), so
       // the focus it held is kept until then.
@@ -389,21 +368,6 @@ namespace cycfi::elements
       LOG_DEBUG(logger(log_cat::input),
          "click {},{} btn={} down={} clicks={} handled={}",
          btn.pos.x, btn.pos.y, int(btn.state), btn.down, btn.num_clicks, handled);
-   }
-
-   // The innermost element with the focus: the one that is its own focus.
-   // Null if none has it.
-   element* view::focus_leaf()
-   {
-      element* e = _content.focus();
-      while (e)
-      {
-         auto* f = e->focus();
-         if (f == e)
-            return e;
-         e = f;
-      }
-      return nullptr;
    }
 
    view::focus_path view::current_focus_path()

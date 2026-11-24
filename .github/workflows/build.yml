@@ -275,6 +275,7 @@ jobs:
           libfontconfig1-dev \
           libfreetype6-dev \
           libharfbuzz-dev \
+          libwebp-dev \
           pkg-config \
           ninja-build
 
